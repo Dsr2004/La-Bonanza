@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block titulo %}Crear Estudiante{% endblock titulo %}
+
+
+{% block contenido %}
+    <form action="{% url 'registartEstudiante' %}" method="post">
+        {% csrf_token %}
+        {{form.as_p}}
+        <button type="submit" class="btn btn-success">Enviar</button>
+    </form>
+{% endblock contenido %}
+    

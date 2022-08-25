@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'libs/bootstrap/css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'libs/fontawesome/css/all.css' %}">
+    <!--  Datatables  -->
+    <link rel="stylesheet" type="text/css" href="{%static 'libs/DataTables/jquery.dataTables.min.css' %}" />
+    <!--  extension responsive  -->
+    <link rel="stylesheet" type="text/css" href="{% static 'libs/DataTables/Responsive/dataTables.min.css' %}">
+    {% block estilos %}{% endblock estilos %}
+        
+    <title>{% block titulo %}Base{% endblock titulo %}</title>
+</head>
+<body>
+    
+    <div>
+        {% block contenido %}
+            <h1>Estoy en el archivo base</h1>
+        {% endblock contenido %}
+    </div>
+
+    <script src="{% static 'libs/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'libs/bootstrap/js/bootstrap.js' %}"></script>
+    <!--   Datatables-->
+    <script type="text/javascript" src="{%static 'libs/DataTables/jquery.dataTables.min.js' %}"></script>
+    <!-- extension responsive -->
+    <script src="{% static 'libs/DataTables/Responsive/dataTables.min.js' %}"></script>
+
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block scripts %}{% endblock scripts %}
+</body>
+</html>
+
