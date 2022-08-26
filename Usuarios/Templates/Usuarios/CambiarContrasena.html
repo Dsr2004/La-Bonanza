@@ -1,0 +1,61 @@
+<div class="modal-dialog  modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Cambiar Contraseña</strong></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form action="{% url 'changePass' %}" method="post" id="cambiarPass">
+                {% csrf_token %}
+                <Label><strong>Contraseña Antigua: <sup class="requerido">(*)</sup></strong></Label>
+                {{form.passwordA}}
+                <p id="passwordA" class="bg-light text-danger" style="color: #dc3545;"></p>
+                <br>
+                <Label><strong>Contraseña Nueva: <sup class="requerido">(*)</sup></strong></Label>
+                {{form.password}}
+                <p id="password" class="bg-light text-danger" style="color: #dc3545;"></p>
+                <br>
+                <Label><strong>Confirmar Contraseña: <sup class="requerido">(*)</sup></strong></Label>
+                {{form.password2}}
+                <p id="passwordC" class="bg-light text-danger" style="color: #dc3545;"></p>
+            </form>
+            <hr>
+        <button id="CambiarContrasenaButton" class="btn btn-success w-100">Cambiar Contraseña</button>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#CambiarContrasenaButton').click(function () {
+            var form = $('#cambiarPass');
+            $.ajax({
+                url: form.attr('action'),
+                type: form.attr('method'),
+                data: {
+                    "contraseña":form.find('input[name=password]').val(),
+                    "contraseñaA":form.find('input[name=passwordA]').val(),
+                    "contraseñaC":form.find('input[name=password2]').val(),
+                    "csrfmiddlewaretoken":form.find('input[name=csrfmiddlewaretoken]').val()
+                },
+                success: function (data) {
+                    swal.fire({
+                            title: "Exito!",
+                            text: "Contraseña modificada con exito!",
+                            icon: "success",
+                            button: "Aceptar",
+                        }).then(function() {
+                            window.location.href = "{%url 'logout'%}";
+                        });
+                       
+                },error: function (error) {
+                    Error = error['responseJSON']
+                    Swal.fire({
+                        icon: 'info',
+                        title: 'Atención.',
+                        text: Error['error'] + '.',
+                    })
+                }
+            });
+        });
+    });
+</script>

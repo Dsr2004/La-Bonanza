@@ -1,4 +1,9 @@
 {% load static %}
+{%if request.user.administrador == False%}
+  <script>
+    window.location.href = "{%url 'calendario' %}";
+  </script>
+{%endif%}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,20 +22,78 @@
     <title>{% block titulo %}Base{% endblock titulo %}</title>
 </head>
 <body>
-    
+
+    {% if  request.user.is_authenticated%}
+    <a class="btn btn-light" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">
+        <i class="fa-solid fa-bars"></i>
+      </a>
+     
+      <div class="CanvasMenu offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" data-bs-target="#staticBackdrop" aria-controls="staticBackdrop">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="offcanvasExampleLabel">{{request.user.nombres|title}}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class=" offcanvas-body">
+          <ul class="nav nav-pills flex-column">
+            {%if request.user.administrador == False%}
+            <li class="nav-item">
+              <a class="nav-link 
+              {% if request.path == '/Administracion/Calendario/'%}active{% endif %} 
+              " aria-current="page" href="{% url 'calendario' %}">Calendario</a>
+            </li>
+            {%else%}
+            <li class="nav-item">
+              <a class="nav-link 
+              {% if request.path == '/'  or 'buscarRuta' in request.path%}active{% endif %} 
+              " aria-current="page" href="{% url 'index' %}">Inicio</a>
+            </li>
+            {%endif%}
+
+            {%if request.user.administrador%}
+            <li class="nav-item">
+              <a class="nav-link 
+              {% if request.path == '/Administracion/Estudiantes/'%}active{% endif %} 
+              " aria-current="page" href="{%url 'estudiantes'%}">Estudiantes</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link 
+              {% if request.path == '/Administracion/Profesores/'%}active{% endif %} 
+              " aria-current="page" href="{%url 'profesores'%}">Profesores</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link 
+              {% if request.path == '/Administracion/Calendario/'%}active{% endif %} 
+              " aria-current="page" href="{%url 'calendario'%}">Calendario</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link 
+              {% if request.path == ''%}active{% endif %} 
+              " aria-current="page" href="">Picaderos</a>
+            </li>
+            {%endif%}
+            <li class="nav-item">
+              <p class="nav-link" onclick="changePass('{%url 'changePass'%}')" style="cursor: pointer;">Cambiar Contraseña</p>
+            </li>
+          </ul> 
+          <a  class="btn btn-ligth btn-close-session" href="{% url 'logout' %}"><i class="fa-solid fa-power-off"></i></a>
+        </div>
+      </div>
+
+    {% endif %}
     <div>
         {% block contenido %}
-            <h1>Estoy en el archivo base</h1>
+            
         {% endblock contenido %}
     </div>
-
+    <div class="modal fade" id="CambiarContrasena" role="dialog" >
+    </div>
+    <script src="{% static 'libs/sweetalert/sweetalert.js' %}"></script>
     <script src="{% static 'libs/jquery/jquery.min.js' %}"></script>
     <script src="{% static 'libs/bootstrap/js/bootstrap.js' %}"></script>
     <!--   Datatables-->
     <script type="text/javascript" src="{%static 'libs/DataTables/jquery.dataTables.min.js' %}"></script>
     <!-- extension responsive -->
     <script src="{% static 'libs/DataTables/Responsive/dataTables.min.js' %}"></script>
-
     <script src="{% static 'js/main.js' %}"></script>
     {% block scripts %}{% endblock scripts %}
 </body>

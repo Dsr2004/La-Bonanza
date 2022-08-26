@@ -1,0 +1,22 @@
+.CanvasMenu{
+    position: relative;
+}
+
+.btn-close-session{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    left: 0;
+    margin-bottom: 10px !important;
+}
+.homecenter{
+    position: relative;
+    margin-top: 30vh;
+}
+.requerido{
+    color: red !important;
+}
+
+.buttonSweetalert{
+    margin-left: 20px !important;
+}
