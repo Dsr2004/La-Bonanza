@@ -79,9 +79,10 @@ class Establo(models.Model):
 class Registro(models.Model):
     estudiante = models.OneToOneField(Estudiante, on_delete=models.CASCADE)
     pagado = models.BooleanField(default=False)
-    diaClases = models.DateField()
-    horaClases = models.TimeField()
-    mesesPagados = models.IntegerField()
+    inicioClase = models.DateField()
+    finClase = models.DateField()
+    horaClase = models.TimeField()
+   
 
     class Meta:
         db_table = "registros"

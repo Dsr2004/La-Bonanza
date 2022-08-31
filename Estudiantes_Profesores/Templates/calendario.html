@@ -25,15 +25,32 @@
                 right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
             },
             events: [
-                {%for clase in clases%}
-                    
-                    {
-                        title: "{{clase.estudiante.nombre_completo | title}}",
-                        start: "{{clase.get_class}}",
-                        color: "{{clase.estudiante.nivel.color_fondo}}"
-                    },
-                {%endfor%}
-            ]
+{
+title : "Estudiante 1",
+startRecur : "2022-08-18",
+endRecur : "2022-08-31",
+
+startTime: '10:45:00',
+color: "green",
+daysOfWeek: [ '4' ],
+},
+{
+title : "Estudiante 2",
+startRecur : "2022-07-01",
+endRecur : "2022-08-31",
+startTime: '11:45:00',
+color: "red",
+daysOfWeek: [ '5' ],
+},
+{
+title : "Estudiante 3",
+startRecur : "2022-08-18",
+endRecur : "2022-08-31",
+startTime: '10:45:00',
+color: "yellow",
+daysOfWeek: [ '4' ],
+}
+],
         })
 
         calendar.render();
@@ -42,4 +59,38 @@
     })
 </script>
 {% endblock scripts %}
-    
+
+
+
+{% comment %}
+events: [
+{
+title : "Estudiante 1",
+startRecur : "2022-08-18",
+endRecur : "2022-08-31",
+
+startTime: '10:45:00',
+endTime: '12:45:00',
+color: "green",
+daysOfWeek: [ '4' ],
+},
+{
+title : "Estudiante 2",
+startRecur : "2022-07-01",
+endRecur : "2022-08-31",
+startTime: '11:45:00',
+endTime: '12:45:00',
+color: "red",
+daysOfWeek: [ '5' ],
+},
+{
+title : "Estudiante 3",
+startRecur : "2022-08-18",
+endRecur : "2022-08-31",
+startTime: '10:45:00',
+endTime: '12:45:00',
+color: "yellow",
+daysOfWeek: [ '4' ],
+}
+],
+{% endcomment %}
