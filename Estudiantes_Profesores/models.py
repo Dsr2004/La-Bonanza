@@ -91,8 +91,26 @@ class Registro(models.Model):
         return self.estudiante.nombre_completo
 
     @property
-    def get_clase(self):
-        start = self.diaClases.strftime("%Y-%m-%d")
-        hora = self.horaClases.strftime("%H:%M:%S")
-        return  f"{start}T{hora}"
-        
+    def get_estado_matricula(self):
+        if self.pagado:
+            return "Pagada"
+        else:
+            return "Pendiente"
+
+    @property
+    def get_estudiante(self):
+        estudiante = self.estudiante.nombre_completo.capitalize()
+        return estudiante
+
+    @property
+    def get_estudiante_documento(self):
+        return self.estudiante.documento
+
+    @property
+    def get_estudiante_celular(self):
+        return self.estudiante.celular
+
+
+    @property
+    def get_estudiante_nivel(self):
+        return self.estudiante.nivel.nivel
