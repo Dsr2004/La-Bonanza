@@ -1,4 +1,5 @@
 {% load static %}
+<!-- Jhorman estuvo aquí -->
 {%if request.user.administrador == False%}
   <script>
     window.location.href = "{%url 'calendario' %}";
