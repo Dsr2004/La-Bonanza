@@ -22,7 +22,9 @@ class Estudiantes(ListView):
     template_name = "estudiantes.html"
     context_object_name= "estudiantes"
     model = Registro
-
+    template_name = "Estudiantes/crearEstudiante.html"
+    success_url = reverse_lazy("calendario")
+    
 class Profesores(ListView):
     template_name = "profesores.html"
     model = Profesor

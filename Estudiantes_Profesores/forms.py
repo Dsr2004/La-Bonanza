@@ -31,7 +31,6 @@ class EstudianteForm(forms.ModelForm):
             "telefono_contactoE": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
             "relacion_contactoE": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
             "nivel": forms.Select(attrs={"class":"form-select"}),
-            
         }
 
 

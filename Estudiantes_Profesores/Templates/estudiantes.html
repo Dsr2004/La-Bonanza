@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block titulo %}Estudiantes{% endblock titulo %}
+
+
+{% block contenido %}
+    <div class="container">
+       <div class="row">
+        <div class="col-md-10">
+            <h1>Administración de Estudiantes</h1>
+        </div>
+        <div class="col-md-2">
+           <a href="{% url 'registartEstudiante' %}" class="btn btn-outline-success btn-lg" > <i class="fa-solid fa-person-circle-plus fa-xl"></i></a>
+           <a href="{% url 'registartEstudiante' %}" class="btn btn-outline-warning btn-lg" >  <i class="fa-solid fa-clock fa-xl"></i></a>
+        </div>
+       </div>
+        <hr>
+        <table id="EstudiantesTable" class="table">
+            <thead>
+                <tr>
+                    <th colspan="4">Datos</th>
+                    <th colspan="3">Acciones</th>
+                </tr>
+               <tr>
+                    <th>#</th>
+                    <th>Nombre</th>
+                    <th>Documento</th>
+                    <th>Celular</th>
+                    <th>Matricula</th>
+                    <th>Nivel</th>
+                    <th></th>
+               </tr>
+            </thead>
+            <tbody>
+                {% for estudiante in estudiantes %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{estudiante.get_estudiante}}</td>
+                        <td>{{estudiante.get_estudiante_documento}}</td>
+                        <td>{{estudiante.get_estudiante}}</td>
+                        <td>{{estudiante.get_estudiante}}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock contenido %}
+    
