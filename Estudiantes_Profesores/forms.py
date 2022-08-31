@@ -7,7 +7,11 @@ class EstudianteForm(forms.ModelForm):
         model = Estudiante
         fields = "__all__"
         widgets = {
-            "fecha_nacimiento":forms.DateTimeInput(),
+            'fecha_nacimiento':forms.DateInput(
+                attrs={
+                    'type':'date',
+                }
+            ),
         }
 
 

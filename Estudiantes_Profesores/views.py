@@ -15,7 +15,7 @@ class Calendario(View):
 class RegistrarEstudiante(CreateView):
     model = Estudiante
     form_class = EstudianteForm
-    template_name = "crearEstudiante.html"
+    template_name = "Estudiantes/crearEstudiante.html"
     success_url = reverse_lazy("calendario")
     
 class Estudiantes(ListView):
