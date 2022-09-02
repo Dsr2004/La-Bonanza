@@ -55,7 +55,9 @@
             {%if request.user.administrador%}
             <li class="nav-item">
               <a class="nav-link 
-              {% if request.path == '/Administracion/Estudiantes/'%}active{% endif %} 
+              {% if request.path == '/Administracion/Estudiantes/'%}active{% endif %}
+              {% if request.path == '/Administracion/RegistarEstudiante/'%}active{% endif %}
+              {% if request.path == '/Administracion/BuscarNuevosEstudiantes/'%}active{% endif %}
               " aria-current="page" href="{%url 'estudiantes'%}">Estudiantes</a>
             </li>
             <li class="nav-item">

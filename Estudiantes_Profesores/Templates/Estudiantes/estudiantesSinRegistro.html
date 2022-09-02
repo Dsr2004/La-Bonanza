@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block titulo %}Estudiantes sin Registro{% endblock titulo %}
+
+
+{% block contenido %}
+<div class="container">
+  <div class="row">
+    <div class="col-10">
+        <h1>Administración de Estudiantes sin Registro</h1>
+    </div>
+    <div class="col-2">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0"> 
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'estudiantes' %}"><i class="fa-solid fa-arrow-left"></i> Volver</a>
+            </li>
+          </ul>
+        
+    </div>
+  </div>
+    <table id="EstudiantesSinRegistroTable" class="table">
+        <thead>
+            <tr>
+                <th colspan="5">Datos</th>
+                <th colspan="1">Acciones</th>
+            </tr>
+           <tr>
+                <th>#</th>
+                <th>Nombre</th>
+                <th>Documento</th>
+                <th>Celular</th>
+                <th>Correo</th>
+                <th>Asignar Horario</th>
+           </tr>
+        </thead>
+        <tbody>
+            {% for estudiante in estudiantes %}
+                <tr>
+                    <td>{{forloop.counter}}</td>
+                    <td>{{estudiante.get_estudiante}}</td>
+                    <td>{{estudiante.documento}}</td>
+                    <td>{{estudiante.celular}}</td>
+                    <td>{{estudiante.email}}</td>
+                    <td><a onclick="EstudianteSinRegistro('{% url 'crearNuevosEstudiantes' estudiante.pk %}')" class="btn btn-outline-info "><i class="fa-solid fa-circle-plus fa-lg"></i></a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="modal fade" id="EstudianteSinRegistroModal" tabindex="-1" aria-hidden="true" role="dialog"></div>
+{% endblock contenido %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function () {
+     $('#EstudiantesSinRegistroTable').DataTable({ responsive:true });
+   });
+</script>
+{% endblock scripts %}

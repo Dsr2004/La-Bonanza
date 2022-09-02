@@ -1,0 +1,44 @@
+<div class="modal-dialog  modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Registro de {{estudiante.get_estudiante}}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="{% url 'crearNuevosEstudiantes' estudiante.pk %}" method="post" id="RegistrarEstudianteForm">
+            {% csrf_token %}
+            <Label><strong>Estudiante:</strong></Label>
+            <h5>{{estudiante.get_estudiante}}</h5>
+            <p id="estudiante" class="bg-light text-danger" style="color: #dc3545;"></p>
+            <br>
+            <Label><strong>Inicio de clases: <sup style="color: #dc3545;">(*)</sup></strong></Label>
+            {{form.inicioClase}}
+            <p id="estudiante" class="bg-light text-danger" style="color: #dc3545;"></p>
+            <br>
+            <Label><strong>Fin de clases: <sup style="color: #dc3545;">(*)</sup></strong></Label>
+            {{form.finClase}}
+            <p id="estudiante" class="bg-light text-danger" style="color: #dc3545;"></p>
+            <br>
+            <Label><strong>Hora de la clase: <sup style="color: #dc3545;">(*)</sup></strong></Label>
+            {{form.horaClase}}
+            <p id="estudiante" class="bg-light text-danger" style="color: #dc3545;"></p>
+            <br>
+            <Label><strong>Dia de la clase: <sup style="color: #dc3545;">(*)</sup></strong></Label>
+            {{form.diaClase}}
+            <p id="diaClase" class="bg-light text-danger" style="color: #dc3545;"></p>
+            <br>
+            <div class="form-check">
+              <Label class="form-check-label"><strong>Matrícula pagada: <sup style="color: #dc3545;">(*)</sup></strong></Label>
+              {{form.pagado}}
+             </div>
+              <p id="pagado" class="bg-light text-danger" style="color: #dc3545;"></p>
+              <br>
+            <input type="hidden" name="estudiante" value="{{estudiante.pk}}">
+            <button type="submit"  class="btn btn-success w-100">Registrar Estudiante </button>
+        </form>
+      </div>
+      <div class="modal-footer">
+            <button type="button" class="btn btn-danger w-100" data-bs-dismiss="modal">Cancelar</button>
+      </div>
+    </div>
+</div>

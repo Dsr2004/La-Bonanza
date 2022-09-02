@@ -1,15 +1,50 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block titulo %}Crear Estudiante{% endblock titulo %}
-
-
+{% block estilos %}
+<style>
+    input{border: 1px solid #dadce0;border-radius: 4px;box-shadow: 0 0 0 transparent;font-size: 16px;line-height: 17px;outline: transparent;padding: 11px 16px;transition: border .3s, box-shadow .3s;width: 100%;}
+    select{border: 1px solid #dadce0;border-radius: 4px;box-shadow: 0 0 0 transparent;font-size: 17px;line-height: 24px;outline: transparent;padding: 11px 16px;transition: border .3s, box-shadow .3s;width: 100%;}
+    .formulario{display: grid;grid-template-columns:repeat(2, 1fr);grid-gap:30px;}
+    .checkbox{display: grid;grid-template-columns: 80% 20%;}
+    @media (max-width: 700px) {.formulario{display: grid;grid-template-columns:repeat(1, 1fr);grid-gap:30px;}}
+</style>{% endblock estilos %}
 {% block contenido %}
-    <div class="container-fluid">
-        <form action="{% url 'registartEstudiante' %}" method="post">
+<div class="container-fluid">
+    <form action="{% url 'registrarEstudiante' %}" method="post">
+        <h1>Registro Estudiante</h1>
+        <br>
+        <div class="formulario">
             {% csrf_token %}
-            {{form.as_p}}
-            <button type="submit" class="btn btn-success">Enviar</button>
-        </form>
-    </div>
+            {%for campo in form %}
+            <div>
+                <label for="" style="font-weight: 500;">{{campo.label}}:</label>
+                <br>{{campo}}<br>
+                <p id="" style="display: none;"></p>
+            </div>
+            {%endfor%}
+            <script>
+                let campos = document.querySelectorAll("input");
+                let selects = document.querySelectorAll("select");
+                selects.forEach(function(select) {
+                    select.setAttribute("class", "form-control");
+                });
+                campos.forEach(function(campo) {
+                    campo.setAttribute("class", "form-control");
+                    if (campo.getAttribute('type')=="checkbox") {
+                        campo.classList.remove("form-control");
+                        campo.previousSibling.remove();
+                        campo.parentNode.classList.add("checkbox");
+                        campo.parentNode.childNodes[1].style.marginTop = "5px"
+                        campo.style.height = "32px";
+                    }
+                }); 
+            </script>
+        </div>
+        <hr>
+        <button type="submit" class="btn btn-success w-100" style="float: right">Enviar</button>
+        <br><br><br>
+    </form>
+</div>
 {% endblock contenido %}
     

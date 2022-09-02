@@ -1,6 +1,11 @@
 from pyexpat import model
 from django.db import models
 
+DIAS_SEMANA = (
+    ("1","Lunes"),("2","Martes"),("3","Miércoles"),("4","Jueves"),("5","Viernes"),("6","Sábado"),("7","Domingo")
+)
+
+
 class Nivel(models.Model):
     nivel = models.CharField(max_length = 150, unique=True, null=False, blank=False)
     color_fondo = models.CharField("color de fondo", null=False, blank=False,max_length = 30)
@@ -44,6 +49,11 @@ class Estudiante(models.Model):
     def __str__(self):
         return self.nombre_completo
 
+    @property
+    def get_estudiante(self):
+        estudiante = self.nombre_completo.capitalize()
+        return estudiante
+
     
 # fecha_inscripcion = models.DateField(auto_now_add=True) to created
 
@@ -82,6 +92,7 @@ class Registro(models.Model):
     inicioClase = models.DateField()
     finClase = models.DateField()
     horaClase = models.TimeField()
+    diaClase = models.CharField(max_length=10, choices=DIAS_SEMANA)
    
 
     class Meta:

@@ -38,3 +38,11 @@ class RegistroForm(forms.ModelForm):
     class Meta:
         model = Registro
         fields = "__all__"
+
+        widgets = {
+            "pagado": forms.CheckboxInput(attrs={"class":"form-check-input", "autocomplete":"off"}),
+            "inicioClase": forms.DateInput(attrs={"type":"date", "class":"form-control", "autocomplete":"off"}),
+            "finClase": forms.DateInput(attrs={"type":"date", "class":"form-control", "autocomplete":"off"}),
+            "horaClase": forms.TimeInput(attrs={"type":"time", "class":"form-control", "autocomplete":"off"}),
+            "diaClase": forms.Select(attrs={"class":"form-select"}),
+        }
