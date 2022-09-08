@@ -1,5 +1,6 @@
 from pyexpat import model
 from django.db import models
+from Usuarios.models import Usuario
 
 DIAS_SEMANA = (
     ("1","Lunes"),("2","Martes"),("3","Miércoles"),("4","Jueves"),("5","Viernes"),("6","Sábado"),("7","Domingo")
@@ -58,11 +59,8 @@ class Estudiante(models.Model):
 # fecha_inscripcion = models.DateField(auto_now_add=True) to created
 
 class Profesor(models.Model):
-    id = models.CharField(primary_key=True, unique=True, max_length=5)
-    nombre = models.CharField("nombre del profesor",max_length = 150)
-    cedula = models.CharField("cedula del profesor",max_length = 150)
-    fecha_nacimiento = models.DateField("fecha de nacimiento del profesor",auto_now=False, auto_now_add=False)
-    telefono = models.CharField("telefono del profesor", max_length = 10)
+    id = models.CharField(primary_key=True, unique=True, max_length=5) 
+    usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE)
     horarios = models.CharField("horarios del profesor", max_length=300) # "[{09:00: 18:00},...]"
     niveles = models.ManyToManyField(Nivel)   
     trabaja_sabado = models.BooleanField("el profesor trabaja los sabados", default=False)
@@ -73,7 +71,6 @@ class Profesor(models.Model):
     def __str__(self):
         return self.nombre
 
-        
 
 class Establo(models.Model):
     estudiantes = models.ManyToManyField(Estudiante)
