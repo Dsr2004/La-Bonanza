@@ -20,3 +20,8 @@
 .buttonSweetalert{
     margin-left: 20px !important;
 }
+.filtroTipoUsuario{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}

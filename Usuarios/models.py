@@ -7,7 +7,7 @@ from  django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 
 class UsuarioManager(BaseUserManager):
-    def create_user(self,usuario,nombres,apellidos,celular,email,password=None):
+    def create_user(self,usuario,nombres,apellidos,celular,email,cedula,fecha_nacimiento,password=None):
         if  not email:
             raise ValueError('El usuario debe tener un correo electronico!')
         usuario = self.model(
@@ -15,14 +15,16 @@ class UsuarioManager(BaseUserManager):
             nombres = nombres, 
             apellidos = apellidos,
             celular = celular, 
-            email = self.normalize_email(email), 
+            email = self.normalize_email(email),
+            cedula = cedula,
+            fecha_nacimiento = fecha_nacimiento 
             )
         usuario.set_password(password)
         usuario.save()
         return usuario
 
 
-    def create_superuser(self,usuario,nombres,apellidos,celular,email,password=None):
+    def create_superuser(self,usuario,nombres,apellidos,celular,email,cedula,fecha_nacimiento,password=None):
         if  not email:
             raise ValueError('El usuario debe tener un correo electronico!')
         usuario = self.model(
@@ -30,7 +32,10 @@ class UsuarioManager(BaseUserManager):
             nombres = nombres, 
             apellidos = apellidos,
             celular = celular, 
-            email = self.normalize_email(email), 
+            email = self.normalize_email(email),
+            cedula = cedula,
+            fecha_nacimiento = fecha_nacimiento
+
             )
         usuario.set_password(password)
         usuario.administrador = True
@@ -39,9 +44,11 @@ class UsuarioManager(BaseUserManager):
 
 class Usuario(AbstractBaseUser):
     usuario = models.CharField("Usuario", unique=True, max_length=15)
-    nombres  = models.CharField("Nombre de usuario", blank=False, null=False, max_length=15)
+    nombres  = models.CharField("Nombres del usuario", blank=False, null=False, max_length=15)
     celular = models.CharField("Celular del usuario", blank=False, null=False, max_length=10)
-    apellidos = models.CharField("Apellido de usuario", blank=False, null=False, max_length=25)
+    apellidos = models.CharField("Apellidos de usuario", blank=False, null=False, max_length=25)
+    cedula = models.CharField("Cedula", blank=False, null=False, max_length=25)
+    fecha_nacimiento = models.DateField("Fecha de nacimiento",auto_now=False, auto_now_add=False)
     email = models.EmailField('Correo Electrónico', unique=True)
     estado = models.BooleanField("Estado del usuario", default=True)
     administrador = models.BooleanField(default=False)
@@ -49,7 +56,7 @@ class Usuario(AbstractBaseUser):
 
 
     USERNAME_FIELD='usuario' 
-    REQUIRED_FIELDS=["nombres", "apellidos","celular","email"]
+    REQUIRED_FIELDS=["nombres", "apellidos","celular","email","cedula","fecha_nacimiento"]
 
     class Meta:
         db_table = "usuarios"

@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block titulo %}Inicio{% endblock titulo %}
-
+{%block estilos%}
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+{%endblock estilos%}
 {% block contenido %}
 <div class="container">
     <div class="row">
@@ -9,35 +11,65 @@
          <h1>Administración de Usuarios</h1>
      </div>
      <div class="col-md-2">
-        <a href="{% url 'registrarEstudiante' %}" class="btn btn-outline-success btn-lg" > <i class="fa-solid fa-person-circle-plus fa-xl"></i></a>
-       
-       {% if nuevosEstudiantes %}
-       <a href="{% url 'buscarNuevosEstudiantes' %}" class="btn btn-outline-warning btn-lg" >  <i class="fa-solid fa-clock fa-xl"></i></a>
-       {% endif %}
-         
+        <a href="" class="btn btn-outline-success btn-lg" > <i class="fa-solid fa-person-circle-plus fa-xl"></i></a>
      </div>
     </div>
      <hr>
-     <div class="filtroTipoUsuario">Mostrando Usuarios</div>
+     <div class="filtroTipoUsuario">
+        <div>Mostrando Usuarios</div>
+        <select name="filterType" id="" class="form-select" onchange="filter(this.value)"style="width:auto;">
+            <option value="{{filter.value}}" selected="selected">{{filter.cont}}</option>
+            {%if filter.value != 'P'%}
+            <option value="P">Profesores</option>
+            {%endif%}
+            {%if filter.value != 'A'%}
+            <option value="A">Administradores</option>
+            {%endif%}
+            {%if filter.value != 'All'%}
+            <option value="All">Todos</option>
+            {%endif%}
+        </select>
+    </div>
+     <br>
      <table id="UsuariosTable" class="table" width="100%">
          <thead>
             <tr>
-                 <th>Usuario</th>
-                 <th>Nombres</th>
-                 <th>Apellidos</th>
-                 <th>Celular</th>
-                 <th>Email</th>
-                 <th>Estado</th>
-                 <th>Editar</th>
+                <th>Tipo</th>
+                <th>Usuario</th>
+                <th>Nombres</th>
+                <th>Apellidos</th>
+                <th>Celular</th>
+                <th>Cedula</th>
+                <th>Fecha de nacimiento</th>
+                <th>Email</th>
+                <th>Estado</th>
+                <th>Editar</th>
             </tr>
          </thead>
          <tbody>
              {% for usuario in Usuarios %}
                  <tr>
+                    <td>
+                        <div id="UserType{{forloop.counter}}" style="width: 100%; text-align: center; color:#fff;"></div>
+                        {%if usuario.administrador%}
+                        <script>
+                            let div{{forloop.counter}} = document.getElementById('UserType{{forloop.counter}}');
+                            div{{forloop.counter}}.innerHTML="<strong>A</strong>";
+                            div{{forloop.counter}}.style.backgroundColor="red";
+                        </script>
+                        {%else%}
+                        <script>
+                            let div{{forloop.counter}} = document.getElementById('UserType{{forloop.counter}}');
+                            div{{forloop.counter}}.innerHTML="<strong>P</strong>";
+                            div{{forloop.counter}}.style.backgroundColor="green";
+                        </script>
+                        {%endif%}</td>
                      <td>{{usuario.usuario}}</td>
                      <td>{{usuario.nombres}}</td>
                      <td>{{usuario.apellidos}}</td>
                      <td>{{usuario.celular}}</td>
+                     <td>{{usuario.cedula}}</td>                     
+                     <td>{{usuario.fecha_nacimiento}}</td>
                      <td>{{usuario.email}}</td>
                      <td>{{usuario.estado}}</td>
                      <td>acciones</td>
@@ -53,5 +85,12 @@
     $(document).ready(function(){
         $("#UsuariosTable").DataTable({responsive:true})
     })
+    function filter(valor){
+        $.ajax({
+            url:'{%url "index"%}',
+            data:valor,
+            method: "POST",
+        })
+    }
 </script>
 {% endblock scripts %}

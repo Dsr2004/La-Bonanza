@@ -20,17 +20,19 @@ from django.conf.urls.static import static
 from django.contrib.auth.views import LogoutView
 from django.contrib.auth.decorators import login_required
 from Usuarios.views import Login
-from .views import index
+from .views import index, pos
+
 
 # formato = inicialminusculaElrestoMayuscula   crearUsuario ->solo para los names
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", index, name="index"),
+    path("", index.as_view(), name="index"),
     path("Login/", Login.as_view(), name="login"),
     path("Logout/", LogoutView.as_view(),{'next_page': settings.LOGOUT_REDIRECT_URL}, name="logout"),
     path("Usuarios/", include("Usuarios.urls")),
     path("Administracion/", include("Estudiantes_Profesores.urls")),
+    path("pos/", pos)
 ]
 
 if settings.DEBUG:

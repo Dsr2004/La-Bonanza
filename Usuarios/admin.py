@@ -3,6 +3,6 @@ from .models import Usuario
 
 # Register your models here.
 
-admin.register(Usuario)
+admin.site.register(Usuario)
 
 
