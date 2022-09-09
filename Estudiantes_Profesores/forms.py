@@ -44,5 +44,5 @@ class RegistroForm(forms.ModelForm):
             "inicioClase": forms.DateInput(attrs={"type":"date", "class":"form-control", "autocomplete":"off"}),
             "finClase": forms.DateInput(attrs={"type":"date", "class":"form-control", "autocomplete":"off"}),
             "horaClase": forms.TimeInput(attrs={"type":"time", "class":"form-control", "autocomplete":"off"}),
-            "diaClase": forms.Select(attrs={"class":"form-select"}),
+            "diaClase": forms.SelectMultiple(attrs={"class":"form-select"}),
         }

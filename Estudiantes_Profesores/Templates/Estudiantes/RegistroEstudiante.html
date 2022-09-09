@@ -1,44 +1,75 @@
-<div class="modal-dialog  modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Registro de {{estudiante.get_estudiante}}</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form action="{% url 'crearNuevosEstudiantes' estudiante.pk %}" method="post" id="RegistrarEstudianteForm">
-            {% csrf_token %}
-            <Label><strong>Estudiante:</strong></Label>
-            <h5>{{estudiante.get_estudiante}}</h5>
-            <p id="estudiante" class="bg-light text-danger" style="color: #dc3545;"></p>
-            <br>
-            <Label><strong>Inicio de clases: <sup style="color: #dc3545;">(*)</sup></strong></Label>
-            {{form.inicioClase}}
-            <p id="estudiante" class="bg-light text-danger" style="color: #dc3545;"></p>
-            <br>
-            <Label><strong>Fin de clases: <sup style="color: #dc3545;">(*)</sup></strong></Label>
-            {{form.finClase}}
-            <p id="estudiante" class="bg-light text-danger" style="color: #dc3545;"></p>
-            <br>
-            <Label><strong>Hora de la clase: <sup style="color: #dc3545;">(*)</sup></strong></Label>
-            {{form.horaClase}}
-            <p id="estudiante" class="bg-light text-danger" style="color: #dc3545;"></p>
-            <br>
-            <Label><strong>Dia de la clase: <sup style="color: #dc3545;">(*)</sup></strong></Label>
-            {{form.diaClase}}
-            <p id="diaClase" class="bg-light text-danger" style="color: #dc3545;"></p>
-            <br>
-            <div class="form-check">
-              <Label class="form-check-label"><strong>Matrícula pagada: <sup style="color: #dc3545;">(*)</sup></strong></Label>
-              {{form.pagado}}
-             </div>
-              <p id="pagado" class="bg-light text-danger" style="color: #dc3545;"></p>
-              <br>
-            <input type="hidden" name="estudiante" value="{{estudiante.pk}}">
-            <button type="submit"  class="btn btn-success w-100">Registrar Estudiante </button>
-        </form>
-      </div>
-      <div class="modal-footer">
-            <button type="button" class="btn btn-danger w-100" data-bs-dismiss="modal">Cancelar</button>
-      </div>
+<div class="modal-dialog modal-lg">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="staticBackdropLabel">Registro de {{estudiante.get_estudiante}}</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
+    <div class="modal-body" style="height: 80vh; overflow: auto;">
+      <form action="{% url 'crearNuevosEstudiantes' estudiante.pk %}" method="post" id="RegistrarEstudianteForm">
+        {% csrf_token %}
+        <Label><strong>Estudiante:</strong></Label>
+        <h5>{{estudiante.get_estudiante}}</h5>
+        <p id="estudiante" class="bg-light text-danger" style="color: #dc3545;"></p>
+        <br>
+        <Label><strong>Inicio de clases: <sup style="color: #dc3545;">(*)</sup></strong></Label>
+        {{form.inicioClase}}
+        <p id="estudiante" class="bg-light text-danger" style="color: #dc3545;"></p>
+        <br>
+        <Label><strong>Fin de clases: <sup style="color: #dc3545;">(*)</sup></strong></Label>
+        {{form.finClase}}
+        <p id="estudiante" class="bg-light text-danger" style="color: #dc3545;"></p>
+        <br>
+        <Label><strong>Hora de la clase: <sup style="color: #dc3545;">(*)</sup></strong></Label>
+        {{form.horaClase}}
+        <p id="estudiante" class="bg-light text-danger" style="color: #dc3545;"></p>
+        <br>
+        <Label><strong>Dia de la clase: <sup style="color: #dc3545;">(*)</sup></strong></Label>
+        {{form.diaClase}}
+        <p id="diaClase" class="bg-light text-danger" style="color: #dc3545;"></p>
+        <br>
+        <div class="form-check">
+          <Label class="form-check-label"><strong>Matrícula pagada: <sup style="color: #dc3545;">(*)</sup></strong></Label>
+          {{form.pagado}}
+         </div>
+          <p id="pagado" class="bg-light text-danger" style="color: #dc3545;"></p>
+          <br>
+        <input type="hidden" name="estudiante" value="{{estudiante.pk}}">
+        <button type="submit"  class="btn btn-success w-100">Registrar Estudiante </button>
+    </form>
+      <hr>
+      <div class="container alert alert-warning  alert-dismissible fade show" role="alert" id="EstudianteSinRegistrAlert">
+        <h5 id="texto"></h5>
+ </div>
+    </div>
+  </div>
 </div>
+
+<script>
+  $(document).ready(function () {
+   $("#EstudianteSinRegistrAlert").hide()   
+   $("#id_diaClase").change(function(){
+    token = $("input[name=csrfmiddlewaretoken]").val()
+        $.ajax({
+          url: "{%url 'validarRegistroEstudiante'%}",
+          type: "POST",
+          data: {"csrfmiddlewaretoken": token, "dia":$(this).val(), "estudiante":"{{estudiante.pk}}"},
+          success: function(data){
+            if(data["cant"]>1){
+              var estudiante = "Estudiantes"
+            }else{
+              var estudiante = "Estudiante"
+            }
+            var text = "Hay <strong>"+data["cant"]+"</strong> "+estudiante+" en el nivel "+data["nivel"]+" el día "+$("#id_diaClase option:selected").text()
+            console.log(text)
+            $("#texto").html(text)
+            $("#EstudianteSinRegistrAlert").show()  
+          },
+          error: function(error){
+            console.log("kiwi")
+          }
+        })
+
+   
+   })
+ });
+</script>

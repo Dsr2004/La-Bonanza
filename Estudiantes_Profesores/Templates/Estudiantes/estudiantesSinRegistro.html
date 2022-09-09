@@ -46,13 +46,19 @@
         </tbody>
     </table>
 </div>
-<div class="modal fade" id="EstudianteSinRegistroModal" tabindex="-1" aria-hidden="true" role="dialog"></div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="EstudianteSinRegistroModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    
+  </div>
 {% endblock contenido %}
 
 {% block scripts %}
 <script>
     $(document).ready(function () {
      $('#EstudiantesSinRegistroTable').DataTable({ responsive:true });
+     $("#EstudianteSinRegistrAlert").hide()   
+    
    });
 </script>
 {% endblock scripts %}
