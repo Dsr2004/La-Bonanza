@@ -79,6 +79,13 @@ class VerInfoEstudiante(DetailView):
         contexto["registro"] = registro
         return contexto
 
+class ModificarEstudiante(UpdateView):
+    model = Estudiante
+    form_class = EstudianteForm
+    template_name = "Estudiantes/editarInfoEstudiante.html"
+    success_url = reverse_lazy("estudiantes")
+
+
 
 class Profesores(ListView):
     template_name = "profesores.html"

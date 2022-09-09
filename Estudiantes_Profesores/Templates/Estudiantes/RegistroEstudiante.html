@@ -49,10 +49,13 @@
    $("#EstudianteSinRegistrAlert").hide()   
    $("#id_diaClase").change(function(){
     token = $("input[name=csrfmiddlewaretoken]").val()
+    console.log($(this).val())
+    dias = JSON.stringify($(this).val())
+    console.log(dias)
         $.ajax({
           url: "{%url 'validarRegistroEstudiante'%}",
           type: "POST",
-          data: {"csrfmiddlewaretoken": token, "dia":$(this).val(), "estudiante":"{{estudiante.pk}}"},
+          data: {"csrfmiddlewaretoken": token, "dia":dias, "estudiante":"{{estudiante.pk}}"},
           success: function(data){
             if(data["cant"]>1){
               var estudiante = "Estudiantes"
