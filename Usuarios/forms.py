@@ -56,3 +56,17 @@ class CambiarContrasena(forms.ModelForm):
         if commit:
             user.save()
         return user
+
+class UsuarioForm(forms.ModelForm):
+    class Meta(forms.ModelForm):
+        model = Usuario
+        fields = ['usuario','nombres','celular','apellidos','cedula','fecha_nacimiento','email']
+        widgets = {
+            "usuario": forms.TextInput(attrs={"class":"form-check-input", "autocomplete":"off"}),
+            "nombres": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
+            "celular": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
+            "cedula": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
+            "fecha_nacimiento": forms.DateInput(attrs={"type":"date", "class":"form-control", "autocomplete":"off"}),
+            "email": forms.EmailInput(attrs={"class":"form-control", "autocomplete":"off"}),
+            "apellidos": forms.DateInput(attrs={"class":"form-control", "autocomplete":"off"}),
+        }   

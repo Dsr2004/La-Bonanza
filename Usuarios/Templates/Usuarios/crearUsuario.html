@@ -1,0 +1,89 @@
+<style>.checkbox{float: right; margin-top: 5px; width: 15px;}</style>
+<div class="modal-dialog modal-lg " id="ModalUserAddDiv">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title ModalUserAddTitle" id="staticBackdropLabel titleModalUserAdd">Registro de {{forms.title}}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="height: 80vh; overflow: auto;">
+        <div>
+            <select name="filterType" id="filterTypeSelect modal" class="form-select" onchange="filterModal(this.value)"style="width:auto;">
+                <option value="{{forms.filter.value}}" selected="selected" id="SelectedType">{{forms.filter.cont}}</option>{{forms.filter.cont}}</option>
+                {%if forms.filter.value == 'P'%}
+                <option value="A">Administradores</option>
+                <option value="P" style="display: none;">Profesores</option>
+                {%endif%}
+                {%if forms.filter.value == 'A'%}
+                <option value="P">Profesores</option>
+                <option value="A" style="display: none;">Administradores</option>
+                {{forms.filter.value}}
+                {%endif%}
+            </select>
+            <br>
+            <form action='{%url "registroUsuario"%}' method="post" id="filterTypeFormModal">{%csrf_token%}<input type="hidden" name="function" value="filtrar"></form>
+        </div>
+        <form action="" method="post" id="RegistrarEstudianteForm">
+            <div id="FormularioUsuarios">
+                {%for campo in forms.formUsuario %}
+                <div>
+                    <label for="" style="font-weight: 500;">{{campo.label}}:</label>
+                    <br>{{campo}}<br>
+                    <p id="" style="display: none;"></p>
+                </div>
+                {%endfor%}
+            </div>
+            <div id="FormularioProfesores" style="{%if forms.filter.value == 'A'%}display:none;{%endif%}">
+                {%for campo in forms.formProfesor %}
+                <div>
+                    <label for="" style="font-weight: 500;">{{campo.label}}:</label>
+                    <br>{{campo}}<br>
+                    <p id="" style="display: none;"></p>
+                </div>
+                {%endfor%}
+            </div>
+      </form>
+      </div>
+    </div>
+  </div>
+  <script>
+    let documento = document.getElementById('ModalUserAddDiv');
+    let campos = documento.querySelectorAll("input");
+    let selects = documento.querySelectorAll("select");
+    selects.forEach(function(select) {
+        select.setAttribute("class", "form-select");
+    });
+    campos.forEach(function(campo) {
+        campo.setAttribute("class", "form-control");
+        if (campo.getAttribute('type')=="checkbox") {
+            campo.classList.remove("form-control");
+            campo.previousSibling.remove();
+            campo.classList.add("checkbox");
+        }
+    }); 
+    function filterModal(valor){
+        $.ajax({
+            url:$('#filterTypeFormModal').attr('action'),
+            data:{
+                'type':valor,
+                'csrfmiddlewaretoken':$("#filterTypeFormModal").find('input[name=csrfmiddlewaretoken]').val(),
+                'function':$("#filterTypeFormModal").find('input[name=function]').val(),
+            },
+            type: $("#filterTypeFormModal").attr('method'),
+            success: function (data) {
+                let title = document.getElementById('staticBackdropLabel titleModalUserAdd');
+                console.log(title.innerHTML = "Registro de "+data.datos.title)
+                let formPer = document.getElementById('FormularioProfesores');
+                let payload = []
+                if(data.datos.filter.value == 'A'){
+                    formPer.style.display = 'none';
+                    let inputs
+                    payload.push({'name':})
+                }
+                else{
+                    formPer.style.display = 'block';
+                }
+            }
+        });
+    }
+    
+  </script>

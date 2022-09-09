@@ -1,3 +1,4 @@
+from pickle import FALSE
 from django.shortcuts import render
 from Usuarios.models import Usuario
 from Estudiantes_Profesores.models import Profesor
@@ -16,9 +17,21 @@ class index(TemplateView):
     @method_decorator(csrf_exempt, name='dispatch')
     def post(self, request, *args, **kwargs):
         filter = {"value":"","cont":''}
-        print(request.POST)
+        filter['value']=request.POST.get('value')
+        cont = ''
+        usuarios = ''
+        if filter['value']=='All':
+            cont = 'Todos'
+            usuarios = Usuario.objects.exclude(pk = request.user.pk)
+        if filter['value']=='P':
+            cont = 'Profesores'
+            usuarios = Usuario.objects.exclude(pk = request.user.pk).filter(administrador = False)
+        if filter['value']=='A':
+            cont = 'Administradores'
+            usuarios = Usuario.objects.exclude(pk = request.user.pk).filter(administrador = True)
+        filter['cont']=cont
         Usuarios =  {
-            'Usuarios':Usuario.objects.exclude(pk = request.user.pk),
+            'Usuarios':usuarios,
             'filter':filter
         }
         return render(request, "index.html", Usuarios)

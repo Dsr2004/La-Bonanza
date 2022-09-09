@@ -1,6 +1,6 @@
 from tkinter import Widget
 from django import forms
-from .models import Estudiante, Registro
+from .models import Estudiante, Registro, Profesor
 
 class EstudianteForm(forms.ModelForm):
     class Meta:
@@ -44,5 +44,15 @@ class RegistroForm(forms.ModelForm):
             "inicioClase": forms.DateInput(attrs={"type":"date", "class":"form-control", "autocomplete":"off"}),
             "finClase": forms.DateInput(attrs={"type":"date", "class":"form-control", "autocomplete":"off"}),
             "horaClase": forms.TimeInput(attrs={"type":"time", "class":"form-control", "autocomplete":"off"}),
-            "diaClase": forms.Select(attrs={"class":"form-select"}),
+            "diaClase": forms.SelectMultiple(attrs={"class":"form-select"}),
+        }
+        
+class ProfesorForm(forms.ModelForm):
+    class Meta(forms.ModelForm):
+        model = Profesor
+        fields = ['horarios','niveles','trabaja_sabado']
+        widgets = {
+            "horarios": forms.TextInput(attrs={"class":"form-check-input", "autocomplete":"off"}),
+            "niveles": forms.SelectMultiple(attrs={"class":"form-control", "autocomplete":"off"}),
+            "trabaja_sabado": forms.CheckboxInput(attrs={"class":"form-control", "autocomplete":"off"}),
         }

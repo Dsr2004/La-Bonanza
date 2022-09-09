@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect
 from django.views.generic import ListView, CreateView, UpdateView, DetailView, TemplateView
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import login, logout, authenticate
-from .forms import LoginForm, CambiarContrasena
+from .forms import LoginForm, CambiarContrasena, UsuarioForm
+from Estudiantes_Profesores.forms import ProfesorForm
 from .models import Usuario
 import json
 from django.http import HttpResponse, JsonResponse
@@ -77,7 +78,42 @@ class CambiarContrasena(TemplateView):
             data = json.dumps({'error': 'Las contraseñas no coinciden'})
             return HttpResponse(data, content_type="application/json", status=400)
         
-
+class RegistroUsuario(TemplateView):
+    def get(self, request, *args, **kwargs):
+        tipo = request.GET.get('type')
+        data={'formUsuario':UsuarioForm, 'formProfesor':ProfesorForm,'title':'profesor'}
+        filter = {"value":"","cont":''}
+        filter['value']=request.GET.get('type')
+        cont = ''
+        if filter['value']=='P' or filter['value']=='All':
+            cont = 'Profesores'
+        if filter['value']=='A':
+            cont = 'Administradores'
+        filter['cont']=cont
+        data['filter']=filter
+        return render(request, 'Usuarios/crearUsuario.html', {'forms':data})
+    
+    def post(self, request, *args, **kwargs):
+        if request.POST.get('function') == 'filtrar':
+            tipo = request.POST.get('type')
+            filter = {"value":"","cont":''}
+            cont = ''
+            filter['value']=tipo
+            if tipo == 'All' or tipo=='P':
+                print(tipo)
+                cont = 'Profesores'
+                data={'title':'profesor'}
+            else:
+                data={'title':'administrador'}
+                cont = 'Administradores'
+            filter['cont']=cont
+            data['filter']=filter
+            print(data)
+            return JsonResponse({"datos":data})
+        # return JsonResponse({"success":"Succes"})
+        # data = json.dumps({'error': 'Las contraseñas no coinciden'})
+        # return HttpResponse(data, content_type="application/json", status=400)
+         
 
 
 

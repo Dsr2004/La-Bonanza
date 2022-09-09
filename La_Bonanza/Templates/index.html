@@ -11,24 +11,36 @@
          <h1>Administración de Usuarios</h1>
      </div>
      <div class="col-md-2">
-        <a href="" class="btn btn-outline-success btn-lg" > <i class="fa-solid fa-person-circle-plus fa-xl"></i></a>
+        <div class="btn btn-outline-success btn-lg" onclick="userAdd('{%url 'registroUsuario'%}')"> <i class="fa-solid fa-user-plus fa-xl"></i></div>
      </div>
     </div>
      <hr>
      <div class="filtroTipoUsuario">
-        <div>Mostrando Usuarios</div>
-        <select name="filterType" id="" class="form-select" onchange="filter(this.value)"style="width:auto;">
-            <option value="{{filter.value}}" selected="selected">{{filter.cont}}</option>
-            {%if filter.value != 'P'%}
-            <option value="P">Profesores</option>
+        <div>Mostrando 
+            {%if filter.value == 'P'%}
+            profesores
             {%endif%}
-            {%if filter.value != 'A'%}
-            <option value="A">Administradores</option>
+            {%if filter.value == 'A'%}
+            administradores
             {%endif%}
-            {%if filter.value != 'All'%}
-            <option value="All">Todos</option>
-            {%endif%}
-        </select>
+            {%if filter.value == 'All'%}
+            todos los usuarios
+            {%endif%}</div>
+        <div>
+            <select name="filterType" id="filterTypeSelect" class="form-select" onchange="filter(this.value)"style="width:auto;">
+                <option value="{{filter.value}}" selected="selected">{{filter.cont}}</option>
+                {%if filter.value != 'P'%}
+                <option value="P">Profesores</option>
+                {%endif%}
+                {%if filter.value != 'A'%}
+                <option value="A">Administradores</option>
+                {%endif%}
+                {%if filter.value != 'All'%}
+                <option value="All">Todos</option>
+                {%endif%}
+            </select>
+            <form action='{%url "index"%}' method="post" id="filterTypeForm"><input type="hidden" name="value" id="filterType">{%csrf_token%}</form>
+        </div>
     </div>
      <br>
      <table id="UsuariosTable" class="table" width="100%">
@@ -50,7 +62,7 @@
              {% for usuario in Usuarios %}
                  <tr>
                     <td>
-                        <div id="UserType{{forloop.counter}}" style="width: 100%; text-align: center; color:#fff;"></div>
+                        <div id="UserType{{forloop.counter}}" style="width: 100%; text-align: center; color:#fff; border:1px solid rgba(0,0,0,0.5);"></div>
                         {%if usuario.administrador%}
                         <script>
                             let div{{forloop.counter}} = document.getElementById('UserType{{forloop.counter}}');
@@ -78,19 +90,27 @@
          </tbody>
      </table>
  </div>
+
 {% endblock contenido %}
-    
+{% block modals %}
+<div class="modal fade" id="registrarUsuario" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+</div>
+{% endblock modals %}
 {% block scripts %}
 <script>
     $(document).ready(function(){
         $("#UsuariosTable").DataTable({responsive:true})
     })
     function filter(valor){
-        $.ajax({
-            url:'{%url "index"%}',
-            data:valor,
-            method: "POST",
-        })
+        document.getElementById("filterType").value=valor
+        document.getElementById('filterTypeForm').submit()
+    }
+    function userAdd(url){
+        let valor = document.getElementById('filterTypeSelect').value
+        url = url+"?type="+valor
+        $("#registrarUsuario").load(url, function (){ 
+        $(this).appendTo("body").modal('show');
+        });
     }
 </script>
 {% endblock scripts %}
