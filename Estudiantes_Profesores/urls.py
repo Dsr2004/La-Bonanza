@@ -13,4 +13,6 @@ urlpatterns=[
     path("ValidarRegistroEstudiante/", ValidarRegistroEstudiante.as_view(), name="validarRegistroEstudiante"),
     path("VerInfoEstudiante/<int:pk>", VerInfoEstudiante.as_view(), name="verInfoEstudiante"),
     path("ModificarEstudiante/<int:pk>", ModificarEstudiante.as_view(), name="modificarEstudiante"),
+    path("ModificarRegistroEstudiante/<int:pk>", ModificarRegistroEstudiante.as_view(), name="modificarRegistroEstudiante"),
+    path("CambiarEstadoEstudiante/", CambiarEstadoEstudiante.as_view(), name="cambiarEstadoEstudiante"),
 ]

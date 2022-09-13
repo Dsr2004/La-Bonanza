@@ -1,6 +1,6 @@
 from tkinter import Widget
 from django import forms
-from .models import Estudiante, Registro
+from .models import Estudiante, Registro, Profesor
 
 class EstudianteForm(forms.ModelForm):
     class Meta:
@@ -12,7 +12,7 @@ class EstudianteForm(forms.ModelForm):
 
         widgets = {
             "nombre_completo": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
-            "fecha_nacimiento":forms.DateInput(attrs={'type':'date', "class":"form-control", "autocomplete":"off"}),
+            "fecha_nacimiento":forms.DateInput(attrs={"class":"form-control", "autocomplete":"off"}),
             "documento": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
             "celular": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
             "telefono": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
@@ -33,6 +33,8 @@ class EstudianteForm(forms.ModelForm):
             "nivel": forms.Select(attrs={"class":"form-select"}),
         }
 
+        
+
 
 class RegistroForm(forms.ModelForm):
     class Meta:
@@ -41,8 +43,18 @@ class RegistroForm(forms.ModelForm):
 
         widgets = {
             "pagado": forms.CheckboxInput(attrs={"class":"form-check-input", "autocomplete":"off"}),
-            "inicioClase": forms.DateInput(attrs={"type":"date", "class":"form-control", "autocomplete":"off"}),
-            "finClase": forms.DateInput(attrs={"type":"date", "class":"form-control", "autocomplete":"off"}),
+            "inicioClase": forms.DateInput(attrs={"class":"form-control", "autocomplete":"off"}),
+            "finClase": forms.DateInput(attrs={"class":"form-control", "autocomplete":"off"}),
             "horaClase": forms.TimeInput(attrs={"type":"time", "class":"form-control", "autocomplete":"off"}),
             "diaClase": forms.SelectMultiple(attrs={"class":"form-select"}),
+        }
+        
+class ProfesorForm(forms.ModelForm):
+    class Meta(forms.ModelForm):
+        model = Profesor
+        fields = ['horarios','niveles','trabaja_sabado']
+        widgets = {
+            "horarios": forms.TextInput(attrs={"class":"form-check-input", "autocomplete":"off"}),
+            "niveles": forms.SelectMultiple(attrs={"class":"form-control", "autocomplete":"off"}),
+            "trabaja_sabado": forms.CheckboxInput(attrs={"class":"form-control", "autocomplete":"off"}),
         }

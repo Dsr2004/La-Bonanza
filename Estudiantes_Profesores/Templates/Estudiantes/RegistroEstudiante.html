@@ -1,4 +1,4 @@
-<div class="modal-dialog modal-lg">
+<div class="modal-dialog modal-lg" role="document">
   <div class="modal-content">
     <div class="modal-header">
       <h5 class="modal-title" id="staticBackdropLabel">Registro de {{estudiante.get_estudiante}}</h5>
@@ -46,7 +46,22 @@
 
 <script>
   $(document).ready(function () {
-   $("#EstudianteSinRegistrAlert").hide()   
+    $("#id_inicioClase").datepicker({
+            language: 'es-ES',
+            format: "dd/mm/YYYY",
+            autoHide: true,
+            zIndex:9999
+            
+            
+        });
+        $("#id_finClase").datepicker({
+            language: 'es-ES',
+            format: "dd/mm/YYYY",
+            autoHide: true,
+            zIndex:9999
+            
+        });   
+   $("#EstudianteSinRegistrAlert").hide()
    $("#id_diaClase").change(function(){
     token = $("input[name=csrfmiddlewaretoken]").val()
     console.log($(this).val())
