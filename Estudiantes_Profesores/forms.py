@@ -54,7 +54,7 @@ class ProfesorForm(forms.ModelForm):
         model = Profesor
         fields = ['horarios','niveles','trabaja_sabado']
         widgets = {
-            "horarios": forms.TextInput(attrs={"class":"form-check-input", "autocomplete":"off"}),
-            "niveles": forms.SelectMultiple(attrs={"class":"form-control", "autocomplete":"off"}),
-            "trabaja_sabado": forms.CheckboxInput(attrs={"class":"form-control", "autocomplete":"off"}),
+            "horarios": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
+            "niveles": forms.SelectMultiple(attrs={"class":"multi_select", "autocomplete":"off", "multiple":'multiple'}),
+            "trabaja_sabado": forms.CheckboxInput(attrs={"class":"form-check-input", "autocomplete":"off"}),
         }
