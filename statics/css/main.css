@@ -25,6 +25,7 @@
     display: flex;
     justify-content: space-between;
 <<<<<<< HEAD
+<<<<<<< HEAD
 }
 .error_text{
     font-weight:600;
@@ -38,6 +39,8 @@
 }
 .buttonSweetalert{
     margin-left: 20px !important;
+=======
+>>>>>>> 02994ecee9337e5c0f62787f1816a650edfdafb4
 =======
 >>>>>>> 02994ecee9337e5c0f62787f1816a650edfdafb4
 }
