@@ -62,7 +62,7 @@ class UsuarioForm(forms.ModelForm):
         model = Usuario
         fields = ['usuario','nombres','celular','apellidos','cedula','fecha_nacimiento','email']
         widgets = {
-            "usuario": forms.TextInput(attrs={"class":"form-check-input", "autocomplete":"off"}),
+            "usuario": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
             "nombres": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
             "celular": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
             "cedula": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),

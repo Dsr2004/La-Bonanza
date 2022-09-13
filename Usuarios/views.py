@@ -110,6 +110,44 @@ class RegistroUsuario(TemplateView):
             data['filter']=filter
             print(data)
             return JsonResponse({"datos":data})
+        if request.POST.get('function') == 'User':
+            print('User')
+            data=json.loads(request.POST.get('datos'))
+            usuario=data.get('usuario')
+            print(usuario)
+            form = UsuarioForm(usuario or None)
+            if form.is_valid():
+                usuario = Usuario.objects.create(usuario=form.cleaned_data['usuario'], nombres=form.cleaned_data['nombres'], celular=form.cleaned_data['celular'], apellidos = form.cleaned_data['apellidos'], cedula=form.cleaned_data['cedula'],fecha_nacimiento = form.cleaned_data['fecha_nacimiento'],email = form.cleaned_data['email'])
+                usuario.set_password(form.cleaned_data['cedula'])
+                usuario.administrador = 1
+                usuario.save()
+            else:
+                data = json.dumps({'error': 'Datos ingresados incorrectos'})
+                return HttpResponse(data, content_type="application/json", status=400)
+            return JsonResponse({"datos":data})
+        if request.POST.get('function') == 'Teacher':
+            print('Teacher')
+            data=json.loads(request.POST.get('datos'))
+            usuario=data.get('usuario')
+            profesor=data.get('profesor')
+            form = UsuarioForm(usuario or None)
+            if form.is_valid():
+                user = Usuario.objects.create(usuario=form.cleaned_data['usuario'], nombres=form.cleaned_data['nombres'], celular=form.cleaned_data['celular'], apellidos = form.cleaned_data['apellidos'], cedula=form.cleaned_data['cedula'],fecha_nacimiento = form.cleaned_data['fecha_nacimiento'],email = form.cleaned_data['email'])
+                user.set_password(form.cleaned_data['cedula'])
+                user.administrador = 1
+                user.save()
+                formP = ProfesorForm(profesor or None)
+                print(profesor)
+                if formP.is_valid():
+                    print('si')
+                else:
+                    user.delete()
+                    data = json.dumps({'error': 'Datos del profesor ingresados incorrectos', 'forms':formP.errors})
+                    return HttpResponse(data, content_type="application/json", status=400)
+            else:
+                data = json.dumps({'error': 'Datos ingresados incorrectos', 'forms':form.errors})
+                return HttpResponse(data, content_type="application/json", status=400)
+            return JsonResponse({"datos":data})
         # return JsonResponse({"success":"Succes"})
         # data = json.dumps({'error': 'Las contraseñas no coinciden'})
         # return HttpResponse(data, content_type="application/json", status=400)
