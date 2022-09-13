@@ -1,8 +1,14 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block titulo %}Estudiantes sin Registro{% endblock titulo %}
 
+{% block estilos %}
+<link rel="stylesheet" href="{% static 'libs/datepicker/dist/datepicker.css' %}">
+{% endblock estilos %}
+  
 
 {% block contenido %}
+
 <div class="container">
   <div class="row">
     <div class="col-10">
@@ -48,16 +54,17 @@
 </div>
 
   <!-- Modal -->
-  <div class="modal fade" id="EstudianteSinRegistroModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal fade" id="EstudianteSinRegistroModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true"  role="dialog" >
     
   </div>
 {% endblock contenido %}
 
 {% block scripts %}
+<script src="{% static 'libs/datepicker/dist/datepicker.js' %}"></script>
+<script src="{% static 'libs/datepicker/i18n/datepicker.es-ES.js' %}"></script>
 <script>
     $(document).ready(function () {
      $('#EstudiantesSinRegistroTable').DataTable({ responsive:true });
-     $("#EstudianteSinRegistrAlert").hide()   
     
    });
 </script>

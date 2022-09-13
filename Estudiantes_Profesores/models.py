@@ -1,6 +1,6 @@
-from pyexpat import model
 from django.db import models
 from Usuarios.models import Usuario
+from multiselectfield import MultiSelectField
 
 DIAS_SEMANA = (
     ("1","Lunes"),("2","Martes"),("3","Miércoles"),("4","Jueves"),("5","Viernes"),("6","Sábado"),("7","Domingo")
@@ -41,6 +41,8 @@ class Estudiante(models.Model):
     telefono_contactoE = models.CharField("telefono del contacto de emergencia",null=False, blank=False, max_length = 10)
     relacion_contactoE = models.CharField("relacion con el alumno",null=False, blank=False,  max_length = 100)
     nivel = models.ForeignKey(Nivel, db_column="nivel_id", on_delete=models.SET_NULL, verbose_name="nivel del estudiante", null=True)
+    #datos para el sistema 
+    estado = models.BooleanField(default=True)
     
 
 
@@ -89,7 +91,7 @@ class Registro(models.Model):
     inicioClase = models.DateField()
     finClase = models.DateField()
     horaClase = models.TimeField()
-    diaClase = models.CharField(max_length=10, choices=DIAS_SEMANA)
+    diaClase = MultiSelectField(max_length=10, choices=DIAS_SEMANA)
    
 
     class Meta:

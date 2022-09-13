@@ -25,3 +25,13 @@
     display: flex;
     justify-content: space-between;
 }
+.error_text{
+    font-weight:600;
+    color: red;
+    margin-left: 10px;
+}
+#icon_danger_ESTUDIANTE, #icon_danger_ACUDIENTE, #icon_danger_EMERGENCIA, #icon_danger_REGISTRO{
+    font-weight:600;
+    color: red;
+    display: none;
+}
