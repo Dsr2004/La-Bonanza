@@ -10,6 +10,9 @@
 {% block contenido %}
 <div id="calendar" style="padding: 40px;">
 </div>
+{% for i in clases %}
+  {{i.get_dias_clase}}
+{% endfor %}
 {% endblock contenido %}
 
 {% block scripts %}
@@ -37,7 +40,7 @@
                 endRecur : '{{clase.finClase|date:"Y-m-d"}}',
 
                 startTime: '{{clase.horaClase}}',
-                daysOfWeek: [ '{{clase.diaClase}}' ],
+                daysOfWeek: [ '{{clase.get_dias_clase}}' ],
                 color: '{{clase.estudiante.nivel.color_fondo}}',
                 textColor: '{{clase.estudiante.nivel.color_letra}}',
                 },

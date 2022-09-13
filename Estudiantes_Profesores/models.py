@@ -124,3 +124,7 @@ class Registro(models.Model):
     @property
     def get_estudiante_nivel(self):
         return self.estudiante.nivel.nivel
+
+    @property
+    def get_dias_clase(self):
+        return ["1"]
