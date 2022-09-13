@@ -24,9 +24,6 @@
     width: 100%;
     display: flex;
     justify-content: space-between;
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 }
 .error_text{
     font-weight:600;
@@ -37,13 +34,4 @@
     font-weight:600;
     color: red;
     display: none;
-}
-.buttonSweetalert{
-    margin-left: 20px !important;
-=======
->>>>>>> 02994ecee9337e5c0f62787f1816a650edfdafb4
-=======
->>>>>>> 02994ecee9337e5c0f62787f1816a650edfdafb4
-=======
->>>>>>> 02994ecee9337e5c0f62787f1816a650edfdafb4
 }
