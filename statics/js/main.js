@@ -192,3 +192,48 @@ function cambiar_estado_estudiante(url,id){
     }
   })
 }
+
+function cambiar_estado_usuario(id){
+  let ids = id
+    let token = $("#EstadoUsuarioForm").find('input[name=csrfmiddlewaretoken]').val()
+    swal.fire({
+        title: "¿Estás seguro?",
+        text: "Se modificara el estado del Usuario",
+        icon: "warning",
+        buttons: {
+            confirm: { text: 'Confirmar', className: 'btn-success' },
+            cancel: 'Cancelar'
+        },
+        dangerMode: true,
+    }).then((changeStatus) => {
+        if (changeStatus) {
+            $(document).ready(function() {
+                $.ajax({
+                    data: { "csrfmiddlewaretoken": token, "estado": ids },
+                    url: $("#EstadoUsuarioForm").attr('action'),
+                    type: $("#EstadoUsuarioForm").attr('method'),
+                    success: function(datas) {
+                        swal.fire("¡OK! Se ha modificado el Usuario", {
+                            icon: "success",
+                        }).then(function() {
+                            location.reload()
+                        });
+                    },
+                    error: function(error) {
+                      Error = error['responseJSON']
+                      Swal.fire({
+                          icon: 'info',
+                          title: 'Atención.',
+                          text: Error['error'] + '.',
+                      })
+                    }
+                });
+            })
+        } else {
+            swal("¡OK! Ningún dato del usuario ha sido modificado").then(function() {
+                location.reload()
+            });
+
+        }
+    });
+}

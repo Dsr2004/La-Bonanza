@@ -5,4 +5,3 @@ admin.site.register(Estudiante)
 admin.site.register(Registro)
 admin.site.register(Nivel)
 admin.site.register(Profesor)
-

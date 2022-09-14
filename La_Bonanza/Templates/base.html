@@ -1,14 +1,8 @@
 {% load static %}
-<!-- Jhorman estuvo aquí -->
-{%if request.user.administrador == False%}
-  <script>
-    window.location.href = "{%url 'calendario' %}";
-  </script>
-{%endif%}
 {% if  request.user.is_authenticated == False%}{% if request.path != '/Login/'%}<script>
   window.location.href = "{%url 'login' %}";</script>{% endif %}{%endif%}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -22,10 +16,11 @@
     <link rel="stylesheet" type="text/css" href="{% static 'libs/DataTables/Responsive/dataTables.min.css' %}">
     {% block estilos %}{% endblock estilos %}
         
+
+  
     <title>{% block titulo %}Base{% endblock titulo %}</title>
 </head>
 <body>
-
     {% if  request.user.is_authenticated%}
     <a class="btn btn-light" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">
         <i class="fa-solid fa-bars"></i>

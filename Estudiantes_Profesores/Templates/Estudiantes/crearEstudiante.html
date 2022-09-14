@@ -9,7 +9,8 @@
     .formulario{display: grid;grid-template-columns:repeat(2, 1fr);grid-gap:30px;}
     .checkbox{display: grid;grid-template-columns: 80% 20%;}
     @media (max-width: 700px) {.formulario{display: grid;grid-template-columns:repeat(1, 1fr);grid-gap:30px;}}
-</style>{% endblock estilos %}
+</style>
+{% endblock estilos %}
 {% block contenido %}
 <div class="container">
     <form action="{% url 'registrarEstudiante' %}" method="post">
@@ -25,6 +26,7 @@
             </div>
             {%endfor%}
             <script>
+               
                 let campos = document.querySelectorAll("input");
                 let selects = document.querySelectorAll("select");
                 selects.forEach(function(select) {
@@ -45,5 +47,19 @@
         <button type="submit" class="btn btn-success" style="float: right">Enviar</button>
     </form>
 </div>
+<script>
+    $("#id_fecha_nacimiento").datepicker({
+        language: 'es-ES',
+        format: "dd/mm/YYYY",
+        autoHide: true,
+        zIndex:9999,
+    });
+</script>
+<script src="{% static 'libs/datepicker/dist/datepicker.js' %}"></script>
+<script src="{% static 'libs/datepicker/i18n/datepicker.es-ES.js' %}"></script>
 {% endblock contenido %}
-    
+
+{% block scripts %}
+
+
+{%endblock scripts%}

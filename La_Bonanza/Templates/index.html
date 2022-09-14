@@ -3,7 +3,10 @@
 {% block titulo %}Inicio{% endblock titulo %}
 {%block estilos%}
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
-
+<!-- CSS only -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 {%endblock estilos%}
 {% block contenido %}
 <div class="container">
@@ -55,8 +58,7 @@
                 <th>Cedula</th>
                 <th>Fecha de nacimiento</th>
                 <th>Email</th>
-                <th>Estado</th>
-                <th>Editar</th>
+                <th>acciones</th>
             </tr>
          </thead>
          <tbody>
@@ -84,17 +86,31 @@
                      <td>{{usuario.cedula}}</td>                     
                      <td>{{usuario.fecha_nacimiento}}</td>
                      <td>{{usuario.email}}</td>
-                     <td>{{usuario.estado}}</td>
-                     <td>acciones</td>
+                     <td>
+                        <div style="display:grid; width:100%; grid-template-columns:repeat(2,1fr);">
+                            <button style="margin-right:10px"  class="btn btn-outline-warning btn-sm" onclick="userUpdate('{%url 'funcionesUsuario' usuario.pk%}')"><i class="fa-solid fa-pencil"></i></button>
+                            <div style="margin-right:10px" class="form-check form-switch">
+                                <form id="EstadoUsuarioForm" method="post" action="{% url 'editarEstadoUsuario' %}">
+                                    {%csrf_token%}
+                                    <div class="form-check form-switch switch-Cambio-TipoServicio" style="">
+                                        <input class="form-check-input" type="checkbox" style="margin-left: -15px;" role="switching" {% if usuario.estado  %}
+                                        checked
+                                        {% endif %} onclick="cambiar_estado_usuario('{{usuario.pk}}')">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </td>
                  </tr>
              {% endfor %}
          </tbody>
      </table>
  </div>
-
 {% endblock contenido %}
 {% block modals %}
 <div class="modal fade" id="registrarUsuario" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+</div>
+<div class="modal fade" id="editarUsuario" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 </div>
 {% endblock modals %}
 {% block scripts %}
@@ -102,6 +118,9 @@
     $(document).ready(function(){
         $("#UsuariosTable").DataTable({responsive:true})
     })
+    function cargar(){
+        $('.selectpicker').selectpicker();
+    }
     function filter(valor){
         document.getElementById("filterType").value=valor
         document.getElementById('filterTypeForm').submit()
@@ -113,6 +132,12 @@
         $(this).appendTo("body").modal('show');
         });
     }
+    function userUpdate(url){
+        $("#editarUsuario").load(url, function (){ 
+            $(this).appendTo("body").modal('show');
+        });
+    }
 </script>
-<script src="{%static 'libs/chosen/chosen.jquery.min.js' %}" type="text/javascript"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
 {% endblock scripts %}
