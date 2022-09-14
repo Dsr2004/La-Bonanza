@@ -133,6 +133,52 @@ class RegistroUsuario(TemplateView):
                 return HttpResponse(data, content_type="application/json", status=400)
         return JsonResponse({"datos":'hola'})
          
+class UserFunction(TemplateView):
+    template_name = "Usuarios/editarUsuarios.html"
+    model = Usuario
+    form_class = UsuarioForm
+    def get(self,request, *args, **kwargs):
+        if request.user.administrador!=1:
+            return redirect("calendario")
+        form = {}
+        try:
+            get_object = Usuario.objects.get(pk=kwargs['pk'])
+            if kwargs['pk']==request.user.pk: 
+                return redirect('index')
+            form = self.form_class(instance=get_object)
+        except Exception as e:
+            return redirect('index')
+        return render(request, self.template_name, {'form':form,'title':get_object.usuario,'pk':get_object.pk})
+    
+    def post(self, request, *args, **kwargs):
+        try:
+            get_object = Usuario.objects.get(pk=kwargs['pk'])
+            if kwargs['pk']==request.user.pk:  
+                return redirect('index')
+        except:
+            return redirect('index')
+        form = self.form_class(request.POST or None, instance=get_object)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({"success":"Succes"})
+        else:
+            data = json.dumps({'error': 'Datos ingresados incorrectos', 'forms':form.errors})
+            return HttpResponse(data, content_type="application/json", status=400)
 
-
+def EstadoUsuario(request):
+    if request.method=="POST":
+        id = request.POST["estado"]
+        update=Usuario.objects.get(pk=id)
+        estado=update.estado
+        if estado==True:
+            update.estado=False
+            update.save()
+        elif estado==False:
+            update.estado=True
+            update.save()
+        else:
+            return redirect("Inicio")
+        return HttpResponse(update)
+    else:
+        return JsonResponse({"method not allowed":"el metodo no está permitido"})
 

@@ -1,0 +1,62 @@
+<div class="modal-dialog modal-lg " id="ModalUserUdpdateDiv">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title ModalUserUpdateTitle" id="staticBackdropLabel titleModalUserupdate">Editar a {{title}}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="height: 80vh; overflow: auto;">
+        <form id="EditarUsuarioForm">
+            <div id="FormularioUsuariosE" class="FormularioUsuariosE">
+                {%csrf_token%}
+                {%for campo in form %}
+                <div>
+                    <label for="" style="font-weight: 500;">{{campo.label}}:</label>
+                    <br>{{campo}}<br class="beforeCampoUserE">
+                    <p id="" style="display: none;"></p>
+                </div>
+                {%endfor%}
+                <script>
+                    let befores = document.getElementsByClassName('beforeCampoUserE')
+                    for (let i = 0; i < befores.length; i++){
+                        let before = befores[i].previousSibling.id
+                        let after = befores[i].nextSibling.nextSibling
+                        after.id = before + '-p'
+                    }
+                </script>
+            </div>
+            <button class="btn btn-success" style="float: right;"type="button"onclick="editarUsuario()">Editar</button>
+            <br>
+            <br>
+            </form>
+            <script>
+                function editarUsuario(){
+                   let inputs = document.getElementById('FormularioUsuariosE').getElementsByTagName('input');
+                   let datos = {}
+                   for (let i = 0; i < inputs.length; i++) {
+                        datos[inputs[i].name]=inputs[i].value
+                   }
+                   $.ajax({
+                        url:'{%url "funcionesUsuario" pk%}',
+                        data: datos,
+                        type:'POST',
+                        success: function(data) {
+                            window.location.reload();
+                        },
+                        error: function(error){
+                            Error = error['responseJSON']
+                            keys=Object.keys(Error['forms'])
+                            for (var i=0; i<keys.length; i++) {
+                                value = Error['forms'][keys[i]]
+                                let p_errors = document.getElementById('id_'+keys[i]+'-p')
+                                p_errors.innerHTML = value
+                                p_errors.style.display = 'block'
+                                p_errors.style.color = 'red'
+                                p_errors.previousSibling.previousSibling.previousSibling.classList.add('is-invalid')
+                            }
+                        }
+                   })
+                }
+            </script>
+      </div>
+    </div>
+  </div>
