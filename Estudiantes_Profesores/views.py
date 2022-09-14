@@ -1,14 +1,13 @@
-from calendar import c
-import code
+import json
 from telnetlib import STATUS
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import View, CreateView, ListView, UpdateView, DetailView
 from django.urls import reverse_lazy
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.db.models import Exists
 from .models import Estudiante, Registro, Profesor
-from .forms import EstudianteForm, RegistroForm
-
+from .forms import EstudianteForm, RegistroForm,ProfesorForm
+from Usuarios.models import Usuario
 class Calendario(View):
     template_name = "calendario.html"
     model = Registro
@@ -40,6 +39,8 @@ class RegistrarEstudiante(CreateView):
     
 class BuscarNuevosEstudiantes(View):
      def get(self, request, *args, **kwargs):
+        if request.user.administrador!=1:
+            return redirect("calendario")
         EstudiantesConRegisto = Estudiante.objects.all()
         EstudiantesSinRegisto = []
         for registro in EstudiantesConRegisto:
@@ -91,6 +92,8 @@ class ModificarEstudiante(UpdateView):
 
 class CambiarEstadoEstudiante(View):
     def post(self, request, *args, **kwargs):
+        if request.user.administrador!=1:
+            return redirect("calendario")
         estudiante = Estudiante.objects.get(pk=request.POST["id"])
         if estudiante.estado == True:
             estudiante.estado = False
@@ -125,3 +128,39 @@ class ModificarRegistroEstudiante(UpdateView):
 class Profesores(ListView):
     template_name = "profesores.html"
     model = Profesor
+    
+    def get(self, request, *args, **kwargs):
+        if request.user.administrador!=1:
+            return redirect("calendario")
+        return render(request, self.template_name)
+
+def datosProfesores(request):
+    if request.user.administrador!=1:
+        return redirect("calendario")
+    if request.method == 'POST':
+        profesor = json.loads(request.POST.get('datos'))
+        user = json.loads(request.POST.get('usuario'))
+        user=Usuario.objects.get(pk = user)
+        formObject = {'niveles':profesor['niveles'],'trabaja_sabado':profesor['trabaja_sabado']}
+        form = ProfesorForm(formObject or None)
+        if form.is_valid():
+            print(user)
+            try:
+                horarios = profesor.get('horarios')
+                saba = form.cleaned_data['trabaja_sabado']
+                profesorModel = Profesor.objects.create(pk=user.pk,usuario = user,horarios=horarios, trabaja_sabado=saba)
+                print(profesorModel, user)
+                niveles = form.cleaned_data['niveles']
+                for nivel in niveles:
+                    profesorModel.niveles.add(nivel)
+                return JsonResponse({"profesor":profesor,'usuario':user.usuario})
+            except Exception as e:
+                print(e)
+                user.delete()
+                data = json.dumps({'error': 'Datos del profesor ingresados incorrectos', 'forms':form.errors})
+                return HttpResponse(data, content_type="application/json", status=400)
+        else:
+            user.delete()
+            data = json.dumps({'error': 'Datos del profesor ingresados incorrectos', 'forms':form.errors})
+            return HttpResponse(data, content_type="application/json", status=400)
+    return HttpResponse('Solo se admiten post', content_type="application/json", status=400)

@@ -14,6 +14,8 @@ class Nivel(models.Model):
 
     class Meta:
         db_table = "niveles"
+        verbose_name_plural = "niveles"
+        
 
     def __str__(self):
         return self.nivel
@@ -69,9 +71,10 @@ class Profesor(models.Model):
 
     class Meta:
         db_table = "profesores"
+        verbose_name_plural = "profesores"
 
     def __str__(self):
-        return self.nombre
+        return self.usuario.usuario
 
 
 class Establo(models.Model):

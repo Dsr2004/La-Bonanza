@@ -4,6 +4,7 @@ from django.contrib.auth.views import LoginView
 from django.contrib.auth import login, logout, authenticate
 from .forms import LoginForm, CambiarContrasena, UsuarioForm
 from Estudiantes_Profesores.forms import ProfesorForm
+from Estudiantes_Profesores.models import Profesor
 from .models import Usuario
 import json
 from django.http import HttpResponse, JsonResponse
@@ -80,6 +81,8 @@ class CambiarContrasena(TemplateView):
         
 class RegistroUsuario(TemplateView):
     def get(self, request, *args, **kwargs):
+        if request.user.administrador!=1:
+            return redirect("calendario")
         tipo = request.GET.get('type')
         data={'formUsuario':UsuarioForm, 'formProfesor':ProfesorForm,'title':'profesor'}
         filter = {"value":"","cont":''}
@@ -94,6 +97,8 @@ class RegistroUsuario(TemplateView):
         return render(request, 'Usuarios/crearUsuario.html', {'forms':data})
     
     def post(self, request, *args, **kwargs):
+        if request.user.administrador!=1:
+            return redirect("calendario")
         if request.POST.get('function') == 'filtrar':
             tipo = request.POST.get('type')
             filter = {"value":"","cont":''}
@@ -110,47 +115,23 @@ class RegistroUsuario(TemplateView):
             data['filter']=filter
             print(data)
             return JsonResponse({"datos":data})
-        if request.POST.get('function') == 'User':
-            print('User')
-            data=json.loads(request.POST.get('datos'))
-            usuario=data.get('usuario')
-            print(usuario)
+        if request.POST.get('function') == 'User' or request.POST.get('function') == 'Teacher':
+            usuario=json.loads(request.POST.get('datos'))
             form = UsuarioForm(usuario or None)
             if form.is_valid():
                 usuario = Usuario.objects.create(usuario=form.cleaned_data['usuario'], nombres=form.cleaned_data['nombres'], celular=form.cleaned_data['celular'], apellidos = form.cleaned_data['apellidos'], cedula=form.cleaned_data['cedula'],fecha_nacimiento = form.cleaned_data['fecha_nacimiento'],email = form.cleaned_data['email'])
                 usuario.set_password(form.cleaned_data['cedula'])
-                usuario.administrador = 1
-                usuario.save()
-            else:
-                data = json.dumps({'error': 'Datos ingresados incorrectos'})
-                return HttpResponse(data, content_type="application/json", status=400)
-            return JsonResponse({"datos":data})
-        if request.POST.get('function') == 'Teacher':
-            print('Teacher')
-            data=json.loads(request.POST.get('datos'))
-            usuario=data.get('usuario')
-            profesor=data.get('profesor')
-            form = UsuarioForm(usuario or None)
-            if form.is_valid():
-                user = Usuario.objects.create(usuario=form.cleaned_data['usuario'], nombres=form.cleaned_data['nombres'], celular=form.cleaned_data['celular'], apellidos = form.cleaned_data['apellidos'], cedula=form.cleaned_data['cedula'],fecha_nacimiento = form.cleaned_data['fecha_nacimiento'],email = form.cleaned_data['email'])
-                user.set_password(form.cleaned_data['cedula'])
-                user.administrador = 1
-                user.save()
-                formP = ProfesorForm(profesor or None)
-                print(profesor)
-                if formP.is_valid():
-                    print('si')
+                if request.POST.get('function') == 'User':
+                    print(request.POST.get('function'))
+                    usuario.administrador = 1
                 else:
-                    user.delete()
-                    data = json.dumps({'error': 'Datos del profesor ingresados incorrectos', 'forms':formP.errors})
-                    return HttpResponse(data, content_type="application/json", status=400)
+                    usuario.administrador = 0
+                usuario.save()
+                return JsonResponse({"datos":usuario.pk})
             else:
                 data = json.dumps({'error': 'Datos ingresados incorrectos', 'forms':form.errors})
                 return HttpResponse(data, content_type="application/json", status=400)
-            return JsonResponse({"datos":data})
-        # return JsonResponse({"success":"Succes"})
-        # data = json.dumps({'error': 'Las contraseñas no coinciden'})
-        # return HttpResponse(data, content_type="application/json", status=400)
+        return JsonResponse({"datos":'hola'})
          
 
 
