@@ -166,9 +166,10 @@
         }
         else{
             let divContHoras = document.getElementById('horarios').childNodes
-            let horarios = {}
+            let horariosA = []
             if (divContHoras.length > 1){
                 for (let i = 0; i < divContHoras.length; i++) {
+                    horarios = {}
                     if(i != 0){
                         let inputs = divContHoras[i].childNodes
                         for (let j = 0; j < inputs.length; j++) {   
@@ -201,6 +202,7 @@
                                 }
                             }
                         }
+                        horariosA.push(horarios)
                     }
                 }
             }
@@ -239,7 +241,7 @@
                     }
                 }
             }
-            profesor['horarios']=horarios
+            profesor['horarios']=JSON.stringify(horariosA)
         }
             $.ajax({
                 url:$('#RegistrarUsuarioForm').attr('action'),
