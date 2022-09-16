@@ -35,3 +35,7 @@
     color: red;
     display: none;
 }
+
+.fade.show {
+    /* opacity: 0.5 !important; */
+}
