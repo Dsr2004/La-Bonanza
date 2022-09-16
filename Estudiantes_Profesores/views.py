@@ -9,8 +9,7 @@ from django.db.models import Exists
 from .models import Estudiante, Registro, Profesor
 from .forms import EstudianteForm, RegistroForm,ProfesorForm
 from Usuarios.models import Usuario
-
-
+from datetime import datetime 
 class Calendario(View):
     template_name = "calendario.html"
     model = Registro
@@ -141,11 +140,12 @@ class Profesores(ListView):
             horarios = json.loads(profe.horarios)
             horario = []
             for horas in horarios:
-                horario.append('Desde '+horas['from']+' Hasta '+horas['through'])
-            horario = str(horario).replace("'", '').replace("[", '').replace("]", '')
+                desde = datetime.strptime(horas['from'], '%H:%M').strftime('%I:%M %p')
+                hasta=datetime.strptime(horas['through'], '%H:%M').strftime('%I:%M %p')
+                horario.append('Desde '+str(desde)+' Hasta '+str(hasta))
+            horario = str(horario).replace("'", '').replace("[", '').replace("]", '').replace(',', ' -')
             datos.append({'profesor':profe, 'horario':horario})
         contexto['Profesores'] = datos
-        print(contexto)
         return render(request, self.template_name, contexto)
 
 def datosProfesores(request):

@@ -43,7 +43,7 @@
                     <td>{{Profesor.profesor.usuario.celular}}</td>
                     <td>{{Profesor.horario}}</td>
                     <td>{%if Profesor.profesor.trabaja_sabado%}Si{%else%}No{%endif%}</td>
-                    <td style="height: 40px; display: flex; justify-content: start; flex-wrap: wrap; overflow: auto;">{%for nivel in Profesor.profesor.niveles.all%}<div style="text-align: center; padding: 5px 0; margin: 5px 0; border-radius: 10px; background-color: {{nivel.color_fondo}};color:{{nivel.color_letra}}; ">{{nivel.nivel}}</div>{%endfor%}</td>
+                    <td style="height: 40px; padding: 5px; display: flex; justify-content: start; flex-wrap: wrap; overflow: auto;">{%for nivel in Profesor.profesor.niveles.all%}<div style="text-align: center; padding: 5px 0; margin: 5px; border-radius: 10px; background-color: {{nivel.color_fondo}};color:{{nivel.color_letra}}; ">{{nivel.nivel}}</div>{%endfor%}</td>
                 </tr>
             {% endfor %}
             {%endif%}
