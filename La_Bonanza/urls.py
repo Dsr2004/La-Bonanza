@@ -32,6 +32,7 @@ urlpatterns = [
     path("Logout/", LogoutView.as_view(),{'next_page': settings.LOGOUT_REDIRECT_URL}, name="logout"),
     path("Usuarios/", include("Usuarios.urls")),
     path("Administracion/", include("Estudiantes_Profesores.urls")),
+    path("Niveles/", include("Niveles.urls")),
     path("pos/", pos)
 ]
 

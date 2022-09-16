@@ -60,11 +60,11 @@
               {% if request.path == '/Administracion/Profesores/'%}active {% endif %} 
               " aria-current="page" href="{%url 'profesores'%} ">Profesores</a>
             </li>
-            <!-- <li class="nav-item">
+            <li class="nav-item">
               <a class="nav-link 
-              {% if request.path == '/Administracion/Profesores/'%}active {% endif %} 
-              " aria-current="page" href="{%url 'niveles'%} ">Niveles</a>
-            </li> -->
+              {% if request.path == '/Niveles/Listar/'%}active {% endif %} 
+              " aria-current="page" href="{%url 'listarNivel'%} ">Niveles</a>
+            </li>
             <li class="nav-item">
               <a class="nav-link 
               {% if request.path == '/Administracion/Calendario/'%}active {% endif %} 

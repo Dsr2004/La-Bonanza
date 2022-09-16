@@ -137,12 +137,15 @@ class Profesores(ListView):
         contexto={}
         datos=[]
         for profe in Profesor.objects.all():
-            horarios = json.loads(profe.horarios)
             horario = []
-            for horas in horarios:
-                desde = datetime.strptime(horas['from'], '%H:%M').strftime('%I:%M %p')
-                hasta=datetime.strptime(horas['through'], '%H:%M').strftime('%I:%M %p')
-                horario.append('Desde '+str(desde)+' Hasta '+str(hasta))
+            try:
+                horarios = json.loads(profe.horarios)
+                for horas in horarios:
+                    desde = datetime.strptime(horas['from'], '%H:%M').strftime('%I:%M %p')
+                    hasta=datetime.strptime(horas['through'], '%H:%M').strftime('%I:%M %p')
+                    horario.append('Desde '+str(desde)+' Hasta '+str(hasta))
+            except:
+                horario.append('Este profesor no tiene horario')
             horario = str(horario).replace("'", '').replace("[", '').replace("]", '').replace(',', ' -')
             datos.append({'profesor':profe, 'horario':horario})
         contexto['Profesores'] = datos
