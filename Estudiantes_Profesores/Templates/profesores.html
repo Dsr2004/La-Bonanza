@@ -1,1 +1,60 @@
 {%extends 'base.html' %}
+{% block titulo %}Profesores{% endblock titulo %}
+{%block estilos%}
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+<!-- CSS only -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+{%endblock estilos%}
+{% block contenido %}
+<div class="container">
+    <div class="row">
+     <div class="col-md-10">
+         <h1>Administración de Profesores</h1>
+     </div>
+     <div class="col-md-2">
+        <!-- <div class="btn btn-outline-success btn-lg" onclick=""> <i class="fa-solid fa-node-js"></i></div> -->
+     </div>
+    </div>
+     <hr>
+     <br>
+     <table id="ProfesoresTable" class="table" width="100%">
+         <thead>
+            <tr>
+                <th>ID</th>
+                <th>Usuario</th>
+                <th>Cédula</th>
+                <th>Fecha de Nacimiento</th>
+                <th>Celular</th>
+                <th>Horario</th>
+                <th>Trabaja los domingos</th>
+                <th>Niveles</th>
+            </tr>
+         </thead>
+         <tbody>
+            {%if Profesores%}
+            {% for Profesor in Profesores %}
+                <tr style="height: 40px;">
+                    <td>{{Profesor.profesor.usuario.pk}}</td>
+                    <td>{{Profesor.profesor.usuario.usuario}}</td>
+                    <td>{{Profesor.profesor.usuario.cedula}}</td>
+                    <td>{{Profesor.profesor.usuario.fecha_nacimiento}}</td>
+                    <td>{{Profesor.profesor.usuario.celular}}</td>
+                    <td>{{Profesor.horario}}</td>
+                    <td>{%if Profesor.profesor.trabaja_sabado%}Si{%else%}No{%endif%}</td>
+                    <td style="height: 40px; display: flex; justify-content: start; flex-wrap: wrap; overflow: auto;">{%for nivel in Profesor.profesor.niveles.all%}<div style="text-align: center; padding: 5px 0; margin: 5px 0; border-radius: 10px; background-color: {{nivel.color_fondo}};color:{{nivel.color_letra}}; ">{{nivel.nivel}}</div>{%endfor%}</td>
+                </tr>
+            {% endfor %}
+            {%endif%}
+         </tbody>
+     </table>
+ </div>
+{%endblock contenido%}
+{% block scripts %}
+<script>
+    $(document).ready(function(){
+        $("#ProfesoresTable").DataTable({responsive:true})
+    })
+</script>
+{% endblock scripts %}

@@ -1,4 +1,5 @@
 import json
+from multiprocessing import context
 from telnetlib import STATUS
 from django.shortcuts import render, redirect
 from django.views.generic import View, CreateView, ListView, UpdateView, DetailView
@@ -132,7 +133,18 @@ class Profesores(ListView):
     def get(self, request, *args, **kwargs):
         if request.user.administrador!=1:
             return redirect("calendario")
-        return render(request, self.template_name)
+        contexto={}
+        datos=[]
+        for profe in Profesor.objects.all():
+            horarios = json.loads(profe.horarios)
+            horario = []
+            for horas in horarios:
+                horario.append('Desde '+horas['from']+' Hasta '+horas['through'])
+            horario = str(horario).replace("'", '').replace("[", '').replace("]", '')
+            datos.append({'profesor':profe, 'horario':horario})
+        contexto['Profesores'] = datos
+        print(contexto)
+        return render(request, self.template_name, contexto)
 
 def datosProfesores(request):
     if request.user.administrador!=1:
@@ -144,12 +156,11 @@ def datosProfesores(request):
         formObject = {'niveles':profesor['niveles'],'trabaja_sabado':profesor['trabaja_sabado']}
         form = ProfesorForm(formObject or None)
         if form.is_valid():
-            print(user)
             try:
                 horarios = profesor.get('horarios')
+                horarios = json.dumps(json.loads(horarios))
                 saba = form.cleaned_data['trabaja_sabado']
                 profesorModel = Profesor.objects.create(pk=user.pk,usuario = user,horarios=horarios, trabaja_sabado=saba)
-                print(profesorModel, user)
                 niveles = form.cleaned_data['niveles']
                 for nivel in niveles:
                     profesorModel.niveles.add(nivel)
