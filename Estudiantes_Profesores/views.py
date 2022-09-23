@@ -137,9 +137,9 @@ class Profesores(ListView):
         contexto={}
         datos=[]
         for profe in Profesor.objects.all():
-            horarios = json.loads(profe.horarios)
             horario = []
             try:
+                horarios = json.loads(profe.horarios)
                 for horas in horarios:
                     desde = datetime.strptime(horas['from'], '%H:%M').strftime('%I:%M %p')
                     hasta=datetime.strptime(horas['through'], '%H:%M').strftime('%I:%M %p')
