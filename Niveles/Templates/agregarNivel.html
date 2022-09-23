@@ -1,0 +1,27 @@
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Agregar nivel</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+       <form action="{% url 'craerNivel' %}" method="post" id="CrearcarNivelForm">
+            {% csrf_token %}
+            <label>Nivel: <strong class="required">(*)</strong></label>
+            {{form.nivel}}
+            <p class="error_text" id="nivel"></p>
+            <br>
+            <label>Color de fondo: <strong class="required">(*)</strong></label>
+            <input type="color" name="color_fondo" id="id_color_fondo" class="form-control">
+            <p class="error_text" id="color_fondo"></p>
+            <br>
+            <label>Color de las letras: <strong class="required">(*)</strong></label>
+            <input type="color"  name="color_letra" id="id_color_letra" class="form-control">
+            <p class="error_text" id="color_letra"></p>
+       </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success w-100" onclick="CraerNivel()">Crear Nivel</button>
+      </div>
+    </div>
+  </div>

@@ -1,11 +1,39 @@
+import os
 from django.db import models
 from Usuarios.models import Usuario
 from Niveles.models import Nivel
 from multiselectfield import MultiSelectField
 
 DIAS_SEMANA = (
-    ("1","Lunes"),("2","Martes"),("3","Miércoles"),("4","Jueves"),("5","Viernes"),("6","Sábado"),("7","Domingo")
+    ("1","Lunes"),("2","Martes"),("3","Miércoles"),("4","Jueves"),("5","Viernes"),("6","Sábado"),("0","Domingo")
 )
+
+ESTADOS_ASISTENCIA = (
+    ("1","Asistió"),("2","No asistió "),("3","Cancelo")
+)
+
+
+def guardar_firma(instance, filename):
+    return  f"Archivos_Estudiantes/{instance.nombre_completo}_{instance.documento}/firma-{filename}"
+def guardar_documento(instance, filename):
+    return  f"Archivos_Estudiantes/{instance.nombre_completo}_{instance.documento}/documento-{filename}"
+def guardar_seguro(instance, filename):
+    return  f"Archivos_Estudiantes/{instance.nombre_completo}_{instance.documento}/seguro-{filename}"
+
+class Profesor(models.Model):
+    id = models.CharField(primary_key=True, unique=True, max_length=5) 
+    usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE)
+    horarios = models.CharField("horarios del profesor", max_length=300) # "[{09:00: 18:00},...]"
+    niveles = models.ManyToManyField(Nivel)   
+    trabaja_sabado = models.BooleanField("el profesor trabaja los sabados", default=False)
+
+    class Meta:
+        db_table = "profesores"
+        verbose_name_plural = "profesores"
+
+    def __str__(self):
+        return self.usuario.nombres
+
 
 
 class Estudiante(models.Model):
@@ -30,7 +58,10 @@ class Estudiante(models.Model):
     nombre_contactoE = models.CharField("nombre del contacto de emergencia", max_length = 10)
     telefono_contactoE = models.CharField("telefono del contacto de emergencia",null=False, blank=False, max_length = 10)
     relacion_contactoE = models.CharField("relacion con el alumno",null=False, blank=False,  max_length = 100)
-    nivel = models.ForeignKey(Nivel, db_column="nivel_id", on_delete=models.SET_NULL, verbose_name="nivel del estudiante", null=True)
+    #archivos
+    firma =models.FileField(upload_to=guardar_firma, null=False, blank=False)
+    documento_A =models.FileField(upload_to=guardar_documento, null=False, blank=False)
+    seguro_A =models.FileField(upload_to=guardar_seguro, null=False, blank=False) 
     #datos para el sistema 
     estado = models.BooleanField(default=True)
     
@@ -42,6 +73,10 @@ class Estudiante(models.Model):
     def __str__(self):
         return self.nombre_completo
 
+
+    def generate_foldername(self, instance, filename):
+        return f"{self.nombre_completo}_{self.documento}/"
+
     @property
     def get_estudiante(self):
         estudiante = self.nombre_completo.capitalize()
@@ -49,21 +84,6 @@ class Estudiante(models.Model):
 
     
 # fecha_inscripcion = models.DateField(auto_now_add=True) to created
-
-class Profesor(models.Model):
-    id = models.CharField(primary_key=True, unique=True, max_length=5) 
-    usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE)
-    horarios = models.CharField("horarios del profesor", max_length=300) # "[{09:00: 18:00},...]"
-    niveles = models.ManyToManyField(Nivel)   
-    trabaja_sabado = models.BooleanField("el profesor trabaja los sabados", default=False)
-
-    class Meta:
-        db_table = "profesores"
-        verbose_name_plural = "profesores"
-
-    def __str__(self):
-        return self.usuario.nombres
-
 
 
 class Establo(models.Model):
@@ -79,6 +99,8 @@ class Establo(models.Model):
 
 class Registro(models.Model):
     estudiante = models.OneToOneField(Estudiante, on_delete=models.CASCADE)
+    nivel = models.ForeignKey(Nivel, db_column="nivel_id", on_delete=models.SET_NULL, verbose_name="nivel del estudiante", null=True)
+    profesor = models.ForeignKey(Profesor, db_column="profesor_id", on_delete=models.SET_NULL, verbose_name="profesor del estudiante", null=True)
     pagado = models.BooleanField(default=False)
     inicioClase = models.DateField()
     finClase = models.DateField()
@@ -115,8 +137,19 @@ class Registro(models.Model):
 
     @property
     def get_estudiante_nivel(self):
-        return self.estudiante.nivel.nivel
+        return self.nivel.nivel
 
     @property
     def get_dias_clase(self):
-        return ["1"]
+        dias = []
+        for i in self.diaClase:
+            dias.append(i)
+        print(dias, self)
+        return list(dias)
+
+
+class Asistencia(models.Model):
+    registro = models.ForeignKey(Registro, on_delete=models.CASCADE, db_column="estudiante_id", verbose_name="estudiante")
+    estado = models.CharField(max_length=15,choices=ESTADOS_ASISTENCIA)
+    dia = models.DateField()
+    hora = models.TimeField()

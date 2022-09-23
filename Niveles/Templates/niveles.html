@@ -1,0 +1,59 @@
+{%extends 'base.html' %}
+{% block titulo %}Niveles{% endblock titulo %}
+
+{% block contenido %}
+<div class="container">
+    <div class="row">
+     <div class="col-md-10">
+         <h1>Administración de Niveles</h1>
+     </div>
+     <div class="col-md-2">
+        <a onclick="abrir_registro_nivel_modal('{%url 'craerNivel'%}')" class="btn btn-outline-success btn-lg" > <i class="fa-solid fa-circle-plus fa-lg"></i></a>
+     </div>
+    </div>
+     <hr>
+     <div class="row">
+        {% for nivel in niveles  %}
+          <div class="col-md-3" style="cursor: pointer;" onclick="GetNivel('{%url 'modifcarNivel' nivel.pk %}')">
+            <div class="card">
+                <div class="card-body" style="padding: 0 !important;">
+                    <div class="row">
+                        <div class="col-3">
+                            <div class="nivelStyle" style="background: linear-gradient(90deg, {{nivel.color_fondo}} 0%, rgba(255,255,255,1) 99%);;"></div>
+                        </div>
+                        <div class="col-9 NivelText">
+                            <p >{{nivel.nivel}}</p>
+                        </div>
+                    </div>
+                </div>  
+            </div>
+          </div>
+        {% endfor %}
+     </div>
+
+ </div>
+
+<div class="modal fade" id="ModificarModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>
+<div class="modal fade" id="AbirModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>
+{%endblock contenido%}
+
+{% block scripts %}
+    <script>
+        function GetNivel(url){
+            $("#ModificarModal").load(url, function(){
+                $(this).appendTo("body").modal("show")
+            })
+        }
+    </script>
+{% endblock scripts %}
+    
+
+
+<div class="row">
+    <div class="col-3">
+        <div class="nivelStyle" style="background-color: {{nivel.color_fondo}};"></div>
+    </div>
+    <div class="col-9">
+        <p style="color: {{nivel.color_letra}};">{{nivel.nivel}}</p>
+    </div>
+</div>

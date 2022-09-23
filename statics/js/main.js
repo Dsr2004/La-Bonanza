@@ -300,3 +300,9 @@ function CraerNivel(){
     },
   })
 }
+
+function abrir_modal_calendario(url){
+  $("#ModalInfoEstudianteCalendario").load(url, function (){ 
+    $(this).appendTo("body").modal('show');
+  });
+}
