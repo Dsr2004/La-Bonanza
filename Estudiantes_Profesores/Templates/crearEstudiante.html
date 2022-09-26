@@ -3,6 +3,7 @@
 {% block titulo %}Crear Estudiante{% endblock titulo %}
 {% block estilos %}
 <link rel="stylesheet" href="{% static 'libs/datepicker/dist/datepicker.css' %}">
+
 <style>
     input{border: 1px solid #dadce0;border-radius: 4px;box-shadow: 0 0 0 transparent;font-size: 16px;line-height: 17px;outline: transparent;padding: 11px 16px;transition: border .3s, box-shadow .3s;width: 100%;}
     select{border: 1px solid #dadce0;border-radius: 4px;box-shadow: 0 0 0 transparent;font-size: 17px;line-height: 24px;outline: transparent;padding: 11px 16px;transition: border .3s, box-shadow .3s;width: 100%;}
@@ -12,7 +13,7 @@
 </style>{% endblock estilos %}
 {% block contenido %}
 <div class="container-fluid">
-    <form action="{% url 'registrarEstudiante' %}" method="post" enctype="multipart/form-data">
+    <form action="{% url 'registrarEstudiante' %}" method="post" enctype="multipart/form-data" id="CrearEstudianteForm">
         <h1>Registro Estudiante</h1>
         <br>
         <div class="formulario">
@@ -136,7 +137,22 @@
         <div class="col-md-6">
             <div class="bodyFile">
                 <div class="containerFile">
-                    <h3>Sube tu archivo</h3>
+                    <h3>Documento</h3>
+                    <div class="drag-areaDocumento">
+                        <div class="icon"><i class="fas fa-images"></i></div>
+                        <span class="headerDocumento">Arrastra y Suelta</span>
+                        <span class="headerDocumento">o <span class="buttonDragDocumento">Selecciónalo</span></span>
+                        <span class="support">Soporta: JPEG, JPG, PNG, PDF</span>
+                    </div>
+                </div>
+            </div>
+            <input type="file" hidden name="documento_A" id="id_documento_A">
+            <p id="documento_A" style="display: none;"></p>
+        </div>
+        <div class="col-md-6">
+            <div class="bodyFile">
+                <div class="containerFile">
+                    <h3>EPS</h3>
                     <div class="drag-area">
                         <div class="icon"><i class="fas fa-images"></i></div>
                         <span class="header">Arrastra y Suelta</span>
@@ -145,21 +161,30 @@
                     </div>
                 </div>
             </div>
-            <label for="" style="font-weight: 500;">{{form.documento_A.label}}:</label>
-            <br>{{form.documento_A}}<br>
-            <p id="" style="display: none;"></p>
-        </div>
-        <div class="col-md-6">
-            <label for="" style="font-weight: 500;">{{form.seguro_A.label}}:</label>
-            <br>{{form.seguro_A}}<br>
-            <p id="" style="display: none;"></p>
+            <input type="file" hidden name="seguro_A" id="id_seguro_A">
+            <p id="seguro_A" style="display: none;"></p>
         </div>
        </div>
-       <div class="col-md-6">
+       <br>
+       {% comment %}
+       <div class="col-md-12">
+        <span class="d-block pb-2">Firma digital aqui</span>
+        <div class="signature mb-2" style="width: 100%; height: 200px;">
+            <canvas id="signature-canvas"
+                style="border: 1px dashed red; width: 100%; height: 200px;"></canvas>
+        </div>
+        <button type="button" onclick="limpiarFirma()">Limpiar</button>
+        <p id="firma" style="display: none;"></p>
+        <br>
+    </div>
+
+       {% endcomment %}
+       <div>
         <label for="" style="font-weight: 500;">{{form.firma.label}}:</label>
         <br>{{form.firma}}<br>
         <p id="" style="display: none;"></p>
     </div>
+       <br>
         <button type="submit" class="btn btn-success w-100" style="float: right">Enviar</button>
         <br><br><br>
     </form>
@@ -168,32 +193,132 @@
 
 
 {% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
+<script>
+    window.addEventListener('load', async () => {
+        const canvas = document.querySelector("canvas");
+        canvas.height = canvas.offsetHeight;
+        canvas.width = canvas.offsetWidth;
+
+        signaturePad = new SignaturePad(canvas, {});
+});
+
+function limpiarFirma(){
+    signaturePad.clear();
+}
+
+$("#CrearEstudianteForm").submit(function(event){
+    event.preventDefault()
+    if(signaturePad.isEmpty()){
+        alert("esta vacio")
+    }else{
+        const canvas = $('#signature-canvas')
+        let img = signaturePad.toDataURL();
+       
+    }
+    
+})
+</script>
 <script>
     const dragArea = $(".drag-area");
     const dragTetxt = document.querySelector(".header")
+    const dragAreaDoc = $(".drag-areaDocumento");
+    const dragTetxtDoc = document.querySelector(".headerDocumento")
     let file;
-    
-     // cuando entra la imagen
-    dragArea.on("dragover", function(event) {
-    event.preventDefault();  
-    event.stopPropagation();
-    dragTetxt.textContent = "Listo para subir"
-    dragArea.addClass("active")
-    // console.log("entro al drag")
-    });
-     // cuando esta fuera
-    dragArea.on("dragleave", function() {
-        dragTetxt.textContent = "Arrastra y Suelta"
-        dragArea.removeClass("active")
-        // console.log("salio del drag")
-    });
+    let buttonDocumento = document.querySelector(".buttonDragDocumento")
+    let inputDocumento = document.querySelector("#id_documento_A")
+    let buttonSeguro = document.querySelector(".buttonDrag")
+    let inputSeguro = document.querySelector("#id_seguro_A")
 
-    dragArea.on("drop", function(event) {
+    buttonDocumento.onclick = () =>{
+        inputDocumento.click()
+    }
+    buttonSeguro.onclick = () =>{
+        inputSeguro.click()
+    }
+
+    inputDocumento.addEventListener("change",function(){
+    file = this.files[0]
+    dragArea.addClass("active")
+    displayFile(dragAreaDoc)
+    })
+    inputSeguro.addEventListener("change",function(){
+    file = this.files[0]
+    console.log(file)
+    dragArea.addClass("active")
+    displayFile(dragArea)
+    })
+    
+    // DOCUMENTO-------------
+        // cuando entra la imagen
+        dragAreaDoc.on("dragover", function(event) {
         event.preventDefault();  
-        file = event.dataTransfer.files[0]
-        console.log(file)
+        event.stopPropagation();
+        dragTetxtDoc.textContent = "Listo para subir"
+        dragAreaDoc.addClass("active")
+        // console.log("entro al drag")
+        });
+        // cuando esta fuera
+        dragAreaDoc.on("dragleave", function() {
+            dragTetxtDoc.textContent = "Arrastra y Suelta"
+            dragAreaDoc.removeClass("active")
+            // console.log("salio del drag")
+        });
+
+        dragAreaDoc.on("drop", function(event) {
+            event.preventDefault();  
+            file = event.originalEvent.dataTransfer.files[0]
+            console.log(file)
+            displayFile(dragAreaDoc)
+        });
+
+    // EPS------------------
+        // cuando entra la imagen
+        dragArea.on("dragover", function(event) {
+        event.preventDefault();  
+        event.stopPropagation();
+        dragTetxt.textContent = "Listo para subir"
+        dragArea.addClass("active")
+        // console.log("entro al drag")
+        });
+        // cuando esta fuera
+        dragArea.on("dragleave", function() {
+            dragTetxt.textContent = "Arrastra y Suelta"
+            dragArea.removeClass("active")
+            // console.log("salio del drag")
+        });
+
+        dragArea.on("drop", function(event) {
+            event.preventDefault();  
+            file = event.originalEvent.dataTransfer.files[0]
+            console.log(event)
+            displayFile(dragArea)
+        });
+
+    
+
+    function displayFile(drag){
+        let fileType = file.type
+        let validExtensions = ["image/jpeg", "image/jpg", "image/png", "application/pdf"]
+        if (validExtensions.includes(fileType)){
+            let fileReader = new FileReader()
+            fileReader.onload=()=>{
+                let fileURL = fileReader.result
+                let imgTag = '<img src="'+fileURL+'" alt="">'
+                drag.html(imgTag)
+            };
+            fileReader.readAsDataURL(file)
+        }else{
+            Swal.fire(
+            'TIPO DE ARCHIVO INVÁLIDO',
+            'Solo se pueden adjuntar imÁgenes JPG, JPEG, PNG y archivos PDF',
+            'error'
+            )
+            drag.removeClass("active")
+        }
+        console.log(fileType)
         // console.log("solto el archivo")
-    });
+    }
 
 
 
@@ -201,9 +326,6 @@
 
 <script src="{% static 'libs/datepicker/dist/datepicker.js' %}"></script>
 <script src="{% static 'libs/datepicker/i18n/datepicker.es-ES.js' %}"></script>
-<script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
-<script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.js"></script>
-<script src="https://unpkg.com/jquery-filepond/filepond.jquery.js"></script>
     <script>
          $("#id_fecha_nacimiento").datepicker({
             language: 'es-ES',
@@ -213,29 +335,5 @@
         });
     </script>
 
-<script>
-    $(function(){
-    
-      // First register any plugins
-      $.fn.filepond.registerPlugin(FilePondPluginImagePreview);
-  
-      // Turn input element into a pond
-      $('.my-pond').filepond();
-  
-      // Set allowMultiple property to true
-      $('.my-pond').filepond('allowMultiple', true);
-    
-      // Listen for addfile event
-      $('.my-pond').on('FilePond:addfile', function(e) {
-          console.log('file added event', e);
-      });
-  
-      // Manually add a file using the addfile method
-      $('.my-pond').first().filepond('addFile', 'index.html').then(function(file){
-        console.log('file added', file);
-      });
-    
-    });
-  </script>
 {% endblock scripts %}
     

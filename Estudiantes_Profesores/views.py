@@ -1,16 +1,24 @@
+import calendar
 import json
-from multiprocessing import context
-from telnetlib import STATUS
+from pprint import pprint
 from django.shortcuts import render, redirect
 from django.views.generic import View, CreateView, ListView, UpdateView, DetailView
 from django.urls import reverse_lazy
 from django.http import JsonResponse, HttpResponse
-from django.db.models import Exists
 from .models import Estudiante, Registro, Profesor
 from .forms import EstudianteForm, RegistroForm,ProfesorForm
 from Usuarios.models import Usuario
-from datetime import datetime 
+from datetime import datetime, timedelta
+from itertools import groupby
 
+
+
+def arreglarFormatoDia(dia):
+    if str(dia) == "6":
+        dia = 0 #en las variables del modelo el domingo es 0 porque asi lo recibe fullcalendar pero python retorna el domingo como 6
+    else:
+        dia = dia+1
+    return dia
 
 class Calendario(View):
     template_name = "calendario.html"
@@ -24,6 +32,34 @@ class VerInfoEstudianteCalendario(DetailView):
     model=Registro
     template_name = "Calendario/verInfoEstudianteCalendario.html"
 
+
+class GestionDeAsistencia(View):
+    template_name = "asistencia.html"
+    model = Registro
+    def get(self, request, *args, **kwargs):
+        ctx = {}
+        hoy = datetime.now()
+        diaSemana = arreglarFormatoDia(hoy.weekday())
+        clasesHoy = Registro.objects.filter(diaClase__icontains=diaSemana).order_by("horaClase")
+        
+        ctx["dia"]=hoy.date()
+        ctx["hora"]=hoy.time()
+        ctx["clases"]=clasesHoy
+        # mañana = hoy + timedelta(days=6)
+        return render(request, self.template_name, ctx)
+
+    def post(self, request, *args, **kwargs):
+        clases = dict(request.POST.copy())
+        hora = clases["hora"]
+        print(hora)
+        clases.pop("hora",None)
+        clases.pop("csrfmiddlewaretoken",None)
+        kiwi =[]
+        for clase in clases:
+            kiwi.append({"estudiante":clases[clase][1],"estado":clases[clase][0]})
+        print(kiwi)
+        return HttpResponse(request.POST)
+    
 
 class Estudiantes(ListView):
     template_name = "estudiantes.html"
@@ -44,6 +80,10 @@ class RegistrarEstudiante(CreateView):
     form_class = EstudianteForm
     template_name = "crearEstudiante.html"
     success_url = reverse_lazy("estudiantes")
+
+    def form_invalid(self, form):
+        print(form.errors)
+        return super().form_invalid(form)
         
 
     

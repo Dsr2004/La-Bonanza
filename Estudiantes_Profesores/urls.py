@@ -16,5 +16,6 @@ urlpatterns=[
     path("ModificarRegistroEstudiante/<int:pk>", ModificarRegistroEstudiante.as_view(), name="modificarRegistroEstudiante"),
     path("CambiarEstadoEstudiante/", CambiarEstadoEstudiante.as_view(), name="cambiarEstadoEstudiante"),
     path('registrarProfesor/', datosProfesores, name="registrarProfesor"),
-     path("VerInfoEstudianteCalendario/<int:pk>", VerInfoEstudianteCalendario.as_view(), name="verInfoEstudianteCalendario"),
+    path("VerInfoEstudianteCalendario/<int:pk>", VerInfoEstudianteCalendario.as_view(), name="verInfoEstudianteCalendario"),
+    path("Asistencia/", GestionDeAsistencia.as_view(), name="asistencia"),
 ]

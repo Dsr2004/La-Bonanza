@@ -144,7 +144,6 @@ class Registro(models.Model):
         dias = []
         for i in self.diaClase:
             dias.append(i)
-        print(dias, self)
         return list(dias)
 
 
