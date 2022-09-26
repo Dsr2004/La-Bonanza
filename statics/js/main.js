@@ -29,6 +29,12 @@ function EstudianteSinRegistro(url){
 }
 
 
+function abrir_registro_nivel_modal(url){
+  $("#AbirModal").load(url, function (){ 
+    $(this).modal('show');
+  });
+}
+
 function ModificarEstudiante(url){
   let forms = document.getElementsByClassName('formEstudianteUpdate')
     datos={}
@@ -236,4 +242,67 @@ function cambiar_estado_usuario(id){
 
         }
     });
+}
+
+function ModificarNivel(){
+  let form = $("#ModificarNivelForm")
+  console.log(form.attr('action'),form.attr('method'),form.serialize())
+  $.ajax({
+    url: form.attr('action'),
+    type: form.attr('method'),
+    data: form.serialize(),
+    success: function(){
+      Swal.fire(
+        'HECHO',
+        'Nivel modificado',
+        'success'
+      ).then(function(){
+        location.reload()
+      })
+    },
+    error: function(){
+      form.find('.error_text').text('');
+      form.find('.is-invalid').removeClass('is-invalid');
+      for (let i in errors){
+        let x=form.find('input[name='+i+']')
+        x.addClass("is-invalid")
+        $("#"+i).text(errors[i])
+    }
+    },
+  })
+}
+
+
+function CraerNivel(){
+  let form = $("#CrearcarNivelForm")
+  console.log(form.attr('action'),form.attr('method'),form.serialize())
+  $.ajax({
+    url: form.attr('action'),
+    type: form.attr('method'),
+    data: form.serialize(),
+    success: function(){
+      Swal.fire(
+        'HECHO',
+        'Nivel Creado',
+        'success'
+      ).then(function(){
+        location.reload()
+      })
+    },
+    error: function(){
+      form.find('.error_text').text('');
+      form.find('.is-invalid').removeClass('is-invalid');
+      for (let i in errors){
+        let x=form.find('input[name='+i+']')
+        x.addClass("is-invalid")
+        $("#"+i).text(errors[i])
+    }
+    },
+  })
+}
+
+function abrir_modal_calendario(url){
+  $("#ModalInfoEstudianteCalendario").load(url, function (){ 
+    $(this).appendTo("body").modal('show');
+  });
 }

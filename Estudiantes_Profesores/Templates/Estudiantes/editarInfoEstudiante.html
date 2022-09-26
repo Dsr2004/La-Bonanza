@@ -112,11 +112,6 @@
                         {{form.ciudad}}
                         <p class="error_text" id="ciudad"></p>
                     </div>
-                    <div class="col-md-6">
-                        <h5><strong>Nivel del estudiante:</strong></h5>
-                        {{form.nivel}}
-                        <p class="error_text" id="nivel"></p>
-                    </div>
                 </div>
                 <br>
             </div>
@@ -225,6 +220,20 @@
                 <br>
                 <div class="row">
                     <div class="col-md-6">
+                        <h5><strong>Profesor:</strong></h5>
+                        {{formRegistro.profesor}}
+                        <p class="error_text" id="profesor"></p>
+                    </div>
+                    <div class="col-md-6">
+                        <h5><strong>Nivel del estudiante:</strong></h5>
+                        {{formRegistro.nivel}}
+                        <p class="error_text" id="nivel"></p>
+                    </div>
+                  
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-6">
                         <div class="form-check">
                             <label class="form-check-label"><strong>Matrícula pagada:</strong></label>
                             {{formRegistro.pagado}} 
@@ -258,7 +267,7 @@
             autoHide: true,
             
         });
-        $("#id_inicioClase").datepicker({
+        $("#id_inicioClase").datepicker({ 
             language: 'es-ES',
             format: "dd/mm/YYYY",
             autoHide: true,

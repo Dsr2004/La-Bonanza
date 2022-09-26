@@ -2,6 +2,7 @@
 {% load static %}
 {% block titulo %}Crear Estudiante{% endblock titulo %}
 {% block estilos %}
+<link rel="stylesheet" href="{% static 'libs/datepicker/dist/datepicker.css' %}">
 <style>
     input{border: 1px solid #dadce0;border-radius: 4px;box-shadow: 0 0 0 transparent;font-size: 16px;line-height: 17px;outline: transparent;padding: 11px 16px;transition: border .3s, box-shadow .3s;width: 100%;}
     select{border: 1px solid #dadce0;border-radius: 4px;box-shadow: 0 0 0 transparent;font-size: 17px;line-height: 24px;outline: transparent;padding: 11px 16px;transition: border .3s, box-shadow .3s;width: 100%;}
@@ -11,18 +12,106 @@
 </style>{% endblock estilos %}
 {% block contenido %}
 <div class="container-fluid">
-    <form action="{% url 'registrarEstudiante' %}" method="post">
+    <form action="{% url 'registrarEstudiante' %}" method="post" enctype="multipart/form-data">
         <h1>Registro Estudiante</h1>
         <br>
         <div class="formulario">
             {% csrf_token %}
-            {%for campo in form %}
             <div>
-                <label for="" style="font-weight: 500;">{{campo.label}}:</label>
-                <br>{{campo}}<br>
+                <label for="" style="font-weight: 500;">{{form.nombre_completo.label}}:</label>
+                <br>{{form.nombre_completo}}<br>
                 <p id="" style="display: none;"></p>
             </div>
-            {%endfor%}
+            <div>
+                <label for="" style="font-weight: 500;">{{form.fecha_nacimiento.label}}:</label>
+                <br>{{form.fecha_nacimiento}}<br>
+                <p id="" style="display: none;"></p>
+            </div>
+            <div>
+                <label for="" style="font-weight: 500;">{{form.documento.label}}:</label>
+                <br>{{form.documento}}<br>
+                <p id="" style="display: none;"></p>
+            </div>
+            <div>
+                <label for="" style="font-weight: 500;">{{form.celular.label}}:</label>
+                <br>{{form.celular}}<br>
+                <p id="" style="display: none;"></p>
+            </div>
+            <div>
+                <label for="" style="font-weight: 500;">{{form.telefono.label}}:</label>
+                <br>{{form.telefono}}<br>
+                <p id="" style="display: none;"></p>
+            </div>
+            <div>
+                <label for="" style="font-weight: 500;">{{form.email.label}}:</label>
+                <br>{{form.email}}<br>
+                <p id="" style="display: none;"></p>
+            </div>
+            <div>
+                <label for="" style="font-weight: 500;">{{form.direccion.label}}:</label>
+                <br>{{form.direccion}}<br>
+                <p id="" style="display: none;"></p>
+            </div>
+            <div>
+                <label for="" style="font-weight: 500;">{{form.barrio.label}}:</label>
+                <br>{{form.barrio}}<br>
+                <p id="" style="display: none;"></p>
+            </div>
+            <div>
+                <label for="" style="font-weight: 500;">{{form.ciudad.label}}:</label>
+                <br>{{form.ciudad}}<br>
+                <p id="" style="display: none;"></p>
+            </div>
+            <div>
+                <label for="" style="font-weight: 500;">{{form.seguro_medico.label}}:</label>
+                <br>{{form.seguro_medico}}<br>
+                <p id="" style="display: none;"></p>
+            </div>
+            <div>
+                <label for="" style="font-weight: 500;">{{form.documento_identidad.label}}:</label>
+                <br>{{form.documento_identidad}}<br>
+                <p id="" style="display: none;"></p>
+            </div>
+            <div>
+                <label for="" style="font-weight: 500;">{{form.nombre_completo_acudiente.label}}:</label>
+                <br>{{form.nombre_completo_acudiente}}<br>
+                <p id="" style="display: none;"></p>
+            </div>
+            <div>
+                <label for="" style="font-weight: 500;">{{form.cedula_acudiente.label}}:</label>
+                <br>{{form.cedula_acudiente}}<br>
+                <p id="" style="display: none;"></p>
+            </div>
+            <div>
+                <label for="" style="font-weight: 500;">{{form.lugar_expedicion_acudiente.label}}:</label>
+                <br>{{form.lugar_expedicion_acudiente}}<br>
+                <p id="" style="display: none;"></p>
+            </div>
+            <div>
+                <label for="" style="font-weight: 500;">{{form.celular_acudiente.label}}:</label>
+                <br>{{form.celular_acudiente}}<br>
+                <p id="" style="display: none;"></p>
+            </div>
+            <div>
+                <label for="" style="font-weight: 500;">{{form.email_acudiente.label}}:</label>
+                <br>{{form.email_acudiente}}<br>
+                <p id="" style="display: none;"></p>
+            </div>
+            <div>
+                <label for="" style="font-weight: 500;">{{form.nombre_contactoE.label}}:</label>
+                <br>{{form.nombre_contactoE}}<br>
+                <p id="" style="display: none;"></p>
+            </div>
+            <div>
+                <label for="" style="font-weight: 500;">{{form.telefono_contactoE.label}}:</label>
+                <br>{{form.telefono_contactoE}}<br>
+                <p id="" style="display: none;"></p>
+            </div>
+            <div>
+                <label for="" style="font-weight: 500;">{{form.relacion_contactoE.label}}:</label>
+                <br>{{form.relacion_contactoE}}<br>
+                <p id="" style="display: none;"></p>
+            </div>
             <script>
                 let campos = document.querySelectorAll("input");
                 let selects = document.querySelectorAll("select");
@@ -42,9 +131,111 @@
             </script>
         </div>
         <hr>
+        <h5>Documentos</h5>
+       <div class="row">
+        <div class="col-md-6">
+            <div class="bodyFile">
+                <div class="containerFile">
+                    <h3>Sube tu archivo</h3>
+                    <div class="drag-area">
+                        <div class="icon"><i class="fas fa-images"></i></div>
+                        <span class="header">Arrastra y Suelta</span>
+                        <span class="header">o <span class="buttonDrag">Selecciónalo</span></span>
+                        <span class="support">Soporta: JPEG, JPG, PNG, PDF</span>
+                    </div>
+                </div>
+            </div>
+            <label for="" style="font-weight: 500;">{{form.documento_A.label}}:</label>
+            <br>{{form.documento_A}}<br>
+            <p id="" style="display: none;"></p>
+        </div>
+        <div class="col-md-6">
+            <label for="" style="font-weight: 500;">{{form.seguro_A.label}}:</label>
+            <br>{{form.seguro_A}}<br>
+            <p id="" style="display: none;"></p>
+        </div>
+       </div>
+       <div class="col-md-6">
+        <label for="" style="font-weight: 500;">{{form.firma.label}}:</label>
+        <br>{{form.firma}}<br>
+        <p id="" style="display: none;"></p>
+    </div>
         <button type="submit" class="btn btn-success w-100" style="float: right">Enviar</button>
         <br><br><br>
     </form>
 </div>
 {% endblock contenido %}
+
+
+{% block scripts %}
+<script>
+    const dragArea = $(".drag-area");
+    const dragTetxt = document.querySelector(".header")
+    let file;
+    
+     // cuando entra la imagen
+    dragArea.on("dragover", function(event) {
+    event.preventDefault();  
+    event.stopPropagation();
+    dragTetxt.textContent = "Listo para subir"
+    dragArea.addClass("active")
+    // console.log("entro al drag")
+    });
+     // cuando esta fuera
+    dragArea.on("dragleave", function() {
+        dragTetxt.textContent = "Arrastra y Suelta"
+        dragArea.removeClass("active")
+        // console.log("salio del drag")
+    });
+
+    dragArea.on("drop", function(event) {
+        event.preventDefault();  
+        file = event.dataTransfer.files[0]
+        console.log(file)
+        // console.log("solto el archivo")
+    });
+
+
+
+</script>
+
+<script src="{% static 'libs/datepicker/dist/datepicker.js' %}"></script>
+<script src="{% static 'libs/datepicker/i18n/datepicker.es-ES.js' %}"></script>
+<script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
+<script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.js"></script>
+<script src="https://unpkg.com/jquery-filepond/filepond.jquery.js"></script>
+    <script>
+         $("#id_fecha_nacimiento").datepicker({
+            language: 'es-ES',
+            format: "dd/mm/YYYY",
+            autoHide: true,
+            
+        });
+    </script>
+
+<script>
+    $(function(){
+    
+      // First register any plugins
+      $.fn.filepond.registerPlugin(FilePondPluginImagePreview);
+  
+      // Turn input element into a pond
+      $('.my-pond').filepond();
+  
+      // Set allowMultiple property to true
+      $('.my-pond').filepond('allowMultiple', true);
+    
+      // Listen for addfile event
+      $('.my-pond').on('FilePond:addfile', function(e) {
+          console.log('file added event', e);
+      });
+  
+      // Manually add a file using the addfile method
+      $('.my-pond').first().filepond('addFile', 'index.html').then(function(file){
+        console.log('file added', file);
+      });
+    
+    });
+  </script>
+{% endblock scripts %}
     

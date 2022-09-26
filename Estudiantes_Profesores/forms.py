@@ -1,18 +1,17 @@
-from tkinter import Widget
 from django import forms
 from .models import Estudiante, Registro, Profesor
 
 class EstudianteForm(forms.ModelForm):
     class Meta:
         model = Estudiante
-        fields = ["nombre_completo","fecha_nacimiento","documento", "celular","telefono","email",
+        fields = ("nombre_completo","fecha_nacimiento","documento", "celular","telefono","email",
         "direccion","barrio","ciudad","seguro_medico","documento_identidad",
         "nombre_completo_acudiente","cedula_acudiente","lugar_expedicion_acudiente","celular_acudiente","email_acudiente",
-        "nombre_contactoE","telefono_contactoE","relacion_contactoE","nivel"]
+        "nombre_contactoE","telefono_contactoE","relacion_contactoE", "documento_A", "seguro_A", "firma")
 
         widgets = {
             "nombre_completo": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
-            "fecha_nacimiento":forms.DateInput(attrs={"type":"date","class":"form-control", "autocomplete":"off"}),
+            "fecha_nacimiento":forms.DateInput(attrs={"type":"text","class":"form-control", "autocomplete":"off"}),
             "documento": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
             "celular": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
             "telefono": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
@@ -30,10 +29,11 @@ class EstudianteForm(forms.ModelForm):
             "nombre_contactoE": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
             "telefono_contactoE": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
             "relacion_contactoE": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
-            "nivel": forms.Select(attrs={"class":"form-select"}),
-        }
+            "documento_A" : forms.FileInput(attrs={"class":"form-control"}),
+            "seguro_A" : forms.FileInput(attrs={"class":"form-control"}),
+            "firma" : forms.FileInput(attrs={"class":"form-control"})
 
-        
+        }    
 
 
 class RegistroForm(forms.ModelForm):
@@ -47,6 +47,8 @@ class RegistroForm(forms.ModelForm):
             "finClase": forms.DateInput(attrs={"class":"form-control", "autocomplete":"off"}),
             "horaClase": forms.TimeInput(attrs={"type":"time", "class":"form-control", "autocomplete":"off"}),
             "diaClase": forms.SelectMultiple(attrs={"class":"form-select"}),
+            "nivel": forms.Select(attrs={"class":"form-select"}),
+            "profesor": forms.Select(attrs={"class":"form-select"}),
         }
         
 class ProfesorForm(forms.ModelForm):

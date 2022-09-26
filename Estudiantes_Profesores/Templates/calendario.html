@@ -8,9 +8,12 @@
     
 
 {% block contenido %}
-<div id="calendar" style="padding: 40px;">
-</div>
+<div id="calendar" style="padding: 40px;"></div>
+
+<div class="modal fade" id="ModalInfoEstudianteCalendario" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>
 {% endblock contenido %}
+
+
 
 {% block scripts %}
 <script src="{% static 'libs/fullcalendar/lib/main.js' %}"></script>
@@ -32,12 +35,13 @@
             events: [
             {%for clase in clases %}
                 {
+                id: '{%url 'verInfoEstudianteCalendario' clase.pk%}',
                 title : '{{clase.get_estudiante}}',
                 startRecur : '{{clase.inicioClase|date:"Y-m-d"}}',
                 endRecur : '{{clase.finClase|date:"Y-m-d"}}',
 
                 startTime: '{{clase.horaClase}}',
-                daysOfWeek: [ '{{clase.diaClase}}' ],
+                daysOfWeek: {{clase.get_dias_clase|safe}},
                 color: '{{clase.estudiante.nivel.color_fondo}}',
                 textColor: '{{clase.estudiante.nivel.color_letra}}',
                 },
@@ -45,6 +49,9 @@
             {%endfor%}
 
             ],
+            eventClick: function(arg) {
+            abrir_modal_calendario(arg.event.id)
+      },
         })
 
         calendar.render();
@@ -54,66 +61,3 @@
 </script>
 {% endblock scripts %}
 
-
-
-{% comment %}
-events: [
-{
-title : "Estudiante 1",
-startRecur : "2022-08-18",
-endRecur : "2022-08-31",
-
-startTime: '10:45:00',
-endTime: '12:45:00',
-color: "green",
-daysOfWeek: [ '4' ],
-},
-{
-title : "Estudiante 2",
-startRecur : "2022-07-01",
-endRecur : "2022-08-31",
-startTime: '11:45:00',
-endTime: '12:45:00',
-color: "red",
-daysOfWeek: [ '5' ],
-},
-{
-title : "Estudiante 3",
-startRecur : "2022-08-18",
-endRecur : "2022-08-31",
-startTime: '10:45:00',
-endTime: '12:45:00',
-color: "yellow",
-daysOfWeek: [ '4' ],
-}
-],
-
-
-----------------
-
-{
-    title : "Estudiante 1",
-    startRecur : "2022-08-18",
-    endRecur : "2022-08-31",
-    
-    startTime: '10:45:00',
-    color: "green",
-    daysOfWeek: [ '4' ],
-    },
-    {
-    title : "Estudiante 2",
-    startRecur : "2022-07-01",
-    endRecur : "2022-08-31",
-    startTime: '11:45:00',
-    color: "red",
-    daysOfWeek: [ '5' ],
-    },
-    {
-    title : "Estudiante 3",
-    startRecur : "2022-08-18",
-    endRecur : "2022-08-31",
-    startTime: '10:45:00',
-    color: "yellow",
-    daysOfWeek: [ '4' ],
-    }
-{% endcomment %}

@@ -43,8 +43,8 @@ class UsuarioManager(BaseUserManager):
         return usuario
 
 class Usuario(AbstractBaseUser):
-    usuario = models.CharField("Usuario", unique=True, max_length=15)
-    nombres  = models.CharField("Nombres del usuario", blank=False, null=False, max_length=15)
+    usuario = models.CharField("Usuario", unique=True, max_length=50)
+    nombres  = models.CharField("Nombres del usuario", blank=False, null=False, max_length=50)
     celular = models.CharField("Celular del usuario", blank=False, null=False, max_length=10)
     apellidos = models.CharField("Apellidos de usuario", blank=False, null=False, max_length=25)
     cedula = models.CharField("Cedula", blank=False, null=False, max_length=25)

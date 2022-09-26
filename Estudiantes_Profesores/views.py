@@ -10,6 +10,8 @@ from .models import Estudiante, Registro, Profesor
 from .forms import EstudianteForm, RegistroForm,ProfesorForm
 from Usuarios.models import Usuario
 from datetime import datetime 
+
+
 class Calendario(View):
     template_name = "calendario.html"
     model = Registro
@@ -18,11 +20,15 @@ class Calendario(View):
         ctx = {"clases":registros}
         return render(request, self.template_name ,ctx)
 
+class VerInfoEstudianteCalendario(DetailView):
+    model=Registro
+    template_name = "Calendario/verInfoEstudianteCalendario.html"
+
+
 class Estudiantes(ListView):
     template_name = "estudiantes.html"
     context_object_name= "estudiantes"
     model = Registro
-
     def get_context_data(self, **kwargs):
         ctx =  super().get_context_data(**kwargs)
         estudiantes = Estudiante.objects.all().count()
@@ -30,7 +36,7 @@ class Estudiantes(ListView):
         if estudiantes != registrosEstudiantes:
             ctx["nuevosEstudiantes"]=True
         else:
-             ctx["nuevosEstudiantes"]=False
+            ctx["nuevosEstudiantes"]=False
         return ctx
 
 class RegistrarEstudiante(CreateView):
@@ -38,6 +44,8 @@ class RegistrarEstudiante(CreateView):
     form_class = EstudianteForm
     template_name = "crearEstudiante.html"
     success_url = reverse_lazy("estudiantes")
+        
+
     
 class BuscarNuevosEstudiantes(View):
      def get(self, request, *args, **kwargs):

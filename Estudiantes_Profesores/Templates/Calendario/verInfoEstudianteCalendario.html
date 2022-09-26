@@ -1,0 +1,21 @@
+<div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">{{object.estudiante}}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <h3>Información del estudiante</h3>
+        <h4>Nombre: </h4>
+        <h6>{{object.estudiante.nombre_completo}}</h6>
+        <h4>Nivel: </h4>
+        <h6>{{object.estudiante.nivel}}</h6>
+        <hr>
+        <h3>Información de la clase</h3>
+        <h4>Dia: </h4>
+        <h6>{{object.get_diaClase_display}}</h6>
+        <h4>Hora: </h4>
+        <h6>{{object.horaClase|time:"P"}}</h6>
+      </div>
+    </div>
+  </div>

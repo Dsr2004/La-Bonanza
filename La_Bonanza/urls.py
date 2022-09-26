@@ -27,13 +27,15 @@ from .views import index, pos
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", index.as_view(), name="index"),
+    path("", login_required(index.as_view()), name="index"),
     path("Login/", Login.as_view(), name="login"),
     path("Logout/", LogoutView.as_view(),{'next_page': settings.LOGOUT_REDIRECT_URL}, name="logout"),
     path("Usuarios/", include("Usuarios.urls")),
     path("Administracion/", include("Estudiantes_Profesores.urls")),
+    path("Niveles/", include("Niveles.urls")),
     path("pos/", pos)
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -62,6 +62,11 @@
             </li>
             <li class="nav-item">
               <a class="nav-link 
+              {% if request.path == '/Niveles/Listar/'%}active {% endif %} 
+              " aria-current="page" href="{%url 'listarNivel'%} ">Niveles</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link 
               {% if request.path == '/Administracion/Calendario/'%}active {% endif %} 
               " aria-current="page" href="{%url 'calendario'%}">Calendario</a>
             </li>
@@ -88,7 +93,7 @@
     {% block modals %}
             
     {% endblock modals %}
-    <div class="modal fade" id="CambiarContrasena" role="dialog" >
+    <div class="modal fade" id="CambiarContrasena" role="dialog" opacity: 1 !important>
     </div>
     <script src="{% static 'libs/sweetalert/sweetalert.js' %}"></script>
     <script src="{% static 'libs/jquery/jquery.min.js' %}"></script>
