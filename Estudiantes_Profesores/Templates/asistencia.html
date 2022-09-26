@@ -8,9 +8,39 @@
     
 
 {% block contenido %}
+
+{% if messages %}
+    {% for mensaje in messages %}
+        {% if mensaje.tags == "info" %}
+            <div class="container alert alert-info  alert-dismissible fade show" role="alert">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16" role="img" aria-label="Warning:">
+                <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                </svg>
+            {{mensaje}}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div> 
+        {% elif mensaje.tags == "warning"%}
+            <div class="container alert alert-warning  alert-dismissible fade show" role="alert">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16" role="img" aria-label="Warning:">
+                <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                </svg>
+            {{mensaje}}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div> 
+        {% endif %}
+    {% endfor %}
+{% endif %}
+    
 {% regroup clases by horaClase as x %}
     <div class="container">
-        <h4><center>{{dia|date:"D-d M Y"}}</center></h4>
+        <div class="row sticky-top" style="background-color: white;">
+            <div class="col-11">
+                <h4 style="margin-left: 16vh;"><center>{{dia|date:"D-d M Y"}}</center></h4>
+            </div>
+            <div class="col-1">
+                <a href="{% url 'controlAsistencia' %}" class="btn btn-outline-secondary "><i class="fa-solid fa-box-archive"></i></a>
+            </div>
+        </div>
         <hr>
         {% for clase in x %}
             <ul class="list-group">
@@ -35,7 +65,8 @@
                                     <select name="estudiante{{estudiante.estudiante.pk}}" id="" class="form-select">
                                         <option value="1" selected>Asistió</option>
                                         <option value="2">No asistió </option>
-                                        <option value="3">Cancelo</option>
+                                        <option value="3">Cancelo con excusa</option>
+                                        <option value="4">Cancelo por enfermedad</option>
                                     </select>
                                     <input type="hidden" name="estudiante{{estudiante.estudiante.pk}}" value="{{estudiante.estudiante.pk}}">
         

@@ -5,7 +5,8 @@ from django.shortcuts import render, redirect
 from django.views.generic import View, CreateView, ListView, UpdateView, DetailView
 from django.urls import reverse_lazy
 from django.http import JsonResponse, HttpResponse
-from .models import Estudiante, Registro, Profesor
+from django.contrib import messages
+from .models import Estudiante, Registro, Profesor, Asistencia
 from .forms import EstudianteForm, RegistroForm,ProfesorForm
 from Usuarios.models import Usuario
 from datetime import datetime, timedelta
@@ -50,16 +51,59 @@ class GestionDeAsistencia(View):
 
     def post(self, request, *args, **kwargs):
         clases = dict(request.POST.copy())
-        hora = clases["hora"]
-        print(hora)
+        hora = clases["hora"][0]
+        hora = datetime.strptime(hora,"%H:%M").time()
         clases.pop("hora",None)
         clases.pop("csrfmiddlewaretoken",None)
-        kiwi =[]
+        clasesDia =[]
         for clase in clases:
-            kiwi.append({"estudiante":clases[clase][1],"estado":clases[clase][0]})
-        print(kiwi)
-        return HttpResponse(request.POST)
+            clasesDia.append({"estudiante":clases[clase][1],"estado":clases[clase][0]})
+        # hasta aqui funciona
+        for clase in clasesDia:
+            try:
+                registro = Registro.objects.get(estudiante=clase["estudiante"])
+                asistencia, creado = Asistencia.objects.get_or_create(registro=registro, dia=datetime.now().date(), hora=hora) 
+                if creado:
+                    asistencia.estado = clase["estado"]
+                    asistencia.save()
+                    messages.add_message(request, messages.INFO, f"{registro.estudiante.nombre_completo} ha sido registrado correctamente en la asistencia del día")
+                else:
+                    if asistencia.estado != clase["estado"]:
+                        asistencia.estado=clase["estado"]
+                        asistencia.save()
+                        messages.add_message(request, messages.WARNING, f"{registro.estudiante.nombre_completo} ha sido modificado, porque ya estaba en la asistencia del día")
+            except:
+                 messages.add_message(request, messages.ERROR, f"No se encontro al estudiante en la base de datos")
+        return redirect("asistencia")
     
+class ControlAsistencia(View):
+    model = Asistencia
+    template_name = "ctrlAsistencia.html"
+    def get(self, request, *args, **kwargs):
+        dia = datetime.now().date()
+        asistencia = self.model.objects.filter(dia=dia).order_by("hora")
+        ctx = {"dia":dia,"asistencia":asistencia}
+        return render(request, self.template_name, ctx)
+    
+    def post(self, request, *args, **kwargs):
+        accion = request.POST["accion"]
+        dia = request.POST["dia"]
+        try:
+            dia = datetime.strptime(dia, "%d/%m/%Y")
+        except:
+            print("error al convertir la fecha")
+            return redirect("controlAsistencia")
+
+        if accion == "siguiente":
+            dia = dia + timedelta(days=1)
+        elif accion == "anterior":
+            dia = dia - timedelta(days=1)
+        else:
+            return redirect("controlAsistencia")
+        
+        asistencia = self.model.objects.filter(dia=dia).order_by("hora")
+        ctx = {"dia":dia,"asistencia":asistencia}
+        return render(request, self.template_name, ctx)
 
 class Estudiantes(ListView):
     template_name = "estudiantes.html"
