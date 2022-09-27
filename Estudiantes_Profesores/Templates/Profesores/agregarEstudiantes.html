@@ -1,0 +1,45 @@
+<div class="modal-dialog modal-lg ">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Relacionar Estudiantes con {{profesor}}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="height: 100%; overflow: auto;">
+        <style>
+            .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn){
+                width: 100%;
+            }
+        </style>
+            <select name="Estudiantes" id="SelectEstudiantes" class="selectpicker" style="width: 100%;" multiple>
+                {%for registro in registros%}
+                <option value="{{registro.pk}}">{{registro.estudiante}}</option>
+                {%endfor%}
+            </select>
+            {%csrf_token%}
+            <br><br>
+            <button class="btn btn-success" style="float: right;" onclick="relacionarEstudiantes()">Relacionar</button>
+            <script>
+                cargar()
+                function relacionarEstudiantes(){
+                    let estudiantes = $('#SelectEstudiantes').val();
+                    $.ajax({
+                        url:"{%url 'verEstudiantes' profesor.pk%}",
+                        data:{
+                            'tipo':'add',
+                            'csrfmiddlewaretoken':csrftoken,
+                            'estudiantes':JSON.stringify(estudiantes),
+                        },
+                        type:'POST',
+                        success: function(data) {
+                            window.location.reload();
+                        },
+                        error: function(error){
+                            Error = error['responseJSON'];
+                            alert(Error['error'])
+                        }
+                    })
+                }
+            </script>
+      </div>
+    </div>
+  </div>

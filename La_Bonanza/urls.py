@@ -27,7 +27,7 @@ from .views import index, pos
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", index.as_view(), name="index"),
+    path("", login_required(index.as_view()), name="index"),
     path("Login/", Login.as_view(), name="login"),
     path("Logout/", LogoutView.as_view(),{'next_page': settings.LOGOUT_REDIRECT_URL}, name="logout"),
     path("Usuarios/", include("Usuarios.urls")),

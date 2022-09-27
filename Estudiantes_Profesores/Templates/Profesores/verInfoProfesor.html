@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block titulo %}{%for Profesor in Profesor%}Información del profesor {{Profesor.profesor.usuario.usuario}}{%endfor%}{% endblock titulo %}
+
+
+{% block contenido %}
+{%for Profesor in Profesor%}
+    <div class="container">
+        <a href="{%url 'profesores'%}">Volver</a>
+        <h1>{{Profesor.profesor.usuario.nombres}} {{Profesor.profesor.usuario.apellidos}}</h1>
+        <hr>
+        <div>
+            <h2>Niveles: </h2>
+            <br>
+            <div style="display:flex;">
+                {%for nivel in Profesor.profesor.niveles.all%}
+                <div style="text-align: center; padding: 5px 10px; margin: 5px; border-radius: 10px; background-color: {{nivel.color_fondo}};color:{{nivel.color_letra}}; ">{{nivel.nivel}}</div>
+                {%endfor%}
+            </div>
+        </div>
+        <hr>
+        <h2>{%if Profesor.profesor.trabaja_sabado%}Si{%else%}No{%endif%} trabaja los sabados</h2>
+        <hr>
+        <div>
+            <h2>Horarios: </h2>
+            <div>
+                {%for horario in Profesor.horarios%}
+                <h3 style="font-weight: 400;">{{horario}}</h3>
+                {%endfor%}
+            </div>
+        </div>
+    </div>
+{%endfor%}
+{% endblock contenido %}
+
+    
