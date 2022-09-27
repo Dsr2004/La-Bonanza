@@ -1,0 +1,117 @@
+{%extends 'base.html' %}
+{% block titulo %}Estudiante de {{profesor}}{% endblock titulo %}
+{%block estilos%}
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+<!-- CSS only -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<style>
+    h3{
+        font-weight: 350;
+    }
+</style>
+{%endblock estilos%}
+{% block contenido %}
+<div class="container">
+    <div class="row">
+        {%if user.administrador%}
+        <a href="{%url 'verEstudiantes' profesor.pk%}">Volver</a>
+        {%else%}
+        <a href="{%url 'profesores'%}">Volver</a>
+        {%endif%}
+    </div>
+    <div class="row">
+        <div class="col-md-10">
+            <h1>Estudiante de {{profesor}}</h1>
+        </div>
+    </div>
+    <hr>
+    <div class="row" style="display: grid; grid-template-columns: 1fr 1fr;">
+        <div>
+            <h2>Nombre: </h2>
+            <h3>{{registro.estudiante.nombre_completo}}</h3>
+        </div>
+        <div>
+            <h2>Pago: </h2><h3>{%if registro.pagado%}SI{%else%}NO{%endif%}</h3>
+        </div>
+    </div>
+    <h2>Nivel:</h2>
+    <div style="text-align: center; padding: 5px 5px; margin: 5px; border-radius: 10px; background-color: {{registro.nivel.color_fondo}};color:{{registro.nivel.color_letra}}; ">{{registro.nivel.nivel}}</div>
+    <h2>Clases: </h2>
+    <div style="flex">
+        <div style="font-size: 17px;">Inicia clases el {{registro.inicioClase}} y finaliza el {{registro.finClase}}</div>
+        <div>Hora de clases a las {{horaClase}}</div>
+        <div>Días de clase {{registro.get_diaClase_display}}</div>
+    </div>
+    <hr>
+    <div class="row" style="display: grid; grid-template-columns: 1fr 1fr;">
+        <div>
+            <h2>Celular: </h2>
+            <h3>{{registro.estudiante.celular}}</h3>
+        </div>
+        <div>
+            <h2>Teléfono: </h2>
+            <h3>{{registro.estudiante.telefono}}</h3>
+        </div>
+        <div>
+            <h2>Documento:</h2>
+            <h3>{{registro.estudiante.documento}}</h3>
+        </div>
+        <div>
+            <h2>Email: </h2>
+            <h3>{{registro.estudiante.email}}</h3>
+        </div>
+        <div>
+            <h2>Dirección:</h2><h3>{{registro.estudiante.direccion}}</h3>
+        </div>
+        <div>
+            <h2>Ciudad y barrio:</h2><h3>{{registro.estudiante.ciudad}}-{{registro.estudiante.barrio}}</h3>
+        </div>
+        <div>
+            <h2>Seguro médico:</h2><h3>{%if registro.estudiante.seguro_medico%}SI{%else%}NO{%endif%}</h3>
+        </div>
+        <div>
+            <h2>Documento de identidad:</h2><h3>{%if registro.estudiante.documento_identidad%}SI{%else%}NO{%endif%}</h3>
+        </div>
+    </div>
+    <hr>
+    <div class="row" style="display: grid; grid-template-columns: 1fr 1fr;">
+        <div>
+            <h2>Nombre del acudiente: </h2>
+            <h3>{{registro.estudiante.nombre_completo_acudiente}}</h3>
+        </div>
+        <div>
+            <h2>Celular del acudiente: </h2>
+            <h3>{{registro.estudiante.celular_acudiente}}</h3>
+        </div>
+        <div>
+            <h2>Cédula del acudiente:</h2><h3>{{registro.estudiante.cedula_acudiente}}</h3>
+        </div>
+        <div>
+            <h2>Lugar de expedición.</h2><h3>{{registro.estudiante.lugar_expedicion_acudiente}}</h3>
+        </div>
+        <div>
+            <h2>Email del acudiente</h2><h3>{{registro.estudiante.email_acudiente}}</h3>
+        </div>
+    </div>
+    <hr>
+    <div class="row" style="display: grid; grid-template-columns: 1fr 1fr;">
+        <div>
+            <h2>Nombre del contacto de emergencia: </h2>
+            <h3>{{registro.estudiante.nombre_contactoE}}</h3>
+        </div>
+        <div>
+            <h2>Teléfono del contacto de emergencia: </h2>
+            <h3>{{registro.estudiante.telefono_contactoE}}</h3>
+        </div>
+    </div>
+    <div>
+        <h2>Relación con el contacto de emergencia: </h2>
+        <h3>{{registro.estudiante.relacion_contactoE}}</h3>
+    </div>
+</div>
+{%endblock contenido%}
+{% block modals %}
+{% endblock modals %}
+{% block scripts %}
+{% endblock scripts %}

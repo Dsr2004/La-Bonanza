@@ -7,6 +7,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 {%endblock estilos%}
 {% block contenido %}
+{%if Profesores%}
 <div class="container">
     <div class="row">
      <div class="col-md-10">
@@ -23,12 +24,9 @@
             <tr>
                 <th>ID</th>
                 <th>Usuario</th>
-                <th>Cédula</th>
-                <th>Fecha de Nacimiento</th>
                 <th>Celular</th>
                 <th>Horario</th>
-                <th>Trabaja los domingos</th>
-                <th>Niveles</th>
+                <th>Acciones</th>
             </tr>
          </thead>
          <tbody>
@@ -37,23 +35,113 @@
                 <tr style="height: 40px;">
                     <td>{{Profesor.profesor.usuario.pk}}</td>
                     <td>{{Profesor.profesor.usuario.usuario}}</td>
-                    <td>{{Profesor.profesor.usuario.cedula}}</td>
-                    <td>{{Profesor.profesor.usuario.fecha_nacimiento}}</td>
                     <td>{{Profesor.profesor.usuario.celular}}</td>
                     <td>{{Profesor.horario}}</td>
-                    <td>{%if Profesor.profesor.trabaja_sabado%}Si{%else%}No{%endif%}</td>
-                    <td style="height: 40px; padding: 5px; display: flex; justify-content: start; flex-wrap: wrap; overflow: auto;">{%for nivel in Profesor.profesor.niveles.all%}<div style="text-align: center; padding: 5px 0; margin: 5px; border-radius: 10px; background-color: {{nivel.color_fondo}};color:{{nivel.color_letra}}; ">{{nivel.nivel}}</div>{%endfor%}</td>
+                    <td>
+                        <div style="display:inline-flex; ">
+                            <a href="{%url 'verInfoProfesor' Profesor.profesor.usuario.pk%}" style="margin-right:10px" class="btn btn-outline-info btn-sm"><i class="fa-solid fa-eye"></i></a>
+                            <a href="{%url 'verEstudiantes' Profesor.profesor.usuario.pk%}" style="margin-right:10px" class="btn btn-outline-secondary btn-sm"><i class="fa-solid fa-school"></i></a>
+                            <button style="margin-right:10px"  class="btn btn-outline-warning btn-sm" onclick="editarProfesor('{%url 'editarProfesor' Profesor.profesor.usuario.pk%}')"><i class="fa-solid fa-pencil"></i></button>
+                            <div style="margin-right:10px" class="form-check form-switch">
+                                <form id="EstadoUsuarioForm" method="post" action="{% url 'editarEstadoUsuario' %}">
+                                    {%csrf_token%}
+                                    <div class="form-check form-switch switch-Cambio-TipoServicio" style="">
+                                        <input class="form-check-input" type="checkbox" style="margin-left: -15px;" role="switching" {% if Profesor.profesor.usuario.estado  %}
+                                        checked
+                                        {% endif %} onclick="cambiar_estado_usuario('{{Profesor.profesor.usuario.pk}}')">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </td>
                 </tr>
             {% endfor %}
             {%endif%}
          </tbody>
      </table>
  </div>
+{%else%}
+<div class="container">
+   <div class="row">
+        <div style="display: flex; justify-content: space-between;">
+            <h1>Perfil {{Profesor.profesor}}</h1>
+            <button class="btn btn-lg" id="togglePerfil" onclick="perfil()">Mostrar <i class="fa fa-angle-down"></i></button>
+        </div>
+        <div id="Perfil" style="display: none;">
+            <div>
+                <h2>Niveles: </h2>
+                <div style="display:flex;">
+                    {%for nivel in Profesor.profesor.niveles.all%}
+                    <div style="text-align: center; padding: 5px 10px; margin: 5px; border-radius: 10px; background-color: {{nivel.color_fondo}};color:{{nivel.color_letra}}; ">{{nivel.nivel}}</div>
+                    {%endfor%}
+                </div>
+            </div>
+            <div>
+                <h2>Horarios: </h2>
+                <h3 style="font-weight: 400;">{{Profesor.horario}}</h3>
+            </div>
+            <div>
+                <h2>{%if Profesor.profesor.trabaja_sabado%}Si{%else%}No{%endif%} trabaja los sabados</h2>
+            </div>
+        </div>
+   </div>
+   <br>
+   <div class="row">
+    {%if Registros%}
+        {%for registro in Registros %}
+            <div style="display:flex;justify-content: space-between; border-bottom: 1px solid rgba(0,0,0,0.1);" class="table">
+                <div>{{registro.estudiante.nombre_completo}}</div>
+                <div><div style="text-align: center; padding: 5px 5px; margin: 5px; border-radius: 10px; background-color: {{registro.nivel.color_fondo}};color:{{registro.nivel.color_letra}}; ">{{registro.nivel.nivel}}</div></div>
+                <div>{{registro.estudiante.nombre_completo_acudiente}}</div>
+                <div>{{registro.estudiante.celular_acudiente}}</div>
+                <div><div style="display:inline-flex; ">
+                    <a href="{%url 'verEstudiante' Profesor.profesor.pk%}?id_registro={{registro.pk}}" style="margin-right:10px" class="btn btn-outline-info btn-sm"><i class="fa-solid fa-eye"></i> ver más</a>
+                </div></div>
+            </div>
+        {%endfor%}
+    {%else%}
+    <h1>No tienes estudiantes relacionados.</h1>
+    {%endif%}
+   </div>
+</div>
+{%endif%}
 {%endblock contenido%}
+{% block modals %}
+<div class="modal fade" id="editarProfesor" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+</div>
+{% endblock modals %}
 {% block scripts %}
+{%if Profesores%}
 <script>
     $(document).ready(function(){
         $("#ProfesoresTable").DataTable({responsive:true})
     })
+    function editarProfesor(url){
+        $("#editarProfesor").load(url, function (){ 
+            $(this).appendTo("body").modal('show');
+        });
+    }
 </script>
+{%else%}
+<script>
+    function perfil(){
+        let btn = document.getElementById('togglePerfil');
+        if(btn.innerHTML == 'Mostrar <i class="fa fa-angle-down"></i>'){
+            document.getElementById('Perfil').style.display = 'block';
+            btn.innerHTML = 'Ocultar <i class="fa fa-angle-up"></i>'
+        }
+        else{
+            document.getElementById('Perfil').style.display = 'none';
+            btn.innerHTML = 'Mostrar <i class="fa fa-angle-down"></i>'
+        }
+    }
+</script>
+{%endif%}
+<script>
+    function cargar(){
+        $('.selectpicker').selectpicker();
+    }
+</script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
 {% endblock scripts %}

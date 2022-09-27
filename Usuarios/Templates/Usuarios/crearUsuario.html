@@ -253,6 +253,11 @@
                 type: $("#RegistrarUsuarioForm").attr('method'),
                 success: function (data) {
                     if(formulario.childNodes[5].style.display != 'none'){
+                        console.log({
+                            'csrfmiddlewaretoken':csrftoken,
+                            'datos':JSON.stringify(profesor),
+                            'usuario':data['datos'],
+                        })
                         $.ajax({
                             url:'{%url "registrarProfesor"%}',
                             data:{

@@ -1,3 +1,4 @@
+from enum import unique
 from platform import mac_ver
 from pyexpat import model
 from statistics import mode
@@ -43,11 +44,12 @@ class UsuarioManager(BaseUserManager):
         return usuario
 
 class Usuario(AbstractBaseUser):
+    id = models.CharField(max_length=10, primary_key=True, unique=True, blank=False, null=False)
     usuario = models.CharField("Usuario", unique=True, max_length=50)
     nombres  = models.CharField("Nombres del usuario", blank=False, null=False, max_length=50)
-    celular = models.CharField("Celular del usuario", blank=False, null=False, max_length=10)
+    celular = models.CharField("Celular del usuario", blank=False, null=False, max_length=10, unique=True)
     apellidos = models.CharField("Apellidos de usuario", blank=False, null=False, max_length=25)
-    cedula = models.CharField("Cedula", blank=False, null=False, max_length=25)
+    cedula = models.CharField("Cedula", blank=False, null=False, max_length=25, unique=True)
     fecha_nacimiento = models.DateField("Fecha de nacimiento",auto_now=False, auto_now_add=False)
     email = models.EmailField('Correo Electrónico', unique=True)
     estado = models.BooleanField("Estado del usuario", default=True)

@@ -8,6 +8,10 @@
     
 
 {% block contenido %}
+<br>
+<div class="container">
+    <a href="{% url 'asistencia' %}" class="btn btn-outline-secondary w-100">Gestionar Aistencia</a>
+</div>
 <div id="calendar" style="padding: 40px;"></div>
 
 <div class="modal fade" id="ModalInfoEstudianteCalendario" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>
@@ -40,10 +44,10 @@
                 startRecur : '{{clase.inicioClase|date:"Y-m-d"}}',
                 endRecur : '{{clase.finClase|date:"Y-m-d"}}',
 
-                startTime: '{{clase.horaClase}}',
+                startTime: '{{clase.horaClase|date:"H:i"}}',
                 daysOfWeek: {{clase.get_dias_clase|safe}},
-                color: '{{clase.estudiante.nivel.color_fondo}}',
-                textColor: '{{clase.estudiante.nivel.color_letra}}',
+                color: '{{clase.nivel.color_fondo}}',
+                textColor: '{{clase.nivel.color_letra}}',
                 },
                 
             {%endfor%}

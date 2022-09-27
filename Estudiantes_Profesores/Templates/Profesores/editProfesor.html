@@ -1,0 +1,206 @@
+<div class="modal-dialog modal-lg ">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Editar información del profesor {{Profesor.profesor}}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="height: 80vh; overflow: auto;">
+        <style>
+            .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn){
+                width: 100%;
+            }
+        </style>
+        <form id="EditarProfesorForm" class="FormularioProfesores">
+            <div class="headerHorario" style="display: flex; justify-content:space-between;">
+                <label for="" style="font-weight: 500;">Horarios:</label>
+                <div style="display: grid;grid-template-columns:1fr 1fr;grid-gap:5px;"><div style="width:100%;background-color:red; padding:0 0px 0 12px;margin-bottom:5px;border-radius:5px; cursor:pointer;" onclick="eliminarHoras()"><i class="fa fa-remove"style="font-size:16px;"></i> </div><div style="width:100%;background-color:cyan; padding:0 10px;margin-bottom:5px;border-radius:5px; cursor:pointer;" onclick="agregarHoras()"><i class="fa fa-plus"style="font-size:15px;"></i></div></div>
+            </div>
+            <div class="form-control" id="horarios" style="height: 120px; display: flex; justify-content:start; overflow: auto;">
+            </div>
+            <p id="horarios-p" style="display: none;"></p>
+            {%for campo in form %}
+            <div>
+                <label for="" style="font-weight: 500;">{{campo.label}}:</label>
+                <br>{{campo}}<br class="beforeCampoProfe">
+                <p id="" style="display: none;"></p>
+            </div>
+            {%endfor%}
+            <script>
+                try{
+                    let beforen = document.getElementsByClassName('beforeCampoProfe')
+                    for (let i = 0; i < beforen.length; i++){
+                        let befored = beforen[i].previousSibling.id
+                        let afterd = beforen[i].nextSibling.nextSibling
+                        afterd.id = befored + '-p'
+                    }
+                }
+                catch{}
+            </script>
+            <br>
+            <button class="btn btn-success" style="float: right;"type="button"onclick="editarProfesor()">Editar</button>
+            <br>
+            <br>
+        </form>
+        <p style="display: none;" id="horariosPq">{{horarios}}</p>
+        <script>
+            var niveles = [];
+        </script>
+        {%if Profesor.profesor.trabaja_sabado%}
+        <script>
+            document.getElementById('id_trabaja_sabado').checked = true;
+        </script>{%endif%}
+        {%for nivel in Profesor.profesor.niveles.all%}
+        <script>
+            niveles.push({'id':'{{nivel.pk}}','nombre':'{{nivel.nivel}}'})
+        </script>
+        {%endfor%}
+            <script>
+                cargar()
+                cargarNiveles()
+                cargarHoras(JSON.parse(document.getElementById('horariosPq').innerHTML))
+                function agregarHoras(){
+                    const divHorario = document.createElement('div');
+                    const inputHorario = document.createElement("input");
+                    inputHorario.type = "time";
+                    inputHorario.className = "form-control";
+                    inputHorario.autocomplete = "off";
+                    let pHorario = document.createElement("div");
+                    pHorario.textContent = "a"
+                    pHorario.style.textAlign = "center";
+                    let cloneInput = inputHorario.cloneNode(true);
+                    inputHorario.classList.add("from")
+                    divHorario.appendChild(inputHorario);
+                    cloneInput.classList.add("through")
+                    divHorario.appendChild(pHorario);
+                    divHorario.appendChild(cloneInput);
+                    document.getElementById('horarios').appendChild(divHorario);
+                }
+                function eliminarHoras(){
+                    let child = document.getElementById('horarios').lastChild;
+                    document.getElementById('horarios').removeChild(child);
+                }
+                function cargarHoras(Horarios){
+                    for(var i=0;i<Horarios.length;i++) {
+                        horas = Horarios[i];
+                        const divHorario = document.createElement('div');
+                        const inputHorario = document.createElement("input");
+                        inputHorario.type = "time";
+                        inputHorario.className = "form-control";
+                        inputHorario.autocomplete = "off";
+                        inputHorario.value = horas.from
+                        let pHorario = document.createElement("div");
+                        pHorario.textContent = "a"
+                        pHorario.style.textAlign = "center";
+                        let cloneInput = inputHorario.cloneNode(true);
+                        inputHorario.classList.add("from")
+                        divHorario.appendChild(inputHorario);
+                        cloneInput.classList.add("through")
+                        cloneInput.value = horas.through
+                        divHorario.appendChild(pHorario);
+                        divHorario.appendChild(cloneInput);
+                        document.getElementById('horarios').appendChild(divHorario);
+                    }
+                }
+                function cargarNiveles(){
+                    let selectInner = document.querySelectorAll('.filter-option-inner-inner')[0]
+                    let innerSelect = []
+                    let valSelect = []
+                    for (let i = 0; i < niveles.length; i++) {
+                        valSelect.push(niveles[i].id)
+                        innerSelect.push(niveles[i].nombre)
+                    }
+                    innerSelect = innerSelect.join(', ')
+                    $('#id_niveles').val(valSelect)
+                    selectInner.innerHTML = innerSelect
+                }
+                function editarProfesor(){
+                    let profesor={}
+                    let divContHoras = document.getElementById('horarios').childNodes
+                    let horariosA = []
+                    if (divContHoras.length > 1){
+                        console.log('horarios')
+                        for (let i = 0; i < divContHoras.length; i++) {
+                            horarios = {}
+                            if(i != 0){
+                                let inputs = divContHoras[i].childNodes
+                                for (let j = 0; j < inputs.length; j++) {   
+                                    if(inputs[j].type == "time"){
+                                        if(inputs[j].classList.contains('from')){
+                                            if(inputs[j].value != ""){
+                                                horarios['from']=inputs[j].value
+                                            }
+                                            else{
+                                                let p_errors = document.getElementById('horarios-p')
+                                                p_errors.innerHTML = 'Por favor ingrese la hora de inicio'
+                                                p_errors.style.display = 'block'
+                                                p_errors.style.color = 'red'
+                                                p_errors.previousSibling.previousSibling.classList.add('is-invalid');
+                                                return 'error';
+                                            }
+                                        }
+                                        else{
+                                            if(inputs[j].value != ""){
+                                            horarios['through']=inputs[j].value
+                                            }
+                                            else{
+                                                let p_errors = document.getElementById('horarios-p')
+                                                p_errors.innerHTML = 'Por favor aingrese la hora de finalización'
+                                                p_errors.style.display = 'block'
+                                                p_errors.style.color = 'red'
+                                                p_errors.previousSibling.previousSibling.classList.add('is-invalid');
+                                                return 'error';
+                                            }
+                                        }
+                                    }
+                                }
+                                horariosA.push(horarios)
+                            }
+                        }
+                    }
+                    else{
+                        let p_errors = document.getElementById('horarios-p')
+                        p_errors.innerHTML = 'Por favor agrega almenos un horario para este profesor'
+                        p_errors.style.display = 'block'
+                        p_errors.style.color = 'red'
+                        p_errors.previousSibling.previousSibling.classList.add('is-invalid');
+                        return 'error';
+                    }
+                    type="Teacher"
+                    formPro = document.getElementsByClassName('FormularioProfesores')
+                    niveles = $('#id_niveles').val();
+                    for (let i = 0; i < formPro.length; i++) {
+                        inputs = formPro[i].getElementsByTagName('input')
+                        selects = formPro[i].getElementsByTagName('select')
+                        for (let i = 0; i < inputs.length; i++) {
+                            if(inputs[i].type == "checkbox"){
+                                profesor[inputs[i].name]=inputs[i].checked
+                            }
+                        }
+                        for (let i = 0; i < selects.length; i++) {
+                            if(selects[i].id=="id_niveles"){
+                                profesor[selects[i].name]=niveles
+                            }
+                        }
+                    }
+                    profesor['horarios']=JSON.stringify(horariosA)
+                    $.ajax({
+                        url:'{%url "editarProfesor" Profesor.profesor.usuario.pk%}',
+                        data:{
+                            'csrfmiddlewaretoken':csrftoken,
+                            'datos':JSON.stringify(profesor)
+                        },
+                        type: 'POST',
+                        success: function (data) {
+                            window.location.reload();
+                        },
+                        error: function (error){
+                            Error = error['responseJSON']
+                            alert(Error)
+                            }
+                        });
+                   
+                }
+            </script>
+      </div>
+    </div>
+  </div>

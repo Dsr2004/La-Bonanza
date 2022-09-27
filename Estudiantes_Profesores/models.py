@@ -9,7 +9,7 @@ DIAS_SEMANA = (
 )
 
 ESTADOS_ASISTENCIA = (
-    ("1","Asistió"),("2","No asistió "),("3","Cancelo")
+    ("1","Asistió"),("2","No asistió"),("3","Cancelo con excusa"), ("4", "Cancelo por enfermedad")
 )
 
 
@@ -144,7 +144,6 @@ class Registro(models.Model):
         dias = []
         for i in self.diaClase:
             dias.append(i)
-        print(dias, self)
         return list(dias)
 
 
@@ -153,3 +152,6 @@ class Asistencia(models.Model):
     estado = models.CharField(max_length=15,choices=ESTADOS_ASISTENCIA)
     dia = models.DateField()
     hora = models.TimeField()
+
+    def __str__(self):
+        return self.registro.estudiante.nombre_completo

@@ -119,7 +119,26 @@ class RegistroUsuario(TemplateView):
             usuario=json.loads(request.POST.get('datos'))
             form = UsuarioForm(usuario or None)
             if form.is_valid():
-                usuario = Usuario.objects.create(usuario=form.cleaned_data['usuario'], nombres=form.cleaned_data['nombres'], celular=form.cleaned_data['celular'], apellidos = form.cleaned_data['apellidos'], cedula=form.cleaned_data['cedula'],fecha_nacimiento = form.cleaned_data['fecha_nacimiento'],email = form.cleaned_data['email'])
+                nombres = form.cleaned_data['nombres'].split(' ')
+                nombres = [nombre[0:1] for nombre in nombres]
+                apellidos = form.cleaned_data['apellidos'].split(' ')
+                apellidos = [nombre[0:1] for nombre in apellidos]
+                id = "".join(nombres).upper()+"".join(apellidos).upper()
+                try:
+                    usuario = Usuario.objects.create(id=id,usuario=form.cleaned_data['usuario'], nombres=form.cleaned_data['nombres'], celular=form.cleaned_data['celular'], apellidos = form.cleaned_data['apellidos'], cedula=form.cleaned_data['cedula'],fecha_nacimiento = form.cleaned_data['fecha_nacimiento'],email = form.cleaned_data['email'])
+                except:
+                    try:
+                        userR = Usuario.objects.get(id = id)
+                        if userR.cedula[0:4] != form.cleaned_data['cedula'][0:4]:
+                            id = id + form.cleaned_data['cedula'][0:4]
+                            usuario = Usuario.objects.create(id=id,usuario=form.cleaned_data['usuario'], nombres=form.cleaned_data['nombres'], celular=form.cleaned_data['celular'], apellidos = form.cleaned_data['apellidos'], cedula=form.cleaned_data['cedula'],fecha_nacimiento = form.cleaned_data['fecha_nacimiento'],email = form.cleaned_data['email'])
+                        else:
+                            id = id + form.cleaned_data['cedula']
+                            usuario = Usuario.objects.create(id=id,usuario=form.cleaned_data['usuario'], nombres=form.cleaned_data['nombres'], celular=form.cleaned_data['celular'], apellidos = form.cleaned_data['apellidos'], cedula=form.cleaned_data['cedula'],fecha_nacimiento = form.cleaned_data['fecha_nacimiento'],email = form.cleaned_data['email'])
+                    except:
+                        data = json.dumps({'error': 'El usuario que intenta registrar ya existe', 'usuario':form.cleaned_data['usuario']})
+                        return HttpResponse(data, content_type="application/json", status=400)
+                        
                 usuario.set_password(form.cleaned_data['cedula'])
                 if request.POST.get('function') == 'User':
                     print(request.POST.get('function'))
@@ -127,7 +146,7 @@ class RegistroUsuario(TemplateView):
                 else:
                     usuario.administrador = 0
                 usuario.save()
-                return JsonResponse({"datos":usuario.pk})
+                return JsonResponse({"datos":id})
             else:
                 data = json.dumps({'error': 'Datos ingresados incorrectos', 'forms':form.errors})
                 return HttpResponse(data, content_type="application/json", status=400)
