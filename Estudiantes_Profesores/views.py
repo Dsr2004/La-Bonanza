@@ -125,9 +125,6 @@ class RegistrarEstudiante(CreateView):
     template_name = "crearEstudiante.html"
     success_url = reverse_lazy("estudiantes")
 
-    def form_invalid(self, form):
-        print(form.errors)
-        return super().form_invalid(form)
         
 
     

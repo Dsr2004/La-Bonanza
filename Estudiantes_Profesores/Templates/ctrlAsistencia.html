@@ -30,34 +30,41 @@
                 </form>
             </div>
             <div class="col-2">
-                <a href="{% url 'controlAsistencia' %}" class="btn btn-outline-secondary "><i class="fa-solid fa-box-archive"></i></a>
+                <a href="{% url 'controlAsistencia' %}" class="btn btn-outline-secondary "><i class="fa-solid fa-house"></i></a>
+                <a href="{% url 'controlAsistencia' %}" class="btn btn-outline-secondary "><i class="fa-solid fa-calendar-days"></i></a>
             </div>
         </div>
         <hr>
+        
+        {% if asistencia %}
         {% for clase in clases%}
-            <ul class="list-group">
-                <li class="list-group-item active" aria-current="true">{{clase.grouper|date:'h:00 A'}}</li>
-                {% csrf_token %}
-                    {% for estudiante in clase.list %}
-                        <li class="list-group-item">
-                            <div class="row">
-                                <div class="col-md-9">
-                                    <div class="tooltipE">
-                                        <button class="btn btn-light btn-sm"> <i class="fa-solid fa-circle" style="color: {{estudiante.registro.nivel.color_fondo}};"></i></button>
-                                        <span class="tooltiptextE" style="color: {{estudiante.registro.nivel.color_letra}}; background-color: {{estudiante.registro.nivel.color_fondo}};">{{estudiante.registro.nivel.nivel}}</span>
-                                    </div>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <h6 style="line-height: 1.9; display: inline-block; vertical-align: middle;">{{estudiante.registro.estudiante.nombre_completo}}</h6>
+        <ul class="list-group">
+            <li class="list-group-item active" aria-current="true">{{clase.grouper|date:'h:00 A'}}</li>
+            {% csrf_token %}
+                {% for estudiante in clase.list %}
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-md-9">
+                                <div class="tooltipE">
+                                    <button class="btn btn-light btn-sm"> <i class="fa-solid fa-circle" style="color: {{estudiante.registro.nivel.color_fondo}};"></i></button>
+                                    <span class="tooltiptextE" style="color: {{estudiante.registro.nivel.color_letra}}; background-color: {{estudiante.registro.nivel.color_fondo}};">{{estudiante.registro.nivel.nivel}}</span>
                                 </div>
-                                <div class="col-md-3">
-                                    <h6 style="line-height: 1.9; display: inline-block; vertical-align: middle; font-size:14px;">{{estudiante.get_estado_display}}</h6>
-                                </div>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <h6 style="line-height: 1.9; display: inline-block; vertical-align: middle;">{{estudiante.registro.estudiante.nombre_completo}}</h6>
                             </div>
-                        </li> 
-                    {% endfor %}
-            </ul>
-            <br>
-        {% endfor %}
+                            <div class="col-md-3">
+                                <h6 style="line-height: 1.9; display: inline-block; vertical-align: middle; font-size:14px;">{{estudiante.get_estado_display}}</h6>
+                            </div>
+                        </div>
+                    </li> 
+                {% endfor %}
+        </ul>
+        <br>
+    {% endfor %}
+        {% else %}
+            <h4>Este día no tiene clases registradas</h4>
+        {% endif %}
+            
     </div>
         
     

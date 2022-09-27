@@ -37,7 +37,6 @@ class Login(LoginView):
                         return redirect("index")
                 else: 
                     context['error']="Este usuario se encuentra inhabilitado"
-
         else:
             try:
                 Usuario.objects.get(usuario=form.cleaned_data.get('username'))

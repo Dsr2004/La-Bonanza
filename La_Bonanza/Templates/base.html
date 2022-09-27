@@ -70,7 +70,8 @@
             <li class="nav-item">
               <a class="nav-link 
               {% if request.path == '/Administracion/Calendario/'%}active {% endif %}
-              {% if request.path == '/Administracion/Asistencia/'%}active {% endif %} 
+              {% if request.path == '/Administracion/Asistencia/'%}active {% endif %}
+              {% if request.path == '/Administracion/ControlAsistencia/'%}active {% endif %}
               " aria-current="page" href="{%url 'calendario'%}">Calendario</a>
             </li>
             <li class="nav-item">
