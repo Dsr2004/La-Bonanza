@@ -39,6 +39,7 @@ httpie==3.0.0
 idna==3.3
 importlib-metadata==4.10.1
 isort==5.10.1
+jsonify==0.5
 lazy-object-proxy==1.7.1
 lxml==4.9.0
 Markdown==3.3.6
@@ -97,4 +98,5 @@ virtualenv==20.13.1
 webencodings==0.5.1
 wrapt==1.13.3
 xhtml2pdf==0.2.7
+XlsxWriter==3.0.3
 zipp==3.7.0

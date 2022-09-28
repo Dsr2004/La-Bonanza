@@ -81,15 +81,17 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            <form action='' method="post" id="">
-                <input type="text" id="fechaFiltro" class="form-control">
+            <form action='{%url "reporteAsistencia"%}' method="post" id="filtroAsistencia">
+                <input type="text" id="fechaFiltro" name="fecha" class="form-control">
+                <label for="">filtrar todos</label>
+                <input type="checkbox" name="todos">
                 {%csrf_token%}
                 <p id="ExportEstudiantes-p" style="display:none;"></p>
             </form>
         </div>
         <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="button" class="btn btn-primary" onclick="exportGenerate()">Generar</button>
+        <button type="button" class="btn btn-primary" onclick="$('#filtroAsistencia').submit()">Generar</button>
         </div>
     </div>
     </div>

@@ -104,6 +104,56 @@ class ControlAsistencia(View):
         ctx = {"dia":dia,"asistencia":asistencia}
         return render(request, self.template_name, ctx)
 
+class reporteAsistencia(ListView):
+    def post(self, request, *args, **kwargs):
+        name = ""
+        fechas = request.POST.get('fecha').split(' - ')
+        todos = request.POST.get('todos')
+        fechas=[datetime.strptime(fechas[0], '%m/%d/%Y').date(), datetime.strptime(fechas[1], '%m/%d/%Y').date()]
+        Estudiante,Documento,Nivel,Profesor,Dia,Hora,Estado=[[],[],[],[],[],[],[]]
+        if todos == None:
+            name = "reporte-asistencia-desde:{fecha1}-hasta:{fecha2}".format(fecha1 = fechas[0], fecha2 = fechas[1])
+            for asistencia in Asistencia.objects.all():
+                if asistencia.dia <= fechas[1] and asistencia.dia >= fechas[0]:
+                    Estudiante.append(asistencia.registro.estudiante)
+                    Documento.append(asistencia.registro.estudiante.documento)
+                    Nivel.append(asistencia.registro.nivel.nivel)
+                    Profesor.append(asistencia.registro.profesor)
+                    Dia.append(datetime.strftime(asistencia.dia, '%Y/%m/%d'))
+                    Hora.append(asistencia.hora.strftime('%I:%M %p'))
+                    Estado.append(asistencia.get_estado_display())
+        else:
+            name="reporte-todas-las-asistencias"
+            for asistencia in Asistencia.objects.all():
+                Estudiante.append(asistencia.registro.estudiante)
+                Documento.append(asistencia.registro.estudiante.documento)
+                Nivel.append(asistencia.registro.nivel.nivel)
+                Profesor.append(asistencia.registro.profesor)
+                Dia.append(datetime.strftime(asistencia.dia, '%Y/%m/%d'))
+                Hora.append(asistencia.hora.strftime('%I:%M %p'))
+                Estado.append(asistencia.get_estado_display())
+        
+        excel = pd.DataFrame()
+        excel['Estudiante'] = Estudiante
+        excel['Documento'] = Documento
+        excel['Nivel'] = Nivel
+        excel['Profesor'] = Profesor
+        excel['Dia'] = Dia
+        excel['Hora'] = Hora
+        excel['Estado'] = Estado
+        
+        with BytesIO() as b:
+            # Use the StringIO object as the filehandle.
+            writer = pd.ExcelWriter(b, engine='xlsxwriter')
+            excel.to_excel(writer, sheet_name='Asistencia')
+            writer.save()
+            filename = name
+            content_type = 'application/vnd.ms-excel'
+            response = HttpResponse(b.getvalue(), content_type=content_type)
+            response['Content-Disposition'] = 'attachment; filename="' + filename + '.xlsx"'
+            return response
+        return JsonResponse({'hola':fechas})
+
 class Estudiantes(ListView):
     template_name = "estudiantes.html"
     context_object_name= "estudiantes"
@@ -169,7 +219,7 @@ class reporteEstudiantes(ListView):
         with BytesIO() as b:
             # Use the StringIO object as the filehandle.
             writer = pd.ExcelWriter(b, engine='xlsxwriter')
-            excel.to_excel(writer, sheet_name='Sheet1')
+            excel.to_excel(writer, sheet_name='Estudiantes')
             writer.save()
             filename = name
             content_type = 'application/vnd.ms-excel'
