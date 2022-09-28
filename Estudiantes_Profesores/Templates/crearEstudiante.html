@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load jsonify %}
 {% block titulo %}Crear Estudiante{% endblock titulo %}
 {% block estilos %}
 <link rel="stylesheet" href="{% static 'libs/datepicker/dist/datepicker.css' %}">
@@ -195,7 +196,7 @@
 {% block scripts %}
 {% if form.errors %}
     <script>
-        let errores = '{{form.errors}}'
+        let errores = '{{form.errors|jsonify}}'
         errores = JSON.parse(errores)
         let form = $("#CrearEstudianteForm")
         form.find('.error_text').text('');
@@ -353,4 +354,3 @@ function limpiarFirma(){
     </script>
 
 {% endblock scripts %}
-    

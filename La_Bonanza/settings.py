@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "jsonify",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -41,7 +42,6 @@ INSTALLED_APPS = [
     "Estudiantes_Profesores",
     "Niveles",
     "multiselectfield",
-    "jsonify",
 ]
 
 MIDDLEWARE = [
