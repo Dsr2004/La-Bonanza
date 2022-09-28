@@ -10,6 +10,17 @@
 
 {% block contenido %}
     <div class="container">
+        {% if messages %}
+    {% for mensaje in messages %}
+    <div class="container alert alert-warning  alert-dismissible fade show" role="alert">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16" role="img" aria-label="Warning:">
+            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+            </svg>
+        {{mensaje}}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div> 
+    {% endfor %}
+{% endif %}
        <div class="row">
         <div class="col-md-9">
             <h1>Administración de Estudiantes</h1>
@@ -69,7 +80,6 @@
         </table>
         {% csrf_token %}
     </div>
-    <input type="text" id="demo">
     <!-- Modal -->
     <div class="modal fade" id="FilterEstudianteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -79,14 +89,23 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="" method="post">
-                    <label for="" style="font-weight: 500;">Seleccione un rango de fecha para el reporte:</label>
-                    <input type="text" class="form-control" id="fechaFiltro">
+                <form action='{%url "reporteEstudiantes"%}' method="post" id="reporteEstudent">
+                    <label for="" style="font-weight: 500;">Seleccione el tipo del reporte:</label>
+                    <select name="typeExport" class="form-select" id="ExportEstudiantes">
+                        <option value="All">Todos</option>
+                        {%for nivel in niveles%}
+                        <option value="{{nivel.pk}}">Nivel - {{nivel}}</option>
+                        {%endfor%}
+                        <option value="inhabilitados">Inhabilitados</option>
+                        <option value="habilitados">Habilitados</option>
+                    </select>
+                    {%csrf_token%}
+                    <p id="ExportEstudiantes-p" style="display:none;"></p>
                 </form>
             </div>
             <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
+            <button type="button" class="btn btn-primary" onclick="exportGenerate()">Save changes</button>
             </div>
         </div>
         </div>
@@ -97,6 +116,20 @@
 <script src="{% static 'libs/daterangepicker/moment.min.js' %}"></script>
 <script src="{% static 'libs/daterangepicker/daterangepicker.js' %}"></script>
 <script>
+    function exportGenerate(){
+        let select = $('#ExportEstudiantes')
+        let p = document.getElementById('ExportEstudiantes-p')
+        let data = {'name':'typeExport','value':select.val()}
+        p.style.display = 'none'
+        select.removeClass('is-invalid')
+        if(isNaN(select.val())&&select.val()!="habilitados"&&select.val()!="inhabilitados"&&select.val()!="All"){
+            p.innerHTML="Por favor selecione una opción válida"
+            p.style.display="block"
+            p.style.color="red"
+            select.addClass('is-invalid')
+        }
+        document.getElementById("reporteEstudent").submit()
+    }
     $(document).ready(function(){
         $("#EstudiantesTable").DataTable({responsive:true})
         $('#fechaFiltro').daterangepicker({

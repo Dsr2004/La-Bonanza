@@ -1,17 +1,17 @@
 import json
-import xlwt
 from django.shortcuts import render, redirect
 from django.views.generic import View, CreateView, ListView, UpdateView, DetailView, TemplateView
 from django.urls import reverse_lazy
 from django.http import JsonResponse, HttpResponse
 from django.contrib import messages
 from .models import Estudiante, Registro, Profesor, Asistencia
+from Niveles.models import Nivel
 from .forms import EstudianteForm, RegistroForm,ProfesorForm
 from Usuarios.models import Usuario
 from datetime import datetime, timedelta
 from itertools import groupby
-
-
+import pandas as pd
+from io import BytesIO
 
 def arreglarFormatoDia(dia):
     if str(dia) == "6":
@@ -112,11 +112,71 @@ class Estudiantes(ListView):
         ctx =  super().get_context_data(**kwargs)
         estudiantes = Estudiante.objects.all().count()
         registrosEstudiantes = self.model.objects.all().count()
+        ctx['niveles'] = Nivel.objects.all()
         if estudiantes != registrosEstudiantes:
             ctx["nuevosEstudiantes"]=True
         else:
             ctx["nuevosEstudiantes"]=False
         return ctx
+    
+class reporteEstudiantes(ListView):
+    def post(self, request, *args, **kwargs):
+        datos = request.POST.get('typeExport')
+        consulta = []
+        name = ""
+        if datos == 'All':
+            name = "reporte-Estudiantes"
+            consulta = Registro.objects.all()
+        elif datos == 'inhabilitados':
+            name = "reporte-Estudiantes-inhabilitados"
+            for registro in Registro.objects.all():
+                if registro.estudiante.estado == 0:
+                    consulta.append(registro)
+        elif datos == 'habilitados':
+            name = "reporte-Estudiantes-habilitados"
+            for registro in Registro.objects.all():
+                if registro.estudiante.estado == 1:
+                    consulta.append(registro)
+        elif datos.isdigit():
+            for registro in Registro.objects.all():
+                if registro.nivel.pk == int(datos):
+                    name = "reporte-Estudiantes-nivel-"+registro.nivel.nivel
+                    datos = "nivel - "+registro.nivel.nivel
+                    consulta.append(registro)
+        if consulta == []:
+            messages.add_message(request, messages.WARNING, "No se encontraron estudiantes con este filtro {filtro}, por lo que no se puede realizar el reporte.".format(filtro = datos))
+            return redirect('estudiantes')
+        # Definir columnas del excel
+        Estudiante, Profesor, Nivel, Estado, Pagado = [[],[],[],[],[]]
+        for row in consulta:
+            Estudiante.append(row.estudiante)
+            Profesor.append(row.profesor)
+            Nivel.append(row.nivel)
+            if row.estudiante.estado:
+                Estado.append("Activo")
+            else:
+                Estado.append("Inhabilitado")
+            if row.pagado:
+                Pagado.append("Pagada")
+            else:
+                Pagado.append("No ha pagado")
+        excel = pd.DataFrame()
+        excel['Estudiante'] = Estudiante
+        excel['Profesor'] = Profesor
+        excel['Nivel'] = Nivel
+        excel['Estado'] = Estado
+        excel['Matricula'] = Pagado 
+        with BytesIO() as b:
+            # Use the StringIO object as the filehandle.
+            writer = pd.ExcelWriter(b, engine='xlsxwriter')
+            excel.to_excel(writer, sheet_name='Sheet1')
+            writer.save()
+            filename = name
+            content_type = 'application/vnd.ms-excel'
+            response = HttpResponse(b.getvalue(), content_type=content_type)
+            response['Content-Disposition'] = 'attachment; filename="' + filename + '.xlsx"'
+            return response
+        return JsonResponse({'hola':'hola'})
 
 class RegistrarEstudiante(CreateView):
     model = Estudiante
@@ -265,7 +325,7 @@ class Profesores(ListView):
 
 class infoProfesor(ListView):
     template_name = "Profesores/verInfoProfesor.html"
-    model = Profesores
+    model = Profesor
     
     def get(self, request, *args, **kwargs):
         if request.user.administrador!=1:

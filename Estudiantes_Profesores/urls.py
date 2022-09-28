@@ -1,14 +1,13 @@
 from django.urls import path
 from django.contrib.auth.decorators import login_required
 from .views import *
-from django.contrib.auth.decorators import login_required
 
 
 
 urlpatterns=[
     path("Calendario/", Calendario.as_view(), name="calendario"),
     path("Estudiantes/", Estudiantes.as_view(), name="estudiantes"),
-    path("Profesores/", Profesores.as_view(), name="profesores"),
+    path("Profesores/", login_required(Profesores.as_view()), name="profesores"),
     path("RegistarEstudiante/", RegistrarEstudiante.as_view(), name="registrarEstudiante"),
     path("BuscarNuevosEstudiantes/", BuscarNuevosEstudiantes.as_view(), name="buscarNuevosEstudiantes"),
     path("CrearNuevosEstudiantes/<int:pk>", CrearNuevosEstudiantes.as_view(), name="crearNuevosEstudiantes"),
@@ -26,4 +25,5 @@ urlpatterns=[
     path("VerInfoEstudianteCalendario/<int:pk>", login_required(VerInfoEstudianteCalendario.as_view()), name="verInfoEstudianteCalendario"),
     path("Asistencia/", login_required(GestionDeAsistencia.as_view()), name="asistencia"),
     path("ControlAsistencia/", login_required(ControlAsistencia.as_view()), name="controlAsistencia"),
+    path("ReporteEstudiantes/", login_required(reporteEstudiantes.as_view()), name="reporteEstudiantes"),
 ]
