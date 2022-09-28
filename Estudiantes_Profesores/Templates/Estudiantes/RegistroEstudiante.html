@@ -54,21 +54,20 @@
 
 <script>
   $(document).ready(function () {
-    $("#id_inicioClase").datepicker({
-            language: 'es-ES',
-            format: "dd/mm/YYYY",
-            autoHide: true,
-            zIndex:9999
+    // $("#id_inicioClase").datepicker({
+    //         language: 'es-ES',
+    //         format: "YYYY/mm/dd",
+    //         autoHide: true,
+    //         zIndex:9999
             
+    //     });
+    //     $("#id_finClase").datepicker({
+    //         language: 'es-ES',
+    //         format: "YYYY/mm/dd",
+    //         autoHide: true,
+    //         zIndex:9999
             
-        });
-        $("#id_finClase").datepicker({
-            language: 'es-ES',
-            format: "dd/mm/YYYY",
-            autoHide: true,
-            zIndex:9999
-            
-        });   
+    //     });   
    $("#EstudianteSinRegistrAlert").hide()
    $("#id_diaClase").change(function(){
     token = $("input[name=csrfmiddlewaretoken]").val()

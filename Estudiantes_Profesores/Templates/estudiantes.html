@@ -1,16 +1,22 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block titulo %}Estudiantes{% endblock titulo %}
+
+{% block estilos %}
+    <link rel="stylesheet" href="{% static 'libs/daterangepicker/daterangepicker.css' %}">
+{% endblock estilos %}
+    
 
 
 {% block contenido %}
     <div class="container">
        <div class="row">
-        <div class="col-md-10">
+        <div class="col-md-9">
             <h1>Administración de Estudiantes</h1>
         </div>
         <div class="col-md-2">
-           <a href="{% url 'registrarEstudiante' %}" class="btn btn-outline-success btn-lg" > <i class="fa-solid fa-person-circle-plus fa-xl"></i></a>
-          
+           <a type="button" data-bs-toggle="modal" data-bs-target="#FilterEstudianteModal" class="btn btn-success " > <i class="fa-solid fa-file-excel"></i></a>
+           <a href="{% url 'registrarEstudiante' %}" class="btn btn-outline-success btn-" > <i class="fa-solid fa-person-circle-plus fa-xl"></i></a>
           {% if nuevosEstudiantes %}
           <a href="{% url 'buscarNuevosEstudiantes' %}" class="btn btn-outline-warning btn-lg" >  <i class="fa-solid fa-clock fa-xl"></i></a>
           {% endif %}
@@ -63,12 +69,78 @@
         </table>
         {% csrf_token %}
     </div>
+    <input type="text" id="demo">
+    <!-- Modal -->
+    <div class="modal fade" id="FilterEstudianteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Generar Excel</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="" method="post">
+                    <label for="" style="font-weight: 500;">Seleccione un rango de fecha para el reporte:</label>
+                    <input type="text" class="form-control" id="fechaFiltro">
+                </form>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+        </div>
+    </div>
 {% endblock contenido %}
 
 {% block scripts %}
+<script src="{% static 'libs/daterangepicker/moment.min.js' %}"></script>
+<script src="{% static 'libs/daterangepicker/daterangepicker.js' %}"></script>
 <script>
     $(document).ready(function(){
         $("#EstudiantesTable").DataTable({responsive:true})
+        $('#fechaFiltro').daterangepicker({
+            "showDropdowns": true,
+            "maxSpan": {
+                "days": 7
+            },
+            "locale": {
+                "format": "MM/DD/YYYY",
+                "separator": " - ",
+                "applyLabel": "Guardar",
+                "cancelLabel": "Cancelar",
+                "fromLabel": "Desde",
+                "toLabel": "Hasta",
+                "customRangeLabel": "Custom",
+                "weekLabel": "W",
+                "daysOfWeek": [
+                    "Do",
+                    "Lu",
+                    "Ma",
+                    "Mi",
+                    "Ju",
+                    "Vi",
+                    "Sa"
+                ],
+                "monthNames": [
+                    "Enero",
+                    "Febrero",
+                    "Marzo",
+                    "Abril",
+                    "Mayo",
+                    "Junio",
+                    "Julio",
+                    "Agosto",
+                    "Septiembre",
+                    "Octubre",
+                    "Noviembre",
+                    "Diciembre"
+                ],
+                "firstDay": 1
+            },
+        }, function(start, end, label) {
+        console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+        });
     })
 </script>
 {% endblock scripts %}

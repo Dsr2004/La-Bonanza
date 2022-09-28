@@ -1,5 +1,5 @@
-import calendar
 import json
+import xlwt
 from django.shortcuts import render, redirect
 from django.views.generic import View, CreateView, ListView, UpdateView, DetailView, TemplateView
 from django.urls import reverse_lazy
@@ -124,6 +124,10 @@ class RegistrarEstudiante(CreateView):
     template_name = "crearEstudiante.html"
     success_url = reverse_lazy("estudiantes")
 
+
+    def form_invalid(self, form):
+        print(form.errors)
+        return JsonResponse({"errores": form.errors}, status=404)
         
 
     
@@ -150,6 +154,10 @@ class CrearNuevosEstudiantes(CreateView):
         estudiante = Estudiante.objects.get(pk=self.kwargs["pk"])
         ctx["estudiante"] = estudiante
         return ctx
+
+    def form_invalid(self, form):
+        print(form.errors)
+        return JsonResponse({"errores": form.errors}, status=404)
 
 class VerInfoEstudiante(DetailView):
     model=Estudiante
@@ -195,14 +203,16 @@ class CambiarEstadoEstudiante(View):
 
 class ValidarRegistroEstudiante(View):
     def post(self, request, *args, **kwargs):
-        dia = request.POST.get("dia")[2]
-        print(dia)
-        estudiante = request.POST.get("estudiante")
-        estudiante = Estudiante.objects.get(pk=estudiante)
-        estudiantesDia = Registro.objects.filter(diaClase__icontains=dia)
-        estudiantesDia = Estudiante.objects.filter(pk__in = [x.id for x in estudiantesDia])
-        estudiantesDia = int(estudiantesDia.filter(nivel=estudiante.nivel.id).count())
-        return JsonResponse({"cant":estudiantesDia, "nivel":estudiante.nivel.nivel})
+        # dia = request.POST.get("dia")[2]
+        # print(dia)
+        # estudiante = request.POST.get("estudiante")
+        # estudiante = Estudiante.objects.get(pk=estudiante)
+        # registro = Registro.objects.get(estudiante=estudiante)
+        # estudiantesDia = Registro.objects.filter(diaClase__icontains=dia)
+        # estudiantesDia = Estudiante.objects.filter(pk__in = [x.id for x in estudiantesDia])
+        # estudiantesDia = int(estudiantesDia.filter(nivel=estudiante.nivel.id).count())
+        estudiantesDia=2
+        return JsonResponse({"cant":estudiantesDia})
 
 class ModificarRegistroEstudiante(UpdateView):
     model = Registro
@@ -403,3 +413,48 @@ def datosProfesores(request):
             data = json.dumps({'error': 'Datos del profesor ingresados incorrectos', 'forms':form.errors})
             return HttpResponse(data, content_type="application/json", status=400)
     return HttpResponse('Solo se admiten post', content_type="application/json", status=400)
+
+
+
+
+# def excel(request):
+#     # content-type of response
+# 	response = HttpResponse(content_type='application/ms-excel')
+
+# 	#decide file name
+# 	response['Content-Disposition'] = 'attachment; filename="ThePythonDjango.xls"'
+
+# 	#creating workbook
+# 	wb = xlwt.Workbook(encoding='utf-8')
+
+# 	#adding sheet
+# 	ws = wb.add_sheet("sheet1")
+
+# 	# Sheet header, first row
+# 	row_num = 0
+
+# 	font_style = xlwt.XFStyle()
+# 	# headers are bold
+# 	font_style.font.bold = True
+
+# 	#column header names, you can use your own headers here
+# 	columns = ['Column 1', 'Column 2', 'Column 3', 'Column 4', ]
+
+# 	#write column headers in sheet
+# 	for col_num in range(len(columns)):
+# 		ws.write(row_num, col_num, columns[col_num], font_style)
+
+# 	# Sheet body, remaining rows
+# 	font_style = xlwt.XFStyle()
+
+# 	#get your data, from database or from a text file...
+# 	data = get_data() #dummy method to fetch data.
+# 	for my_row in data:
+# 		row_num = row_num + 1
+# 		ws.write(row_num, 0, my_row.name, font_style)
+# 		ws.write(row_num, 1, my_row.start_date_time, font_style)
+# 		ws.write(row_num, 2, my_row.end_date_time, font_style)
+# 		ws.write(row_num, 3, my_row.notes, font_style)
+
+# 	wb.save(response)
+# 	return response

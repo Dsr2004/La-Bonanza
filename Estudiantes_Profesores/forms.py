@@ -43,8 +43,8 @@ class RegistroForm(forms.ModelForm):
 
         widgets = {
             "pagado": forms.CheckboxInput(attrs={"class":"form-check-input", "autocomplete":"off"}),
-            "inicioClase": forms.DateInput(attrs={"class":"form-control", "autocomplete":"off"}),
-            "finClase": forms.DateInput(attrs={"class":"form-control", "autocomplete":"off"}),
+            "inicioClase": forms.DateInput(attrs={"class":"form-control", "autocomplete":"off", "type":"date"}),
+            "finClase": forms.DateInput(attrs={"class":"form-control", "autocomplete":"off", "type":"date"}),
             "horaClase": forms.TimeInput(attrs={"type":"time", "class":"form-control", "autocomplete":"off"}),
             "diaClase": forms.SelectMultiple(attrs={"class":"form-select"}),
             "nivel": forms.Select(attrs={"class":"form-select"}),
