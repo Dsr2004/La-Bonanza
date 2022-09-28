@@ -51,7 +51,7 @@ def logout(request):
 class CambiarContrasena(TemplateView):
     model = Usuario
     form_class = CambiarContrasena
-    template_name="Usuarios/CambiarContrasena.html" 
+    template_name="Usuarios/cambiarContrasena.html" 
     
     def get(self, request, *args, **kwargs):
         contexto={"form":self.form_class}

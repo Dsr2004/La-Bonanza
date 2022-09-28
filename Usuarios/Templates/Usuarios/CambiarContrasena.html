@@ -1,29 +1,33 @@
-<div class="modal-dialog  modal-lg" role="document">
-    <div class="modal-content">
-        <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Cambiar Contraseña</strong></h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            <form action="{% url 'changePass' %}" method="post" id="cambiarPass">
-                {% csrf_token %}
-                <Label><strong>Contraseña Antigua: <sup class="requerido">(*)</sup></strong></Label>
-                {{form.passwordA}}
-                <p id="passwordA" class="bg-light text-danger" style="color: #dc3545;"></p>
-                <br>
-                <Label><strong>Contraseña Nueva: <sup class="requerido">(*)</sup></strong></Label>
-                {{form.password}}
-                <p id="password" class="bg-light text-danger" style="color: #dc3545;"></p>
-                <br>
-                <Label><strong>Confirmar Contraseña: <sup class="requerido">(*)</sup></strong></Label>
-                {{form.password2}}
-                <p id="passwordC" class="bg-light text-danger" style="color: #dc3545;"></p>
-            </form>
-            <hr>
-        <button id="CambiarContrasenaButton" class="btn btn-success w-100">Cambiar Contraseña</button>
-        </div>
-    </div>
+{% extends 'base.html' %}
+{% load static %}
+{% block titulo %}Cambiar Contraseña{% endblock titulo %}
+{% block estilos %}
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+<!-- CSS only -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+{% endblock estilos %}
+{% block contenido %}
+<div class="container">
+    <form action="{% url 'changePass' %}" method="post" id="cambiarPass">
+        {% csrf_token %}
+        <Label><strong>Contraseña Antigua: <sup class="requerido">(*)</sup></strong></Label>
+        {{form.passwordA}}
+        <p id="passwordA" class="bg-light text-danger" style="color: #dc3545;"></p>
+        <br>
+        <Label><strong>Contraseña Nueva: <sup class="requerido">(*)</sup></strong></Label>
+        {{form.password}}
+        <p id="password" class="bg-light text-danger" style="color: #dc3545;"></p>
+        <br>
+        <Label><strong>Confirmar Contraseña: <sup class="requerido">(*)</sup></strong></Label>
+        {{form.password2}}
+        <p id="passwordC" class="bg-light text-danger" style="color: #dc3545;"></p>
+    </form>
+    <hr>
+    <button id="CambiarContrasenaButton" class="btn btn-success w-100">Cambiar Contraseña</button>
 </div>
+{% endblock contenido %}
+{% block scripts %}
 <script>
     $(document).ready(function () {
         $('#CambiarContrasenaButton').click(function () {
@@ -59,3 +63,4 @@
         });
     });
 </script>
+{% endblock scripts %}
