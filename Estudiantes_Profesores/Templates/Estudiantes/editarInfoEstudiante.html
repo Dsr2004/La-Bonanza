@@ -10,10 +10,20 @@
 
 {% block contenido %}
     <div class="container">
-        <div class="alert alert-light alert-dismissible fade show" role="alert">
-            <strong>¡Nota!</strong> El botón para modificar al estudiante está en la pestaña Información del Contacto de emergencia.
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-          </div>
+        
+        {% if messages %}
+            {% for mensaje in messages %}
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                <strong>¡HECHO!</strong> {{mensaje}}.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-light alert-dismissible fade show" role="alert">
+                <strong>¡Nota!</strong> El botón para modificar al estudiante está en la pestaña Información del Contacto de emergencia.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endif %}
         <h1>Modificar información de {{object.get_estudiante}}</h1>
         <hr>
         <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -27,231 +37,259 @@
               <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false"><i id="icon_danger_EMERGENCIA" class="fa-solid fa-triangle-exclamation"></i> Información del Contacto de emergencia</button>
             </li>
             <li class="nav-item" role="presentation">
+                <button class="nav-link" id="docs-tab" data-bs-toggle="tab" data-bs-target="#docs-tab-pane" type="button" role="tab" aria-controls="docs-tab-pane" aria-selected="false"><i id="icon_danger_DOCUMENTOS" class="fa-solid fa-triangle-exclamation"></i> Documentos</button>
+            </li>
+            <li class="nav-item" role="presentation">
               <button class="nav-link" id="disabled-tab" data-bs-toggle="tab" data-bs-target="#disabled-tab-pane" type="button" role="tab" aria-controls="disabled-tab-pane" aria-selected="false" ><i id="icon_danger_REGISTRO" class="fa-solid fa-triangle-exclamation"></i> Información del Registro</button>
             </li>
           </ul>
-          <div class="tab-content" id="myTabContent">
-            <div class="formEstudianteUpdate tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
-                <br>
-                <h3>Información del estudiante</h3>
-                {% csrf_token %}
-                <br>
-                <div class="row">
-                    <div class="col-md-6">
-                        <h5><strong>Nombre Completo: </strong></h5>
-                        {{form.nombre_completo}}
-                        <p class="error_text" id="nombre_completo"></p>
-                    </div>
-                    <div class="col-md-6">
-                        <h5><strong>Fecha de nacimiento:
-                        </strong></h5>
-                        {{form.fecha_nacimiento}}
-                        <p class="error_text" id="fecha_nacimiento"></p>
-                    </div>
-                </div>
-                <br>
-                <div class="row">
-                    <div class="col-md-6">
-                        <h5><strong>Numero de documento:</strong></h5>
-                        {{form.documento}}
-                        <p class="error_text" id="documento"></p>
-                    </div>
-                    <div class="col-md-6">
-                        <h5><strong>Numero de celular:</strong></h5>
-                        {{form.celular}}
-                        <p class="error_text" id="celular"></p>
-                    </div>
-                </div>
-                <br>
-                <div class="row">
-                    <div class="col-md-6">
-                        <h5><strong>Numero de telefono:</strong></h5>
-                        {{form.telefono}}
-                        <p class="error_text" id="telefono"></p>
-                    </div>
-                    <div class="col-md-6">
-                        <h5><strong>Correo electronico:</strong></h5>
-                        {{form.email}}
-                        <p class="error_text" id="email"></p>
-                    </div>
-                </div>
-                <br>
-                <div class="row">
-                    <div class="col-md-6">
-                        <h5><strong>Direccion de residencia:</strong></h5>
-                        {{form.direccion}}
-                        <p class="error_text" id="direccion"></p>
-                    </div>
-                    <div class="col-md-6">
-                        <h5><strong>Barrio de resdencia:</strong></h5>
-                        {{form.barrio}}
-                        <p class="error_text" id="barrio"></p>
-                    </div>
-                </div>
-                <br>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-check">
-                            <label class="form-check-label"><strong>Tiene seguro medico:</strong></label>
-                            {{form.seguro_medico}}  
-                            <p class="error_text" id="seguro_medico"></p>
-                        </div>               
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-check">
-                            <label class="form-check-label"><strong>Tiene documento de identidad:</strong></label>
-                            {{form.documento_identidad}}
-                            <p class="error_text" id="documento_identidad"></p>  
-                        </div>
-                    </div>
-                </div>
-                <br>
-                <div class="row">
-                    <div class="col-md-6">
-                        <h5><strong>Ciudad de residencia:</strong></h5>
-                        {{form.ciudad}}
-                        <p class="error_text" id="ciudad"></p>
-                    </div>
-                </div>
-                <br>
-            </div>
-            <div class="formEstudianteUpdate tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
-                <br>
-                <h3>Información del acudiente</h3>
-                <br>
-                <div class="row">
-                    <div class="col-md-6">
-                        <h5><strong>Nombre completo del acudiente:</strong></h5>
-                        {{form.nombre_completo_acudiente}}
-                        <p class="error_text" id="nombre_completo_acudiente"></p>
-                    </div>
-                    <div class="col-md-6">
-                        <h5><strong>Numero de cedula acudiente:
-                        </strong></h5>
-                        {{form.cedula_acudiente}}
-                        <p class="error_text" id="cedula_acudiente"></p>
-                    </div>
-                </div>
-                <br>
-                <div class="row">
-                    <div class="col-md-6">
-                        <h5><strong>Numero de celular acudiente :</strong></h5>
-                        {{form.celular_acudiente}}
-                        <p class="error_text" id="celular_acudiente"></p>
-                    </div>
-                    <div class="col-md-6">
-                        <h5><strong> Correo electronico acudiente:</strong></h5>
-                        {{form.email_acudiente}}
-                        <p class="error_text" id="email_acudiente"></p>
-                    </div>
-                </div>
-                <br>
-                <div class="row">
-                    <div class="col-md-6">
-                        <h5><strong>Lugar de expedicion de la cedula del acudiente:</strong></h5>
-                        {{form.lugar_expedicion_acudiente}}
-                        <p class="error_text" id="lugar_expedicion_acudiente"></p>
-                    </div>
-                   
-                </div>
-                <br>
-            </div>
-            <div class="formEstudianteUpdate tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
-                <br>
-                <h3>Información del contacto de emergencia </h3>
-                <br>
-                <div class="row">
-                    <div class="col-md-6">
-                        <h5><strong>Nombre del contacto de emergencia:</strong></h5>
-                        {{form.nombre_contactoE}}
-                        <p class="error_text" id="nombre_contactoE"></p>
-                    </div>
-                    <div class="col-md-6">
-                        <h5><strong> Telefono del contacto de emergencia:</strong></h5>
-                        {{form.telefono_contactoE}}
-                        <p class="error_text" id="telefono_contactoE"></p>
-                    </div>
-                </div>
-                <br>
-                <div class="row">
-                    <div class="col-md-6">
-                        <h5><strong> Relacion con el alumno:</strong></h5>
-                        {{form.relacion_contactoE}}
-                        <p class="error_text" id="relacion_contactoE"></p>
-                    </div>
-                    <input type="hidden" name="estado" value="{{object.estado}}">
-                </div>
-                <br>
-                <button class="btn btn-success w-100" onclick="ModificarEstudiante('{%url 'modificarEstudiante' object.pk%}')">Modificar estudiante</button>
-                <br>
-            </div>
-
-            <div class="tab-pane fade" id="disabled-tab-pane" role="tabpanel" aria-labelledby="disabled-tab" tabindex="0">
-                <br>
-                <h3>Información del Registro </h3>
-                <br>
-               <form action="{%url 'modificarRegistroEstudiante' registro.pk%}" method="post" id="ModificarRegistroEstudianteForm">
-                {% csrf_token %}
+            <div class="tab-content" id="myTabContent">
+                <div class="formEstudianteUpdate tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+                    <br>
+                    <h3>Información del estudiante</h3>
+                    {% csrf_token %}
+                    <br>
                     <div class="row">
                         <div class="col-md-6">
-                            <h5><strong>Inicio de clases: </strong></h5>
-                            {{formRegistro.inicioClase}}
-                            <p class="error_text" id="inicioClase"></p>
+                            <h5><strong>Nombre Completo: </strong></h5>
+                            {{form.nombre_completo}}
+                            <p class="error_text" id="nombre_completo"></p>
                         </div>
                         <div class="col-md-6">
-                            <h5><strong>Fin de clases: </strong></h5>
-                            {{formRegistro.finClase}}
-                            <p class="error_text" id="finClase"></p>
+                            <h5><strong>Fecha de nacimiento:
+                            </strong></h5>
+                            {{form.fecha_nacimiento}}
+                            <p class="error_text" id="fecha_nacimiento"></p>
                         </div>
                     </div>
                     <br>
-                <div class="row">
-                    <div class="col-md-6">
-                        <h5><strong>Hora de la clase: </strong></h5>
-                        {{formRegistro.horaClase}}
-                        <p class="error_text" id="horaClase"></p>
-                    </div>
-                    <div class="col-md-6">
-                        <h5><strong>Dia de la clase: </strong></h5>
-                        {{formRegistro.diaClase}}
-                        <p class="error_text" id="diaClase"></p>
-                    </div>
-                </div>
-                <br>
-                <div class="row">
-                    <div class="col-md-6">
-                        <h5><strong>Profesor:</strong></h5>
-                        {{formRegistro.profesor}}
-                        <p class="error_text" id="profesor"></p>
-                    </div>
-                    <div class="col-md-6">
-                        <h5><strong>Nivel del estudiante:</strong></h5>
-                        {{formRegistro.nivel}}
-                        <p class="error_text" id="nivel"></p>
-                    </div>
-                  
-                </div>
-                <br>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-check">
-                            <label class="form-check-label"><strong>Matrícula pagada:</strong></label>
-                            {{formRegistro.pagado}} 
-                            <p class="error_text" id="pagado"></p> 
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5><strong>Numero de documento:</strong></h5>
+                            {{form.documento}}
+                            <p class="error_text" id="documento"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <h5><strong>Numero de celular:</strong></h5>
+                            {{form.celular}}
+                            <p class="error_text" id="celular"></p>
                         </div>
                     </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5><strong>Numero de telefono:</strong></h5>
+                            {{form.telefono}}
+                            <p class="error_text" id="telefono"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <h5><strong>Correo electronico:</strong></h5>
+                            {{form.email}}
+                            <p class="error_text" id="email"></p>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5><strong>Direccion de residencia:</strong></h5>
+                            {{form.direccion}}
+                            <p class="error_text" id="direccion"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <h5><strong>Barrio de resdencia:</strong></h5>
+                            {{form.barrio}}
+                            <p class="error_text" id="barrio"></p>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <label class="form-check-label"><strong>Tiene seguro medico:</strong></label>
+                                {{form.seguro_medico}}  
+                                <p class="error_text" id="seguro_medico"></p>
+                            </div>               
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <label class="form-check-label"><strong>Tiene documento de identidad:</strong></label>
+                                {{form.documento_identidad}}
+                                <p class="error_text" id="documento_identidad"></p>  
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5><strong>Ciudad de residencia:</strong></h5>
+                            {{form.ciudad}}
+                            <p class="error_text" id="ciudad"></p>
+                        </div>
+                    </div>
+                    <br>
                 </div>
-                <input type="hidden" name="estudiante" value="{{registro.estudiante.id}}">
-               </form>
-            <br>
-            <button type="button" class="btn btn-success w-100" onclick="ModificarRegistroEstudiante()">Modificar Registro del estudiante</button>
-            <br>
-            </div>
-        <br>
+                <div class="formEstudianteUpdate tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+                    <br>
+                    <h3>Información del acudiente</h3>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5><strong>Nombre completo del acudiente:</strong></h5>
+                            {{form.nombre_completo_acudiente}}
+                            <p class="error_text" id="nombre_completo_acudiente"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <h5><strong>Numero de cedula acudiente:
+                            </strong></h5>
+                            {{form.cedula_acudiente}}
+                            <p class="error_text" id="cedula_acudiente"></p>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5><strong>Numero de celular acudiente :</strong></h5>
+                            {{form.celular_acudiente}}
+                            <p class="error_text" id="celular_acudiente"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <h5><strong> Correo electronico acudiente:</strong></h5>
+                            {{form.email_acudiente}}
+                            <p class="error_text" id="email_acudiente"></p>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5><strong>Lugar de expedicion de la cedula del acudiente:</strong></h5>
+                            {{form.lugar_expedicion_acudiente}}
+                            <p class="error_text" id="lugar_expedicion_acudiente"></p>
+                        </div>
+                    
+                    </div>
+                    <br>
+                </div>
+                <div class="tab-pane fade" id="docs-tab-pane" role="tabpanel" aria-labelledby="docs-tab" tabindex="0">
+                    <br>
+                    <h3>Documentos </h3>
+                    <br>
+                    <form action="{%url 'modificarDocsEstudiante' object.pk%}" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                    <h5><strong>Documento de identidad:</strong></h5>
+                                    {{form.documento_A}}
+                            </div>
+                            <div class="col-md-6">
+                                <h5><strong>EPS</strong></h5>
+                                {{form.seguro_A}}
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5><strong>Firma:</strong></h5>
+                                {{form.firma}}
+                            </div>
+                        </div>
+                        <br>
+                        <button type="submit" class="btn btn-success w-100">Actualizar documentos</button>
+                    </form>
+                    <br>
+                </div>
+                <div class="formEstudianteUpdate tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
+                    <br>
+                    <h3>Información del contacto de emergencia </h3>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5><strong>Nombre del contacto de emergencia:</strong></h5>
+                            {{form.nombre_contactoE}}
+                            <p class="error_text" id="nombre_contactoE"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <h5><strong> Telefono del contacto de emergencia:</strong></h5>
+                            {{form.telefono_contactoE}}
+                            <p class="error_text" id="telefono_contactoE"></p>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5><strong> Relacion con el alumno:</strong></h5>
+                            {{form.relacion_contactoE}}
+                            <p class="error_text" id="relacion_contactoE"></p>
+                        </div>
+                        <input type="hidden" name="estado" value="{{object.estado}}">
+                    </div>
+                    <br>
+                    <button class="btn btn-success w-100" onclick="ModificarEstudiante('{%url 'modificarEstudiante' object.pk%}')">Modificar estudiante</button>
+                    <br>
+                </div>
+                
+                <div class="tab-pane fade" id="disabled-tab-pane" role="tabpanel" aria-labelledby="disabled-tab" tabindex="0">
+                    <br>
+                    <h3>Información del Registro </h3>
+                    <br>
+                <form action="{%url 'modificarRegistroEstudiante' registro.pk%}" method="post" id="ModificarRegistroEstudianteForm">
+                    {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5><strong>Inicio de clases: </strong></h5>
+                                {{formRegistro.inicioClase}}
+                                <p class="error_text" id="inicioClase"></p>
+                            </div>
+                            <div class="col-md-6">
+                                <h5><strong>Fin de clases: </strong></h5>
+                                {{formRegistro.finClase}}
+                                <p class="error_text" id="finClase"></p>
+                            </div>
+                        </div>
+                        <br>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5><strong>Hora de la clase: </strong></h5>
+                            {{formRegistro.horaClase}}
+                            <p class="error_text" id="horaClase"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <h5><strong>Dia de la clase: </strong></h5>
+                            {{formRegistro.diaClase}}
+                            <p class="error_text" id="diaClase"></p>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5><strong>Profesor:</strong></h5>
+                            {{formRegistro.profesor}}
+                            <p class="error_text" id="profesor"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <h5><strong>Nivel del estudiante:</strong></h5>
+                            {{formRegistro.nivel}}
+                            <p class="error_text" id="nivel"></p>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <label class="form-check-label"><strong>Matrícula pagada:</strong></label>
+                                {{formRegistro.pagado}} 
+                                <p class="error_text" id="pagado"></p> 
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" name="estudiante" value="{{registro.estudiante.id}}">
+                </form>
+                    <br>
+                    <button type="button" class="btn btn-success w-100" onclick="ModificarRegistroEstudiante()">Modificar Registro del estudiante</button>
+                    <br>
+                </div>
+                <br>
             </div>
             <br> 
-          </div>
-            </div>
     </div>
 
 {% endblock contenido %}
@@ -281,6 +319,5 @@
         });
     })
 
-    
 </script>
 {%endblock scripts%}

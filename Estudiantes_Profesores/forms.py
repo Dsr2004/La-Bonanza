@@ -11,7 +11,7 @@ class EstudianteForm(forms.ModelForm):
 
         widgets = {
             "nombre_completo": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
-            "fecha_nacimiento":forms.DateInput(attrs={"type":"text","class":"form-control", "autocomplete":"off"}),
+            "fecha_nacimiento":forms.DateInput(attrs={"type":"date","class":"form-control", "autocomplete":"off"}),
             "documento": forms.NumberInput(attrs={"class":"form-control", "autocomplete":"off"}),
             "celular": forms.NumberInput(attrs={"class":"form-control", "autocomplete":"off"}),
             "telefono": forms.NumberInput(attrs={"class":"form-control", "autocomplete":"off"}),

@@ -113,7 +113,7 @@ class reporteAsistencia(ListView):
         Estudiante,Documento,Nivel,Profesor,Dia,Hora,Estado=[[],[],[],[],[],[],[]]
         if todos == None:
             name = "reporte-asistencia-desde:{fecha1}-hasta:{fecha2}".format(fecha1 = fechas[0], fecha2 = fechas[1])
-            for asistencia in Asistencia.objects.all():
+            for asistencia in Asistencia.objects.all().order_by("dia"):
                 if asistencia.dia <= fechas[1] and asistencia.dia >= fechas[0]:
                     Estudiante.append(asistencia.registro.estudiante)
                     Documento.append(asistencia.registro.estudiante.documento)
@@ -124,7 +124,7 @@ class reporteAsistencia(ListView):
                     Estado.append(asistencia.get_estado_display())
         else:
             name="reporte-todas-las-asistencias"
-            for asistencia in Asistencia.objects.all():
+            for asistencia in Asistencia.objects.all().order_by("dia"):
                 Estudiante.append(asistencia.registro.estudiante)
                 Documento.append(asistencia.registro.estudiante.documento)
                 Nivel.append(asistencia.registro.nivel.nivel)
@@ -290,9 +290,32 @@ class ModificarEstudiante(UpdateView):
         contexto["formRegistro"] = RegistroForm(instance=registro)
         return contexto
 
-
     def form_invalid(self, form):
        return JsonResponse({"errores": form.errors}, status=404)
+
+
+class ModificarDocsEstudiante(UpdateView):
+    model = Estudiante
+    form_class = EstudianteForm
+    template_name = "Estudiantes/editarInfoEstudiante.html"
+    success_url = reverse_lazy("estudiantes")
+
+    def post(self, request, *args, **kwargs):
+        estudiante = Estudiante.objects.get(pk=self.kwargs["pk"])
+        acciones = []
+        if request.FILES:
+            if "documento_A" in request.FILES:
+                estudiante.documento_A = request.FILES["documento_A"]
+                messages.add_message(request, messages.INFO, "El documento de identidad ha sido modificado")
+            if "seguro_A" in request.FILES:
+                estudiante.seguro_A = request.FILES["seguro_A"]
+                messages.add_message(request, messages.INFO, "El documento de la EPS ha sido modificado")
+            if "firma" in request.FILES:
+                estudiante.firma = request.FILES["firma"]
+                messages.add_message(request, messages.INFO, "La firma ha sido modificada")
+            estudiante.save()
+        return redirect("modificarEstudiante",pk= self.kwargs["pk"])
+   
 
 class CambiarEstadoEstudiante(View):
     def post(self, request, *args, **kwargs):

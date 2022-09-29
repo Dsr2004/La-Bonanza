@@ -60,6 +60,8 @@
               {% if request.path == '/Administracion/Estudiantes/'%}active{% endif %}
               {% if request.path == '/Administracion/RegistarEstudiante/'%}active{% endif %}
               {% if request.path == '/Administracion/BuscarNuevosEstudiantes/'%}active{% endif %}
+              {% if '/Administracion/ModificarEstudiante/' in request.path %}active{% endif %}
+              {% if '/Administracion/VerInfoEstudiante/' in request.path %}active{% endif %}
               " aria-current="page" href="{%url 'estudiantes'%}">Estudiantes</a>
             </li>
             <li class="nav-item">

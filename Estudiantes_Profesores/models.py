@@ -65,7 +65,19 @@ class Estudiante(models.Model):
     #datos para el sistema 
     estado = models.BooleanField(default=True)
     
+    def save(self, *args, **kwargs):
+        try:
+            this = Estudiante.objects.get(id=self.id)
+            if this.firma != self.firma:
+                this.firma.delete()
 
+            if this.documento_A != self.documento_A:
+                this.documento_A.delete()
+                
+            if this.seguro_A != self.seguro_A:
+                this.seguro_A.delete()
+        except: pass
+        super(Estudiante, self).save(*args, **kwargs)
 
     class Meta:
         db_table = "estudiantes"

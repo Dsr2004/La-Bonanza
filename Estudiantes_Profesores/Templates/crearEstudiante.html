@@ -47,72 +47,72 @@
             <div>
                 <label for="" style="font-weight: 500;">{{form.email.label}}:</label>
                 {{form.email}}
-                <p id="" class="error_text"></p>
+                <p id="email" class="error_text"></p>
             </div>
             <div>
                 <label for="" style="font-weight: 500;">{{form.direccion.label}}:</label>
                 {{form.direccion}}
-                <p id="" class="error_text"></p>
+                <p id="direccion" class="error_text"></p>
             </div>
             <div>
                 <label for="" style="font-weight: 500;">{{form.barrio.label}}:</label>
                 {{form.barrio}}
-                <p id="" class="error_text"></p>
+                <p id="barrio" class="error_text"></p>
             </div>
             <div>
                 <label for="" style="font-weight: 500;">{{form.ciudad.label}}:</label>
                 {{form.ciudad}}
-                <p id="" class="error_text"></p>
+                <p id="ciudad" class="error_text"></p>
             </div>
             <div>
                 <label for="" style="font-weight: 500;">{{form.seguro_medico.label}}:</label>
                 {{form.seguro_medico}}
-                <p id="" class="error_text"></p>
+                <p id="seguro_medico" class="error_text"></p>
             </div>
             <div>
                 <label for="" style="font-weight: 500;">{{form.documento_identidad.label}}:</label>
                 {{form.documento_identidad}}
-                <p id="" class="error_text"></p>
+                <p id="documento_identidad" class="error_text"></p>
             </div>
             <div>
                 <label for="" style="font-weight: 500;">{{form.nombre_completo_acudiente.label}}:</label>
                 {{form.nombre_completo_acudiente}}
-                <p id="" class="error_text"></p>
+                <p id="nombre_completo_acudiente" class="error_text"></p>
             </div>
             <div>
                 <label for="" style="font-weight: 500;">{{form.cedula_acudiente.label}}:</label>
                 {{form.cedula_acudiente}}
-                <p id="" class="error_text"></p>
+                <p id="cedula_acudiente" class="error_text"></p>
             </div>
             <div>
                 <label for="" style="font-weight: 500;">{{form.lugar_expedicion_acudiente.label}}:</label>
                 {{form.lugar_expedicion_acudiente}}
-                <p id="" class="error_text"></p>
+                <p id="lugar_expedicion_acudiente" class="error_text"></p>
             </div>
             <div>
                 <label for="" style="font-weight: 500;">{{form.celular_acudiente.label}}:</label>
                 {{form.celular_acudiente}}
-                <p id="" class="error_text"></p>
+                <p id="celular_acudiente" class="error_text"></p>
             </div>
             <div>
                 <label for="" style="font-weight: 500;">{{form.email_acudiente.label}}:</label>
                 {{form.email_acudiente}}
-                <p id="" class="error_text"></p>
+                <p id="email_acudiente" class="error_text"></p>
             </div>
             <div>
                 <label for="" style="font-weight: 500;">{{form.nombre_contactoE.label}}:</label>
                 {{form.nombre_contactoE}}
-                <p id="" class="error_text"></p>
+                <p id="nombre_contactoE" class="error_text"></p>
             </div>
             <div>
                 <label for="" style="font-weight: 500;">{{form.telefono_contactoE.label}}:</label>
                 {{form.telefono_contactoE}}
-                <p id="" class="error_text"></p>
+                <p id="telefono_contactoE" class="error_text"></p>
             </div>
             <div>
                 <label for="" style="font-weight: 500;">{{form.relacion_contactoE.label}}:</label>
                 {{form.relacion_contactoE}}
-                <p id="" class="error_text"></p>
+                <p id="relacion_contactoE" class="error_text"></p>
             </div>
             <script>
                 let campos = document.querySelectorAll("input");
@@ -344,13 +344,13 @@ function limpiarFirma(){
 
 <script src="{% static 'libs/datepicker/dist/datepicker.js' %}"></script>
 <script src="{% static 'libs/datepicker/i18n/datepicker.es-ES.js' %}"></script>
-    <script>
+    <!-- <script>
          $("#id_fecha_nacimiento").datepicker({
             language: 'es-ES',
             format: "dd/mm/YYYY",
             autoHide: true,
             
         });
-    </script>
+    </script> -->
 
 {% endblock scripts %}
