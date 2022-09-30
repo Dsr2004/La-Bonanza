@@ -32,7 +32,7 @@
     color: red;
     margin-left: 10px;
 }
-#icon_danger_ESTUDIANTE, #icon_danger_ACUDIENTE, #icon_danger_EMERGENCIA, #icon_danger_REGISTRO{
+#icon_danger_ESTUDIANTE, #icon_danger_ACUDIENTE, #icon_danger_EMERGENCIA, #icon_danger_REGISTRO, #icon_danger_DOCUMENTOS{
     font-weight:600;
     color: red;
     display: none;

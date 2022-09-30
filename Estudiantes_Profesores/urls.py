@@ -5,15 +5,16 @@ from .views import *
 
 
 urlpatterns=[
-    path("Calendario/", Calendario.as_view(), name="calendario"),
-    path("Estudiantes/", Estudiantes.as_view(), name="estudiantes"),
+    path("Calendario/", login_required(Calendario.as_view()), name="calendario"),
+    path("Estudiantes/", login_required(Estudiantes.as_view()), name="estudiantes"),
     path("Profesores/", login_required(Profesores.as_view()), name="profesores"),
     path("RegistarEstudiante/", RegistrarEstudiante.as_view(), name="registrarEstudiante"),
-    path("BuscarNuevosEstudiantes/", BuscarNuevosEstudiantes.as_view(), name="buscarNuevosEstudiantes"),
-    path("CrearNuevosEstudiantes/<int:pk>", CrearNuevosEstudiantes.as_view(), name="crearNuevosEstudiantes"),
-    path("ValidarRegistroEstudiante/", ValidarRegistroEstudiante.as_view(), name="validarRegistroEstudiante"),
+    path("BuscarNuevosEstudiantes/", login_required(BuscarNuevosEstudiantes.as_view()), name="buscarNuevosEstudiantes"),
+    path("CrearNuevosEstudiantes/<int:pk>", login_required(CrearNuevosEstudiantes.as_view()), name="crearNuevosEstudiantes"),
+    path("ValidarRegistroEstudiante/", login_required(ValidarRegistroEstudiante.as_view()), name="validarRegistroEstudiante"),
     path("VerInfoEstudiante/<int:pk>", login_required(VerInfoEstudiante.as_view()), name="verInfoEstudiante"),
     path("ModificarEstudiante/<int:pk>", login_required(ModificarEstudiante.as_view()), name="modificarEstudiante"),
+    path("ModificarDocsEstudiante/<int:pk>", login_required(ModificarDocsEstudiante.as_view()), name="modificarDocsEstudiante"),
     path("ModificarRegistroEstudiante/<int:pk>", login_required(ModificarRegistroEstudiante.as_view()), name="modificarRegistroEstudiante"),
     path("CambiarEstadoEstudiante/", login_required(CambiarEstadoEstudiante.as_view()), name="cambiarEstadoEstudiante"),
     path('registrarProfesor/', login_required(datosProfesores), name="registrarProfesor"),

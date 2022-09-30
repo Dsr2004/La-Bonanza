@@ -27,9 +27,9 @@
         </div>
         <div class="col-md-2">
            <a type="button" data-bs-toggle="modal" data-bs-target="#FilterEstudianteModal" class="btn btn-success " > <i class="fa-solid fa-file-excel"></i></a>
-           <a href="{% url 'registrarEstudiante' %}" class="btn btn-outline-success btn-" > <i class="fa-solid fa-person-circle-plus fa-xl"></i></a>
+           <a href="{% url 'registrarEstudiante' %}" class="btn btn-outline-success " > <i class="fa-solid fa-person-circle-plus fa-xl"></i></a>
           {% if nuevosEstudiantes %}
-          <a href="{% url 'buscarNuevosEstudiantes' %}" class="btn btn-outline-warning btn-lg" >  <i class="fa-solid fa-clock fa-xl"></i></a>
+          <a href="{% url 'buscarNuevosEstudiantes' %}" class="btn btn-outline-warning " >  <i class="fa-solid fa-clock fa-xl"></i></a>
           {% endif %}
             
         </div>
@@ -104,8 +104,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" onclick="exportGenerate()">Save changes</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            <button type="button" class="btn btn-primary" onclick="exportGenerate()">Guardar</button>
             </div>
         </div>
         </div>

@@ -33,7 +33,7 @@
             <div class="col-2">
                 <a type="button" data-bs-toggle="modal" data-bs-target="#FilterAsistenciaModal" class="btn btn-success "> <i class="fa-solid fa-file-excel"></i></a>
                 <a href="{% url 'controlAsistencia' %}" class="btn btn-outline-secondary "><i class="fa-solid fa-house"></i></a>
-                <a href="{% url 'controlAsistencia' %}" class="btn btn-outline-secondary "><i class="fa-solid fa-calendar-days"></i></a>
+                <a href="{% url 'calendario' %}" class="btn btn-outline-secondary "><i class="fa-solid fa-calendar-days"></i></a>
             </div>
         </div>
         <hr>
@@ -82,8 +82,10 @@
         </div>
         <div class="modal-body">
             <form action='{%url "reporteAsistencia"%}' method="post" id="filtroAsistencia">
+                <label for="" style="font-weight: 500;">Filtrar por rango de fecha:</label>
                 <input type="text" id="fechaFiltro" name="fecha" class="form-control">
-                <label for="">filtrar todos</label>
+                <br>
+                <label for="" style="font-weight: 500;">Filtrar todos:</label>
                 <input type="checkbox" name="todos">
                 {%csrf_token%}
                 <p id="ExportEstudiantes-p" style="display:none;"></p>

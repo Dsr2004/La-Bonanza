@@ -37,7 +37,7 @@ function abrir_registro_nivel_modal(url){
 
 function ModificarEstudiante(url){
   let forms = document.getElementsByClassName('formEstudianteUpdate')
-    datos={}
+   datos={}
     for (let i = 0; i < forms.length; i++) {
         inputs = forms[i].getElementsByTagName('input')
         selects = forms[i].getElementsByTagName('select')
@@ -48,10 +48,12 @@ function ModificarEstudiante(url){
             datos[selects[i].name]=selects[i].value
         }
     }
+    console.log(datos)
     $.ajax({
       url: url,
       type: "POST",
       data:datos,
+      
       success: function(data){
         $(".formEstudianteUpdate").find('.error_text').text('');
         $(".formEstudianteUpdate").find('.is-invalid').removeClass('is-invalid');
@@ -72,11 +74,13 @@ function ModificarEstudiante(url){
         $("#icon_danger_ESTUDIANTE").css("display","none")
         $("#icon_danger_ACUDIENTE").css("display","none")
         $("#icon_danger_EMERGENCIA").css("display","none")
+        $("#icon_danger_DOCUMENTOS").css("display","none")
         errors = errores.responseJSON["errores"]
         pestañas = {
-          "info_estudiante":["nombre_completo","fecha_nacimiento","documento","celular","telefono","email","direccion","barrio","seguro_medico","documento_identidad","ciudad","nivel"],
+          "info_estudiante":["nombre_completo","fecha_nacimiento","documento","celular","telefono","email","direccion","barrio","seguro_medico","documento_identidad","ciudad"],
           "info_acudiente":["nombre_completo_acudiente","cedula_acudiente","celular_acudiente","email_acudiente","lugar_expedicion_acudiente"],
-          "info_emergencia":["nombre_contactoE","telefono_contactoE","relacion_contactoE"]
+          "info_emergencia":["nombre_contactoE","telefono_contactoE","relacion_contactoE"],
+          "info_documentos":["documento_A","seguro_A","firma"]
         }
 
         for(campo in pestañas["info_estudiante"]){
@@ -94,6 +98,12 @@ function ModificarEstudiante(url){
         for(campo in pestañas["info_estudiante"]){
           if (pestañas["info_emergencia"][campo] in errors){
             $("#icon_danger_EMERGENCIA").css("display","inline-block")
+            break
+          }
+        }
+        for(campo in pestañas["info_documentos"]){
+          if (pestañas["info_emergencia"][campo] in errors){
+            $("#icon_danger_DOCUMENTOS").css("display","inline-block")
             break
           }
         }

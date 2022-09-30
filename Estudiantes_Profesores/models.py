@@ -1,4 +1,3 @@
-import os
 from django.db import models
 from Usuarios.models import Usuario
 from Niveles.models import Nivel
@@ -11,7 +10,9 @@ DIAS_SEMANA = (
 ESTADOS_ASISTENCIA = (
     ("1","Asistió"),("2","No asistió"),("3","Cancelo con excusa"), ("4", "Cancelo por enfermedad")
 )
-
+ESTADOS_ASISTENCIA = (
+    ("1","Clase puntual"),("2","Mensualidad")
+)
 
 def guardar_firma(instance, filename):
     return  f"Archivos_Estudiantes/{instance.nombre_completo}_{instance.documento}/firma-{filename}"
@@ -62,10 +63,23 @@ class Estudiante(models.Model):
     firma =models.FileField(upload_to=guardar_firma, null=False, blank=False)
     documento_A =models.FileField(upload_to=guardar_documento, null=False, blank=False)
     seguro_A =models.FileField(upload_to=guardar_seguro, null=False, blank=False) 
-    #datos para el sistema 
+    #datos para el sistema
+    tipo_clase = models.CharField(max_length=15, choices=ESTADOS_ASISTENCIA, null=False, blank=False)
     estado = models.BooleanField(default=True)
     
+    def save(self, *args, **kwargs):
+        try:
+            this = Estudiante.objects.get(id=self.id)
+            if this.firma != self.firma:
+                this.firma.delete()
 
+            if this.documento_A != self.documento_A:
+                this.documento_A.delete()
+                
+            if this.seguro_A != self.seguro_A:
+                this.seguro_A.delete()
+        except: pass
+        super(Estudiante, self).save(*args, **kwargs)
 
     class Meta:
         db_table = "estudiantes"

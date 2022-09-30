@@ -7,11 +7,11 @@ class EstudianteForm(forms.ModelForm):
         fields = ("nombre_completo","fecha_nacimiento","documento", "celular","telefono","email",
         "direccion","barrio","ciudad","seguro_medico","documento_identidad",
         "nombre_completo_acudiente","cedula_acudiente","lugar_expedicion_acudiente","celular_acudiente","email_acudiente",
-        "nombre_contactoE","telefono_contactoE","relacion_contactoE", "documento_A", "seguro_A", "firma")
+        "nombre_contactoE","telefono_contactoE","relacion_contactoE","tipo_clase", "documento_A", "seguro_A", "firma")
 
         widgets = {
             "nombre_completo": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
-            "fecha_nacimiento":forms.DateInput(attrs={"type":"text","class":"form-control", "autocomplete":"off"}),
+            "fecha_nacimiento":forms.DateInput(attrs={"type":"date","class":"form-control", "autocomplete":"off"}),
             "documento": forms.NumberInput(attrs={"class":"form-control", "autocomplete":"off"}),
             "celular": forms.NumberInput(attrs={"class":"form-control", "autocomplete":"off"}),
             "telefono": forms.NumberInput(attrs={"class":"form-control", "autocomplete":"off"}),
@@ -31,7 +31,9 @@ class EstudianteForm(forms.ModelForm):
             "relacion_contactoE": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
             "documento_A" : forms.FileInput(attrs={"class":"form-control"}),
             "seguro_A" : forms.FileInput(attrs={"class":"form-control"}),
-            "firma" : forms.FileInput(attrs={"class":"form-control"})
+            "firma" : forms.FileInput(attrs={"class":"form-control"}),
+            "tipo_clase":forms.Select(attrs={"class":"form-control"})
+
 
         }    
 

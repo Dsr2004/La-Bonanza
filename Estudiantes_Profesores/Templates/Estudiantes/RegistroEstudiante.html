@@ -5,45 +5,88 @@
       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
     <div class="modal-body" style="height: 80vh; overflow: auto;">
-      <form action="{% url 'crearNuevosEstudiantes' estudiante.pk %}" method="post" id="RegistrarEstudianteForm">
-        {% csrf_token %}
-        <Label><strong>Estudiante:</strong></Label>
-        <h5>{{estudiante.get_estudiante}}</h5>
-        <p id="estudiante" class="bg-light text-danger" style="color: #dc3545;"></p>
-        <br>
-        <Label><strong>Inicio de clases: <sup style="color: #dc3545;">(*)</sup></strong></Label>
-        {{form.inicioClase}}
-        <p id="estudiante" class="bg-light text-danger" style="color: #dc3545;"></p>
-        <br>
-        <Label><strong>Fin de clases: <sup style="color: #dc3545;">(*)</sup></strong></Label>
-        {{form.finClase}}
-        <p id="estudiante" class="bg-light text-danger" style="color: #dc3545;"></p>
-        <br>
-        <Label><strong>Hora de la clase: <sup style="color: #dc3545;">(*)</sup></strong></Label>
-        {{form.horaClase}}
-        <p id="estudiante" class="bg-light text-danger" style="color: #dc3545;"></p>
-        <br>
-        <Label><strong>Dia de la clase: <sup style="color: #dc3545;">(*)</sup></strong></Label>
-        {{form.diaClase}}
-        <p id="diaClase" class="bg-light text-danger" style="color: #dc3545;"></p>
-        <br>
-        <Label><strong>Profesor: <sup style="color: #dc3545;">(*)</sup></strong></Label>
-        {{form.profesor}}
-        <p id="diaClase" class="bg-light text-danger" style="color: #dc3545;"></p>
-        <br>
-        <Label><strong>Nivel: <sup style="color: #dc3545;">(*)</sup></strong></Label>
-        {{form.nivel}}
-        <p id="diaClase" class="bg-light text-danger" style="color: #dc3545;"></p>
-        <br>
-        <div class="form-check">
-          <Label class="form-check-label"><strong>Matrícula pagada: <sup style="color: #dc3545;">(*)</sup></strong></Label>
-          {{form.pagado}}
-         </div>
-          <p id="pagado" class="bg-light text-danger" style="color: #dc3545;"></p>
+
+      {%if estudiante.tipo_clase == '1' %}
+        <form action="{% url 'crearNuevosEstudiantes' estudiante.pk %}" method="post" id="RegistrarEstudianteForm">
+          {% csrf_token %}
+          <Label><strong>Estudiante:</strong></Label>
+          <h5>{{estudiante.get_estudiante}}</h5>
+          <p id="estudiante" class="bg-light text-danger" style="color: #dc3545;"></p>
           <br>
-        <input type="hidden" name="estudiante" value="{{estudiante.pk}}">
-        <button type="submit"  class="btn btn-success w-100">Registrar Estudiante </button>
-    </form>
+          <Label><strong>Inicio de clases: <sup style="color: #dc3545;">(*)</sup></strong></Label>
+          {{form.inicioClase}}
+          <p id="estudiante" class="bg-light text-danger" style="color: #dc3545;"></p>
+          <br>
+          <Label><strong>Hora de la clase: <sup style="color: #dc3545;">(*)</sup></strong></Label>
+          {{form.horaClase}}
+          <p id="estudiante" class="bg-light text-danger" style="color: #dc3545;"></p>
+          <br>
+          <Label><strong>Profesor: <sup style="color: #dc3545;">(*)</sup></strong></Label>
+          {{form.profesor}}
+          <p id="diaClase" class="bg-light text-danger" style="color: #dc3545;"></p>
+          <br>
+          <Label><strong>Nivel: <sup style="color: #dc3545;">(*)</sup></strong></Label>
+          {{form.nivel}}
+          <p id="diaClase" class="bg-light text-danger" style="color: #dc3545;"></p>
+          <br>
+          <div class="form-check">
+            <Label class="form-check-label"><strong>Matrícula pagada: <sup style="color: #dc3545;">(*)</sup></strong></Label>
+            {{form.pagado}}
+          </div>
+            <p id="pagado" class="bg-light text-danger" style="color: #dc3545;"></p>
+            <br>
+          <input type="hidden" name="estudiante" value="{{estudiante.pk}}">
+          <button type="submit"  class="btn btn-success w-100">Registrar Estudiante </button>
+      </form>
+    {% elif estudiante.tipo_clase == '2'%}
+    <form action="{% url 'crearNuevosEstudiantes' estudiante.pk %}" method="post" id="RegistrarEstudianteForm">
+      {% csrf_token %}
+      <Label><strong>Estudiante:</strong></Label>
+      <h5>{{estudiante.get_estudiante}}</h5>
+      <p id="estudiante" class="bg-light text-danger" style="color: #dc3545;"></p>
+      <br>
+      <Label><strong>Inicio de clases: <sup style="color: #dc3545;">(*)</sup></strong></Label>
+      {{form.inicioClase}}
+      <p id="inicioClase" class="bg-light text-danger" style="color: #dc3545;"></p>
+      <br>
+      <Label><strong>Hora de la clase: <sup style="color: #dc3545;">(*)</sup></strong></Label>
+      {{form.horaClase}}
+      <p id="horaClase" class="bg-light text-danger" style="color: #dc3545;"></p>
+      <br>
+      <Label><strong>Meses de suscripción: <sup style="color: #dc3545;">(*)</sup></strong></Label>
+      <select name="meseSus" id="mesesSus"  class="form-select">
+        <option value="1">1 Mes</option>
+        <option value="2">2 Meses</option>
+        <option value="3">3 Meses</option>
+        <option value="4">4 Meses</option>
+        <option value="5">5 Meses</option>
+        <option value="6">6 Meses</option>
+      </select>
+      <p id="horaClase" class="bg-light text-danger" style="color: #dc3545;"></p>
+      <br>
+      <Label><strong>Días de la clase: <sup style="color: #dc3545;">(*)</sup></strong></Label>
+      {{form.diaClase}}
+      <p id="diaClase" class="bg-light text-danger" style="color: #dc3545;"></p>
+      <br>
+      <Label><strong>Profesor: <sup style="color: #dc3545;">(*)</sup></strong></Label>
+      {{form.profesor}}
+      <p id="profesor" class="bg-light text-danger" style="color: #dc3545;"></p>
+      <br>
+      <Label><strong>Nivel: <sup style="color: #dc3545;">(*)</sup></strong></Label>
+      {{form.nivel}}
+      <p id="nivel" class="bg-light text-danger" style="color: #dc3545;"></p>
+      <br>
+      <div class="form-check">
+        <Label class="form-check-label"><strong>Matrícula pagada: <sup style="color: #dc3545;">(*)</sup></strong></Label>
+        {{form.pagado}}
+      </div>
+        <p id="pagado" class="bg-light text-danger" style="color: #dc3545;"></p>
+        <br>
+      <input type="hidden" name="estudiante" value="{{estudiante.pk}}">
+      <button type="submit"  class="btn btn-success w-100">Registrar Estudiante </button>
+  </form>
+    {%endif%}
+
       <hr>
       <div class="container alert alert-warning  alert-dismissible fade show" role="alert" id="EstudianteSinRegistrAlert">
         <h5 id="texto"></h5>
