@@ -172,7 +172,7 @@ class Estudiantes(ListView):
 class reporteEstudiantes(ListView):
     def post(self, request, *args, **kwargs):
         datos = request.POST.get('typeExport')
-        print(datos)
+        print(request.POST)
         consulta = []
         name = ""
         if datos == 'All':
@@ -193,16 +193,27 @@ class reporteEstudiantes(ListView):
                 if registro.nivel == Nivel.objects.get(pk = datos):
                     name = "reporte-Estudiantes-nivel-"+registro.nivel.nivel
                     consulta.append(registro)
+        elif datos == "clase_Puntual":
+             for registro in Registro.objects.all():
+                if registro.estudiante.tipo_clase == "1":
+                    name = "reporte-Estudiantes-clases_puntuales"
+                    consulta.append(registro)
+        elif datos == "clase_Mensualidad":
+             for registro in Registro.objects.all():
+                if registro.estudiante.tipo_clase == "2":
+                    name = "reporte-Estudiantes-clases_mensualidad"
+                    consulta.append(registro)
                     
         if consulta == []:
             messages.add_message(request, messages.WARNING, "No se encontraron estudiantes con este filtro {filtro}, por lo que no se puede realizar el reporte.".format(filtro = datos))
             return redirect('estudiantes')
         # Definir columnas del excel
-        Estudiante, Profesor, Nivele, Estado, Pagado = [[],[],[],[],[]]
+        Estudiante, Profesor, Nivele, Estado, Pagado, Tipo_Clase = [[],[],[],[],[],[]]
         for row in consulta:
             Estudiante.append(row.estudiante)
             Profesor.append(row.profesor)
             Nivele.append(row.nivel)
+            Tipo_Clase.append(row.estudiante.get_tipo_clase_display())
             if row.estudiante.estado:
                 Estado.append("Activo")
             else:
@@ -216,7 +227,8 @@ class reporteEstudiantes(ListView):
         excel['Profesor'] = Profesor
         excel['Nivel'] = Nivele
         excel['Estado'] = Estado
-        excel['Matricula'] = Pagado 
+        excel['Matricula'] = Pagado
+        excel['Tipo de Clase'] = Tipo_Clase 
         with BytesIO() as b:
             # Use the StringIO object as the filehandle.
             writer = pd.ExcelWriter(b, engine='xlsxwriter')

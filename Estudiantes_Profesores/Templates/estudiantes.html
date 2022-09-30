@@ -93,11 +93,20 @@
                     <label for="" style="font-weight: 500;">Seleccione el tipo del reporte:</label>
                     <select name="typeExport" class="form-select" id="ExportEstudiantes">
                         <option value="All">Todos</option>
-                        {%for nivel in niveles%}
-                        <option value="{{nivel.pk}}">Nivel - {{nivel}}</option>
-                        {%endfor%}
-                        <option value="inhabilitados">Inhabilitados</option>
-                        <option value="habilitados">Habilitados</option>
+                        <optgroup label="Estados" id="EstadosOPTG">
+                            <option value="inhabilitados">Inhabilitados</option>
+                            <option value="habilitados">Habilitados</option>
+                        </optgroup>
+                        <optgroup label="Tipos de clase" id="TiposOPTG">
+                            <option value="clase_Puntual">Clase puntual</option>
+                            <option value="clase_Mensualidad">Mensualidad</option>
+                        </optgroup>
+                        <option value="" id="hola12">--</option>
+                        <optgroup label="Niveles" id="NivelesOPTG">
+                            {%for nivel in niveles%}
+                            <option value="{{nivel.pk}}">Nivel - {{nivel}}</option>
+                            {%endfor%}
+                        </optgroup>
                     </select>
                     {%csrf_token%}
                     <p id="ExportEstudiantes-p" style="display:none;"></p>
@@ -116,13 +125,30 @@
 <script src="{% static 'libs/daterangepicker/moment.min.js' %}"></script>
 <script src="{% static 'libs/daterangepicker/daterangepicker.js' %}"></script>
 <script>
+    const $select = document.querySelector("#ExportEstudiantes");
+    let lastSelectedIndex = $select.selectedIndex;
+    let arr = []
+    $select.addEventListener("click", function () {
+        lastSelectedIndex = $select.selectedIndex;
+        arr[0]=lastSelectedIndex
+    });
+    $select.addEventListener("change", function (e) {
+        console.log(arr[0])
+        console.log($select.childNodes[lastSelectedIndex+1])
+        if (!confirm("Al cambiar de cliente se eliminará la lista de artículos. ¿Continuar?")) {
+            $select.selectedIndex = lastSelectedIndex;
+            return;
+        }
+
+        // Aquí el usuario sí ha aceptado, continúa con lo que harías normalmente
+    });
     function exportGenerate(){
         let select = $('#ExportEstudiantes')
         let p = document.getElementById('ExportEstudiantes-p')
         let data = {'name':'typeExport','value':select.val()}
         p.style.display = 'none'
         select.removeClass('is-invalid')
-        if(isNaN(select.val())&&select.val()!="habilitados"&&select.val()!="inhabilitados"&&select.val()!="All"){
+        if(isNaN(select.val())&&select.val()!="habilitados"&&select.val()!="inhabilitados"&&select.val()!="All"&&select.val()!="clase_Puntual"&&select.val()!="clase_Mensualidad"){
             p.innerHTML="Por favor selecione una opción válida"
             p.style.display="block"
             p.style.color="red"
