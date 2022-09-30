@@ -10,7 +10,7 @@ DIAS_SEMANA = (
 ESTADOS_ASISTENCIA = (
     ("1","Asistió"),("2","No asistió"),("3","Cancelo con excusa"), ("4", "Cancelo por enfermedad")
 )
-ESTADOS_ASISTENCIA = (
+ESTADOS_CLASES = (
     ("1","Clase puntual"),("2","Mensualidad")
 )
 
@@ -64,7 +64,7 @@ class Estudiante(models.Model):
     documento_A =models.FileField(upload_to=guardar_documento, null=False, blank=False)
     seguro_A =models.FileField(upload_to=guardar_seguro, null=False, blank=False) 
     #datos para el sistema
-    tipo_clase = models.CharField(max_length=15, choices=ESTADOS_ASISTENCIA, null=False, blank=False)
+    tipo_clase = models.CharField(max_length=15, choices=ESTADOS_CLASES, null=False, blank=False)
     estado = models.BooleanField(default=True)
     
     def save(self, *args, **kwargs):
