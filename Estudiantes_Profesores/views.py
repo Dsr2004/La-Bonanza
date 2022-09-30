@@ -110,14 +110,14 @@ class reporteAsistencia(ListView):
         fechas = request.POST.get('fecha').split(' - ')
         todos = request.POST.get('todos')
         fechas=[datetime.strptime(fechas[0], '%m/%d/%Y').date(), datetime.strptime(fechas[1], '%m/%d/%Y').date()]
-        Estudiante,Documento,Nivel,Profesor,Dia,Hora,Estado=[[],[],[],[],[],[],[]]
+        Estudiante,Documento,Nivele,Profesor,Dia,Hora,Estado=[[],[],[],[],[],[],[]]
         if todos == None:
             name = "reporte-asistencia-desde:{fecha1}-hasta:{fecha2}".format(fecha1 = fechas[0], fecha2 = fechas[1])
             for asistencia in Asistencia.objects.all().order_by("dia"):
                 if asistencia.dia <= fechas[1] and asistencia.dia >= fechas[0]:
                     Estudiante.append(asistencia.registro.estudiante)
                     Documento.append(asistencia.registro.estudiante.documento)
-                    Nivel.append(asistencia.registro.nivel.nivel)
+                    Nivele.append(asistencia.registro.nivel.nivel)
                     Profesor.append(asistencia.registro.profesor)
                     Dia.append(datetime.strftime(asistencia.dia, '%Y/%m/%d'))
                     Hora.append(asistencia.hora.strftime('%I:%M %p'))
@@ -127,7 +127,7 @@ class reporteAsistencia(ListView):
             for asistencia in Asistencia.objects.all().order_by("dia"):
                 Estudiante.append(asistencia.registro.estudiante)
                 Documento.append(asistencia.registro.estudiante.documento)
-                Nivel.append(asistencia.registro.nivel.nivel)
+                Nivele.append(asistencia.registro.nivel.nivel)
                 Profesor.append(asistencia.registro.profesor)
                 Dia.append(datetime.strftime(asistencia.dia, '%Y/%m/%d'))
                 Hora.append(asistencia.hora.strftime('%I:%M %p'))
@@ -136,7 +136,7 @@ class reporteAsistencia(ListView):
         excel = pd.DataFrame()
         excel['Estudiante'] = Estudiante
         excel['Documento'] = Documento
-        excel['Nivel'] = Nivel
+        excel['Nivel'] = Nivele
         excel['Profesor'] = Profesor
         excel['Dia'] = Dia
         excel['Hora'] = Hora
@@ -172,6 +172,7 @@ class Estudiantes(ListView):
 class reporteEstudiantes(ListView):
     def post(self, request, *args, **kwargs):
         datos = request.POST.get('typeExport')
+        print(datos)
         consulta = []
         name = ""
         if datos == 'All':
@@ -189,19 +190,19 @@ class reporteEstudiantes(ListView):
                     consulta.append(registro)
         elif datos.isdigit():
             for registro in Registro.objects.all():
-                if registro.nivel.pk == int(datos):
+                if registro.nivel == Nivel.objects.get(pk = datos):
                     name = "reporte-Estudiantes-nivel-"+registro.nivel.nivel
-                    datos = "nivel - "+registro.nivel.nivel
                     consulta.append(registro)
+                    
         if consulta == []:
             messages.add_message(request, messages.WARNING, "No se encontraron estudiantes con este filtro {filtro}, por lo que no se puede realizar el reporte.".format(filtro = datos))
             return redirect('estudiantes')
         # Definir columnas del excel
-        Estudiante, Profesor, Nivel, Estado, Pagado = [[],[],[],[],[]]
+        Estudiante, Profesor, Nivele, Estado, Pagado = [[],[],[],[],[]]
         for row in consulta:
             Estudiante.append(row.estudiante)
             Profesor.append(row.profesor)
-            Nivel.append(row.nivel)
+            Nivele.append(row.nivel)
             if row.estudiante.estado:
                 Estado.append("Activo")
             else:
@@ -213,7 +214,7 @@ class reporteEstudiantes(ListView):
         excel = pd.DataFrame()
         excel['Estudiante'] = Estudiante
         excel['Profesor'] = Profesor
-        excel['Nivel'] = Nivel
+        excel['Nivel'] = Nivele
         excel['Estado'] = Estado
         excel['Matricula'] = Pagado 
         with BytesIO() as b:
