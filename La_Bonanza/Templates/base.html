@@ -1,6 +1,4 @@
 {% load static %}
-{% if  request.user.is_authenticated == False%}{% if request.path != '/Login/'%}<script>
-  window.location.href = "{%url 'login' %}";</script>{% endif %}{%endif%}
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -87,9 +85,10 @@
               disabled" aria-current="page" href="">Picaderos</a>
             </li>
             {%endif%}
+            {% if request.path != '/Usuarios/CambiarContrasena/'%}
             <li class="nav-item">
-              <p class="nav-link" onclick="changePass('{%url 'changePass'%}')" style="cursor: pointer;">Cambiar Contraseña</p>
-            </li>
+              <a class="nav-link" href="{%url 'changePass'%}" style="cursor: pointer;">Cambiar Contraseña</a>
+            </li>{% endif %}
           </ul> 
           <a  class="btn btn-ligth btn-close-session" href="{% url 'logout' %}"><i class="fa-solid fa-power-off"></i></a>
         </div>

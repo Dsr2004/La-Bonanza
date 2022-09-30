@@ -114,7 +114,13 @@
                 {{form.relacion_contactoE}}
                 <p id="relacion_contactoE" class="error_text"></p>
             </div>
+            <div>
+                <label for="" style="font-weight: 500;">{{form.tipo_clase.label}}:</label>
+                {{form.tipo_clase}}
+                <p id="tipo_clase" class="error_text"></p>
+            </div>
             <script>
+                console.log($('#id_tipo_clase'))
                 let campos = document.querySelectorAll("input");
                 let selects = document.querySelectorAll("select");
                 selects.forEach(function(select) {
@@ -203,7 +209,9 @@
         form.find('.is-invalid').removeClass('is-invalid');
         for (let i in errores){
             let x=form.find('input[name='+i+']')
+            let y=form.find('select[name='+i+']')
             x.addClass("is-invalid")
+            y.addClass("is-invalid")
             $("#"+i).text(errores[i])
         }
         

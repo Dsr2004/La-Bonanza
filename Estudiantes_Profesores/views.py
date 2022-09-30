@@ -9,7 +9,7 @@ from Niveles.models import Nivel
 from .forms import EstudianteForm, RegistroForm,ProfesorForm
 from Usuarios.models import Usuario
 from datetime import datetime, timedelta
-from itertools import groupby
+from dateutil.relativedelta import relativedelta
 import pandas as pd
 from io import BytesIO
 
@@ -234,9 +234,16 @@ class RegistrarEstudiante(CreateView):
     template_name = "crearEstudiante.html"
     success_url = reverse_lazy("estudiantes")
 
-        
+    # def form_valid(self, form):
+    #     if self.request.user.is_authenticated:
+    #         if self.request.user.administrador:
+    #             return redirect("estudiantes")
+    #     else:
+    #         nombre = str(form.cleaned_data['nombre_completo']).capitalize()
+    #         return render(self.request, "gracias.html",{"nombre":nombre})
 
-    
+    #     return super().form_valid(form)
+
 class BuscarNuevosEstudiantes(View):
      def get(self, request, *args, **kwargs):
         if request.user.administrador!=1:
@@ -260,10 +267,30 @@ class CrearNuevosEstudiantes(CreateView):
         estudiante = Estudiante.objects.get(pk=self.kwargs["pk"])
         ctx["estudiante"] = estudiante
         return ctx
+    
+    def post(self, request, *args, **kwargs):
+        copia = request.POST.copy()
+        if "meseSus" not in request.POST:
+            dia = request.POST.get('inicioClase')
+            dia = datetime.strptime(dia, "%Y-%m-%d")
+            diaClase = dia.weekday()
+            copia["finClase"]=dia+relativedelta(days=1)
+            copia["diaClase"]=arreglarFormatoDia(dia=int(diaClase))
+        else:
+            meses = request.POST.get("meseSus")
+            dia = request.POST.get('inicioClase') 
+            finClases = datetime.strptime(dia, "%Y-%m-%d")+relativedelta(months=int(meses))
+            copia["finClase"]=finClases
+        form = self.form_class(copia)
+        if form.is_valid():
+            form.save()
+            return redirect('estudiantes')
+        else:
+            return JsonResponse({"errores": form.errors}, status=400)
 
     def form_invalid(self, form):
         print(form.errors)
-        return JsonResponse({"errores": form.errors}, status=404)
+        return JsonResponse({"errores": form.errors}, status=400)
 
 class VerInfoEstudiante(DetailView):
     model=Estudiante

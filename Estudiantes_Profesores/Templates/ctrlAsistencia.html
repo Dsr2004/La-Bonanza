@@ -82,8 +82,10 @@
         </div>
         <div class="modal-body">
             <form action='{%url "reporteAsistencia"%}' method="post" id="filtroAsistencia">
+                <label for="" style="font-weight: 500;">Filtrar por rango de fecha:</label>
                 <input type="text" id="fechaFiltro" name="fecha" class="form-control">
-                <label for="">filtrar todos</label>
+                <br>
+                <label for="" style="font-weight: 500;">Filtrar todos:</label>
                 <input type="checkbox" name="todos">
                 {%csrf_token%}
                 <p id="ExportEstudiantes-p" style="display:none;"></p>
