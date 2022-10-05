@@ -30,7 +30,7 @@ def guardar_seguro(instance, filename):
 class Profesor(models.Model):
     id = models.CharField(primary_key=True, unique=True, max_length=5) 
     usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE)
-    horarios = models.CharField("horarios del profesor", max_length=300) # "[{"day": "2022-10-05","from": "11:42", "through": "23:42"},...]"
+    horarios = models.CharField("horarios del profesor", max_length=300) # "[{"day": "Lunes","from": "11:42", "through": "23:42"},...]"
     niveles = models.ManyToManyField(Nivel)   
     trabaja_sabado = models.BooleanField("el profesor trabaja los sabados", default=False)
 
@@ -44,15 +44,7 @@ class Profesor(models.Model):
         days = []
         horarios = json.loads(self.horarios)
         for horario in horarios:
-            day = datetime.strptime(horario.get('day'), '%d-%m-%Y')
-            days.append(DIA_INGLES(day.strftime('%A')))
-        return days
-    def get_date(self):
-        days = []
-        horarios = json.loads(self.horarios)
-        for horario in horarios:
-            day = datetime.strptime(horario.get('day'), '%d-%m-%Y')
-            days.append(day.strftime('%d:%m %Y'))
+            days.append(horarios.get('day'))
         return days
     def get_hora_inicial(self):
         horas = []

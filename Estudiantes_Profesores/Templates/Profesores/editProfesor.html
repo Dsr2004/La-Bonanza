@@ -15,7 +15,7 @@
                 <label for="" style="font-weight: 500;">Horarios:</label>
                 <div style="display: grid;grid-template-columns:1fr 1fr;grid-gap:5px;"><div style="width:100%;background-color:red; padding:0 0px 0 12px;margin-bottom:5px;border-radius:5px; cursor:pointer;" onclick="eliminarHoras()"><i class="fa fa-remove"style="font-size:16px;"></i> </div><div style="width:100%;background-color:cyan; padding:0 10px;margin-bottom:5px;border-radius:5px; cursor:pointer;" onclick="agregarHoras()"><i class="fa fa-plus"style="font-size:15px;"></i></div></div>
             </div>
-            <div class="form-control" id="horarios" style="height: 120px; display: flex; justify-content:start; overflow: auto;">
+            <div class="form-control" id="horarios" style="height: 160px; display: flex; justify-content:start; overflow: auto;">
             </div>
             <p id="horarios-p" style="display: none;"></p>
             {%for campo in form %}
@@ -42,6 +42,8 @@
             <br>
         </form>
         <p style="display: none;" id="horariosPq">{{horarios}}</p>
+        <p style="display: none;" id="horariosPe">{{dias}}</p>
+
         <script>
             var niveles = [];
         </script>
@@ -57,29 +59,48 @@
             <script>
                 cargar()
                 cargarNiveles()
-                cargarHoras(JSON.parse(document.getElementById('horariosPq').innerHTML))
+                cargarHoras(JSON.parse(document.getElementById('horariosPq').innerHTML),JSON.parse(document.getElementById('horariosPe').innerHTML))
                 function agregarHoras(){
                     const divHorario = document.createElement('div');
                     const inputHorario = document.createElement("input");
                     inputHorario.type = "time";
                     inputHorario.className = "form-control";
                     inputHorario.autocomplete = "off";
+                    const dateDay = document.createElement("select");
+                    dateDay.className = "dia";
+                    dateDay.classList.add("form-select")
+                    dateDay.style.marginBottom = "5px";
+                    dateDay.autocomplete = "off";
+                    let optionSelected = document.createElement("option");
+                    optionSelected.innerHTML = "Eliga un día"
+                    optionSelected.selected = true
+                    dateDay.appendChild(optionSelected)
+                    let dias = {"0":"Lunes","1":"Martes","2":"Miércoles","3":"Jueves","4":"Viernes","5":"Sábado","6":"Domingo"}
+                    for (let i = 0; i < 7; i++) {
+                        let option = document.createElement("option");
+                        option.value = dias[i]
+                        option.innerHTML = dias[i]
+                        dateDay.appendChild(option)
+                    }
                     let pHorario = document.createElement("div");
                     pHorario.textContent = "a"
                     pHorario.style.textAlign = "center";
                     let cloneInput = inputHorario.cloneNode(true);
                     inputHorario.classList.add("from")
+                    divHorario.appendChild(dateDay);
                     divHorario.appendChild(inputHorario);
                     cloneInput.classList.add("through")
                     divHorario.appendChild(pHorario);
                     divHorario.appendChild(cloneInput);
                     document.getElementById('horarios').appendChild(divHorario);
+                    cargar()
                 }
                 function eliminarHoras(){
                     let child = document.getElementById('horarios').lastChild;
                     document.getElementById('horarios').removeChild(child);
                 }
-                function cargarHoras(Horarios){
+                function cargarHoras(Horarios, dia){
+                    let days = dia
                     for(var i=0;i<Horarios.length;i++) {
                         horas = Horarios[i];
                         const divHorario = document.createElement('div');
@@ -88,17 +109,36 @@
                         inputHorario.className = "form-control";
                         inputHorario.autocomplete = "off";
                         inputHorario.value = horas.from
+                        const dateDay = document.createElement("select");
+                        dateDay.className = "dia";
+                        dateDay.classList.add("form-select")
+                        dateDay.style.marginBottom = "5px";
+                        dateDay.autocomplete = "off";
+                        let optionSelected = document.createElement("option");
+                        optionSelected.value = days[i]
+                        optionSelected.innerHTML = days[i]
+                        optionSelected.selected = true
+                        dateDay.appendChild(optionSelected)
+                        let dias = {"0":"Lunes","1":"Martes","2":"Miércoles","3":"Jueves","4":"Viernes","5":"Sábado","6":"Domingo"}
+                        for (let i = 0; i < 7; i++) {
+                            let option = document.createElement("option");
+                            option.value = dias[i]
+                            option.innerHTML = dias[i]
+                            dateDay.appendChild(option)
+                        }
                         let pHorario = document.createElement("div");
                         pHorario.textContent = "a"
                         pHorario.style.textAlign = "center";
                         let cloneInput = inputHorario.cloneNode(true);
                         inputHorario.classList.add("from")
+                        divHorario.appendChild(dateDay);
                         divHorario.appendChild(inputHorario);
                         cloneInput.classList.add("through")
                         cloneInput.value = horas.through
                         divHorario.appendChild(pHorario);
                         divHorario.appendChild(cloneInput);
                         document.getElementById('horarios').appendChild(divHorario);
+                        cargar()
                     }
                 }
                 function cargarNiveles(){
@@ -145,6 +185,20 @@
                                             else{
                                                 let p_errors = document.getElementById('horarios-p')
                                                 p_errors.innerHTML = 'Por favor aingrese la hora de finalización'
+                                                p_errors.style.display = 'block'
+                                                p_errors.style.color = 'red'
+                                                p_errors.previousSibling.previousSibling.classList.add('is-invalid');
+                                                return 'error';
+                                            }
+                                        }
+                                        if (inputs[j].type == "select-one"){
+                                            if(inputs[j].value != ""){
+                                                console.log(inputs[j].value)
+                                                horarios['day']=inputs[j].value
+                                            }
+                                            else{
+                                                let p_errors = document.getElementById('horarios-p')
+                                                p_errors.innerHTML = 'Por favor ingrese un día relacionado'
                                                 p_errors.style.display = 'block'
                                                 p_errors.style.color = 'red'
                                                 p_errors.previousSibling.previousSibling.classList.add('is-invalid');

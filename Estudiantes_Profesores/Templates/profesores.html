@@ -26,6 +26,7 @@
                 <th>Usuario</th>
                 <th>Celular</th>
                 <th>Horario</th>
+                <th>Dias</th>
                 <th>Acciones</th>
             </tr>
          </thead>
@@ -37,6 +38,7 @@
                     <td>{{Profesor.profesor.usuario.usuario}}</td>
                     <td>{{Profesor.profesor.usuario.celular}}</td>
                     <td>{{Profesor.horario}}</td>
+                    <td>{{Profesor.dias}}</td>
                     <td>
                         <div style="display:inline-flex; ">
                             <a href="{%url 'verInfoProfesor' Profesor.profesor.usuario.pk%}" style="margin-right:10px" class="btn btn-outline-info btn-sm"><i class="fa-solid fa-eye"></i></a>

@@ -419,16 +419,19 @@ class Profesores(ListView):
         datos=[]
         for profe in Profesor.objects.all():
             horario = []
+            dias = []
             try:
                 horarios = json.loads(profe.horarios)
                 for horas in horarios:
                     desde = datetime.strptime(horas['from'], '%H:%M').strftime('%I:%M %p')
                     hasta=datetime.strptime(horas['through'], '%H:%M').strftime('%I:%M %p')
+                    dias.append(horas['day'])
                     horario.append('Desde '+str(desde)+' Hasta '+str(hasta))
             except:
                 horario.append('Este profesor no tiene horario')
             horario = str(horario).replace("'", '').replace("[", '').replace("]", '').replace(',', ' -')
-            datos.append({'profesor':profe, 'horario':horario})
+            dias = str(dias).replace("'", '').replace("[", '').replace("]", '').replace(',', ' -')
+            datos.append({'profesor':profe, 'horario':horario,'dias':dias})
         contexto['Profesores'] = datos
         return render(request, self.template_name, contexto)
 
@@ -443,16 +446,19 @@ class infoProfesor(ListView):
         datos=[]
         for profe in Profesor.objects.filter(id=kwargs['pk']):
             horario = []
+            dias = []
             try:
                 horarios = json.loads(profe.horarios)
                 for horas in horarios:
                     desde = datetime.strptime(horas['from'], '%H:%M').strftime('%I:%M %p')
                     hasta=datetime.strptime(horas['through'], '%H:%M').strftime('%I:%M %p')
+                    dias.append(horas['day'])
                     horario.append('Desde '+str(desde)+' Hasta '+str(hasta))
             except:
                 horario.append('Este profesor no tiene horario')
             horario = str(horario).replace("'", '').replace("[", '').replace("]", '').replace(',', ' -')
-            datos.append({'profesor':profe, 'horarios':horario.split(', ')})
+            dias = str(dias).replace("'", '').replace("[", '').replace("]", '').replace(',', ' -')
+            datos.append({'profesor':profe, 'horarios':horario.split(', '), 'dias':dias.split(', ')})
         contexto['Profesor'] = datos
         return render(request, self.template_name, contexto)
 
@@ -473,19 +479,22 @@ class editProfesor(TemplateView):
         datos=[]
         for profe in Profesor.objects.filter(id=kwargs['pk']):
             horario = []
+            dias = []
             try:
                 horarios = json.loads(profe.horarios)
                 for horas in horarios:
                     desde = datetime.strptime(horas['from'], '%H:%M').strftime('%I:%M %p')
                     hasta=datetime.strptime(horas['through'], '%H:%M').strftime('%I:%M %p')
+                    dias.append(horas['day'])
                     horario.append('Desde '+str(desde)+' Hasta '+str(hasta))
             except:
                 horario.append('Este profesor no tiene horario')
             horario = str(horario).replace("'", '').replace("[", '').replace("]", '').replace(',', ' -')
-            datos.append({'profesor':profe, 'horarios':horario.split(', ')})
+            datos.append({'profesor':profe, 'horarios':horario.split(', '), 'dias':dias})
         contexto['Profesor'] = datos[0]
         contexto['horarios'] = json.loads(datos[0]['profesor'].horarios)
         contexto['horarios'] = json.dumps(contexto['horarios'])
+        contexto['dias'] = json.dumps(datos[0]['dias'])
         contexto['form'] = form
         
         return render(request, self.template_name, contexto)

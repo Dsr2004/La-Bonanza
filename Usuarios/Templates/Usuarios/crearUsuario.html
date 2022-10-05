@@ -72,7 +72,7 @@
                     <label for="" style="font-weight: 500;">Horarios:</label>
                     <div style="display: grid;grid-template-columns:1fr 1fr;grid-gap:5px;"><div style="width:100%;background-color:red; padding:0 0px 0 12px;margin-bottom:5px;border-radius:5px; cursor:pointer;" onclick="eliminarHoras()"><i class="fa fa-remove"style="font-size:16px;"></i> </div><div style="width:100%;background-color:cyan; padding:0 10px;margin-bottom:5px;border-radius:5px; cursor:pointer;" onclick="agregarHoras()"><i class="fa fa-plus"style="font-size:15px;"></i></div></div>
                 </div>
-                <div class="form-control" id="horarios" style="height: 120px; display: flex; justify-content:start; overflow: auto;">
+                <div class="form-control" id="horarios" style="height: 160px; display: flex; justify-content:start; overflow: auto;">
                 </div>
                 <p id="horarios-p" style="display: none;"></p>
                 {%for campo in forms.formProfesor %}
@@ -172,7 +172,8 @@
                     horarios = {}
                     if(i != 0){
                         let inputs = divContHoras[i].childNodes
-                        for (let j = 0; j < inputs.length; j++) {   
+                        for (let j = 0; j < inputs.length; j++) { 
+                            console.log(inputs[j].type)  
                             if(inputs[j].type == "time"){
                                 if(inputs[j].classList.contains('from')){
                                     if(inputs[j].value != ""){
@@ -193,12 +194,26 @@
                                     }
                                     else{
                                         let p_errors = document.getElementById('horarios-p')
-                                        p_errors.innerHTML = 'Por favor aingrese la hora de finalización'
+                                        p_errors.innerHTML = 'Por favor ingrese la hora de finalización'
                                         p_errors.style.display = 'block'
                                         p_errors.style.color = 'red'
                                         p_errors.previousSibling.previousSibling.classList.add('is-invalid');
                                         return 'error';
                                     }
+                                }
+                            }
+                            if (inputs[j].type == "select-one"){
+                                if(inputs[j].value != ""){
+                                    console.log(inputs[j].value)
+                                    horarios['day']=inputs[j].value
+                                }
+                                else{
+                                    let p_errors = document.getElementById('horarios-p')
+                                    p_errors.innerHTML = 'Por favor ingrese un día relacionado'
+                                    p_errors.style.display = 'block'
+                                    p_errors.style.color = 'red'
+                                    p_errors.previousSibling.previousSibling.classList.add('is-invalid');
+                                    return 'error';
                                 }
                             }
                         }
@@ -243,63 +258,63 @@
             }
             profesor['horarios']=JSON.stringify(horariosA)
         }
-            $.ajax({
-                url:$('#RegistrarUsuarioForm').attr('action'),
-                data:{
-                    'csrfmiddlewaretoken':$("#RegistrarUsuarioForm").find('input[name=csrfmiddlewaretoken]').val(),
-                    'function':type,
-                    'datos':JSON.stringify(usuario),
-                },
-                type: $("#RegistrarUsuarioForm").attr('method'),
-                success: function (data) {
-                    if(formulario.childNodes[5].style.display != 'none'){
-                        console.log({
+        $.ajax({
+            url:$('#RegistrarUsuarioForm').attr('action'),
+            data:{
+                'csrfmiddlewaretoken':$("#RegistrarUsuarioForm").find('input[name=csrfmiddlewaretoken]').val(),
+                'function':type,
+                'datos':JSON.stringify(usuario),
+            },
+            type: $("#RegistrarUsuarioForm").attr('method'),
+            success: function (data) {
+                if(formulario.childNodes[5].style.display != 'none'){
+                    console.log({
+                        'csrfmiddlewaretoken':csrftoken,
+                        'datos':JSON.stringify(profesor),
+                        'usuario':data['datos'],
+                    })
+                    $.ajax({
+                        url:'{%url "registrarProfesor"%}',
+                        data:{
                             'csrfmiddlewaretoken':csrftoken,
                             'datos':JSON.stringify(profesor),
                             'usuario':data['datos'],
-                        })
-                        $.ajax({
-                            url:'{%url "registrarProfesor"%}',
-                            data:{
-                                'csrfmiddlewaretoken':csrftoken,
-                                'datos':JSON.stringify(profesor),
-                                'usuario':data['datos'],
-                            },
-                            type: 'POST',
-                            success: function (data) {
-                                window.location.reload();
-                            },
-                            error: function (error){
-                                Error = error['responseJSON']
-                                keys=Object.keys(Error['forms'])
-                                for (var i=0; i<keys.length; i++) {
-                                    value = Error['forms'][keys[i]]
-                                    let p_errors = document.getElementById('id_'+keys[i]+'-p')
-                                    p_errors.innerHTML = value
-                                    p_errors.style.display = 'block'
-                                    p_errors.style.color = 'red'
-                                    p_errors.previousSibling.previousSibling.previousSibling.classList.add('is-invalid')
-                                }
+                        },
+                        type: 'POST',
+                        success: function (data) {
+                            window.location.reload();
+                        },
+                        error: function (error){
+                            Error = error['responseJSON']
+                            keys=Object.keys(Error['forms'])
+                            for (var i=0; i<keys.length; i++) {
+                                value = Error['forms'][keys[i]]
+                                let p_errors = document.getElementById('id_'+keys[i]+'-p')
+                                p_errors.innerHTML = value
+                                p_errors.style.display = 'block'
+                                p_errors.style.color = 'red'
+                                p_errors.previousSibling.previousSibling.previousSibling.classList.add('is-invalid')
                             }
-                        });
-                    }
-                    else{
-                        window.location.reload();
-                    }
-                },
-                error: function (error){
-                    Error = error['responseJSON']
-                    keys=Object.keys(Error['forms'])
-                    for (var i=0; i<keys.length; i++) {
-                        value = Error['forms'][keys[i]]
-                        let p_errors = document.getElementById('id_'+keys[i]+'-p')
-                        p_errors.innerHTML = value
-                        p_errors.style.display = 'block'
-                        p_errors.style.color = 'red'
-                        p_errors.previousSibling.previousSibling.previousSibling.classList.add('is-invalid')
-                    }
+                        }
+                    });
                 }
-            });
+                else{
+                    window.location.reload();
+                }
+            },
+            error: function (error){
+                Error = error['responseJSON']
+                keys=Object.keys(Error['forms'])
+                for (var i=0; i<keys.length; i++) {
+                    value = Error['forms'][keys[i]]
+                    let p_errors = document.getElementById('id_'+keys[i]+'-p')
+                    p_errors.innerHTML = value
+                    p_errors.style.display = 'block'
+                    p_errors.style.color = 'red'
+                    p_errors.previousSibling.previousSibling.previousSibling.classList.add('is-invalid')
+                }
+            }
+        });
         }
     function agregarHoras(){
         const divHorario = document.createElement('div');
@@ -307,16 +322,34 @@
         inputHorario.type = "time";
         inputHorario.className = "form-control";
         inputHorario.autocomplete = "off";
+        const dateDay = document.createElement("select");
+        dateDay.className = "dia";
+        dateDay.classList.add("form-select")
+        dateDay.style.marginBottom = "5px";
+        dateDay.autocomplete = "off";
+        let optionSelected = document.createElement("option");
+        optionSelected.innerHTML = "Eliga un día"
+        optionSelected.selected = true
+        dateDay.appendChild(optionSelected)
+        let dias = {"0":"Lunes","1":"Martes","2":"Miércoles","3":"Jueves","4":"Viernes","5":"Sábado","6":"Domingo"}
+        for (let i = 0; i < 7; i++) {
+            let option = document.createElement("option");
+            option.value = dias[i]
+            option.innerHTML = dias[i]
+            dateDay.appendChild(option)
+        }
         let pHorario = document.createElement("div");
         pHorario.textContent = "a"
         pHorario.style.textAlign = "center";
         let cloneInput = inputHorario.cloneNode(true);
         inputHorario.classList.add("from")
+        divHorario.appendChild(dateDay);
         divHorario.appendChild(inputHorario);
         cloneInput.classList.add("through")
         divHorario.appendChild(pHorario);
         divHorario.appendChild(cloneInput);
         document.getElementById('horarios').appendChild(divHorario);
+        cargar()
     }
     function eliminarHoras(){
         let child = document.getElementById('horarios').lastChild;
