@@ -208,12 +208,28 @@ class reporteEstudiantes(ListView):
             messages.add_message(request, messages.WARNING, "No se encontraron estudiantes con este filtro {filtro}, por lo que no se puede realizar el reporte.".format(filtro = datos))
             return redirect('estudiantes')
         # Definir columnas del excel
-        Estudiante, Profesor, Nivele, Estado, Pagado, Tipo_Clase = [[],[],[],[],[],[]]
+        Estudiante, Profesor, Nivele, Estado, Pagado, Tipo_Clase, fecha_de_nacimiento,direccion,barrio,ciudad,seguro,documento,email_acudiente,celular_acudiente,lugar_expedicion_acudiente,nombre_completo_acudiente,relacion_contactoE,telefono_contactoE,nombre_contactoE = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
         for row in consulta:
             Estudiante.append(row.estudiante)
             Profesor.append(row.profesor)
             Nivele.append(row.nivel)
             Tipo_Clase.append(row.estudiante.get_tipo_clase_display())
+            fecha_de_nacimiento.append(row.estudiante.fecha_nacimiento)
+            direccion.append(row.estudiante.direccion)
+            barrio.append(row.estudiante.barrio)
+            ciudad.append(row.estudiante.ciudad)
+            if row.estudiante.seguro_medico:
+                seguro.append('Si tiene')
+            else:
+                seguro.append('No tiene')
+            documento.append(row.estudiante.documento_identidad)
+            email_acudiente.append(row.estudiante.email_acudiente)
+            celular_acudiente.append(row.estudiante.celular_acudiente)
+            lugar_expedicion_acudiente.append(row.estudiante.lugar_expedicion_acudiente)
+            nombre_completo_acudiente.append(row.estudiante.nombre_completo_acudiente)
+            relacion_contactoE.append(row.estudiante.relacion_contactoE)
+            telefono_contactoE.append(row.estudiante.telefono_contactoE)
+            nombre_contactoE.append(row.estudiante.nombre_contactoE)
             if row.estudiante.estado:
                 Estado.append("Activo")
             else:
@@ -229,6 +245,19 @@ class reporteEstudiantes(ListView):
         excel['Estado'] = Estado
         excel['Matricula'] = Pagado
         excel['Tipo de Clase'] = Tipo_Clase 
+        excel['Fecha de nacimiento'] = fecha_de_nacimiento
+        excel['Direccion'] = direccion
+        excel['Barrio'] = barrio
+        excel['Ciudad'] = ciudad
+        excel['Seguro'] = seguro
+        excel['Documento de identidad'] = documento
+        excel['Email del acudiente'] = email_acudiente
+        excel['Celular del acudiente'] = celular_acudiente
+        excel['Lugar de expedición del acudiente'] = lugar_expedicion_acudiente
+        excel['Nombre del acudiente'] = nombre_completo_acudiente
+        excel['Relacion con el contacto de emergencia'] = relacion_contactoE
+        excel['Teléfono del contacto de emergencia'] = telefono_contactoE
+        excel['Nombre del contacto de emergencia'] = nombre_contactoE
         with BytesIO() as b:
             # Use the StringIO object as the filehandle.
             writer = pd.ExcelWriter(b, engine='xlsxwriter')
