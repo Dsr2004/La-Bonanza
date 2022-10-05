@@ -101,7 +101,6 @@
                             <option value="clase_Puntual">Clase puntual</option>
                             <option value="clase_Mensualidad">Mensualidad</option>
                         </optgroup>
-                        <option value="" id="hola12">--</option>
                         <optgroup label="Niveles" id="NivelesOPTG">
                             {%for nivel in niveles%}
                             <option value="{{nivel.pk}}">Nivel - {{nivel}}</option>
@@ -125,23 +124,6 @@
 <script src="{% static 'libs/daterangepicker/moment.min.js' %}"></script>
 <script src="{% static 'libs/daterangepicker/daterangepicker.js' %}"></script>
 <script>
-    const $select = document.querySelector("#ExportEstudiantes");
-    let lastSelectedIndex = $select.selectedIndex;
-    let arr = []
-    $select.addEventListener("click", function () {
-        lastSelectedIndex = $select.selectedIndex;
-        arr[0]=lastSelectedIndex
-    });
-    $select.addEventListener("change", function (e) {
-        console.log(arr[0])
-        console.log($select.childNodes[lastSelectedIndex+1])
-        if (!confirm("Al cambiar de cliente se eliminará la lista de artículos. ¿Continuar?")) {
-            $select.selectedIndex = lastSelectedIndex;
-            return;
-        }
-
-        // Aquí el usuario sí ha aceptado, continúa con lo que harías normalmente
-    });
     function exportGenerate(){
         let select = $('#ExportEstudiantes')
         let p = document.getElementById('ExportEstudiantes-p')

@@ -2,6 +2,12 @@ from django.db import models
 from Usuarios.models import Usuario
 from Niveles.models import Nivel
 from multiselectfield import MultiSelectField
+import json
+from datetime import datetime
+def DIA_INGLES(dia):
+    dias = {"Monday":"Lunes","Tuesday":"Martes","Wednesday":"Miércoles","Thursday":"Jueves","Friday":"Viernes","Saturday":"Sábado","Sunday":"Domingo"}
+    dia = dias.get(str(dia))
+    return dia
 
 DIAS_SEMANA = (
     ("1","Lunes"),("2","Martes"),("3","Miércoles"),("4","Jueves"),("5","Viernes"),("6","Sábado"),("0","Domingo")
@@ -24,7 +30,7 @@ def guardar_seguro(instance, filename):
 class Profesor(models.Model):
     id = models.CharField(primary_key=True, unique=True, max_length=5) 
     usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE)
-    horarios = models.CharField("horarios del profesor", max_length=300) # "[{09:00: 18:00},...]"
+    horarios = models.CharField("horarios del profesor", max_length=300) # "[{"day": "2022-10-05","from": "11:42", "through": "23:42"},...]"
     niveles = models.ManyToManyField(Nivel)   
     trabaja_sabado = models.BooleanField("el profesor trabaja los sabados", default=False)
 
@@ -34,6 +40,34 @@ class Profesor(models.Model):
 
     def __str__(self):
         return self.usuario.nombres
+    def get_days(self):
+        days = []
+        horarios = json.loads(self.horarios)
+        for horario in horarios:
+            day = datetime.strptime(horario.get('day'), '%d-%m-%Y')
+            days.append(DIA_INGLES(day.strftime('%A')))
+        return days
+    def get_date(self):
+        days = []
+        horarios = json.loads(self.horarios)
+        for horario in horarios:
+            day = datetime.strptime(horario.get('day'), '%d-%m-%Y')
+            days.append(day.strftime('%d:%m %Y'))
+        return days
+    def get_hora_inicial(self):
+        horas = []
+        horarios = json.loads(self.horarios)
+        for horario in horarios:
+            day = datetime.strptime(horario.get('from'), '%H:%M')
+            horas.append(day.strftime('%H:%M %p'))
+        return horas
+    def get_hora_final(self):
+        horas = []
+        horarios = json.loads(self.horarios)
+        for horario in horarios:
+            day = datetime.strptime(horario.get('through'), '%H:%M')
+            horas.append(day.strftime('%H:%M %p'))
+        return horas
 
 
 
