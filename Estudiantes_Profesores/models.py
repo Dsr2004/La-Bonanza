@@ -73,9 +73,9 @@ class Estudiante(models.Model):
     barrio = models.CharField("barrio de resdencia", max_length = 500, null=False, blank=False)
     ciudad = models.CharField("ciudad de residencia",max_length = 150, null=False, blank=False)
     seguro = models.CharField("seguro medico", max_length = 500)
-    poliza = models.CharField("poliaz",max_length = 150)
-    comprobante_seguro_medico = models.BooleanField("tiene seguro medico", null=False, blank=False)
-    comprobante_documento_identidad =  models.BooleanField("tiene documento de identidad", null=False, blank=False)
+    poliza = models.CharField("poliza",max_length = 150)
+    comprobante_seguro_medico = models.BooleanField("tiene comprobante de seguro medico", null=False, blank=False)
+    comprobante_documento_identidad =  models.BooleanField("tiene comprobante de documento de identidad", null=False, blank=False)
     #informacion de los padres
     # MADRE 
     nombre_completo_madre = models.CharField("nombre completo de la madre", max_length=150)

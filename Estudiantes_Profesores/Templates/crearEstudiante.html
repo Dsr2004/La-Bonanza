@@ -15,110 +15,252 @@
 {% block contenido %}
 <div class="container-fluid">
     <form action="{% url 'registrarEstudiante' %}" method="post" enctype="multipart/form-data" id="CrearEstudianteForm">
-        <h1>Registro Estudiante</h1>
+        {% csrf_token %}
         <br>
-        <div class="formulario">
-            {% csrf_token %}
-            <div>
-                <label for="" style="font-weight: 500;">{{form.nombre_completo.label}}:</label>
-                {{form.nombre_completo}}
-                <p id="nombre_completo" class="error_text"></p>
-            </div>
-            <div>
-                <label for="" style="font-weight: 500;">{{form.fecha_nacimiento.label}}:</label>
-                {{form.fecha_nacimiento}}
-                <p id="fecha_nacimiento" class="error_text"></p>
-            </div>
-            <div>
-                <label for="" style="font-weight: 500;">{{form.documento.label}}:</label>
-                {{form.documento}}
-                <p id="documento" class="error_text"></p>
-            </div>
-            <div>
-                <label for="" style="font-weight: 500;">{{form.celular.label}}:</label>
-                {{form.celular}}
-                <p id="celular" class="error_text"></p>
-            </div>
-            <div>
-                <label for="" style="font-weight: 500;">{{form.telefono.label}}:</label>
-                {{form.telefono}}
-                <p id="telefono" class="error_text"></p>
-            </div>
-            <div>
-                <label for="" style="font-weight: 500;">{{form.email.label}}:</label>
-                {{form.email}}
-                <p id="email" class="error_text"></p>
-            </div>
-            <div>
-                <label for="" style="font-weight: 500;">{{form.direccion.label}}:</label>
-                {{form.direccion}}
-                <p id="direccion" class="error_text"></p>
-            </div>
-            <div>
-                <label for="" style="font-weight: 500;">{{form.barrio.label}}:</label>
-                {{form.barrio}}
-                <p id="barrio" class="error_text"></p>
-            </div>
-            <div>
-                <label for="" style="font-weight: 500;">{{form.ciudad.label}}:</label>
-                {{form.ciudad}}
-                <p id="ciudad" class="error_text"></p>
-            </div>
-            <div>
-                <label for="" style="font-weight: 500;">{{form.seguro_medico.label}}:</label>
-                {{form.seguro_medico}}
-                <p id="seguro_medico" class="error_text"></p>
-            </div>
-            <div>
-                <label for="" style="font-weight: 500;">{{form.documento_identidad.label}}:</label>
-                {{form.documento_identidad}}
-                <p id="documento_identidad" class="error_text"></p>
-            </div>
-            <div>
-                <label for="" style="font-weight: 500;">{{form.nombre_completo_acudiente.label}}:</label>
-                {{form.nombre_completo_acudiente}}
-                <p id="nombre_completo_acudiente" class="error_text"></p>
-            </div>
-            <div>
-                <label for="" style="font-weight: 500;">{{form.cedula_acudiente.label}}:</label>
-                {{form.cedula_acudiente}}
-                <p id="cedula_acudiente" class="error_text"></p>
-            </div>
-            <div>
-                <label for="" style="font-weight: 500;">{{form.lugar_expedicion_acudiente.label}}:</label>
-                {{form.lugar_expedicion_acudiente}}
-                <p id="lugar_expedicion_acudiente" class="error_text"></p>
-            </div>
-            <div>
-                <label for="" style="font-weight: 500;">{{form.celular_acudiente.label}}:</label>
-                {{form.celular_acudiente}}
-                <p id="celular_acudiente" class="error_text"></p>
-            </div>
-            <div>
-                <label for="" style="font-weight: 500;">{{form.email_acudiente.label}}:</label>
-                {{form.email_acudiente}}
-                <p id="email_acudiente" class="error_text"></p>
-            </div>
-            <div>
-                <label for="" style="font-weight: 500;">{{form.nombre_contactoE.label}}:</label>
-                {{form.nombre_contactoE}}
-                <p id="nombre_contactoE" class="error_text"></p>
-            </div>
-            <div>
-                <label for="" style="font-weight: 500;">{{form.telefono_contactoE.label}}:</label>
-                {{form.telefono_contactoE}}
-                <p id="telefono_contactoE" class="error_text"></p>
-            </div>
-            <div>
-                <label for="" style="font-weight: 500;">{{form.relacion_contactoE.label}}:</label>
-                {{form.relacion_contactoE}}
-                <p id="relacion_contactoE" class="error_text"></p>
-            </div>
-            <div>
-                <label for="" style="font-weight: 500;">{{form.tipo_clase.label}}:</label>
-                {{form.tipo_clase}}
-                <p id="tipo_clase" class="error_text"></p>
-            </div>
+        <h1><center>Registro Estudiante</center></h1>
+        <br>
+        <div class="container">
+            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Estudiante</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Padres</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Contacto de Emergencia</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="pills-disabled-tab" data-bs-toggle="pill" data-bs-target="#pills-disabled" type="button" role="tab" aria-controls="pills-disabled" aria-selected="false">Documentos</button>
+                </li>
+              </ul>
+              <div class="tab-content" id="pills-tabContent">
+                <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
+                    <h3>Información del estudiante</h3>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="" style="font-weight: 500;">{{form.nombre_completo.label}}:</label>
+                            {{form.nombre_completo}}
+                            <p id="nombre_completo" class="error_text"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="" style="font-weight: 500;">{{form.fecha_nacimiento.label}}:</label>
+                            {{form.fecha_nacimiento}}
+                            <p id="fecha_nacimiento" class="error_text"></p>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="" style="font-weight: 500;">{{form.documento.label}}:</label>
+                            {{form.documento}}
+                            <p id="documento" class="error_text"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="" style="font-weight: 500;">{{form.celular.label}}:</label>
+                            {{form.celular}}
+                            <p id="celular" class="error_text"></p>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="" style="font-weight: 500;">{{form.email.label}}:</label>
+                            {{form.email}}
+                            <p id="email" class="error_text"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="" style="font-weight: 500;">{{form.direccion.label}}:</label>
+                            {{form.direccion}}
+                            <p id="direccion" class="error_text"></p>
+                        </div>
+                    </div>
+                   <br>
+                   <div class="row">
+                        <div class="col-md-6">
+                            <label for="" style="font-weight: 500;">{{form.barrio.label}}:</label>
+                            {{form.barrio}}
+                            <p id="barrio" class="error_text"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="" style="font-weight: 500;">{{form.ciudad.label}}:</label>
+                            {{form.ciudad}}
+                            <p id="ciudad" class="error_text"></p>
+                        </div>
+                   </div>
+                   <div class="row">
+                        <div class="col-md-6">
+                            <label for="" style="font-weight: 500;">{{form.seguro.label}}:</label>
+                            {{form.seguro}}
+                            <p id="seguro" class="error_text"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="" style="font-weight: 500;">{{form.poliza.label}}:</label>
+                            {{form.poliza}}
+                            <p id="poliza" class="error_text"></p>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="" style="font-weight: 500;">{{form.comprobante_seguro_medico.label}}:</label>
+                            {{form.comprobante_seguro_medico}}
+                            <p id="comprobante_seguro_medico" class="error_text"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="" style="font-weight: 500;">{{form.comprobante_documento_identidad.label}}:</label>
+                            {{form.comprobante_documento_identidad}}
+                            <p id="comprobante_documento_identidad" class="error_text"></p>
+                        </div>
+                    </div>
+                
+                </div>
+                <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
+                    <h3>Información de los padres</h3>
+                    <hr>
+                    <h5><center>Información de la Madre</center></h5>
+                    <div>
+                        <label for="" style="font-weight: 500;">{{form.nombre_completo_madre.label}}:</label>
+                        {{form.nombre_completo_madre}}
+                        <p id="nombre_completo_madre" class="error_text"></p>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="" style="font-weight: 500;">{{form.cedula_madre.label}}:</label>
+                            {{form.cedula_madre}}
+                            <p id="cedula_madre" class="error_text"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="" style="font-weight: 500;">{{form.lugar_expedicion_madre.label}}:</label>
+                            {{form.lugar_expedicion_madre}}
+                            <p id="lugar_expedicion_madre" class="error_text"></p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="" style="font-weight: 500;">{{form.celular_madre.label}}:</label>
+                            {{form.celular_madre}}
+                            <p id="celular_madre" class="error_text"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="" style="font-weight: 500;">{{form.email_madre.label}}:</label>
+                            {{form.email_madre}}
+                            <p id="email_madre" class="error_text"></p>
+                        </div>
+                    </div>
+                    <h5><center>Información del Padre</center></h5>
+                    <div>
+                        <label for="" style="font-weight: 500;">{{form.nombre_completo_padre.label}}:</label>
+                        {{form.nombre_completo_padre}}
+                        <p id="nombre_completo_padre" class="error_text"></p>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="" style="font-weight: 500;">{{form.cedula_padre.label}}:</label>
+                            {{form.cedula_padre}}
+                            <p id="cedula_padre" class="error_text"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="" style="font-weight: 500;">{{form.lugar_expedicion_padre.label}}:</label>
+                            {{form.lugar_expedicion_padre}}
+                            <p id="lugar_expedicion_padre" class="error_text"></p>
+                        </div>
+                    </div>
+                   <div class="row">
+                        <div class="col-md-6">
+                            <label for="" style="font-weight: 500;">{{form.celular_padre.label}}:</label>
+                            {{form.celular_padre}}
+                            <p id="celular_padre" class="error_text"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="" style="font-weight: 500;">{{form.email_padre.label}}:</label>
+                            {{form.email_padre}}
+                            <p id="email_padre" class="error_text"></p>
+                        </div>
+                   </div>
+                   <br>
+                   <h4>Información de ubicacion de los padres</h4>
+                   <div class="row">
+                    <div class="col-md-6">
+                        <label for="" style="font-weight: 500;">{{form.direccion.label}}:</label>
+                        {{form.direccion}}
+                        <p id="direccion" class="error_text"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="" style="font-weight: 500;">{{form.barrio.label}}:</label>
+                            {{form.barrio}}
+                            <p id="barrio" class="error_text"></p>
+                        </div>
+                   </div>
+                    <div>
+                        <label for="" style="font-weight: 500;">{{form.ciudad.label}}:</label>
+                        {{form.ciudad}}
+                        <p id="ciudad" class="error_text"></p>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab" tabindex="0">
+                    <div>
+                        <label for="" style="font-weight: 500;">{{form.nombre_contactoE.label}}:</label>
+                        {{form.nombre_contactoE}}
+                        <p id="nombre_contactoE" class="error_text"></p>
+                    </div>
+                    <div>
+                        <label for="" style="font-weight: 500;">{{form.telefono_contactoE.label}}:</label>
+                        {{form.telefono_contactoE}}
+                        <p id="telefono_contactoE" class="error_text"></p>
+                    </div>
+                    <div>
+                        <label for="" style="font-weight: 500;">{{form.relacion_contactoE.label}}:</label>
+                        {{form.relacion_contactoE}}
+                        <p id="relacion_contactoE" class="error_text"></p>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="pills-disabled" role="tabpanel" aria-labelledby="pills-disabled-tab" tabindex="0">
+                    <h3>Documentos del estudiante</h3>
+        <div class="row">
+                <div class="col-md-6">
+                    {{form.documento_A}}
+                    <p id="documento_A" class="error_text"></p>
+                </div>
+                <div class="col-md-6">
+                    {{form.seguro_A}}
+                    <p id="seguro_A" class="error_text"></p>
+                </div>
+                <div>
+                    <label for="" style="font-weight: 500;">{{form.firma.label}}:</label>
+                    <br>{{form.firma}}<br>
+                    <p id="" class="error_text"></p>
+                </div>
+                   <br>
+                <div>
+                    <label for="" style="font-weight: 500;">{{form.tipo_clase.label}}:</label>
+                    {{form.tipo_clase}}
+                    <p id="tipo_clase" class="error_text"></p>
+                </div>
+        </div>
+       <br>
+       {% comment %}
+       <div class="col-md-12">
+        <span class="d-block pb-2">Firma digital aqui</span>
+        <div class="signature mb-2" style="width: 100%; height: 200px;">
+            <canvas id="signature-canvas"
+                style="border: 1px dashed red; width: 100%; height: 200px;"></canvas>
+        </div>
+        <button type="button" onclick="limpiarFirma()">Limpiar</button>
+        <p id="firma" class="error_text"></p>
+        <br>
+    </div>
+
+       {% endcomment %}
+       
+        <button type="submit" class="btn btn-success w-100" style="float: right">Enviar</button>
+                </div>
+              </div>
+            <!-- ------------------- -->
+
+           
+           
             <script>
                 console.log($('#id_tipo_clase'))
                 let campos = document.querySelectorAll("input");
@@ -138,61 +280,7 @@
                 }); 
             </script>
         </div>
-        <hr>
-        <h5>Documentos</h5>
-       <div class="row">
-        <div class="col-md-6">
-            <div class="bodyFile">
-                <div class="containerFile">
-                    <h3>Documento</h3>
-                    <div class="drag-areaDocumento">
-                        <div class="icon"><i class="fas fa-images"></i></div>
-                        <span class="headerDocumento">Arrastra y Suelta</span>
-                        <span class="headerDocumento">o <span class="buttonDragDocumento">Selecciónalo</span></span>
-                        <span class="support">Soporta: JPEG, JPG, PNG, PDF</span>
-                    </div>
-                </div>
-            </div>
-            <input type="file" hidden name="documento_A" id="id_documento_A">
-            <p id="documento_A" class="error_text"></p>
-        </div>
-        <div class="col-md-6">
-            <div class="bodyFile">
-                <div class="containerFile">
-                    <h3>EPS</h3>
-                    <div class="drag-area">
-                        <div class="icon"><i class="fas fa-images"></i></div>
-                        <span class="header">Arrastra y Suelta</span>
-                        <span class="header">o <span class="buttonDrag">Selecciónalo</span></span>
-                        <span class="support">Soporta: JPEG, JPG, PNG, PDF</span>
-                    </div>
-                </div>
-            </div>
-            <input type="file" hidden name="seguro_A" id="id_seguro_A">
-            <p id="seguro_A" class="error_text"></p>
-        </div>
-       </div>
-       <br>
-       {% comment %}
-       <div class="col-md-12">
-        <span class="d-block pb-2">Firma digital aqui</span>
-        <div class="signature mb-2" style="width: 100%; height: 200px;">
-            <canvas id="signature-canvas"
-                style="border: 1px dashed red; width: 100%; height: 200px;"></canvas>
-        </div>
-        <button type="button" onclick="limpiarFirma()">Limpiar</button>
-        <p id="firma" class="error_text"></p>
-        <br>
-    </div>
 
-       {% endcomment %}
-       <div>
-        <label for="" style="font-weight: 500;">{{form.firma.label}}:</label>
-        <br>{{form.firma}}<br>
-        <p id="" class="error_text"></p>
-    </div>
-       <br>
-        <button type="submit" class="btn btn-success w-100" style="float: right">Enviar</button>
         <br><br><br>
     </form>
 </div>
@@ -219,19 +307,19 @@
 {% endif %}
 
 <script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
-
+<!--  
 <script>
-    window.addEventListener('load', async () => {
-        const canvas = document.querySelector("canvas");
-        canvas.height = canvas.offsetHeight;
-        canvas.width = canvas.offsetWidth;
+//     window.addEventListener('load', async () => {
+//         const canvas = document.querySelector("canvas");
+//         canvas.height = canvas.offsetHeight;
+//         canvas.width = canvas.offsetWidth;
 
-        signaturePad = new SignaturePad(canvas, {});
-});
+//         signaturePad = new SignaturePad(canvas, {});
+// });
 
-function limpiarFirma(){
-    signaturePad.clear();
-}
+// function limpiarFirma(){
+//     signaturePad.clear();
+// }
 
 // $("#CrearEstudianteForm").submit(function(event){
 //     event.preventDefault()
@@ -247,83 +335,8 @@ function limpiarFirma(){
 
 
 </script>
+-->
 <script>
-    const dragArea = $(".drag-area");
-    const dragTetxt = document.querySelector(".header")
-    const dragAreaDoc = $(".drag-areaDocumento");
-    const dragTetxtDoc = document.querySelector(".headerDocumento")
-    let file;
-    let buttonDocumento = document.querySelector(".buttonDragDocumento")
-    let inputDocumento = document.querySelector("#id_documento_A")
-    let buttonSeguro = document.querySelector(".buttonDrag")
-    let inputSeguro = document.querySelector("#id_seguro_A")
-
-    buttonDocumento.onclick = () =>{
-        inputDocumento.click()
-    }
-    buttonSeguro.onclick = () =>{
-        inputSeguro.click()
-    }
-
-    inputDocumento.addEventListener("change",function(){
-    file = this.files[0]
-    dragArea.addClass("active")
-    displayFile(dragAreaDoc)
-    })
-    inputSeguro.addEventListener("change",function(){
-    file = this.files[0]
-    console.log(file)
-    dragArea.addClass("active")
-    displayFile(dragArea)
-    })
-    
-    // DOCUMENTO-------------
-        // cuando entra la imagen
-        dragAreaDoc.on("dragover", function(event) {
-        event.preventDefault();  
-        event.stopPropagation();
-        dragTetxtDoc.textContent = "Listo para subir"
-        dragAreaDoc.addClass("active")
-        // console.log("entro al drag")
-        });
-        // cuando esta fuera
-        dragAreaDoc.on("dragleave", function() {
-            dragTetxtDoc.textContent = "Arrastra y Suelta"
-            dragAreaDoc.removeClass("active")
-            // console.log("salio del drag")
-        });
-
-        dragAreaDoc.on("drop", function(event) {
-            event.preventDefault();  
-            file = event.originalEvent.dataTransfer.files[0]
-            console.log(file)
-            displayFile(dragAreaDoc)
-        });
-
-    // EPS------------------
-        // cuando entra la imagen
-        dragArea.on("dragover", function(event) {
-        event.preventDefault();  
-        event.stopPropagation();
-        dragTetxt.textContent = "Listo para subir"
-        dragArea.addClass("active")
-        // console.log("entro al drag")
-        });
-        // cuando esta fuera
-        dragArea.on("dragleave", function() {
-            dragTetxt.textContent = "Arrastra y Suelta"
-            dragArea.removeClass("active")
-            // console.log("salio del drag")
-        });
-
-        dragArea.on("drop", function(event) {
-            event.preventDefault();  
-            file = event.originalEvent.dataTransfer.files[0]
-            console.log(event)
-            displayFile(dragArea)
-        });
-
-    
 
     function displayFile(drag){
         let fileType = file.type
@@ -352,13 +365,5 @@ function limpiarFirma(){
 
 <script src="{% static 'libs/datepicker/dist/datepicker.js' %}"></script>
 <script src="{% static 'libs/datepicker/i18n/datepicker.es-ES.js' %}"></script>
-    <!-- <script>
-         $("#id_fecha_nacimiento").datepicker({
-            language: 'es-ES',
-            format: "dd/mm/YYYY",
-            autoHide: true,
-            
-        });
-    </script> -->
 
 {% endblock scripts %}
