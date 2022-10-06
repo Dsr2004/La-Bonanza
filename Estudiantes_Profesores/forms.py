@@ -9,7 +9,7 @@ class EstudianteForm(forms.ModelForm):
         "comprobante_documento_identidad","nombre_completo_madre","cedula_madre","lugar_expedicion_madre","celular_madre",
         "email_madre","nombre_completo_padre","cedula_padre","lugar_expedicion_padre", "celular_padre", "email_padre", "direccion","barrio",
         "ciudad","nombre_contactoE","telefono_contactoE","relacion_contactoE","firma",
-        "documento_A","seguro_A","tipo_clase","estado")
+        "documento_A","seguro_A","tipo_clase","estado","aceptaContrato")
 
         widgets = {
         "nombre_completo": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
@@ -23,6 +23,7 @@ class EstudianteForm(forms.ModelForm):
         "seguro": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
         "poliza": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
         "comprobante_seguro_medico": forms.CheckboxInput(attrs={"class":"form-check-input", "autocomplete":"off"}),
+        "aceptaContrato": forms.CheckboxInput(attrs={"class":"form-check-input", "autocomplete":"off"}),
         "comprobante_documento_identidad": forms.CheckboxInput(attrs={"class":"form-check-input", "autocomplete":"off"}),
         "nombre_completo_madre": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
         "cedula_madre": forms.NumberInput(attrs={"class":"form-control", "autocomplete":"off"}),
@@ -45,7 +46,12 @@ class EstudianteForm(forms.ModelForm):
         "seguro_A": forms.FileInput(attrs={"class":"form-control"}),
         "tipo_clase": forms.Select(attrs={"class":"form-select"}),
         }    
-
+    def clean_aceptaContrato(self):
+        contrato = self.cleaned_data["aceptaContrato"]
+        if contrato:
+            return contrato
+        else:
+            raise forms.ValidationError('Si no se acepta el contrato no podrá realizar el registro')
 
 class RegistroForm(forms.ModelForm):
     class Meta:
