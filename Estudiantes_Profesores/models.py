@@ -40,12 +40,14 @@ class Profesor(models.Model):
 
     def __str__(self):
         return self.usuario.nombres
+    
     def get_days(self):
         days = []
         horarios = json.loads(self.horarios)
         for horario in horarios:
-            days.append(horarios.get('day'))
+            days.append(horario.get('day'))
         return days
+    
     def get_hora_inicial(self):
         horas = []
         horarios = json.loads(self.horarios)
@@ -53,6 +55,7 @@ class Profesor(models.Model):
             day = datetime.strptime(horario.get('from'), '%H:%M')
             horas.append(day.strftime('%H:%M %p'))
         return horas
+    
     def get_hora_final(self):
         horas = []
         horarios = json.loads(self.horarios)
@@ -67,20 +70,31 @@ class Estudiante(models.Model):
     nombre_completo = models.CharField("nombre completo", max_length=150, null=False, blank=False)
     fecha_nacimiento = models.DateField("fecha de nacimiento", null=False, blank=False)
     documento = models.CharField("numero de documento", max_length = 18, null=False, blank=False, unique=True)
-    celular = models.CharField("numero de celular", max_length = 10, null=False, blank=False)
-    telefono = models.CharField("numero de telefono", max_length = 10)
-    email = models.EmailField("correo electronico",null=False, blank=False, unique=True)
+    celular = models.CharField("numero de celular", max_length = 10)
+    email = models.EmailField("correo electronico", unique=True)
     direccion = models.CharField("direccion de residencia", max_length = 500,null=False, blank=False,)
     barrio = models.CharField("barrio de resdencia", max_length = 500, null=False, blank=False)
     ciudad = models.CharField("ciudad de residencia",max_length = 150, null=False, blank=False)
-    seguro_medico = models.BooleanField("tiene seguro medico", null=False, blank=False)
-    documento_identidad =  models.BooleanField("tiene documento de identidad", null=False, blank=False)
-    #informacion del acudiente
-    nombre_completo_acudiente = models.CharField("nombre completo del acudiente", max_length=150, null=False, blank=False)
-    cedula_acudiente = models.CharField("numero de cedula acudiente", max_length = 18, null=False, blank=False, unique=True)
-    lugar_expedicion_acudiente = models.CharField("lugar de expedicion de la cedula del acudiente", max_length = 500, null=False, blank=False)
-    celular_acudiente = models.CharField("numero de celular acudiente ", max_length = 10)
-    email_acudiente = models.EmailField("correo electronico acudiente",null=False, blank=False, unique=True)
+    seguro = models.CharField("seguro medico", max_length = 500)
+    poliza = models.CharField("poliza",max_length = 150)
+    comprobante_seguro_medico = models.BooleanField("tiene seguro medico", null=False, blank=False)
+    comprobante_documento_identidad =  models.BooleanField("tiene documento de identidad", null=False, blank=False)
+    #informacion de los padres
+    # MADRE 
+    nombre_completo_madre = models.CharField("nombre completo de la madre", max_length=150)
+    cedula_madre = models.CharField("numero de cedula de la madre", max_length = 18, unique=True)
+    lugar_expedicion_madre = models.CharField("lugar de expedicion de la cedula de la madre", max_length = 500)
+    celular_madre = models.CharField("numero de celular de la madre", max_length = 10)
+    email_madre = models.EmailField("correo electronico de la madre", unique=True)
+    # PADRE 
+    nombre_completo_padre = models.CharField("nombre completo del padre", max_length=150)
+    cedula_padre = models.CharField("numero de cedula del padre", max_length = 18, unique=True)
+    lugar_expedicion_padre = models.CharField("lugar de expedicion de la cedula del padre", max_length = 500)
+    celular_padre = models.CharField("numero de celular del padre ", max_length = 10)
+    email_padre = models.EmailField("correo electronico del padre", unique=True)
+    direccion = models.CharField("direccion de residencia", max_length = 500,null=False, blank=False,)
+    barrio = models.CharField("barrio de resdencia", max_length = 500)
+    ciudad = models.CharField("ciudad de residencia",max_length = 150)
     #informacion contacto de emergencia
     nombre_contactoE = models.CharField("nombre del contacto de emergencia", max_length = 10)
     telefono_contactoE = models.CharField("telefono del contacto de emergencia",null=False, blank=False, max_length = 10)

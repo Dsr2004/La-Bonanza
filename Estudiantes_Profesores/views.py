@@ -1,4 +1,5 @@
 import json
+from time import strptime
 from django.shortcuts import render, redirect
 from django.views.generic import View, CreateView, ListView, UpdateView, DetailView, TemplateView
 from django.urls import reverse_lazy
@@ -12,6 +13,7 @@ from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 import pandas as pd
 from io import BytesIO
+from datetime import date
 
 def arreglarFormatoDia(dia):
     if str(dia) == "6":
@@ -208,7 +210,11 @@ class reporteEstudiantes(ListView):
             messages.add_message(request, messages.WARNING, "No se encontraron estudiantes con este filtro {filtro}, por lo que no se puede realizar el reporte.".format(filtro = datos))
             return redirect('estudiantes')
         # Definir columnas del excel
-        Estudiante, Profesor, Nivele, Estado, Pagado, Tipo_Clase, fecha_de_nacimiento,direccion,barrio,ciudad,seguro,documento,email_acudiente,celular_acudiente,lugar_expedicion_acudiente,nombre_completo_acudiente,relacion_contactoE,telefono_contactoE,nombre_contactoE = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
+        def calculateAge(birthDate): 
+            today = date.today() 
+            age = today.year - birthDate.year -((today.month, today.day) < (birthDate.month, birthDate.day)) 
+            return age 
+        Estudiante, Profesor, Nivele, Estado, Pagado, Tipo_Clase, fecha_de_nacimiento,direccion,barrio,ciudad,seguro,documento,email_madre,celular_madre,lugar_expedicion_madre,nombre_completo_madre,email_padre,celular_padre,lugar_expedicion_padre,nombre_completo_padre,relacion_contactoE,telefono_contactoE,nombre_contactoE,edad,docuemntoq = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
         for row in consulta:
             Estudiante.append(row.estudiante)
             Profesor.append(row.profesor)
@@ -218,18 +224,29 @@ class reporteEstudiantes(ListView):
             direccion.append(row.estudiante.direccion)
             barrio.append(row.estudiante.barrio)
             ciudad.append(row.estudiante.ciudad)
-            if row.estudiante.seguro_medico:
+            if row.estudiante.comprobante_seguro_medico:
                 seguro.append('Si tiene')
             else:
                 seguro.append('No tiene')
-            documento.append(row.estudiante.documento_identidad)
-            email_acudiente.append(row.estudiante.email_acudiente)
-            celular_acudiente.append(row.estudiante.celular_acudiente)
-            lugar_expedicion_acudiente.append(row.estudiante.lugar_expedicion_acudiente)
-            nombre_completo_acudiente.append(row.estudiante.nombre_completo_acudiente)
+            if row.estudiante.comprobante_documento_identidad:
+                docuemntoq.append('Si tiene')
+                documento.append(row.estudiante.documento)
+            else:
+                docuemntoq.append('No tiene')
+                documento.append('No aplica')
+
+            email_madre.append(row.estudiante.email_madre)
+            celular_madre.append(row.estudiante.celular_madre)
+            lugar_expedicion_madre.append(row.estudiante.lugar_expedicion_madre)
+            nombre_completo_madre.append(row.estudiante.nombre_completo_madre)
+            email_padre.append(row.estudiante.email_padre)
+            celular_padre.append(row.estudiante.celular_padre)
+            lugar_expedicion_padre.append(row.estudiante.lugar_expedicion_padre)
+            nombre_completo_padre.append(row.estudiante.nombre_completo_padre)
             relacion_contactoE.append(row.estudiante.relacion_contactoE)
             telefono_contactoE.append(row.estudiante.telefono_contactoE)
             nombre_contactoE.append(row.estudiante.nombre_contactoE)
+            edad.append(calculateAge(row.estudiante.fecha_nacimiento))
             if row.estudiante.estado:
                 Estado.append("Activo")
             else:
@@ -246,15 +263,17 @@ class reporteEstudiantes(ListView):
         excel['Matricula'] = Pagado
         excel['Tipo de Clase'] = Tipo_Clase 
         excel['Fecha de nacimiento'] = fecha_de_nacimiento
+        excel['Edad']=edad
         excel['Direccion'] = direccion
         excel['Barrio'] = barrio
         excel['Ciudad'] = ciudad
         excel['Seguro'] = seguro
+        excel['Tiene documento de identidad'] = docuemntoq
         excel['Documento de identidad'] = documento
-        excel['Email del acudiente'] = email_acudiente
-        excel['Celular del acudiente'] = celular_acudiente
-        excel['Lugar de expedición del acudiente'] = lugar_expedicion_acudiente
-        excel['Nombre del acudiente'] = nombre_completo_acudiente
+        excel['Email del madre'] = email_madre
+        excel['Celular del madre'] = celular_madre
+        excel['Lugar de expedición del madre'] = lugar_expedicion_madre
+        excel['Nombre del madre'] = nombre_completo_madre
         excel['Relacion con el contacto de emergencia'] = relacion_contactoE
         excel['Teléfono del contacto de emergencia'] = telefono_contactoE
         excel['Nombre del contacto de emergencia'] = nombre_contactoE
@@ -431,15 +450,22 @@ class Profesores(ListView):
             datos=[]
             profe = Profesor.objects.get(pk=request.user.pk)
             horario = []
+            dias = []
             try:
                 horarios = json.loads(profe.horarios)
                 for horas in horarios:
                     desde = datetime.strptime(horas['from'], '%H:%M').strftime('%I:%M %p')
                     hasta=datetime.strptime(horas['through'], '%H:%M').strftime('%I:%M %p')
-                    horario.append('Desde '+str(desde)+' Hasta '+str(hasta))
+                    dias.append(horas['day'])
+                    horario.append('De '+str(desde)+' Hasta '+str(hasta))
             except:
                 horario.append('Este profesor no tiene horario')
             horario = str(horario).replace("'", '').replace("[", '').replace("]", '').replace(',', ' -')
+            dias = str(dias).replace("'", '').replace("[", '').replace("]", '').replace(',', ' -')
+            diccionario = {'horarios':horario.split(' - '), 'dias':dias.split(' - ')}
+            horario=[]
+            for i in range(len(diccionario['horarios'])):
+                horario.append('Para el día '+diccionario['dias'][i] + ' el horario es '+diccionario['horarios'][i])
             datos.append({'profesor':profe, 'horario':horario})
             contexto['Profesor'] = datos[0]
             contexto['Registros'] = Registro.objects.filter(profesor = profe)
@@ -482,12 +508,16 @@ class infoProfesor(ListView):
                     desde = datetime.strptime(horas['from'], '%H:%M').strftime('%I:%M %p')
                     hasta=datetime.strptime(horas['through'], '%H:%M').strftime('%I:%M %p')
                     dias.append(horas['day'])
-                    horario.append('Desde '+str(desde)+' Hasta '+str(hasta))
+                    horario.append('De '+str(desde)+' Hasta '+str(hasta))
             except:
                 horario.append('Este profesor no tiene horario')
             horario = str(horario).replace("'", '').replace("[", '').replace("]", '').replace(',', ' -')
             dias = str(dias).replace("'", '').replace("[", '').replace("]", '').replace(',', ' -')
-            datos.append({'profesor':profe, 'horarios':horario.split(', '), 'dias':dias.split(', ')})
+            diccionario = {'horarios':horario.split(' - '), 'dias':dias.split(' - ')}
+            horario=[]
+            for i in range(len(diccionario['horarios'])):
+                horario.append('Para el día '+diccionario['dias'][i] + ' el horario es '+diccionario['horarios'][i])
+            datos.append({'profesor':profe, 'horario':horario})
         contexto['Profesor'] = datos
         return render(request, self.template_name, contexto)
 

@@ -124,6 +124,9 @@
 <script src="{% static 'libs/daterangepicker/moment.min.js' %}"></script>
 <script src="{% static 'libs/daterangepicker/daterangepicker.js' %}"></script>
 <script>
+    const $select = document.querySelector("#ExportEstudiantes");
+   
+
     function exportGenerate(){
         let select = $('#ExportEstudiantes')
         let p = document.getElementById('ExportEstudiantes-p')
