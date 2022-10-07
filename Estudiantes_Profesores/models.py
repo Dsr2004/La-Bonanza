@@ -3,7 +3,7 @@ from Usuarios.models import Usuario
 from Niveles.models import Nivel
 from multiselectfield import MultiSelectField
 import json
-from datetime import datetime
+from datetime import datetime, date
 def DIA_INGLES(dia):
     dias = {"Monday":"Lunes","Tuesday":"Martes","Wednesday":"Miércoles","Thursday":"Jueves","Friday":"Viernes","Saturday":"Sábado","Sunday":"Domingo"}
     dia = dias.get(str(dia))
@@ -89,9 +89,9 @@ class Estudiante(models.Model):
     lugar_expedicion_padre = models.CharField("lugar de expedicion de la cedula del padre", max_length = 500)
     celular_padre = models.CharField("numero de celular del padre ", max_length = 10)
     email_padre = models.EmailField("correo electronico del padre", unique=True)
-    direccion = models.CharField("direccion de residencia", max_length = 500,null=False, blank=False,)
-    barrio = models.CharField("barrio de resdencia", max_length = 500)
-    ciudad = models.CharField("ciudad de residencia",max_length = 150)
+    direccion_A = models.CharField("direccion de residencia", max_length = 500,null=False, blank=False,)
+    barrio_A = models.CharField("barrio de resdencia", max_length = 500)
+    ciudad_A = models.CharField("ciudad de residencia",max_length = 150)
     #informacion contacto de emergencia
     nombre_contactoE = models.CharField("nombre del contacto de emergencia", max_length = 10)
     telefono_contactoE = models.CharField("telefono del contacto de emergencia",null=False, blank=False, max_length = 10)
@@ -124,14 +124,27 @@ class Estudiante(models.Model):
     def __str__(self):
         return self.nombre_completo
 
-
-    def generate_foldername(self, instance, filename):
-        return f"{self.nombre_completo}_{self.documento}/"
-
     @property
     def get_estudiante(self):
         estudiante = self.nombre_completo.capitalize()
         return estudiante
+    @property
+    def get_edad(self):
+        hoy = date.today()
+        nacimiento = self.fecha_nacimiento
+        if hoy.year == nacimiento.year:
+            edad = hoy.month - nacimiento.month -  ((hoy.month, hoy.day) < (nacimiento.month, nacimiento.day))
+            if edad == 1:
+                edad = f"{edad} Mes"
+            else:
+                edad = f"{edad} Meses"
+        else:
+            edad = hoy.year - nacimiento.year -  ((hoy.month, hoy.day) < (nacimiento.month, nacimiento.day)) 
+            if edad == 1:
+                edad = f"{edad} Año"
+            else:
+                edad = f"{edad} Años"
+        return edad 
 
     
 # fecha_inscripcion = models.DateField(auto_now_add=True) to created
