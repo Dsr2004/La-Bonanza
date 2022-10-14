@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+
+{% block titulo %}Ver Picadero {{picadero.nombre|title}}{% endblock titulo %}
+
+{% block contenido %}
+    <div class="container-fluid">
+        <div class="row">
+            <div>
+                <h1></h1>
+                <button class="btn w-100" id="togglePicadero" style="display: flex; justify-content: space-between; border: 1px solid rgba(0,0,0,0.8);" onclick="togglePikachu()"><div>Ocultar picadero</div><i class="fa fa-angle-up" style="position: relative; top:5px;"></i></button>
+            </div>
+            <div id="ContenidoPicadero" style="display: block;margin: 0 5px;">
+                <div class="card" style="width: calc(100% - 10px); border-radius: 0 0 5px  5px;">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5>Nombre del Picadero</h5>
+                                <h6>{{picadero.nombre|title}}</h6>
+                            </div>
+                            <div class="col-md-6">
+                                <h5>Nivel del Picadero</h5>
+                                <h6>{{picadero.nivel}}</h6>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5>Maximo de Estudiantes</h5>
+                                <h6>
+                                    {% if picadero.max_estudiantes >  1 %}
+                                        {{picadero.max_estudiantes}} Personas
+                                    {% else %}
+                                        {{picadero.max_estudiantes}} Persona
+                                    {% endif %}
+
+                                </h6>
+                            </div>
+                            <div class="col-md-6">
+                                <h5>Maximo de Profesores</h5>
+                                <h6>
+                                    {% if picadero.max_profesores >  1 %}
+                                        {{picadero.max_profesores}} Personas
+                                    {% else %}
+                                        {{picadero.max_profesores}} Persona
+                                    {% endif %}
+                                </h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="row" style="padding: 0 20px;">
+            <div class="col-3">
+                <h5>Seleccionar hora:</h5>
+            </div>
+            <div class="col-5">
+                <div class="input-group mb-3">
+                    <input type="time" step="3600" name="HoraClase" id="HoraClase" value="{{hora|date:'H:i'}}" class="form-control">
+                    <button class="btn btn-outline-secondary" type="button" id="HoraClaseButton">Buscar</button>
+                  </div>
+                
+            </div>
+            <div class="col-2"></div>
+           <div class="col-2">
+            {% if infoPicadero %}
+            <a href="" class="btn btn-outline-warning"><i class="fa-solid fa-pencil"></i></a>
+            {% endif %}
+            
+           </div>
+        </div>
+        {% if infoPicadero %}
+        <hr>
+        <div class="container" id="box">
+            <h4>Mostrando informacion del picadero: <b>{{picadero.nombre}}</b> a las <b>{{hora|date:'h:i A'}}</b></h4>
+            {% csrf_token %}
+            <table class="table table-bordered" id="ClasesTabla">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Estudiante</th>
+                    <th scope="col">Profesor</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    {% for clase in clases %}
+                        <tr>
+                            <th scope="row">{{forloop.counter}}</th>
+                            <td>{{clase.estudiante}}</td>
+                            <td>{{clase.profesor}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+              </table>
+            
+        {% endif %}
+        </div>
+    </div>
+{% endblock contenido %}
+{%block scripts%}   
+<script>
+    function togglePikachu(){
+        let btn = document.getElementById('togglePicadero');
+        if(btn.innerHTML == '<div>Mostrar picadero</div><i class="fa fa-angle-down" style="position: relative; top:5px;"></i>'){
+            document.getElementById('ContenidoPicadero').style.display = 'block';
+            btn.innerHTML = '<div>Ocultar picadero</div><i class="fa fa-angle-up" style="position: relative; top:5px;"></i>'
+        }
+        else{
+            document.getElementById('ContenidoPicadero').style.display = 'none';
+            btn.innerHTML = '<div>Mostrar picadero</div><i class="fa fa-angle-down" style="position: relative; top:5px;"></i>'
+        }
+    }
+    $("#HoraClaseButton").click(function(){
+        let hora = $("#HoraClase").val()
+        $.ajax({
+            url: window.location.href,
+            type: "post",
+            data: {"csrfmiddlewaretoken":csrftoken, "hora":hora},
+            success: function(response){
+            let contenido = ''
+            clases = response["clases"]
+            console.log(clases)
+            for (var i = 0; i < clases.length; i++) {
+                
+                contenido += '<tr>';
+                contenido += '<th scope="row">' + String(i+1) + '</th>';
+                contenido += '<td>' + clases[i]["estudiante"] + '</td>';
+                contenido += '<td>' + clases[i]["profesor"] + '</td>';
+                contenido += '</tr>';
+                
+            }
+            $('#ClasesTabla tbody').html(contenido); 
+
+            console.log(contenido)
+            },
+            error: function(data){
+                Swal.fire({
+                    title: '<strong>No se pudo Buscar la hora</strong>',
+                    icon: 'error',
+                    text: "Se recargará la página",
+                    focusConfirm: false,
+                    confirmButtonText:
+                    '<i class="fa fa-thumbs-up"></i> Cerrar esta ventana!',
+                }).then(function(){
+                    swal.close()
+                    })
+            }
+        })
+    })
+</script> 
+{%endblock scripts%}    
+    

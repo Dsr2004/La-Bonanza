@@ -28,19 +28,19 @@
         <hr>
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
-              <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true"><i id="icon_danger_ESTUDIANTE" class="fa-solid fa-triangle-exclamation"></i> Información del Estudiante</button>
+              <a class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true"><i id="icon_danger_ESTUDIANTE" class="fa-solid fa-triangle-exclamation"></i> Información del Estudiante</a>
             </li>
             <li class="nav-item" role="presentation">
-              <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false"><i id="icon_danger_ACUDIENTE" class="fa-solid fa-triangle-exclamation"></i> Información del Acudiente</button>
+              <a class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false"><i id="icon_danger_ACUDIENTE" class="fa-solid fa-triangle-exclamation"></i> Información del Acudiente</a>
             </li>
             <li class="nav-item" role="presentation">
-              <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false"><i id="icon_danger_EMERGENCIA" class="fa-solid fa-triangle-exclamation"></i> Información del Contacto de emergencia</button>
+              <a class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false"><i id="icon_danger_EMERGENCIA" class="fa-solid fa-triangle-exclamation"></i> Información del Contacto de emergencia</a>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="docs-tab" data-bs-toggle="tab" data-bs-target="#docs-tab-pane" type="button" role="tab" aria-controls="docs-tab-pane" aria-selected="false"><i id="icon_danger_DOCUMENTOS" class="fa-solid fa-triangle-exclamation"></i> Documentos</button>
+                <a class="nav-link" id="docs-tab" data-bs-toggle="tab" data-bs-target="#docs-tab-pane" type="button" role="tab" aria-controls="docs-tab-pane" aria-selected="false"><i id="icon_danger_DOCUMENTOS" class="fa-solid fa-triangle-exclamation"></i> Documentos</a>
             </li>
             <li class="nav-item" role="presentation">
-              <button class="nav-link" id="disabled-tab" data-bs-toggle="tab" data-bs-target="#disabled-tab-pane" type="button" role="tab" aria-controls="disabled-tab-pane" aria-selected="false" ><i id="icon_danger_REGISTRO" class="fa-solid fa-triangle-exclamation"></i> Información del Registro</button>
+              <a class="nav-link" id="disabled-tab" data-bs-toggle="tab" data-bs-target="#disabled-tab-pane" type="button" role="tab" aria-controls="disabled-tab-pane" aria-selected="false" ><i id="icon_danger_REGISTRO" class="fa-solid fa-triangle-exclamation"></i> Información del Registro</a>
             </li>
           </ul>
             <div class="tab-content" id="myTabContent">
@@ -51,121 +51,168 @@
                     <br>
                     <div class="row">
                         <div class="col-md-6">
-                            <h5><strong>Nombre Completo: </strong></h5>
+                            <label for="" style="font-weight: 500;">{{form.nombre_completo.label}}: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
                             {{form.nombre_completo}}
-                            <p class="error_text" id="nombre_completo"></p>
+                            <p id="nombre_completo" class="error_text"></p>
                         </div>
                         <div class="col-md-6">
-                            <h5><strong>Fecha de nacimiento:
-                            </strong></h5>
+                            <label for="" style="font-weight: 500;">{{form.fecha_nacimiento.label}}: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
                             {{form.fecha_nacimiento}}
-                            <p class="error_text" id="fecha_nacimiento"></p>
+                            <p id="fecha_nacimiento" class="error_text"></p>
                         </div>
                     </div>
                     <br>
                     <div class="row">
                         <div class="col-md-6">
-                            <h5><strong>Numero de documento:</strong></h5>
+                            <label for="" style="font-weight: 500;">{{form.documento.label}}: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
                             {{form.documento}}
-                            <p class="error_text" id="documento"></p>
+                            <p id="documento" class="error_text"></p>
                         </div>
                         <div class="col-md-6">
-                            <h5><strong>Numero de celular:</strong></h5>
+                            <label for="" style="font-weight: 500;">{{form.celular.label}}:</label>
                             {{form.celular}}
-                            <p class="error_text" id="celular"></p>
+                            <p id="celular" class="error_text"></p>
                         </div>
                     </div>
                     <br>
                     <div class="row">
                         <div class="col-md-6">
-                            <h5><strong>Numero de telefono:</strong></h5>
-                            {{form.telefono}}
-                            <p class="error_text" id="telefono"></p>
-                        </div>
-                        <div class="col-md-6">
-                            <h5><strong>Correo electronico:</strong></h5>
+                            <label for="" style="font-weight: 500;">{{form.email.label}}:</label>
                             {{form.email}}
-                            <p class="error_text" id="email"></p>
+                            <p id="email" class="error_text"></p>
                         </div>
-                    </div>
-                    <br>
-                    <div class="row">
                         <div class="col-md-6">
-                            <h5><strong>Direccion de residencia:</strong></h5>
+                            <label for="" style="font-weight: 500;">{{form.direccion.label}}: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
                             {{form.direccion}}
-                            <p class="error_text" id="direccion"></p>
+                            <p id="direccion" class="error_text"></p>
                         </div>
+                    </div>
+                   <br>
+                   <div class="row">
                         <div class="col-md-6">
-                            <h5><strong>Barrio de resdencia:</strong></h5>
+                            <label for="" style="font-weight: 500;">{{form.barrio.label}}: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
                             {{form.barrio}}
-                            <p class="error_text" id="barrio"></p>
-                        </div>
-                    </div>
-                    <br>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <label class="form-check-label"><strong>Tiene seguro medico:</strong></label>
-                                {{form.seguro_medico}}  
-                                <p class="error_text" id="seguro_medico"></p>
-                            </div>               
+                            <p id="barrio" class="error_text"></p>
                         </div>
                         <div class="col-md-6">
-                            <div class="form-check">
-                                <label class="form-check-label"><strong>Tiene documento de identidad:</strong></label>
-                                {{form.documento_identidad}}
-                                <p class="error_text" id="documento_identidad"></p>  
-                            </div>
-                        </div>
-                    </div>
-                    <br>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h5><strong>Ciudad de residencia:</strong></h5>
+                            <label for="" style="font-weight: 500;">{{form.ciudad.label}}: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
                             {{form.ciudad}}
-                            <p class="error_text" id="ciudad"></p>
+                            <p id="ciudad" class="error_text"></p>
+                        </div>
+                   </div>
+                   <div class="row">
+                        <div class="col-md-6">
+                            <label for="" style="font-weight: 500;">{{form.seguro.label}}:</label>
+                            {{form.seguro}}
+                            <p id="seguro" class="error_text"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="" style="font-weight: 500;">{{form.poliza.label}}:</label>
+                            {{form.poliza}}
+                            <p id="poliza" class="error_text"></p>
                         </div>
                     </div>
                     <br>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="" style="font-weight: 500;">{{form.comprobante_seguro_medico.label}}:</label>
+                            {{form.comprobante_seguro_medico}}
+                            <p id="comprobante_seguro_medico" class="error_text"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="" style="font-weight: 500;">{{form.comprobante_documento_identidad.label}}:</label>
+                            {{form.comprobante_documento_identidad}}
+                            <p id="comprobante_documento_identidad" class="error_text"></p>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="" style="font-weight: 500;">{{form.tipo_clase.label}}: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
+                        {{form.tipo_clase}}
+                        <p id="tipo_clase" class="error_text"></p>
+                    </div>
                 </div>
                 <div class="formEstudianteUpdate tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
                     <br>
-                    <h3>Información del acudiente</h3>
-                    <br>
+                    <h3>Información de los padres</h3>
+                    <hr>
+                    <h5><center>Información de la Madre</center></h5>
+                    <div>
+                        <label for="" style="font-weight: 500;">{{form.nombre_completo_madre.label}}:</label>
+                        {{form.nombre_completo_madre}}
+                        <p id="nombre_completo_madre" class="error_text"></p>
+                    </div>
                     <div class="row">
                         <div class="col-md-6">
-                            <h5><strong>Nombre completo del acudiente:</strong></h5>
-                            {{form.nombre_completo_acudiente}}
-                            <p class="error_text" id="nombre_completo_acudiente"></p>
+                            <label for="" style="font-weight: 500;">{{form.cedula_madre.label}}:</label>
+                            {{form.cedula_madre}}
+                            <p id="cedula_madre" class="error_text"></p>
                         </div>
                         <div class="col-md-6">
-                            <h5><strong>Numero de cedula acudiente:
-                            </strong></h5>
-                            {{form.cedula_acudiente}}
-                            <p class="error_text" id="cedula_acudiente"></p>
+                            <label for="" style="font-weight: 500;">{{form.lugar_expedicion_madre.label}}:</label>
+                            {{form.lugar_expedicion_madre}}
+                            <p id="lugar_expedicion_madre" class="error_text"></p>
                         </div>
                     </div>
-                    <br>
                     <div class="row">
                         <div class="col-md-6">
-                            <h5><strong>Numero de celular acudiente :</strong></h5>
-                            {{form.celular_acudiente}}
-                            <p class="error_text" id="celular_acudiente"></p>
+                            <label for="" style="font-weight: 500;">{{form.celular_madre.label}}:</label>
+                            {{form.celular_madre}}
+                            <p id="celular_madre" class="error_text"></p>
                         </div>
                         <div class="col-md-6">
-                            <h5><strong> Correo electronico acudiente:</strong></h5>
-                            {{form.email_acudiente}}
-                            <p class="error_text" id="email_acudiente"></p>
+                            <label for="" style="font-weight: 500;">{{form.email_madre.label}}:</label>
+                            {{form.email_madre}}
+                            <p id="email_madre" class="error_text"></p>
                         </div>
                     </div>
-                    <br>
+                    <h5><center>Información del Padre</center></h5>
+                    <div>
+                        <label for="" style="font-weight: 500;">{{form.nombre_completo_padre.label}}:</label>
+                        {{form.nombre_completo_padre}}
+                        <p id="nombre_completo_padre" class="error_text"></p>
+                    </div>
                     <div class="row">
                         <div class="col-md-6">
-                            <h5><strong>Lugar de expedicion de la cedula del acudiente:</strong></h5>
-                            {{form.lugar_expedicion_acudiente}}
-                            <p class="error_text" id="lugar_expedicion_acudiente"></p>
+                            <label for="" style="font-weight: 500;">{{form.cedula_padre.label}}:</label>
+                            {{form.cedula_padre}}
+                            <p id="cedula_padre" class="error_text"></p>
                         </div>
-                    
+                        <div class="col-md-6">
+                            <label for="" style="font-weight: 500;">{{form.lugar_expedicion_padre.label}}:</label>
+                            {{form.lugar_expedicion_padre}}
+                            <p id="lugar_expedicion_padre" class="error_text"></p>
+                        </div>
+                    </div>
+                   <div class="row">
+                        <div class="col-md-6">
+                            <label for="" style="font-weight: 500;">{{form.celular_padre.label}}:</label>
+                            {{form.celular_padre}}
+                            <p id="celular_padre" class="error_text"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="" style="font-weight: 500;">{{form.email_padre.label}}:</label>
+                            {{form.email_padre}}
+                            <p id="email_padre" class="error_text"></p>
+                        </div>
+                   </div>
+                   <br>
+                   <h4>Información de ubicacion de los padres</h4>
+                   <div class="row">
+                    <div class="col-md-6">
+                        <label for="" style="font-weight: 500;">{{form.direccion_A.label}}:</label>
+                        {{form.direccion_A}}
+                        <p id="direccion" class="error_text"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="" style="font-weight: 500;">{{form.barrio_A.label}}:</label>
+                            {{form.barrio_A}}
+                            <p id="barrio" class="error_text"></p>
+                        </div>
+                   </div>
+                    <div>
+                        <label for="" style="font-weight: 500;">{{form.ciudad_A.label}}:</label>
+                        {{form.ciudad_A}}
+                        <p id="ciudad" class="error_text"></p>
                     </div>
                     <br>
                 </div>
@@ -231,61 +278,132 @@
                     <br>
                     <h3>Información del Registro </h3>
                     <br>
-                <form action="{%url 'modificarRegistroEstudiante' registro.pk%}" method="post" id="ModificarRegistroEstudianteForm">
-                    {% csrf_token %}
+                    {%if object.tipo_clase == '1' %}
+                        <form action="{%url 'modificarRegistroEstudiante' registro.pk%}" method="post" id="ModificarRegistroEstudianteForm">
+                        {% csrf_token %}
                         <div class="row">
                             <div class="col-md-6">
-                                <h5><strong>Inicio de clases: </strong></h5>
+                                <Label><strong>Inicio de clases: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  style="color: #dc3545;">*</sup></strong></Label>
                                 {{formRegistro.inicioClase}}
-                                <p class="error_text" id="inicioClase"></p>
+                                <p id="inicioClase" class="bg-light text-danger" style="color: #dc3545;"></p>
+                                <br>
                             </div>
                             <div class="col-md-6">
-                                <h5><strong>Fin de clases: </strong></h5>
-                                {{formRegistro.finClase}}
-                                <p class="error_text" id="finClase"></p>
+                                <Label  style="margin-bottom: 10px;"><strong>Fin de las clases: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  style="color: #dc3545;">*</sup></strong></Label>
+                                <br>
+                                {{formRegistro.finClase.value|date:'d/m/Y'}}
+                                <p id="finClase" class="bg-light text-danger" style="color: #dc3545;"></p>
+                                <br>
                             </div>
                         </div>
-                        <br>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <Label><strong>Hora de la clase: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  style="color: #dc3545;">*</sup></strong></Label>
+                                {{formRegistro.horaClase}}
+                                <p id="horaClase" class="bg-light text-danger" style="color: #dc3545;"></p>
+                                <br>
+                            </div>
+                            <div class="col-md-6">
+                                <Label><strong>Profesor: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  style="color: #dc3545;">*</sup></strong></Label>
+                                {{formRegistro.profesor}}
+                                <p id="profesor" class="bg-light text-danger" style="color: #dc3545;"></p>
+                                <br>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <Label><strong>Nivel: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  style="color: #dc3545;">*</sup></strong></Label>
+                                {{formRegistro.nivel}}
+                                <p id="nivel" class="bg-light text-danger" style="color: #dc3545;"></p>
+                                <br>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check" style="margin-top: 30px">
+                                    <Label class="form-check-label"><strong>Matrícula pagada: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  style="color: #dc3545;">*</sup></strong></Label>
+                                    {{formRegistro.pagado}}
+                                </div>
+                                    <p id="pagado" class="bg-light text-danger" style="color: #dc3545;"></p>
+                                    <br>
+                            </div>
+                        </div>
+                        <input type="hidden" name="estudiante" value="{{object.pk}}">
+                        <button type="button" class="btn btn-success w-100" onclick="ModificarRegistroEstudiante()">Modificar Registro del estudiante </button>
+                    </form>
+
+                    {% elif object.tipo_clase == '2'%}
+                    <form action="{%url 'modificarRegistroEstudiante' registro.pk%}" method="post" id="ModificarRegistroEstudianteForm">
+                    {% csrf_token %}
                     <div class="row">
                         <div class="col-md-6">
-                            <h5><strong>Hora de la clase: </strong></h5>
+                            <Label><strong>Inicio de clases: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  style="color: #dc3545;">*</sup></strong></Label>
+                            {{formRegistro.inicioClase}}
+                            <p id="inicioClase" class="bg-light text-danger" style="color: #dc3545;"></p>
+                            <br>
+                        </div>
+                        <div class="col-md-6">
+                            <Label  style="margin-bottom: 10px;"><strong>Fin de las clases: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  style="color: #dc3545;">*</sup></strong></Label>
+                            <br>
+                            {{formRegistro.finClase.value|date:'d/m/Y'}}
+                            <p id="finClase" class="bg-light text-danger" style="color: #dc3545;"></p>
+                            <br>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <Label><strong>Hora de la clase: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  style="color: #dc3545;">*</sup></strong></Label>
                             {{formRegistro.horaClase}}
-                            <p class="error_text" id="horaClase"></p>
+                            <p id="horaClase" class="bg-light text-danger" style="color: #dc3545;"></p>
+                            <br>
                         </div>
                         <div class="col-md-6">
-                            <h5><strong>Dia de la clase: </strong></h5>
+                            <Label><strong>Meses de suscripción: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  style="color: #dc3545;">*</sup></strong></Label>
+                            <select name="meseSus" id="mesesSus"  class="form-select">
+                                <option value="1">1 Mes</option>
+                                <option value="2">2 Meses</option>
+                                <option value="3">3 Meses</option>
+                                <option value="4">4 Meses</option>
+                                <option value="5">5 Meses</option>
+                                <option value="6">6 Meses</option>
+                            </select>
+                            <br>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <Label><strong>Días de la clase: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  style="color: #dc3545;">*</sup></strong></Label>
                             {{formRegistro.diaClase}}
-                            <p class="error_text" id="diaClase"></p>
+                            <p id="diaClase" class="bg-light text-danger" style="color: #dc3545;"></p>
+                            <br>
                         </div>
-                    </div>
-                    <br>
-                    <div class="row">
                         <div class="col-md-6">
-                            <h5><strong>Profesor:</strong></h5>
+                            <Label><strong>Profesor: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  style="color: #dc3545;">*</sup></strong></Label>
                             {{formRegistro.profesor}}
-                            <p class="error_text" id="profesor"></p>
-                        </div>
-                        <div class="col-md-6">
-                            <h5><strong>Nivel del estudiante:</strong></h5>
-                            {{formRegistro.nivel}}
-                            <p class="error_text" id="nivel"></p>
+                            <p id="profesor" class="bg-light text-danger" style="color: #dc3545;"></p>
+                            <br>
                         </div>
                     </div>
-                    <br>
                     <div class="row">
                         <div class="col-md-6">
-                            <div class="form-check">
-                                <label class="form-check-label"><strong>Matrícula pagada:</strong></label>
-                                {{formRegistro.pagado}} 
-                                <p class="error_text" id="pagado"></p> 
+                            <Label><strong>Nivel: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  style="color: #dc3545;">*</sup></strong></Label>
+                            {{formRegistro.nivel}}
+                            <p id="nivel" class="bg-light text-danger" style="color: #dc3545;"></p>
+                            <br>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-check" style="margin-top: 30px">
+                                <Label class="form-check-label"><strong>Matrícula pagada: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  style="color: #dc3545;">*</sup></strong></Label>
+                                {{formRegistro.pagado}}
                             </div>
+                                <p id="pagado" class="bg-light text-danger" style="color: #dc3545;"></p>
+                                <br>
                         </div>
                     </div>
-                    <input type="hidden" name="estudiante" value="{{registro.estudiante.id}}">
+                    <input type="hidden" name="estudiante" value="{{object.pk}}">
+                    <button type="button"  class="btn btn-success w-100"onclick="ModificarRegistroEstudiante()">Modificar Registro del estudiante</button>
                 </form>
+                    {%endif%}
                     <br>
-                    <button type="button" class="btn btn-success w-100" onclick="ModificarRegistroEstudiante()">Modificar Registro del estudiante</button>
-                    <br>
+                   
                 </div>
                 <br>
             </div>
@@ -299,6 +417,7 @@
 <script src="{% static 'libs/datepicker/i18n/datepicker.es-ES.js' %}"></script>
 <script>
     $(document).ready(function(){
+        $('#profile-tab-pane').tab('show')
         $("#id_fecha_nacimiento").datepicker({
             language: 'es-ES',
             format: "dd/mm/YYYY",

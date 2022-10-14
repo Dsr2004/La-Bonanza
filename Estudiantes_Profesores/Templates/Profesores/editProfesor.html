@@ -206,7 +206,21 @@
                                             }
                                         }
                                     }
+                                if (inputs[j].type == "select-one"){
+                                if(inputs[j].value != ""){
+                                    console.log(inputs[j].value)
+                                    horarios['day']=inputs[j].value
                                 }
+                                else{
+                                    let p_errors = document.getElementById('horarios-p')
+                                    p_errors.innerHTML = 'Por favor ingrese un día relacionado'
+                                    p_errors.style.display = 'block'
+                                    p_errors.style.color = 'red'
+                                    p_errors.previousSibling.previousSibling.classList.add('is-invalid');
+                                    return 'error';
+                                }
+                                }
+                            }
                                 horariosA.push(horarios)
                             }
                         }

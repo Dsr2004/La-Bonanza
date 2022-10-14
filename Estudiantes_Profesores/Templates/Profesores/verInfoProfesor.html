@@ -23,12 +23,8 @@
         <div>
             <h2>Horarios: </h2>
             <div>
-                {%for horario in Profesor.horarios%}
-                <h3 style="font-weight: 400;">{{horario}}</h3>
-                {%endfor%}
-                <h2>Dias:</h2>
-                {%for dia in Profesor.dias%}
-                <h3 style="font-weight: 400;">{{dia}}</h3>
+                {%for horario in Profesor.horario%}
+                <h3 style="font-weight: 400; margin-left:10px;">{{horario}}</h3>
                 {%endfor%}
             </div>
         </div>

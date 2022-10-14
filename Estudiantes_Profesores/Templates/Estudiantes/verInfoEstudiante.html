@@ -79,16 +79,24 @@
                         {{object.ciudad}}
                     </div>
                     <div class="col-md-6">
-                        <h5><strong>Seguro:</strong></h5>
-                        {{object.seguro}}
+                        <h5><strong>Tipo de Clase:</strong></h5>
+                        {{object.get_tipo_clase_display}}
                     </div>
                 </div>
                 <br>
                 <div class="row">
                     <div class="col-md-6">
+                        <h5><strong>Seguro:</strong></h5>
+                        {{object.seguro}}
+                    </div>
+                    <div class="col-md-6">
                         <h5><strong>Poliza:</strong></h5>
                         {{object.poliza}}
                     </div>
+                    
+                </div>
+                <br>
+                <div class="row">
                     <div class="col-md-6">
                         <h5><strong>Tiene comprobante de seguro medico:</strong></h5>
                         {% if object.comprobante_seguro_medico %}
@@ -97,9 +105,6 @@
                         NO
                         {% endif %}
                     </div>
-                </div>
-                <br>
-                <div class="row">
                     <div class="col-md-6">
                         <h5><strong>Tiene comprobante de documento de identidad:</strong></h5>
                         {% if object.comprobante_documento_identidad %}

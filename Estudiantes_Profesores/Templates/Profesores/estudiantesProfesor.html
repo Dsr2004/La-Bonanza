@@ -26,8 +26,10 @@
            <tr>
             <th>Estudiante</th>
             <th>Nivel</th>
-            <th>Acudiente</th>
-            <th>Número de acudiente</th>
+            <th>Madre</th>
+            <th>Número de madre</th>
+            <th>Padre</th>
+            <th>Número de padre</th>
             <th>Acciones</th>
            </tr>
         </thead>
@@ -37,8 +39,10 @@
                     <tr style="height: 40px;">
                         <td>{{registro.estudiante.nombre_completo}}</td>
                         <td><div style="text-align: center; padding: 5px 5px; margin: 5px; border-radius: 10px; background-color: {{registro.nivel.color_fondo}};color:{{registro.nivel.color_letra}}; ">{{registro.nivel.nivel}}</div></td>
-                        <td>{{registro.estudiante.nombre_completo_acudiente}}</td>
-                        <td>{{registro.estudiante.celular_acudiente}}</td>
+                        <td>{{registro.estudiante.nombre_completo_madre}}</td>
+                        <td>{{registro.estudiante.celular_madre}}</td>
+                        <td>{{registro.estudiante.nombre_completo_padre}}</td>
+                        <td>{{registro.estudiante.celular_padre}}</td>
                         <td>
                             <div style="display:inline-flex; ">
                                 <a href="{%url 'verEstudiante' Profesor.pk%}?id_registro={{registro.pk}}" style="margin-right:10px" class="btn btn-outline-info btn-sm"><i class="fa-solid fa-eye"></i></a>

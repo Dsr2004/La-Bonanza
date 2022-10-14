@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block titulo %}Picaderos{% endblock titulo %}
+
+{% block contenido %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4" style="margin-bottom: 20px;" onclick="BuscarRuta('{{carro.placa}}')">
+                <div class="card" style="width: 18rem; padding: 15px;">
+                    <div class="card-body" style="display: grid; grid-template-columns: 20% 80%; grid-gap:10px;">
+                        <i class="fas fa-horse-head fa-2x1" style="font-size: 2pc;"></i>
+                         Agregar Picadero
+                    </div>
+                    <div class="card-footer">
+                        <div class=""><a onclick="abrir_modal_crear_picadero('{% url 'crearPicadero' %}')" class="btn btn-success btn-sm w-100"><i class="fa-solid fa-plus"></i></a></div>
+                    </div>
+                </div>
+            </div>
+        {% for picadero in picaderos %}
+        <div class="col-md-4" style="margin-bottom: 20px;" onclick="BuscarRuta('{{carro.placa}}')">
+            <div class="card" style="width: 18rem; padding: 15px;">
+                <div class="card-body" style="display: grid; grid-template-columns: 20% 80%; grid-gap:10px;">
+                    <i class="fas fa-horse-head fa-2x1" style="font-size: 2pc;"></i>
+                    {{picadero.nombre}}
+                    
+                </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-4"><a href="{%url 'verPicadero' picadero.slug%}" class="btn btn-info btn-sm w-100"><i class="fa-solid fa-plus"></i></a></div>
+                        <div class="col-4"><a onclick="" class="btn btn-warning btn-sm w-100"><i class="fa-solid fa-pen-nib"></i></a></div>
+                        <div class="col-4"><a onclick="" class="btn btn-danger btn-sm w-100"><i class="fa-solid fa-trash"></i></a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        </div>
+    </div>
+
+<div class="modal fade" id="crearPicaderoModal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true"></div>
+
+{% endblock contenido %}
+
+{% block scripts %}
+    <script src="{% static 'js/picaderos.js' %}"></script>
+{% endblock scripts %}
+    
+    
+    

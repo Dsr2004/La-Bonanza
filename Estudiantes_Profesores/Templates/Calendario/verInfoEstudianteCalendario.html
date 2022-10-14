@@ -18,6 +18,27 @@
         <h6>{{object.horaClase|time:"h:00 A"}}</h6>
         <h4>Profesor: </h4>
         <h6>{{object.profesor.usuario}}</h6>
+        <hr>
+        <h3>Asistencia del estudiante</h3>
+        <div class="row">
+          <div class="col-md-6">
+            <h5>Total de Clases</h5>
+            <h6>{{totalClases}}</h6>
+          </div>
+          <div class="col-md-6">
+            <h5>Asistidas</h5>
+            <h6>{{AsitidasClases}}</h6>
+          </div>
+          <hr>
+          <div class="col-md-6">
+            <h5>No asistidas</h5>
+            <h6>{{NoAsistidasClases}}</h6>
+          </div>
+          <div class="col-md-6">
+            <h5>Canceladas</h5>
+            <h6>{{CanceladasClases}}</h6>
+          </div>
+        </div>
       </div>
     </div>
   </div>

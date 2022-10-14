@@ -20,7 +20,7 @@ from django.conf.urls.static import static
 from django.contrib.auth.views import LogoutView
 from django.contrib.auth.decorators import login_required
 from Usuarios.views import Login
-from .views import index, pos
+from .views import index
 
 
 # formato = inicialminusculaElrestoMayuscula   crearUsuario ->solo para los names
@@ -33,7 +33,7 @@ urlpatterns = [
     path("Usuarios/", include("Usuarios.urls")),
     path("Administracion/", include("Estudiantes_Profesores.urls")),
     path("Niveles/", include("Niveles.urls")),
-    path("pos/", pos)
+    path("Picaderos/", include("Picaderos.urls")),
 ]
 
 if settings.DEBUG:

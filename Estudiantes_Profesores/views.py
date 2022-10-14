@@ -1,17 +1,21 @@
 import json
+import pandas as pd
+from datetime import datetime, timedelta, date
+from dateutil.relativedelta import relativedelta
+from io import BytesIO
 from django.shortcuts import render, redirect
 from django.views.generic import View, CreateView, ListView, UpdateView, DetailView, TemplateView
 from django.urls import reverse_lazy
 from django.http import JsonResponse, HttpResponse
 from django.contrib import messages
-from .models import Estudiante, Registro, Profesor, Asistencia
-from Niveles.models import Nivel
-from .forms import EstudianteForm, RegistroForm,ProfesorForm
+from django.db.models import Q
 from Usuarios.models import Usuario
-from datetime import datetime, timedelta
-from dateutil.relativedelta import relativedelta
-import pandas as pd
-from io import BytesIO
+from La_Bonanza. mixins import IsAdminMixin
+from Niveles.models import Nivel
+from .models import Estudiante, Registro, Profesor, Asistencia
+from .forms import EstudianteForm,CrearEstudianteForm, RegistroForm,ProfesorForm
+
+
 
 def arreglarFormatoDia(dia):
     if str(dia) == "6":
@@ -24,13 +28,33 @@ class Calendario(View):
     template_name = "calendario.html"
     model = Registro
     def get(self, request, *args, **kwargs):
-        registros = Registro.objects.all()
+        estudiantes = Estudiante.objects.filter(estado=True)
+        registros = {}
+        if estudiantes:
+            if request.user.administrador:
+                registros = Registro.objects.filter(estudiante__in=[x.pk for x in estudiantes])
+            else:
+                 registros = Registro.objects.filter(estudiante__in=[x.pk for x in estudiantes]).filter(profesor=request.user.pk)
         ctx = {"clases":registros}
         return render(request, self.template_name ,ctx)
 
 class VerInfoEstudianteCalendario(DetailView):
     model=Registro
     template_name = "Calendario/verInfoEstudianteCalendario.html"
+
+    def get_context_data(self, **kwargs):
+        ctx =  super().get_context_data(**kwargs)
+        registro = self.get_object()
+        clases = Asistencia.objects.filter(registro=registro)
+        conteoClases = clases.count()
+        conteoClaesAsistidas = clases.filter(estado=1).count()
+        conteoClaesNoAsistidas = clases.filter(estado=2).count()
+        conteoClaesCanceladas = clases.filter(Q(estado=3)|Q(estado=4)).count()
+        ctx["totalClases"]=conteoClases
+        ctx["AsitidasClases"]=conteoClaesAsistidas
+        ctx["NoAsistidasClases"]=conteoClaesNoAsistidas
+        ctx["CanceladasClases"]=conteoClaesCanceladas
+        return ctx
 
 
 class GestionDeAsistencia(View):
@@ -39,12 +63,23 @@ class GestionDeAsistencia(View):
     def get(self, request, *args, **kwargs):
         ctx = {}
         hoy = datetime.now()
+        hoyA = date.today()
         diaSemana = arreglarFormatoDia(hoy.weekday())
-        clasesHoy = Registro.objects.filter(diaClase__icontains=diaSemana).order_by("horaClase")
+        estudiantes = Estudiante.objects.filter(estado=True)
+        if request.user.administrador:
+            clasesHoy = Registro.objects.filter(diaClase__icontains=diaSemana).filter(estudiante__in=[x.pk for x in estudiantes]).order_by("horaClase")
+        else:
+            clasesHoy = Registro.objects.filter(diaClase__icontains=diaSemana).filter(estudiante__in=[x.pk for x in estudiantes]).order_by("horaClase").filter(profesor=request.user.pk)
+        clasesHoy = list(clasesHoy)
+        clasesHoyRango = []
+        for clases in clasesHoy:
+            if clases.inicioClase  <= hoyA <= clases.finClase:
+                clasesHoyRango.append(clases)
+             
         
         ctx["dia"]=hoy.date()
         ctx["hora"]=hoy.time()
-        ctx["clases"]=clasesHoy
+        ctx["clases"]=clasesHoyRango
         # mañana = hoy + timedelta(days=6)
         return render(request, self.template_name, ctx)
 
@@ -80,8 +115,16 @@ class ControlAsistencia(View):
     template_name = "ctrlAsistencia.html"
     def get(self, request, *args, **kwargs):
         dia = datetime.now().date()
-        asistencia = self.model.objects.filter(dia=dia).order_by("hora")
-        ctx = {"dia":dia,"asistencia":asistencia}
+        ctx = {"dia":dia}
+        if request.user.administrador:
+            print("esa dmin")
+            asistencia = self.model.objects.filter(dia=dia).order_by("hora")
+            ctx["asistencia"]=asistencia
+        else:
+            asistencia = self.model.objects.filter(dia=dia).order_by("hora")
+            asistenciaValida = [i for i in [x for x in asistencia if x.registro.profesor is not None] if i.registro.profesor.pk == request.user.pk]
+            ctx["asistencia"]=asistenciaValida
+       
         return render(request, self.template_name, ctx)
     
     def post(self, request, *args, **kwargs):
@@ -154,7 +197,7 @@ class reporteAsistencia(ListView):
             return response
         return JsonResponse({'hola':fechas})
 
-class Estudiantes(ListView):
+class Estudiantes(IsAdminMixin, ListView):
     template_name = "estudiantes.html"
     context_object_name= "estudiantes"
     model = Registro
@@ -169,7 +212,7 @@ class Estudiantes(ListView):
             ctx["nuevosEstudiantes"]=False
         return ctx
     
-class reporteEstudiantes(ListView):
+class reporteEstudiantes(IsAdminMixin, ListView):
     def post(self, request, *args, **kwargs):
         datos = request.POST.get('typeExport')
         print(request.POST)
@@ -208,12 +251,43 @@ class reporteEstudiantes(ListView):
             messages.add_message(request, messages.WARNING, "No se encontraron estudiantes con este filtro {filtro}, por lo que no se puede realizar el reporte.".format(filtro = datos))
             return redirect('estudiantes')
         # Definir columnas del excel
-        Estudiante, Profesor, Nivele, Estado, Pagado, Tipo_Clase = [[],[],[],[],[],[]]
+        def calculateAge(birthDate): 
+            today = date.today() 
+            age = today.year - birthDate.year -((today.month, today.day) < (birthDate.month, birthDate.day)) 
+            return age 
+        Estudiante, Profesor, Nivele, Estado, Pagado, Tipo_Clase, fecha_de_nacimiento,direccion,barrio,ciudad,seguro,documento,email_madre,celular_madre,lugar_expedicion_madre,nombre_completo_madre,email_padre,celular_padre,lugar_expedicion_padre,nombre_completo_padre,relacion_contactoE,telefono_contactoE,nombre_contactoE,edad,docuemntoq = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
         for row in consulta:
             Estudiante.append(row.estudiante)
             Profesor.append(row.profesor)
             Nivele.append(row.nivel)
             Tipo_Clase.append(row.estudiante.get_tipo_clase_display())
+            fecha_de_nacimiento.append(row.estudiante.fecha_nacimiento)
+            direccion.append(row.estudiante.direccion)
+            barrio.append(row.estudiante.barrio)
+            ciudad.append(row.estudiante.ciudad)
+            if row.estudiante.comprobante_seguro_medico:
+                seguro.append('Si tiene')
+            else:
+                seguro.append('No tiene')
+            if row.estudiante.comprobante_documento_identidad:
+                docuemntoq.append('Si tiene')
+                documento.append(row.estudiante.documento)
+            else:
+                docuemntoq.append('No tiene')
+                documento.append('No aplica')
+
+            email_madre.append(row.estudiante.email_madre)
+            celular_madre.append(row.estudiante.celular_madre)
+            lugar_expedicion_madre.append(row.estudiante.lugar_expedicion_madre)
+            nombre_completo_madre.append(row.estudiante.nombre_completo_madre)
+            email_padre.append(row.estudiante.email_padre)
+            celular_padre.append(row.estudiante.celular_padre)
+            lugar_expedicion_padre.append(row.estudiante.lugar_expedicion_padre)
+            nombre_completo_padre.append(row.estudiante.nombre_completo_padre)
+            relacion_contactoE.append(row.estudiante.relacion_contactoE)
+            telefono_contactoE.append(row.estudiante.telefono_contactoE)
+            nombre_contactoE.append(row.estudiante.nombre_contactoE)
+            edad.append(calculateAge(row.estudiante.fecha_nacimiento))
             if row.estudiante.estado:
                 Estado.append("Activo")
             else:
@@ -229,6 +303,21 @@ class reporteEstudiantes(ListView):
         excel['Estado'] = Estado
         excel['Matricula'] = Pagado
         excel['Tipo de Clase'] = Tipo_Clase 
+        excel['Fecha de nacimiento'] = fecha_de_nacimiento
+        excel['Edad']=edad
+        excel['Direccion'] = direccion
+        excel['Barrio'] = barrio
+        excel['Ciudad'] = ciudad
+        excel['Seguro'] = seguro
+        excel['Tiene documento de identidad'] = docuemntoq
+        excel['Documento de identidad'] = documento
+        excel['Email del madre'] = email_madre
+        excel['Celular del madre'] = celular_madre
+        excel['Lugar de expedición del madre'] = lugar_expedicion_madre
+        excel['Nombre del madre'] = nombre_completo_madre
+        excel['Relacion con el contacto de emergencia'] = relacion_contactoE
+        excel['Teléfono del contacto de emergencia'] = telefono_contactoE
+        excel['Nombre del contacto de emergencia'] = nombre_contactoE
         with BytesIO() as b:
             # Use the StringIO object as the filehandle.
             writer = pd.ExcelWriter(b, engine='xlsxwriter')
@@ -243,21 +332,24 @@ class reporteEstudiantes(ListView):
 
 class RegistrarEstudiante(CreateView):
     model = Estudiante
-    form_class = EstudianteForm
+    form_class = CrearEstudianteForm
     template_name = "crearEstudiante.html"
     success_url = reverse_lazy("estudiantes")
 
-    # def form_valid(self, form):
-    #     if self.request.user.is_authenticated:
-    #         if self.request.user.administrador:
-    #             return redirect("estudiantes")
-    #     else:
-    #         nombre = str(form.cleaned_data['nombre_completo']).capitalize()
-    #         return render(self.request, "gracias.html",{"nombre":nombre})
+    def form_valid(self, form):
+        if self.request.user.is_authenticated:
+            if self.request.user.administrador:
+                form.save()
+                return redirect("estudiantes")
+        else:
+            nombre = str(form.cleaned_data['nombre_completo']).capitalize()
+            form.save()
+            return render(self.request, "gracias.html",{"nombre":nombre})
 
-    #     return super().form_valid(form)
+        return super().form_valid(form)
+    
 
-class BuscarNuevosEstudiantes(View):
+class BuscarNuevosEstudiantes(IsAdminMixin, View):
      def get(self, request, *args, **kwargs):
         if request.user.administrador!=1:
             return redirect("calendario")
@@ -269,7 +361,7 @@ class BuscarNuevosEstudiantes(View):
         ctx={"estudiantes":EstudiantesSinRegisto}
         return render(request, "Estudiantes/estudiantesSinRegistro.html", ctx)
 
-class CrearNuevosEstudiantes(CreateView):
+class CrearNuevosEstudiantes(IsAdminMixin, CreateView):
     model = Registro
     form_class = RegistroForm
     template_name = "Estudiantes/RegistroEstudiante.html"
@@ -302,10 +394,9 @@ class CrearNuevosEstudiantes(CreateView):
             return JsonResponse({"errores": form.errors}, status=400)
 
     def form_invalid(self, form):
-        print(form.errors)
         return JsonResponse({"errores": form.errors}, status=400)
 
-class VerInfoEstudiante(DetailView):
+class VerInfoEstudiante(IsAdminMixin, DetailView):
     model=Estudiante
     template_name = "Estudiantes/verInfoEstudiante.html"
     
@@ -316,7 +407,7 @@ class VerInfoEstudiante(DetailView):
         contexto["registro"] = registro
         return contexto
 
-class ModificarEstudiante(UpdateView):
+class ModificarEstudiante(IsAdminMixin, UpdateView):
     model = Estudiante
     form_class = EstudianteForm
     template_name = "Estudiantes/editarInfoEstudiante.html"
@@ -331,10 +422,11 @@ class ModificarEstudiante(UpdateView):
         return contexto
 
     def form_invalid(self, form):
-       return JsonResponse({"errores": form.errors}, status=404)
+        print(form.errors)
+        return JsonResponse({"errores": form.errors}, status=404)
 
 
-class ModificarDocsEstudiante(UpdateView):
+class ModificarDocsEstudiante(IsAdminMixin, UpdateView):
     model = Estudiante
     form_class = EstudianteForm
     template_name = "Estudiantes/editarInfoEstudiante.html"
@@ -357,7 +449,7 @@ class ModificarDocsEstudiante(UpdateView):
         return redirect("modificarEstudiante",pk= self.kwargs["pk"])
    
 
-class CambiarEstadoEstudiante(View):
+class CambiarEstadoEstudiante(IsAdminMixin, View):
     def post(self, request, *args, **kwargs):
         if request.user.administrador!=1:
             return redirect("calendario")
@@ -370,7 +462,7 @@ class CambiarEstadoEstudiante(View):
 
         return JsonResponse({"mensaje":"estudiante modificado con exito"}, status=200)
 
-class ValidarRegistroEstudiante(View):
+class ValidarRegistroEstudiante(IsAdminMixin, View):
     def post(self, request, *args, **kwargs):
         # dia = request.POST.get("dia")[2]
         # print(dia)
@@ -383,15 +475,37 @@ class ValidarRegistroEstudiante(View):
         estudiantesDia=2
         return JsonResponse({"cant":estudiantesDia})
 
-class ModificarRegistroEstudiante(UpdateView):
+class ModificarRegistroEstudiante(IsAdminMixin, UpdateView):
     model = Registro
     form_class = RegistroForm
     template_name = "Estudiantes/editarInfoEstudiante.html"
     success_url = reverse_lazy("estudiantes")
 
+    def post(self, request, *args, **kwargs):
+        copia = request.POST.copy()
+        if "meseSus" not in request.POST:
+            dia = request.POST.get('inicioClase')
+            dia = datetime.strptime(dia, "%Y-%m-%d")
+            diaClase = dia.weekday()
+            copia["finClase"]=dia+relativedelta(days=1)
+            copia["diaClase"]=arreglarFormatoDia(dia=int(diaClase))
+        else:
+            meses = request.POST.get("meseSus")
+            dia = request.POST.get('inicioClase') 
+            finClases = datetime.strptime(dia, "%Y-%m-%d")+relativedelta(months=int(meses))
+            copia["finClase"]=finClases
+        form = self.form_class(copia, instance=self.get_object())
+        if form.is_valid():
+            form.save()
+            return JsonResponse({"mensaje":"guardado correctamente"}, status=200)
+        else:
+            return JsonResponse({"errores": form.errors}, status=400)
+
     def form_invalid(self, form):
         print(form.errors)
         return JsonResponse({"errores": form.errors}, status=404)
+
+
 class Profesores(ListView):
     template_name = "profesores.html"
     model = Profesor
@@ -402,15 +516,22 @@ class Profesores(ListView):
             datos=[]
             profe = Profesor.objects.get(pk=request.user.pk)
             horario = []
+            dias = []
             try:
                 horarios = json.loads(profe.horarios)
                 for horas in horarios:
                     desde = datetime.strptime(horas['from'], '%H:%M').strftime('%I:%M %p')
                     hasta=datetime.strptime(horas['through'], '%H:%M').strftime('%I:%M %p')
-                    horario.append('Desde '+str(desde)+' Hasta '+str(hasta))
+                    dias.append(horas['day'])
+                    horario.append('De '+str(desde)+' Hasta '+str(hasta))
             except:
                 horario.append('Este profesor no tiene horario')
             horario = str(horario).replace("'", '').replace("[", '').replace("]", '').replace(',', ' -')
+            dias = str(dias).replace("'", '').replace("[", '').replace("]", '').replace(',', ' -')
+            diccionario = {'horarios':horario.split(' - '), 'dias':dias.split(' - ')}
+            horario=[]
+            for i in range(len(diccionario['horarios'])):
+                horario.append('Para el día '+diccionario['dias'][i] + ' el horario es '+diccionario['horarios'][i])
             datos.append({'profesor':profe, 'horario':horario})
             contexto['Profesor'] = datos[0]
             contexto['Registros'] = Registro.objects.filter(profesor = profe)
@@ -453,16 +574,20 @@ class infoProfesor(ListView):
                     desde = datetime.strptime(horas['from'], '%H:%M').strftime('%I:%M %p')
                     hasta=datetime.strptime(horas['through'], '%H:%M').strftime('%I:%M %p')
                     dias.append(horas['day'])
-                    horario.append('Desde '+str(desde)+' Hasta '+str(hasta))
+                    horario.append('De '+str(desde)+' Hasta '+str(hasta))
             except:
                 horario.append('Este profesor no tiene horario')
             horario = str(horario).replace("'", '').replace("[", '').replace("]", '').replace(',', ' -')
             dias = str(dias).replace("'", '').replace("[", '').replace("]", '').replace(',', ' -')
-            datos.append({'profesor':profe, 'horarios':horario.split(', '), 'dias':dias.split(', ')})
+            diccionario = {'horarios':horario.split(' - '), 'dias':dias.split(' - ')}
+            horario=[]
+            for i in range(len(diccionario['horarios'])):
+                horario.append('Para el día '+diccionario['dias'][i] + ' el horario es '+diccionario['horarios'][i])
+            datos.append({'profesor':profe, 'horario':horario})
         contexto['Profesor'] = datos
         return render(request, self.template_name, contexto)
 
-class editProfesor(TemplateView):
+class editProfesor(IsAdminMixin, TemplateView):
     template_name = "Profesores/editProfesor.html"
     model = Profesor
     form_class=ProfesorForm
@@ -591,48 +716,3 @@ def datosProfesores(request):
             data = json.dumps({'error': 'Datos del profesor ingresados incorrectos', 'forms':form.errors})
             return HttpResponse(data, content_type="application/json", status=400)
     return HttpResponse('Solo se admiten post', content_type="application/json", status=400)
-
-
-
-
-# def excel(request):
-#     # content-type of response
-# 	response = HttpResponse(content_type='application/ms-excel')
-
-# 	#decide file name
-# 	response['Content-Disposition'] = 'attachment; filename="ThePythonDjango.xls"'
-
-# 	#creating workbook
-# 	wb = xlwt.Workbook(encoding='utf-8')
-
-# 	#adding sheet
-# 	ws = wb.add_sheet("sheet1")
-
-# 	# Sheet header, first row
-# 	row_num = 0
-
-# 	font_style = xlwt.XFStyle()
-# 	# headers are bold
-# 	font_style.font.bold = True
-
-# 	#column header names, you can use your own headers here
-# 	columns = ['Column 1', 'Column 2', 'Column 3', 'Column 4', ]
-
-# 	#write column headers in sheet
-# 	for col_num in range(len(columns)):
-# 		ws.write(row_num, col_num, columns[col_num], font_style)
-
-# 	# Sheet body, remaining rows
-# 	font_style = xlwt.XFStyle()
-
-# 	#get your data, from database or from a text file...
-# 	data = get_data() #dummy method to fetch data.
-# 	for my_row in data:
-# 		row_num = row_num + 1
-# 		ws.write(row_num, 0, my_row.name, font_style)
-# 		ws.write(row_num, 1, my_row.start_date_time, font_style)
-# 		ws.write(row_num, 2, my_row.end_date_time, font_style)
-# 		ws.write(row_num, 3, my_row.notes, font_style)
-
-# 	wb.save(response)
-# 	return response

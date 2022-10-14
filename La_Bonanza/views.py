@@ -39,7 +39,3 @@ class index(TemplateView):
             'filter':filter
         }
         return render(request, "index.html", Usuarios)
-@csrf_exempt
-def pos(request):
-    if request.method == 'POST':
-        return  HttpResponse(request, content_type="application/json", status=200)
