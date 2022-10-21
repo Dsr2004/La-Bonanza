@@ -64,7 +64,9 @@
             </li>
             <li class="nav-item">
               <a class="nav-link 
-              {% if request.path == '/Administracion/Profesores/'%}active {% endif %} 
+              {% if request.path == '/Administracion/Profesores/'%}active {% endif %}
+              {% if '/Administracion/VerInfoProfesor/' in request.path %}active{% endif %}
+              {% if '/Administracion/VerEstudiantes/' in request.path %}active{% endif %}
               " aria-current="page" href="{%url 'profesores'%} ">Profesores</a>
             </li>
             <li class="nav-item">
@@ -81,8 +83,8 @@
             </li>
             <li class="nav-item">
               <a class="nav-link 
-              {% if request.path == ''%}active {% endif %}  
-              disabled" aria-current="page" href="">Picaderos</a>
+              {% if request.path == '/Picaderos/'%}active {% endif %}  
+              " aria-current="page" href="{% url 'picaderos' %}">Picaderos</a>
             </li>
             {%endif%}
             {% if request.path != '/Usuarios/CambiarContrasena/'%}

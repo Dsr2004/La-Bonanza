@@ -66,7 +66,10 @@ function ModificarEstudiante(url){
           title: 'Estudiante Modificado',
           showConfirmButton: false,
           timer: 2000
+        }).then(function(){
+          location.reload()
         })
+        
       },
       error: function(errores){
         $(".formEstudianteUpdate").find('.error_text').text('');
@@ -136,6 +139,8 @@ function ModificarRegistroEstudiante(){
           title: 'Registro del Estudiante Modificado',
           showConfirmButton: false,
           timer: 2000
+        }).then(function(){
+         location.reload()
         })
     },
     error: function(errores){

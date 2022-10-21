@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "Usuarios",
     "Estudiantes_Profesores",
     "Niveles",
+    "Picaderos",
     "multiselectfield",
 ]
 
@@ -59,7 +60,7 @@ ROOT_URLCONF = "La_Bonanza.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [os.path.join(BASE_DIR, "La_Bonanza/Templates") , os.path.join(BASE_DIR, "Usuarios/Templates") , os.path.join(BASE_DIR, "Estudiantes_Profesores/Templates"), os.path.join(BASE_DIR, "Niveles/Templates") ],
+        "DIRS": [os.path.join(BASE_DIR, "La_Bonanza/Templates") , os.path.join(BASE_DIR, "Usuarios/Templates") , os.path.join(BASE_DIR, "Estudiantes_Profesores/Templates"), os.path.join(BASE_DIR, "Niveles/Templates"), os.path.join(BASE_DIR, "Picaderos/Templates")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [

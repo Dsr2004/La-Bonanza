@@ -1,9 +1,10 @@
 from django.db import models
+from django.db.models.signals import pre_save
 from Usuarios.models import Usuario
 from Niveles.models import Nivel
 from multiselectfield import MultiSelectField
 import json
-from datetime import datetime
+from datetime import datetime, date
 def DIA_INGLES(dia):
     dias = {"Monday":"Lunes","Tuesday":"Martes","Wednesday":"Miércoles","Thursday":"Jueves","Friday":"Viernes","Saturday":"Sábado","Sunday":"Domingo"}
     dia = dias.get(str(dia))
@@ -40,14 +41,14 @@ class Profesor(models.Model):
 
     def __str__(self):
         return self.usuario.nombres
-    
+    @property
     def get_days(self):
         days = []
         horarios = json.loads(self.horarios)
         for horario in horarios:
             days.append(horario.get('day'))
         return days
-    
+    @property
     def get_hora_inicial(self):
         horas = []
         horarios = json.loads(self.horarios)
@@ -55,7 +56,7 @@ class Profesor(models.Model):
             day = datetime.strptime(horario.get('from'), '%H:%M')
             horas.append(day.strftime('%H:%M %p'))
         return horas
-    
+    @property
     def get_hora_final(self):
         horas = []
         horarios = json.loads(self.horarios)
@@ -63,15 +64,19 @@ class Profesor(models.Model):
             day = datetime.strptime(horario.get('through'), '%H:%M')
             horas.append(day.strftime('%H:%M %p'))
         return horas
+    @property
+    def get_profesor(self):
+        return f"{self.usuario.nombres.capitalize()} {self.usuario.apellidos.capitalize()}"
+    
 
 
 
 class Estudiante(models.Model):
     nombre_completo = models.CharField("nombre completo", max_length=150, null=False, blank=False)
-    fecha_nacimiento = models.DateField("fecha de nacimiento", null=False, blank=False)
-    documento = models.CharField("numero de documento", max_length = 18, null=False, blank=False, unique=True)
-    celular = models.CharField("numero de celular", max_length = 10)
-    email = models.EmailField("correo electronico", unique=True)
+    fecha_nacimiento = models.DateField("Fecha de nacimiento")
+    documento = models.IntegerField("numero de documento", null=False, blank=False, unique=True)
+    celular = models.IntegerField("numero de celular", null=True, blank=True)
+    email = models.EmailField("correo electronico", unique=True, null=True, blank=True)
     direccion = models.CharField("direccion de residencia", max_length = 500,null=False, blank=False,)
     barrio = models.CharField("barrio de resdencia", max_length = 500, null=False, blank=False)
     ciudad = models.CharField("ciudad de residencia",max_length = 150, null=False, blank=False)
@@ -81,23 +86,23 @@ class Estudiante(models.Model):
     comprobante_documento_identidad =  models.BooleanField("tiene comprobante de documento de identidad", null=False, blank=False)
     #informacion de los padres
     # MADRE 
-    nombre_completo_madre = models.CharField("nombre completo de la madre", max_length=150)
-    cedula_madre = models.CharField("numero de cedula de la madre", max_length = 18, unique=True)
-    lugar_expedicion_madre = models.CharField("lugar de expedicion de la cedula de la madre", max_length = 500)
-    celular_madre = models.CharField("numero de celular de la madre", max_length = 10)
-    email_madre = models.EmailField("correo electronico de la madre", unique=True)
+    nombre_completo_madre = models.CharField("nombre completo de la madre", max_length=150, null=True, blank=True)
+    cedula_madre = models.IntegerField("numero de cedula de la madre", unique=True, null=True, blank=True)
+    lugar_expedicion_madre = models.CharField("lugar de expedicion de la cedula de la madre", max_length = 500, null=True, blank=True)
+    celular_madre = models.IntegerField("numero de celular de la madre", null=True, blank=True)
+    email_madre = models.EmailField("correo electronico de la madre", unique=True, null=True, blank=True)
     # PADRE 
-    nombre_completo_padre = models.CharField("nombre completo del padre", max_length=150)
-    cedula_padre = models.CharField("numero de cedula del padre", max_length = 18, unique=True)
-    lugar_expedicion_padre = models.CharField("lugar de expedicion de la cedula del padre", max_length = 500)
-    celular_padre = models.CharField("numero de celular del padre ", max_length = 10)
-    email_padre = models.EmailField("correo electronico del padre", unique=True)
-    direccion = models.CharField("direccion de residencia", max_length = 500,null=False, blank=False,)
-    barrio = models.CharField("barrio de resdencia", max_length = 500)
-    ciudad = models.CharField("ciudad de residencia",max_length = 150)
+    nombre_completo_padre = models.CharField("nombre completo del padre", max_length=150, null=True, blank=True)
+    cedula_padre = models.IntegerField("numero de cedula del padre", unique=True, null=True, blank=True)
+    lugar_expedicion_padre = models.CharField("lugar de expedicion de la cedula del padre", max_length = 500, null=True, blank=True)
+    celular_padre = models.IntegerField("numero de celular del padre ",  null=True, blank=True)
+    email_padre = models.EmailField("correo electronico del padre", unique=True, null=True, blank=True)
+    direccion_A = models.CharField("direccion de residencia", max_length = 500,null=True, blank=True)
+    barrio_A = models.CharField("barrio de resdencia", max_length = 500, null=True, blank=True)
+    ciudad_A = models.CharField("ciudad de residencia",max_length = 150, null=True, blank=True)
     #informacion contacto de emergencia
     nombre_contactoE = models.CharField("nombre del contacto de emergencia", max_length = 10)
-    telefono_contactoE = models.CharField("telefono del contacto de emergencia",null=False, blank=False, max_length = 10)
+    telefono_contactoE = models.IntegerField("telefono del contacto de emergencia",null=False, blank=False)
     relacion_contactoE = models.CharField("relacion con el alumno",null=False, blank=False,  max_length = 100)
     #archivos
     firma =models.FileField(upload_to=guardar_firma, null=False, blank=False)
@@ -107,6 +112,7 @@ class Estudiante(models.Model):
     tipo_clase = models.CharField(max_length=15, choices=ESTADOS_CLASES, null=False, blank=False)
     estado = models.BooleanField(default=True)
     aceptaContrato = models.BooleanField(blank=False, null=False)
+    fecha_inscripcion = models.DateField(auto_now_add=True)
     
     def save(self, *args, **kwargs):
         try:
@@ -128,39 +134,38 @@ class Estudiante(models.Model):
     def __str__(self):
         return self.nombre_completo
 
-
-    def generate_foldername(self, instance, filename):
-        return f"{self.nombre_completo}_{self.documento}/"
-
     @property
     def get_estudiante(self):
         estudiante = self.nombre_completo.capitalize()
         return estudiante
-
-    
-# fecha_inscripcion = models.DateField(auto_now_add=True) to created
-
-
-class Establo(models.Model):
-    estudiantes = models.ManyToManyField(Estudiante)
-    profesores = models.ManyToManyField(Profesor)
-    
-    class Meta:
-        db_table = "establos"
-
-    def __str__(self):
-        return f"{self.pk}"
+    @property
+    def get_edad(self):
+        hoy = date.today()
+        nacimiento = self.fecha_nacimiento
+        if hoy.year == nacimiento.year:
+            edad = hoy.month - nacimiento.month -  ((hoy.month, hoy.day) < (nacimiento.month, nacimiento.day))
+            if edad == 1:
+                edad = f"{edad} Mes"
+            else:
+                edad = f"{edad} Meses"
+        else:
+            edad = hoy.year - nacimiento.year -  ((hoy.month, hoy.day) < (nacimiento.month, nacimiento.day)) 
+            if edad == 1:
+                edad = f"{edad} Año"
+            else:
+                edad = f"{edad} Años"
+        return edad 
 
 
 class Registro(models.Model):
     estudiante = models.OneToOneField(Estudiante, on_delete=models.CASCADE)
     nivel = models.ForeignKey(Nivel, db_column="nivel_id", on_delete=models.SET_NULL, verbose_name="nivel del estudiante", null=True)
-    profesor = models.ForeignKey(Profesor, db_column="profesor_id", on_delete=models.SET_NULL, verbose_name="profesor del estudiante", null=True)
-    pagado = models.BooleanField(default=False)
+    diaClase = MultiSelectField(max_length=10, choices=DIAS_SEMANA)
     inicioClase = models.DateField()
     finClase = models.DateField()
     horaClase = models.TimeField()
-    diaClase = MultiSelectField(max_length=10, choices=DIAS_SEMANA)
+    profesor = models.ForeignKey(Profesor, db_column="profesor_id", on_delete=models.SET_NULL, verbose_name="profesor del estudiante", null=True)
+    pagado = models.BooleanField(default=False)
    
 
     class Meta:
@@ -210,3 +215,13 @@ class Asistencia(models.Model):
 
     def __str__(self):
         return self.registro.estudiante.nombre_completo
+
+
+
+# SIGNALS 
+
+def pre_save_registro_receiver(sender, instance, *args, **kwargs):
+    if instance.horaClase:
+        instance.horaClase = instance.horaClase.replace(minute=0, second=0)
+
+pre_save.connect(pre_save_registro_receiver,sender=Registro)

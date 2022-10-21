@@ -34,14 +34,14 @@ function hideContrato(){
 function guardarContrato(){
     let checkbox = document.getElementById("AceptacionContrato")
     let input = checkbox.cloneNode(true);
-    input.id = "aceptaContrato"
+    input.id = "aceptaContratoInput"
     input.style.display="none"
     if (checkbox.checked) {
         input.name = "aceptaContrato"
-        if(document.getElementById("aceptaContrato")==null){
+        if(document.getElementById("aceptaContratoInput")==null){
             document.getElementById("CrearEstudianteForm").appendChild(input)
         }else{
-            let repl = document.getElementById("aceptaContrato")
+            let repl = document.getElementById("aceptaContratoInput")
             document.getElementById("CrearEstudianteForm").replaceChild(input, repl)
         }
         let div = document.getElementById("fondoContrato");
@@ -59,10 +59,10 @@ function guardarContrato(){
         button.nextSibling.style.display = "none"
     }
     else{
-        if(document.getElementById("aceptaContrato")==null){
+        if(document.getElementById("aceptaContratoInput")==null){
             document.getElementById("CrearEstudianteForm").appendChild(input)
         }else{
-            let repl = document.getElementById("aceptaContrato")
+            let repl = document.getElementById("aceptaContratoInput")
             document.getElementById("CrearEstudianteForm").replaceChild(input, repl)
         }
         let div = document.getElementById("fondoContrato");
