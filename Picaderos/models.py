@@ -1,14 +1,19 @@
+from random import choices
+from secrets import choice
 from django.db import models
 from django.db.models.signals import pre_save
 from django.utils.text import slugify
 from Niveles.models import Nivel
-from Estudiantes_Profesores.models import Estudiante, Profesor, Registro
+
+DIAS_SEMANA = (
+    ("1","Lunes"),("2","Martes"),("3","Miércoles"),("4","Jueves"),("5","Viernes"),("6","Sábado"),("0","Domingo")
+)
 
 class Picadero(models.Model):
     nombre = models.CharField("Nombre del picadero", max_length=100, unique=True, null=False, blank=False)
     max_estudiantes = models.IntegerField("maximo de estudiantes", null=False, blank=False)
     max_profesores  = models.IntegerField("maximo de profesores", null=False, blank=False)
-    nivel = models.ForeignKey(Nivel, on_delete=models.SET_NULL,  null=True)
+    nivel = models.OneToOneField(Nivel, on_delete=models.SET_NULL,  null=True)
     slug=models.SlugField("Slug", unique=True, null=True, blank=True)
 
     class Meta:
@@ -19,8 +24,8 @@ class Picadero(models.Model):
 
 
 class Clase(models.Model):
-    profesor = models.ForeignKey(Profesor, on_delete=models.SET_NULL, blank=True, null=True)
-    estudiante = models.OneToOneField(Registro, on_delete=models.CASCADE)
+    profesor = models.ForeignKey(to="Estudiantes_Profesores.Profesor", on_delete=models.SET_NULL, blank=True, null=True)
+    estudiante = models.OneToOneField(to="Estudiantes_Profesores.Registro", on_delete=models.CASCADE)
     
     class Meta:
         db_table = "clases"
@@ -30,6 +35,7 @@ class Clase(models.Model):
 
 class InfoPicadero(models.Model):
     picadero = models.ForeignKey(Picadero, on_delete=models.CASCADE)
+    dia = models.CharField(max_length=15, choices=DIAS_SEMANA)
     hora = models.TimeField()
     clases = models.ManyToManyField(Clase)
 
@@ -37,7 +43,7 @@ class InfoPicadero(models.Model):
         db_table = "infoPicaderos"
 
     def __str__(self):
-        return f"{self.picadero} a las {self.hora.strftime('%I:%M %p')}"
+        return f"{self.picadero} el dia {self.get_dia_display()} a las {self.hora.strftime('%I:%M %p')}"
     
     def get_clases(self):
         print(self)
@@ -50,7 +56,7 @@ def pre_save_picadero_receiver(sender, instance, *args, **kwargs):
         instance.slug=slugify(instance.nombre)
         
 def pre_save_clase_receiver(sender, instance, *args, **kwargs):
-    if  instance.estudiante.profesor:
+    if  not instance.estudiante.profesor:
         instance.profesor = instance.estudiante.profesor
         
 def pre_save_infoPicadero_receiver(sender, instance, *args, **kwargs):       

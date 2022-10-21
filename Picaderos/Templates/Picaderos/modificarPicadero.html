@@ -1,0 +1,32 @@
+<div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Modificar Picedero</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <form action="{% url 'modificarPicadero' object.pk %}" method="post" id="modificarPicaderoForm">
+            {% csrf_token %}
+            <Label><strong>Nombre del Picadero: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  style="color: #dc3545;">*</sup></strong></Label>
+            {{form.nombre}}
+            <p id="nombre" class="bg-light error_text" style="color: #dc3545;"></p>
+            <br>
+            <Label><strong>Maximo de Estudiantes para este picadero: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  style="color: #dc3545;">*</sup></strong></Label>
+            {{form.max_estudiantes}}
+            <p id="max_estudiantes" class="bg-light error_text" style="color: #dc3545;"></p>
+            <br>
+            <Label><strong>Maximo de Profesores para este picadero: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  style="color: #dc3545;">*</sup></strong></Label>
+            {{form.max_profesores}}
+            <p id="max_profesores" class="bg-light error_text" style="color: #dc3545;"></p>
+            <br>
+            <Label><strong>Nivel del Picadero: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  style="color: #dc3545;">*</sup></strong></Label>
+            {{form.nivel}}
+            <p id="nivel" class="bg-light error_text" style="color: #dc3545;"></p>
+            <br>
+          </form>   
+      </div>
+      <div class="modal-footer">
+        <button onclick="ModificarPicadero()" class="btn btn-success w-100">Craer Picadero</button>
+      </div>
+    </div>
+</div>

@@ -203,14 +203,13 @@ class RegistroForm(forms.ModelForm):
         profesor = self.cleaned_data["profesor"]
         horario = profesor.horarios
         horario = json.loads(horario)
-        print(horario)
         hora = self.horaClase.replace(minute = 0, second = 0).strftime('%I:%M %p')
         dias = [str(i[1]) for i in [dia for dia in DIAS_SEMANA] if int(i[0]) in [int(cl) for cl in self.diaClase]]
-        diasNo = 'los días '+', '.join([str(i[1]) for i in [dia for dia in DIAS_SEMANA] if int(i[0]) not in [int(cl) for cl in self.diaClase]])+f' a las {hora} el profesor no esta disponible'
+        diasNo = 'los días '+', '.join([str(i[1]) for i in [dia for dia in DIAS_SEMANA] if int(i[0]) in [int(cl) for cl in self.diaClase]])+f' a las {hora} el profesor no esta disponible'
         if [hor for hor in [horary for horary in horario if horary['day'] in [dia for dia in dias]] if datetime.strptime(hor['from'], '%H:%M').time() <= self.horaClase and (datetime.strptime(hor['through'], '%H:%M')-timedelta(hours=1)).time() >= self.horaClase] == []:
             raise forms.ValidationError(diasNo)
         else:
-            return profesor
+            return profesor 
     
     
     def clean_inicioClase(self):
@@ -222,7 +221,7 @@ class RegistroForm(forms.ModelForm):
         finClase=self.cleaned_data['finClase']
         if finClase<self.inicioClase:
             raise forms.ValidationError('La fecha de finalizacion de la clase debe ser mayor al de inicio de la clase')
-            return finClase
+        return finClase
         
     
 class ProfesorForm(forms.ModelForm):

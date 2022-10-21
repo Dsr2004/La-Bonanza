@@ -52,10 +52,19 @@
         <hr>
         <div class="row" style="padding: 0 20px;">
             <div class="col-3">
-                <h5>Seleccionar hora:</h5>
+                <h5>Seleccionar dia y hora:</h5>
             </div>
             <div class="col-5">
                 <div class="input-group mb-3">
+                    <select name="DiaClase" id="DiaClase"  class="form-select">
+                        <option value="1" {%if dia == 1 %}selected{%endif%}>Lunes</option>
+                        <option value="2" {%if dia == 2 %}selected{%endif%}>Martes</option>
+                        <option value="3" {%if dia == 3 %}selected{%endif%}>Miércoles</option>
+                        <option value="4" {%if dia == 4 %}selected{%endif%}>Jueves</option>
+                        <option value="5" {%if dia == 5 %}selected{%endif%}>Viernes</option>
+                        <option value="6" {%if dia == 6 %}selected{%endif%}>Sábado</option>
+                        <option value="0" {%if dia == 0 %}selected{%endif%}>Domingo</option>
+                    </select>
                     <input type="time" step="3600" name="HoraClase" id="HoraClase" value="{{hora|date:'H:i'}}" class="form-control">
                     <button class="btn btn-outline-secondary" type="button" id="HoraClaseButton">Buscar</button>
                   </div>
@@ -63,37 +72,38 @@
             </div>
             <div class="col-2"></div>
            <div class="col-2">
-            {% if infoPicadero %}
-            <a href="" class="btn btn-outline-warning"><i class="fa-solid fa-pencil"></i></a>
+            {% if not infoPicadero %}
+            <a href="" class="btn btn-outline-info"><i class="fa-solid fa-plus"></i></a>
+            {% else %}
+            <a href="" class="btn btn-outline-warning" ><i class="fa-solid fa-pencil"></i></a>
             {% endif %}
             
            </div>
         </div>
-        {% if infoPicadero %}
-        <hr>
         <div class="container" id="box">
-            <h4>Mostrando informacion del picadero: <b>{{picadero.nombre}}</b> a las <b>{{hora|date:'h:i A'}}</b></h4>
-            {% csrf_token %}
-            <table class="table table-bordered" id="ClasesTabla">
-                <thead>
-                  <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Estudiante</th>
-                    <th scope="col">Profesor</th>
-                  </tr>
-                </thead>
-                <tbody>
-                    {% for clase in clases %}
-                        <tr>
-                            <th scope="row">{{forloop.counter}}</th>
-                            <td>{{clase.estudiante}}</td>
-                            <td>{{clase.profesor}}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-              </table>
-            
+        {% if infoPicadero %}
+            <hr>
+            <h4>Mostrando informacion del picadero: <b>{{picadero.nombre}}</b> a las <b>{{hora|date:'h:i A'}}</b></h4>    
         {% endif %}
+        <br>
+        <table class="table table-bordered" id="ClasesTabla">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Estudiante</th>
+                <th scope="col">Profesor</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for clase in clases %}
+                    <tr>
+                        <th scope="row">{{forloop.counter}}</th>
+                        <td>{{clase.estudiante.get_estudiante}}</td>
+                        <td>{{clase.profesor}}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+          </table>
         </div>
     </div>
 {% endblock contenido %}
@@ -112,16 +122,16 @@
     }
     $("#HoraClaseButton").click(function(){
         let hora = $("#HoraClase").val()
+        let dia = $("#DiaClase").val()
         $.ajax({
             url: window.location.href,
             type: "post",
-            data: {"csrfmiddlewaretoken":csrftoken, "hora":hora},
+            data: {"csrfmiddlewaretoken":csrftoken, "hora":hora, "dia":dia},
             success: function(response){
             let contenido = ''
             clases = response["clases"]
             console.log(clases)
             for (var i = 0; i < clases.length; i++) {
-                
                 contenido += '<tr>';
                 contenido += '<th scope="row">' + String(i+1) + '</th>';
                 contenido += '<td>' + clases[i]["estudiante"] + '</td>';
@@ -135,14 +145,11 @@
             },
             error: function(data){
                 Swal.fire({
-                    title: '<strong>No se pudo Buscar la hora</strong>',
+                    position: 'top-end',
                     icon: 'error',
-                    text: "Se recargará la página",
-                    focusConfirm: false,
-                    confirmButtonText:
-                    '<i class="fa fa-thumbs-up"></i> Cerrar esta ventana!',
-                }).then(function(){
-                    swal.close()
+                    title: 'No se pudieron encontrar clases ese dia a esa hora',
+                    showConfirmButton: false,
+                    timer: 1000
                     })
             }
         })

@@ -12,7 +12,7 @@ from django.db.models import Q
 from Usuarios.models import Usuario
 from La_Bonanza. mixins import IsAdminMixin
 from Niveles.models import Nivel
-from .models import Estudiante, Registro, Profesor, Asistencia
+from .models import Estudiante, Registro, Profesor, Asistencia, FormValidationProfesorError, FormValidationEstudianteError
 from .forms import EstudianteForm,CrearEstudianteForm, RegistroForm,ProfesorForm
 
 
@@ -34,7 +34,7 @@ class Calendario(View):
             if request.user.administrador:
                 registros = Registro.objects.filter(estudiante__in=[x.pk for x in estudiantes])
             else:
-                 registros = Registro.objects.filter(estudiante__in=[x.pk for x in estudiantes]).filter(profesor=request.user.pk)
+                registros = Registro.objects.filter(estudiante__in=[x.pk for x in estudiantes]).filter(profesor=request.user.pk)
         ctx = {"clases":registros}
         return render(request, self.template_name ,ctx)
 
@@ -153,7 +153,7 @@ class reporteAsistencia(ListView):
         fechas = request.POST.get('fecha').split(' - ')
         todos = request.POST.get('todos')
         fechas=[datetime.strptime(fechas[0], '%m/%d/%Y').date(), datetime.strptime(fechas[1], '%m/%d/%Y').date()]
-        Estudiante,Documento,Nivele,Profesor,Dia,Hora,Estado=[[],[],[],[],[],[],[]]
+        Estudiante,Documento,Nivele,Profesor,Dia,Hora,Estado,Tipo_Clase=[[],[],[],[],[],[],[],[]]
         if todos == None:
             name = "reporte-asistencia-desde:{fecha1}-hasta:{fecha2}".format(fecha1 = fechas[0], fecha2 = fechas[1])
             for asistencia in Asistencia.objects.all().order_by("dia"):
@@ -165,6 +165,7 @@ class reporteAsistencia(ListView):
                     Dia.append(datetime.strftime(asistencia.dia, '%Y/%m/%d'))
                     Hora.append(asistencia.hora.strftime('%I:%M %p'))
                     Estado.append(asistencia.get_estado_display())
+                    Tipo_Clase.append(asistencia.registro.estudiante.get_tipo_clase_display())
         else:
             name="reporte-todas-las-asistencias"
             for asistencia in Asistencia.objects.all().order_by("dia"):
@@ -175,6 +176,7 @@ class reporteAsistencia(ListView):
                 Dia.append(datetime.strftime(asistencia.dia, '%Y/%m/%d'))
                 Hora.append(asistencia.hora.strftime('%I:%M %p'))
                 Estado.append(asistencia.get_estado_display())
+                Tipo_Clase.append(asistencia.registro.estudiante.get_tipo_clase_display())
         
         excel = pd.DataFrame()
         excel['Estudiante'] = Estudiante
@@ -184,6 +186,7 @@ class reporteAsistencia(ListView):
         excel['Dia'] = Dia
         excel['Hora'] = Hora
         excel['Estado'] = Estado
+        excel['Tipo de Clase'] = Tipo_Clase
         
         with BytesIO() as b:
             # Use the StringIO object as the filehandle.
@@ -251,10 +254,10 @@ class reporteEstudiantes(IsAdminMixin, ListView):
             messages.add_message(request, messages.WARNING, "No se encontraron estudiantes con este filtro {filtro}, por lo que no se puede realizar el reporte.".format(filtro = datos))
             return redirect('estudiantes')
         # Definir columnas del excel
-        def calculateAge(birthDate): 
-            today = date.today() 
-            age = today.year - birthDate.year -((today.month, today.day) < (birthDate.month, birthDate.day)) 
-            return age 
+        # def calculateAge(birthDate): 
+        #     today = date.today() 
+        #     age = today.year - birthDate.year -((today.month, today.day) < (birthDate.month, birthDate.day)) 
+        #     return age 
         Estudiante, Profesor, Nivele, Estado, Pagado, Tipo_Clase, fecha_de_nacimiento,direccion,barrio,ciudad,seguro,documento,email_madre,celular_madre,lugar_expedicion_madre,nombre_completo_madre,email_padre,celular_padre,lugar_expedicion_padre,nombre_completo_padre,relacion_contactoE,telefono_contactoE,nombre_contactoE,edad,docuemntoq = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
         for row in consulta:
             Estudiante.append(row.estudiante)
@@ -287,7 +290,7 @@ class reporteEstudiantes(IsAdminMixin, ListView):
             relacion_contactoE.append(row.estudiante.relacion_contactoE)
             telefono_contactoE.append(row.estudiante.telefono_contactoE)
             nombre_contactoE.append(row.estudiante.nombre_contactoE)
-            edad.append(calculateAge(row.estudiante.fecha_nacimiento))
+            edad.append(row.estudiante.get_edad)
             if row.estudiante.estado:
                 Estado.append("Activo")
             else:
@@ -375,23 +378,37 @@ class CrearNuevosEstudiantes(IsAdminMixin, CreateView):
     
     def post(self, request, *args, **kwargs):
         copia = request.POST.copy()
+        dia = request.POST.get('inicioClase')
+        if not dia:
+            return JsonResponse({"errores":{"inicioClase":["Este campo es obligatorio."]}}, status=400)
         if "meseSus" not in request.POST:
-            dia = request.POST.get('inicioClase')
-            dia = datetime.strptime(dia, "%Y-%m-%d")
-            diaClase = dia.weekday()
-            copia["finClase"]=dia+relativedelta(days=1)
-            copia["diaClase"]=arreglarFormatoDia(dia=int(diaClase))
+            if dia:
+                dia = datetime.strptime(dia, "%Y-%m-%d")
+                diaClase = dia.weekday()
+                copia["finClase"]=dia+relativedelta(days=1)
+                copia["diaClase"]=arreglarFormatoDia(dia=int(diaClase))
         else:
             meses = request.POST.get("meseSus")
-            dia = request.POST.get('inicioClase') 
             finClases = datetime.strptime(dia, "%Y-%m-%d")+relativedelta(months=int(meses))
             copia["finClase"]=finClases
         form = self.form_class(copia)
         if form.is_valid():
-            form.save()
-            return redirect('estudiantes')
+            try:
+                form.save()
+                return redirect('estudiantes')
+            except Exception as error:
+                print(error)
+                if type(error).__name__ == "FormValidationEstudianteError":
+                    return JsonResponse({"errores": {"estudiante":[str(error)]}}, status=400)
+                elif type(error).__name__ == "FormValidationProfesorError":
+                    print("tengo algun error aqui")
+                    return JsonResponse({"errores": {"profesor":[str(error)]}}, status=400)
+                elif type(error).__name__ == "FormValidationNiveleError":
+                    return JsonResponse({"errores": {"nivel":[str(error)]}}, status=400)
+            
         else:
             return JsonResponse({"errores": form.errors}, status=400)
+           
 
     def form_invalid(self, form):
         return JsonResponse({"errores": form.errors}, status=400)
@@ -716,3 +733,32 @@ def datosProfesores(request):
             data = json.dumps({'error': 'Datos del profesor ingresados incorrectos', 'forms':form.errors})
             return HttpResponse(data, content_type="application/json", status=400)
     return HttpResponse('Solo se admiten post', content_type="application/json", status=400)
+
+
+class ConteoClasesFecha(View):
+    def post(self,request, *args, **kwargs):
+        fechas = request.POST.get("fechas").split(" - ")
+        fechas=[datetime.strptime(fechas[0], '%m/%d/%Y').date(), datetime.strptime(fechas[1], '%m/%d/%Y').date()]
+        id = self.kwargs["pk"]
+        registro = Registro.objects.get(pk=id)
+        clases = Asistencia.objects.filter(registro=registro)
+        conteoClases=0
+        conteoClaesAsistidas=0
+        conteoClaesNoAsistidas=0
+        conteoClaesCanceladas=0
+        for clase in clases:
+            if clase.dia <= fechas[1] and clase.dia >= fechas[0]:
+                print(clase.dia)
+                conteoClases +=1
+                if clase.estado=="1":
+                    conteoClaesAsistidas+=1
+                elif clase.estado == "2":
+                    conteoClaesNoAsistidas+=1
+                elif clase.estado == "3" or clase.estado == "4":
+                    conteoClaesCanceladas +=1
+        ctx = {}
+        ctx["totalClases"]=conteoClases
+        ctx["AsitidasClases"]=conteoClaesAsistidas
+        ctx["NoAsistidasClases"]=conteoClaesNoAsistidas
+        ctx["CanceladasClases"]=conteoClaesCanceladas
+        return JsonResponse(ctx, status=200)

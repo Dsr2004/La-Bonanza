@@ -15,19 +15,19 @@
           <br>
           <Label><strong>Inicio de clases: <sup style="color: #dc3545;">(*)</sup></strong></Label>
           {{form.inicioClase}}
-          <p id="estudiante" class="bg-light text-danger" style="color: #dc3545;"></p>
+          <p id="inicioClase" class="bg-light text-danger" style="color: #dc3545;"></p>
           <br>
           <Label><strong>Hora de la clase: <sup style="color: #dc3545;">(*)</sup></strong></Label>
           {{form.horaClase}}
-          <p id="estudiante" class="bg-light text-danger" style="color: #dc3545;"></p>
+          <p id="horaClase" class="bg-light text-danger" style="color: #dc3545;"></p>
           <br>
           <Label><strong>Profesor: <sup style="color: #dc3545;">(*)</sup></strong></Label>
           {{form.profesor}}
-          <p id="diaClase" class="bg-light text-danger" style="color: #dc3545;"></p>
+          <p id="profesor" class="bg-light text-danger" style="color: #dc3545;"></p>
           <br>
           <Label><strong>Nivel: <sup style="color: #dc3545;">(*)</sup></strong></Label>
           {{form.nivel}}
-          <p id="diaClase" class="bg-light text-danger" style="color: #dc3545;"></p>
+          <p id="nivel" class="bg-light text-danger" style="color: #dc3545;"></p>
           <br>
           <div class="form-check">
             <Label class="form-check-label"><strong>Matrícula pagada: <sup style="color: #dc3545;">(*)</sup></strong></Label>
@@ -36,7 +36,7 @@
             <p id="pagado" class="bg-light text-danger" style="color: #dc3545;"></p>
             <br>
           <input type="hidden" name="estudiante" value="{{estudiante.pk}}">
-          <button type="submit"  class="btn btn-success w-100">Registrar Estudiante </button>
+          <button type="button" onclick="RegistrarEstudianteSinRegistro()"  class="btn btn-success w-100">Registrar Estudiante </button>
       </form>
     {% elif estudiante.tipo_clase == '2'%}
     <form action="{% url 'crearNuevosEstudiantes' estudiante.pk %}" method="post" id="RegistrarEstudianteForm">
@@ -62,7 +62,7 @@
         <option value="5">5 Meses</option>
         <option value="6">6 Meses</option>
       </select>
-      <p id="horaClase" class="bg-light text-danger" style="color: #dc3545;"></p>
+      <p id="meses" class="bg-light text-danger" style="color: #dc3545;"></p>
       <br>
       <Label><strong>Días de la clase: <sup style="color: #dc3545;">(*)</sup></strong></Label>
       {{form.diaClase}}
@@ -83,34 +83,17 @@
         <p id="pagado" class="bg-light text-danger" style="color: #dc3545;"></p>
         <br>
       <input type="hidden" name="estudiante" value="{{estudiante.pk}}">
-      <button type="submit"  class="btn btn-success w-100">Registrar Estudiante </button>
+      <button type="button" onclick="RegistrarEstudianteSinRegistro()"  class="btn btn-success w-100">Registrar Estudiante</button>
   </form>
     {%endif%}
-
-      <hr>
       <div class="container alert alert-warning  alert-dismissible fade show" role="alert" id="EstudianteSinRegistrAlert">
         <h5 id="texto"></h5>
  </div>
     </div>
   </div>
 </div>
-
 <script>
   $(document).ready(function () {
-    // $("#id_inicioClase").datepicker({
-    //         language: 'es-ES',
-    //         format: "YYYY/mm/dd",
-    //         autoHide: true,
-    //         zIndex:9999
-            
-    //     });
-    //     $("#id_finClase").datepicker({
-    //         language: 'es-ES',
-    //         format: "YYYY/mm/dd",
-    //         autoHide: true,
-    //         zIndex:9999
-            
-    //     });   
    $("#EstudianteSinRegistrAlert").hide()
    $("#id_diaClase").change(function(){
     token = $("input[name=csrfmiddlewaretoken]").val()
@@ -136,8 +119,6 @@
             console.log("kiwi")
           }
         })
-
-   
    })
  });
 </script>

@@ -28,4 +28,5 @@ urlpatterns=[
     path("ControlAsistencia/", login_required(ControlAsistencia.as_view()), name="controlAsistencia"),
     path("ReporteEstudiantes/", login_required(reporteEstudiantes.as_view()), name="reporteEstudiantes"),
     path("ReporteAsistencias/", login_required(reporteAsistencia.as_view()), name="reporteAsistencia"),
+    path("ConteoClasesFecha/<int:pk>", login_required(ConteoClasesFecha.as_view()), name="conteoClasesFecha"),
 ]
