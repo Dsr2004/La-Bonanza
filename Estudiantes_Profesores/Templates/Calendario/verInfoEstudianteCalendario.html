@@ -1,3 +1,4 @@
+
 <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -20,25 +21,98 @@
         <h6>{{object.profesor.usuario}}</h6>
         <hr>
         <h3>Asistencia del estudiante</h3>
+        <hr>
+          <label for="" style="font-weight: 500;"> Busque por un rango de fechas específicas:</label>
+          <div class="input-group mb-3">
+            <input type="text" id="fechaFiltro" name="fecha" class="form-control" autocomplete="off">
+            <button class="btn btn-outline-secondary" type="button" id="BuscarFechas">Buscar</button>
+          </div>
+         
+        <br>
+        <hr>
         <div class="row">
           <div class="col-md-6">
             <h5>Total de Clases</h5>
-            <h6>{{totalClases}}</h6>
+            <h6 id="TotalClases">{{totalClases}}</h6>
           </div>
           <div class="col-md-6">
             <h5>Asistidas</h5>
-            <h6>{{AsitidasClases}}</h6>
+            <h6 id="AsistidasClases">{{AsitidasClases}}</h6>
           </div>
           <hr>
           <div class="col-md-6">
             <h5>No asistidas</h5>
-            <h6>{{NoAsistidasClases}}</h6>
+            <h6 id="NoAsistidasClases">{{NoAsistidasClases}}</h6>
           </div>
           <div class="col-md-6">
             <h5>Canceladas</h5>
-            <h6>{{CanceladasClases}}</h6>
+            <h6 id="CanceladasClases">{{CanceladasClases}}</h6>
           </div>
         </div>
+        <br><br><br>
       </div>
     </div>
   </div>
+
+  <script>
+     $(document).ready(function() {
+            $('#fechaFiltro').daterangepicker({
+                "showDropdowns": true,
+                "locale": {
+                    "format": "MM/DD/YYYY",
+                    "separator": " - ",
+                    "applyLabel": "Guardar",
+                    "cancelLabel": "Cancelar",
+                    "fromLabel": "Desde",
+                    "toLabel": "Hasta",
+                    "customRangeLabel": "Custom",
+                    "weekLabel": "W",
+                    "daysOfWeek": [
+                        "Do",
+                        "Lu",
+                        "Ma",
+                        "Mi",
+                        "Ju",
+                        "Vi",
+                        "Sa"
+                    ],
+                    "monthNames": [
+                        "Enero",
+                        "Febrero",
+                        "Marzo",
+                        "Abril",
+                        "Mayo",
+                        "Junio",
+                        "Julio",
+                        "Agosto",
+                        "Septiembre",
+                        "Octubre",
+                        "Noviembre",
+                        "Diciembre"
+                    ],
+                    "firstDay": 1
+                },
+            }, function(start, end, label) {
+            console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+            });
+        })
+      $("#BuscarFechas").on("click", function () {
+        fechas=$("#fechaFiltro").val()
+        $.ajax({
+          type: "POST",
+          url: "{%url 'conteoClasesFecha' object.pk %}",
+          data: {"csrfmiddlewaretoken":csrftoken,"fechas":fechas},
+          success: function (response) {
+            let Total = response["totalClases"]
+            let Asistidas = response["AsitidasClases"]
+            let NoAsistidas = response["NoAsistidasClases"]
+            let Canceladas = response["CanceladasClases"]
+            $("#TotalClases").html(Total)
+            $("#AsistidasClases").html(Asistidas)
+            $("#NoAsistidasClases").html(NoAsistidas)
+            $("#CanceladasClases").html(Canceladas)
+           
+          }
+        });
+      })
+  </script>

@@ -1,12 +1,13 @@
 from datetime import date, datetime, time
 from gc import get_objects
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import View, ListView, DetailView, CreateView, UpdateView
 from django.urls import reverse_lazy
 from django.http import JsonResponse
 from La_Bonanza. mixins import IsAdminMixin
 from .models import Picadero, InfoPicadero as infoPicaderoModel
 from .forms import PicaderoForm
+from Estudiantes_Profesores.views import arreglarFormatoDia
 
 class Picaderos(IsAdminMixin, ListView):
     model = Picadero
@@ -24,6 +25,8 @@ class InfoPicadero(IsAdminMixin, DetailView):
         contexto = super().get_context_data(**kwargs)
         hora = datetime.now().time()
         hora = time(hora.hour,0,0)
+        dia = datetime.now().weekday()
+        dia = arreglarFormatoDia(dia)
         try:
             InformacionPicadero = infoPicaderoModel.objects.get(picadero=self.get_object(),hora=hora)
             contexto["clases"]= InformacionPicadero.clases.all()
@@ -32,15 +35,19 @@ class InfoPicadero(IsAdminMixin, DetailView):
         contexto["infoPicadero"]=InformacionPicadero
        
         contexto["hora"]=hora
+        contexto["dia"]=dia
+       
         return contexto
     
     def post(self, request, *args, **kwargs):
         hora = request.POST.get("hora")
+        dia = request.POST.get("dia")
+        print("el dia es", dia)
         if hora:
             hora = datetime.strptime(hora, "%H:%M").time()
             hora=time(hora.hour,0,0)
             try:
-                InformacionPicadero = infoPicaderoModel.objects.get(picadero=self.get_object(),hora=hora)
+                InformacionPicadero = infoPicaderoModel.objects.get(picadero=self.get_object(),hora=hora,dia=dia)
                 clases = InformacionPicadero.clases.all()
                 clasesList=[]
                 for clase in clases:
@@ -61,3 +68,25 @@ class CrearPicadero(IsAdminMixin, CreateView):
     
     def form_invalid(self, form):
         return JsonResponse({"errores":form.errors}, status=400)
+
+class ModificarPicadero(IsAdminMixin, UpdateView):
+    model = Picadero
+    template_name = "Picaderos/modificarPicadero.html"
+    form_class = PicaderoForm
+    success_url= reverse_lazy("picaderos")
+    
+    def form_invalid(self, form):
+        return JsonResponse({"errores":form.errors}, status=400)
+    
+    
+class BorrarPicadero(View):
+    def post(self, request, *args, **kwargs):
+        if request.method == "POST":
+            id = request.POST.get("id")
+            try:
+                picadero = Picadero.objects.get(pk=id)
+                picadero.delete()
+                return JsonResponse({"mensaje":"se borro el picadero satisfactoriamente"}, status=200)
+            except:
+                print("ha ocurrido error")
+                return JsonResponse({"error":"no se pudo encontrar el picadero porque no existe"}, status=400)

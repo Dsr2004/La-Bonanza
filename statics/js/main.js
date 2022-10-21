@@ -158,6 +158,74 @@ function ModificarRegistroEstudiante(){
     },
   })
 }
+function RegistrarEstudianteSinRegistro(forj){
+  let form = $("#RegistrarEstudianteForm")
+  
+  try {
+    let div = document.getElementById('Calendario'+errors['identificador'])
+    document.getElementById('pCalendario').remove()
+    div.childNodes[0].classList.remove("is-invalid")
+    div.childNodes[2].classList.remove("is-invalid")
+  } catch (error) {
+    
+  }
+  div = forj.parentNode.childNodes[21]
+  calendario = [[],[]]
+  for (let i = 0; i < div.childNodes.length; i++) {
+    if (i>0) {
+      calendario[0].push(div.childNodes[i].firstChild.value)
+      calendario[1].push(div.childNodes[i].lastChild.value)
+    }
+  }
+  csrfT=forj.parentNode.childNodes[1]
+  inicioClase = forj.parentNode.childNodes[13]
+  meses = forj.parentNode.childNodes[29]
+  profesor = forj.parentNode.childNodes[37]
+  nivel =  forj.parentNode.childNodes[45]
+  pago = forj.parentNode.childNodes[51].childNodes[3]
+  idEs = forj.parentNode.childNodes[57].value
+  $.ajax({
+    url: form.attr("action"),
+    data: {
+      'csrfmiddlewaretoken':csrfT.value,
+      'inicioClase':inicioClase.value,
+      'meseSus':meses.value,
+      'profesor':profesor.value,
+      'nivel':nivel.value,
+      'horaClase':JSON.stringify(calendario[1]),
+      'diaClase':JSON.stringify(calendario[0]),
+      'estudiante':idEs
+    },
+    type: form.attr("method"),
+    success: function (response) {
+      location.reload()
+    },
+    error: function(errores){
+      errors = errores.responseJSON["errores"]
+      console.log(errors)
+      try {
+        let div = document.getElementById('Calendario'+errors['identificador'])
+        let pCalendario = document.createElement("p");
+        pCalendario.innerHTML = errors['Calendario']
+        pCalendario.style.color = "red"
+        pCalendario.id = "pCalendario"
+        div.appendChild(pCalendario)
+        div.childNodes[0].classList.add("is-invalid")
+        div.childNodes[2].classList.add("is-invalid")
+      } catch (error) {
+        form.find('.text-danger').text('');
+        form.find('.is-invalid').removeClass('is-invalid');
+        for (let i in errors){
+          let x=form.find('input[name='+i+']')
+          let y=form.find('select[name='+i+']')
+          x.addClass("is-invalid")
+          y.addClass("is-invalid")
+          $("#"+i).text(errors[i]) 
+      }
+    }
+    }
+  });
+ }
 
 function cambiar_estado_estudiante(url,id){
   const swalWithBootstrapButtons = Swal.mixin({
@@ -320,4 +388,60 @@ function abrir_modal_calendario(url){
   $("#ModalInfoEstudianteCalendario").load(url, function (){ 
     $(this).appendTo("body").modal('show');
   });
+}
+
+
+function Borrar_Nivel(url, id){
+  const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: 'btn btn-success',
+        cancelButton: 'btn btn-danger'
+      },
+      buttonsStyling: false
+    })
+  
+    swalWithBootstrapButtons.fire({
+      title: '¿Estas Seguro?',
+      text: "¡Se borrará el Nivel, esta acción no se puede deshacer, los estudiantes y picaderos que tengan este nivel quedaran sin uno.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: '¡Si, Borrar!',
+      cancelButtonText: '¡No, Cancelar!',
+      confirmButtonClass: "buttonSweetalert",
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        console.log(csrftoken)
+       $.ajax({
+        url:url,
+        type:"POST",
+        data:{"csrfmiddlewaretoken":csrftoken,"id":id},
+        success: function(){
+           swalWithBootstrapButtons.fire(
+          'Borrado!',
+          'Se ha borrado Este nivel',
+          'success'
+        ).then(function(){
+          location.reload()
+        })
+        },
+        error: function(){
+           swalWithBootstrapButtons.fire(
+          'ERROR!',
+          'ha ocurrido un error.',
+          'error'
+        )
+        },
+       })
+      } else if (
+        /* Read more about handling dismissals below */
+        result.dismiss === Swal.DismissReason.cancel
+      ) {
+        swalWithBootstrapButtons.fire(
+          'Cancelado',
+          'No se han aplicado cambios',
+          'error'
+        )
+      }
+    })
 }

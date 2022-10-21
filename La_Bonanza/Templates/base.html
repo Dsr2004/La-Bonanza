@@ -83,7 +83,8 @@
             </li>
             <li class="nav-item">
               <a class="nav-link 
-              {% if request.path == '/Picaderos/'%}active {% endif %}  
+              {% if request.path == '/Picaderos/'%}active {% endif %}
+              {% if '/Picaderos/InfoPicadero/' in request.path %}active{% endif %}
               " aria-current="page" href="{% url 'picaderos' %}">Picaderos</a>
             </li>
             {%endif%}

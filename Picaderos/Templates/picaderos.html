@@ -28,8 +28,8 @@
                 <div class="card-footer">
                     <div class="row">
                         <div class="col-4"><a href="{%url 'verPicadero' picadero.slug%}" class="btn btn-info btn-sm w-100"><i class="fa-solid fa-plus"></i></a></div>
-                        <div class="col-4"><a onclick="" class="btn btn-warning btn-sm w-100"><i class="fa-solid fa-pen-nib"></i></a></div>
-                        <div class="col-4"><a onclick="" class="btn btn-danger btn-sm w-100"><i class="fa-solid fa-trash"></i></a></div>
+                        <div class="col-4"><a onclick="abrir_modal_modificar_picadero('{%url 'modificarPicadero' picadero.pk %}')" class="btn btn-warning btn-sm w-100"><i class="fa-solid fa-pen-nib"></i></a></div>
+                        <div class="col-4"><a onclick="Borrar_picadero('{%url 'borrarPicadero' %}' , '{{picadero.pk}}')" class="btn btn-danger btn-sm w-100"><i class="fa-solid fa-trash"></i></a></div>
                     </div>
                 </div>
             </div>
@@ -39,6 +39,7 @@
     </div>
 
 <div class="modal fade" id="crearPicaderoModal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true"></div>
+<div class="modal fade" id="modificarPicaderoModal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true"></div>
 
 {% endblock contenido %}
 

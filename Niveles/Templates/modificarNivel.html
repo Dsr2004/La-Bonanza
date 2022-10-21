@@ -21,7 +21,8 @@
        </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-success w-100" onclick="ModificarNivel()">Guardar cambios</button>
+        <button type="button" class="btn btn-success" onclick="ModificarNivel()">Guardar cambios</button>
+        <button type="button" class="btn btn-danger " onclick="Borrar_Nivel('{%url 'borrarNivel'%}', '{{object.pk}}')">Eliminar Nivel</button>
       </div>
     </div>
   </div>

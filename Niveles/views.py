@@ -1,5 +1,5 @@
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, UpdateView
+from django.views.generic import View, ListView, CreateView, UpdateView
 from .models import Nivel
 from .forms import NivelForm
 from django.http import JsonResponse
@@ -27,3 +27,16 @@ class ModificarNivel(UpdateView):
     def form_invalid(self, form):
         return JsonResponse({"errores":form.errors}, status=400)
 
+
+class BorrarNivel(View):
+    def post(self, request, *args, **kwargs):
+        id = request.POST.get("id")
+        try:
+            nivel = Nivel.objects.get(pk=id)
+            nivel.delete()
+            return JsonResponse({"mensaje":"Se ha borrado el nivel de forma satisfactoria"}, status=200)
+        except:
+            print("error")
+            return JsonResponse({"error":"No se encontro el ID "}, status=400) 
+        
+        
