@@ -12,17 +12,27 @@ from django.db.models import Q
 from Usuarios.models import Usuario
 from La_Bonanza. mixins import IsAdminMixin
 from Niveles.models import Nivel
-from .models import Estudiante, Registro, Profesor, Asistencia, FormValidationProfesorError, FormValidationEstudianteError
+from .models import Estudiante, Registro, Profesor, Asistencia, FormValidationProfesorError, FormValidationEstudianteError, Calendario
 from .forms import EstudianteForm,CrearEstudianteForm, RegistroForm,ProfesorForm
+from .models import DIAS_SEMANA
 
 
 
 def arreglarFormatoDia(dia):
-    if str(dia) == "6":
-        dia = 0 #en las variables del modelo el domingo es 0 porque asi lo recibe fullcalendar pero python retorna el domingo como 6
+    if type(dia)  != list:
+        if str(dia) == "6":
+            dia = 0 #en las variables del modelo el domingo es 0 porque asi lo recibe fullcalendar pero python retorna el domingo como 6
+        else:
+            dia = dia+1
+        return dia
     else:
-        dia = dia+1
-    return dia
+        dias = []
+        for dia in dia:
+            if str(dia) == "6":
+                dias.append(0) #en las variables del modelo el domingo es 0 porque asi lo recibe fullcalendar pero python retorna el domingo como 6
+            else:
+                dias.append(int(dia)+1)
+        return dias
 
 class Calendario(View):
     template_name = "calendario.html"
@@ -381,6 +391,7 @@ class CrearNuevosEstudiantes(IsAdminMixin, CreateView):
         dia = request.POST.get('inicioClase')
         if not dia:
             return JsonResponse({"errores":{"inicioClase":["Este campo es obligatorio."]}}, status=400)
+        
         if "meseSus" not in request.POST:
             if dia:
                 dia = datetime.strptime(dia, "%Y-%m-%d")
@@ -394,7 +405,28 @@ class CrearNuevosEstudiantes(IsAdminMixin, CreateView):
         form = self.form_class(copia)
         if form.is_valid():
             try:
-                form.save()
+                profesor = form.cleaned_data["profesor"]
+                horario = profesor.horarios
+                horario = json.loads(horario)
+                hora = []
+                horas = json.loads(request.POST.get('horaClase'))
+                diasClases = json.loads(request.POST.get('diaClase'))
+                for i in range(len(horas)):
+                    if diasClases[0].replace('í', 'i') == 'Eliga un dia':
+                        return JsonResponse({"errores":{"Calendario":'El día es un campo obligatorio','identificador':i}}, status=400)
+                    if horas[0] == '':
+                        return JsonResponse({"errores":{"Calendario":'La hora es un campo obligatorio','identificador':i}}, status=400)
+                    hora.append(datetime.strptime(horas[i], '%H:%M').replace(minute = 0, second = 0))
+                dias = [[str(i[1]) for i in [dia for dia in DIAS_SEMANA] if int(i[0]) in [int(cl) for cl in diasClases]]][0]
+                for i in range(len(hora)):
+                    diasNo = 'los días '+str(dias[i])+' a las '+hora[i].strftime('%I:%M %p')+' el profesor no esta disponible'
+                    if [hor for hor in [horary for horary in horario if horary['day'] in [dia for dia in dias]] if datetime.strptime(hor['from'], '%H:%M').time() <= hora[i].time() and (datetime.strptime(hor['through'], '%H:%M')-timedelta(hours=1)).time() >= hora[i].time()] == []:
+                         return JsonResponse({"errores":{"Calendario":diasNo,'identificador':i}}, status=400)
+                # return JsonResponse({"errores":{"X":''}}, status=400)
+                objecto = form.save()
+                for i in range(len(horas)):
+                    calendario = Calendario.objects.create(horaClase=horas[i],finClase=finClases,inicioClase=form.cleaned_data['inicioClase'],diaClase = str(diasClases[i]), registro=objecto.pk)
+                objecto.save()
                 return redirect('estudiantes')
             except Exception as error:
                 print(error)

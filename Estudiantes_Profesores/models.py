@@ -1,10 +1,8 @@
-from distutils.log import info
 from django.db import models
 from django.db.models.signals import pre_save,post_save
 from Picaderos.models import Clase, InfoPicadero, Picadero
 from Usuarios.models import Usuario
 from Niveles.models import Nivel
-from multiselectfield import MultiSelectField
 import json
 from datetime import datetime, date
 def DIA_INGLES(dia):
@@ -159,14 +157,12 @@ class Estudiante(models.Model):
         return edad 
 
 
+
 class Registro(models.Model):
     estudiante = models.OneToOneField(Estudiante, on_delete=models.CASCADE)
     nivel = models.ForeignKey(Nivel, db_column="nivel_id", on_delete=models.SET_NULL, verbose_name="nivel del estudiante", null=True)
-    diaClase = MultiSelectField(max_length=10, choices=DIAS_SEMANA)
-    inicioClase = models.DateField()
-    finClase = models.DateField()
-    horaClase = models.TimeField()
-    profesor = models.ForeignKey(Profesor, db_column="profesor_id", on_delete=models.SET_NULL, verbose_name="profesor del estudiante", null=True)
+    inicioClase = models.TextField(null=True,blank=True)
+    profesor = models.ForeignKey(Profesor, db_column="profesor_id", on_delete=models.SET_NULL, verbose_name="profesor del estudiante",null=True)
     pagado = models.BooleanField(default=False)
    
 
@@ -209,6 +205,12 @@ class Registro(models.Model):
         return list(dias)
 
 
+class Calendario(models.Model):
+    diaClase = models.TextField(max_length=10, choices=DIAS_SEMANA)
+    inicioClase = models.DateField()
+    finClase = models.DateField()
+    horaClase = models.TimeField()
+    registro = models.ForeignKey(Registro, db_column="calendario_id", on_delete=models.CASCADE, verbose_name="calendario", null=True, blank=True)
 class Asistencia(models.Model):
     registro = models.ForeignKey(Registro, on_delete=models.CASCADE, db_column="estudiante_id", verbose_name="estudiante")
     estado = models.CharField(max_length=15,choices=ESTADOS_ASISTENCIA)

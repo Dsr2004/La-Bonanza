@@ -158,11 +158,44 @@ function ModificarRegistroEstudiante(){
     },
   })
 }
-function RegistrarEstudianteSinRegistro(){
+function RegistrarEstudianteSinRegistro(forj){
   let form = $("#RegistrarEstudianteForm")
+  
+  try {
+    let div = document.getElementById('Calendario'+errors['identificador'])
+    document.getElementById('pCalendario').remove()
+    div.childNodes[0].classList.remove("is-invalid")
+    div.childNodes[2].classList.remove("is-invalid")
+  } catch (error) {
+    
+  }
+  div = forj.parentNode.childNodes[21]
+  calendario = [[],[]]
+  for (let i = 0; i < div.childNodes.length; i++) {
+    if (i>0) {
+      calendario[0].push(div.childNodes[i].firstChild.value)
+      calendario[1].push(div.childNodes[i].lastChild.value)
+    }
+  }
+  csrfT=forj.parentNode.childNodes[1]
+  inicioClase = forj.parentNode.childNodes[13]
+  meses = forj.parentNode.childNodes[29]
+  profesor = forj.parentNode.childNodes[37]
+  nivel =  forj.parentNode.childNodes[45]
+  pago = forj.parentNode.childNodes[51].childNodes[3]
+  idEs = forj.parentNode.childNodes[57].value
   $.ajax({
     url: form.attr("action"),
-    data: form.serialize(),
+    data: {
+      'csrfmiddlewaretoken':csrfT.value,
+      'inicioClase':inicioClase.value,
+      'meseSus':meses.value,
+      'profesor':profesor.value,
+      'nivel':nivel.value,
+      'horaClase':JSON.stringify(calendario[1]),
+      'diaClase':JSON.stringify(calendario[0]),
+      'estudiante':idEs
+    },
     type: form.attr("method"),
     success: function (response) {
       location.reload()
@@ -170,14 +203,25 @@ function RegistrarEstudianteSinRegistro(){
     error: function(errores){
       errors = errores.responseJSON["errores"]
       console.log(errors)
-      form.find('.text-danger').text('');
-      form.find('.is-invalid').removeClass('is-invalid');
-      for (let i in errors){
-        let x=form.find('input[name='+i+']')
-        let y=form.find('select[name='+i+']')
-        x.addClass("is-invalid")
-        y.addClass("is-invalid")
-        $("#"+i).text(errors[i])
+      try {
+        let div = document.getElementById('Calendario'+errors['identificador'])
+        let pCalendario = document.createElement("p");
+        pCalendario.innerHTML = errors['Calendario']
+        pCalendario.style.color = "red"
+        pCalendario.id = "pCalendario"
+        div.appendChild(pCalendario)
+        div.childNodes[0].classList.add("is-invalid")
+        div.childNodes[2].classList.add("is-invalid")
+      } catch (error) {
+        form.find('.text-danger').text('');
+        form.find('.is-invalid').removeClass('is-invalid');
+        for (let i in errors){
+          let x=form.find('input[name='+i+']')
+          let y=form.find('select[name='+i+']')
+          x.addClass("is-invalid")
+          y.addClass("is-invalid")
+          $("#"+i).text(errors[i]) 
+      }
     }
     }
   });

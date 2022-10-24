@@ -38,7 +38,7 @@
         <table id="EstudiantesTable" class="table">
             <thead>
                 <tr>
-                    <th colspan="6">Datos</th>
+                    <th colspan="7">Datos</th>
                     <th colspan="1">Acciones</th>
                 </tr>
                <tr>
@@ -46,6 +46,7 @@
                     <th>Nombre</th>
                     <th>Documento</th>
                     <th>Celular</th>
+                    <th>Correo</th>
                     <th>Matricula</th>
                     <th>Nivel</th>
                     <th></th>
@@ -57,7 +58,20 @@
                         <td>{{forloop.counter}}</td>
                         <td>{{estudiante.get_estudiante}}</td>
                         <td>{{estudiante.get_estudiante_documento}}</td>
-                        <td>{{estudiante.get_estudiante_celular}}</td>
+                        <td>
+                            {% if estudiante.get_estudiante_celular %}
+                            {{estudiante.get_estudiante_celular}}
+                            {% else %}
+                            No aplica
+                            {% endif %}
+                              </td>
+                            <td>
+                              {% if estudiante.email %}
+                            {{estudiante.email}}
+                            {% else %}
+                            No aplica
+                            {% endif %}
+                            </td>
                         <td>{{estudiante.get_estado_matricula}}</td>
                         <td>{{estudiante.get_estudiante_nivel}}</td>
                         <td>

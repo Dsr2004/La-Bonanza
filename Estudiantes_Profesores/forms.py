@@ -3,7 +3,6 @@ import json
 from django import forms
 from .models import Estudiante, Registro, Profesor
 from django.core.exceptions import ValidationError
-from .models import DIAS_SEMANA
 
 
 class CrearEstudianteForm(forms.ModelForm):
@@ -183,34 +182,9 @@ class RegistroForm(forms.ModelForm):
         widgets = {
             "pagado": forms.CheckboxInput(attrs={"class":"form-check-input", "autocomplete":"off"}),
             "inicioClase": forms.DateInput(attrs={"class":"form-control", "autocomplete":"off", "type":"date"}),
-            "finClase": forms.DateInput(attrs={"class":"form-control", "autocomplete":"off", "type":"date"}),
-            "horaClase": forms.TimeInput(attrs={"type":"time", "class":"form-control", "autocomplete":"off"}),
-            "diaClase": forms.SelectMultiple(attrs={"class":"form-select"}),
             "nivel": forms.Select(attrs={"class":"form-select"}),
             "profesor": forms.Select(attrs={"class":"form-select"}),
         }
-    def clean_diaClase(self):
-        diaClase = self.cleaned_data["diaClase"]
-        self.diaClase = diaClase
-        return diaClase
-    
-    def clean_horaClase(self):
-        horaClase = self.cleaned_data["horaClase"]
-        self.horaClase = horaClase
-        return horaClase
-    
-    def clean_profesor(self):
-        profesor = self.cleaned_data["profesor"]
-        horario = profesor.horarios
-        horario = json.loads(horario)
-        hora = self.horaClase.replace(minute = 0, second = 0).strftime('%I:%M %p')
-        dias = [str(i[1]) for i in [dia for dia in DIAS_SEMANA] if int(i[0]) in [int(cl) for cl in self.diaClase]]
-        diasNo = 'los días '+', '.join([str(i[1]) for i in [dia for dia in DIAS_SEMANA] if int(i[0]) in [int(cl) for cl in self.diaClase]])+f' a las {hora} el profesor no esta disponible'
-        if [hor for hor in [horary for horary in horario if horary['day'] in [dia for dia in dias]] if datetime.strptime(hor['from'], '%H:%M').time() <= self.horaClase and (datetime.strptime(hor['through'], '%H:%M')-timedelta(hours=1)).time() >= self.horaClase] == []:
-            raise forms.ValidationError(diasNo)
-        else:
-            return profesor 
-    
     
     def clean_inicioClase(self):
         inicioClase=self.cleaned_data['inicioClase']

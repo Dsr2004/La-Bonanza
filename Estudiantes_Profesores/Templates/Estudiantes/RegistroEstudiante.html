@@ -37,6 +37,7 @@
             <br>
           <input type="hidden" name="estudiante" value="{{estudiante.pk}}">
           <button type="button" onclick="RegistrarEstudianteSinRegistro()"  class="btn btn-success w-100">Registrar Estudiante </button>
+          
       </form>
     {% elif estudiante.tipo_clase == '2'%}
     <form action="{% url 'crearNuevosEstudiantes' estudiante.pk %}" method="post" id="RegistrarEstudianteForm">
@@ -49,9 +50,14 @@
       {{form.inicioClase}}
       <p id="inicioClase" class="bg-light text-danger" style="color: #dc3545;"></p>
       <br>
-      <Label><strong>Hora de la clase: <sup style="color: #dc3545;">(*)</sup></strong></Label>
-      {{form.horaClase}}
-      <p id="horaClase" class="bg-light text-danger" style="color: #dc3545;"></p>
+      <div class="headerHorario" style="display: flex; justify-content:space-between;">
+        <label for="" style="font-weight: 500;">Calendario:</label>
+        <div style="display: grid;grid-template-columns:1fr 1fr;grid-gap:5px;"><div style="width:100%;background-color:red; padding:0 0px 0 12px;margin-bottom:5px;border-radius:5px; cursor:pointer;" onclick="eliminarHoras()"><i class="fa fa-remove"style="font-size:16px;"></i> </div><div style="width:100%;background-color:cyan; padding:0 10px;margin-bottom:5px;border-radius:5px; cursor:pointer;" onclick="agregarHoras()"><i class="fa fa-plus"style="font-size:15px;"></i></div></div>
+    </div>
+    <div class="form-control" id="horarios" style="height: 160px; display: flex; justify-content:start; overflow: auto;">
+        
+    </div>
+    <p id="horarios-p" style="display: none;"></p>
       <br>
       <Label><strong>Meses de suscripción: <sup style="color: #dc3545;">(*)</sup></strong></Label>
       <select name="meseSus" id="mesesSus"  class="form-select">
@@ -63,10 +69,6 @@
         <option value="6">6 Meses</option>
       </select>
       <p id="meses" class="bg-light text-danger" style="color: #dc3545;"></p>
-      <br>
-      <Label><strong>Días de la clase: <sup style="color: #dc3545;">(*)</sup></strong></Label>
-      {{form.diaClase}}
-      <p id="diaClase" class="bg-light text-danger" style="color: #dc3545;"></p>
       <br>
       <Label><strong>Profesor: <sup style="color: #dc3545;">(*)</sup></strong></Label>
       {{form.profesor}}
@@ -83,7 +85,7 @@
         <p id="pagado" class="bg-light text-danger" style="color: #dc3545;"></p>
         <br>
       <input type="hidden" name="estudiante" value="{{estudiante.pk}}">
-      <button type="button" onclick="RegistrarEstudianteSinRegistro()"  class="btn btn-success w-100">Registrar Estudiante</button>
+      <button type="button" onclick="RegistrarEstudianteSinRegistro(this)"  class="btn btn-success w-100">Registrar Estudiante</button>
   </form>
     {%endif%}
       <div class="container alert alert-warning  alert-dismissible fade show" role="alert" id="EstudianteSinRegistrAlert">
@@ -93,6 +95,7 @@
   </div>
 </div>
 <script>
+  var idCal = 0
   $(document).ready(function () {
    $("#EstudianteSinRegistrAlert").hide()
    $("#id_diaClase").change(function(){
@@ -121,4 +124,43 @@
         })
    })
  });
+ function agregarHoras(){
+  const divHorario = document.createElement('div');
+  const inputHorario = document.createElement("input");
+  inputHorario.type = "time";
+  inputHorario.className = "form-control";
+  inputHorario.autocomplete = "off";
+  const dateDay = document.createElement("select");
+  dateDay.className = "dia";
+  dateDay.classList.add("form-select")
+  dateDay.style.marginBottom = "5px";
+  dateDay.autocomplete = "off";
+  let optionSelected = document.createElement("option");
+  optionSelected.innerHTML = "Eliga un día"
+  optionSelected.selected = true
+  dateDay.appendChild(optionSelected)
+  let dias = {"1":"Lunes","2":"Martes","3":"Miércoles","4":"Jueves","5":"Viernes","6":"Sábado","0":"Domingo"}
+  for (let i = 0; i < 7; i++) {
+      let option = document.createElement("option");
+      option.value = i
+      option.innerHTML = dias[i]
+      dateDay.appendChild(option)
+  }
+  
+  let pHorario = document.createElement("label");
+  pHorario.textContent = "Hora de la clase:"
+  pHorario.style.textAlign = "center";
+  pHorario.style.fontWeight = "bold";
+  divHorario.appendChild(dateDay);
+  divHorario.appendChild(pHorario);
+  divHorario.appendChild(inputHorario);
+  divHorario.style.margin = "0 5px"
+  divHorario.id = "Calendario"+idCal
+  idCal= idCal+1
+  document.getElementById('horarios').appendChild(divHorario);
+}
+function eliminarHoras(){
+  let child = document.getElementById('horarios').lastChild;
+  document.getElementById('horarios').removeChild(child);
+}
 </script>
