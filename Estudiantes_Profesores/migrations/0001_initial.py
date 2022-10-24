@@ -46,7 +46,7 @@ class Migration(migrations.Migration):
                 ('nombre_contactoE', models.CharField(max_length=10, verbose_name='nombre del contacto de emergencia')),
                 ('telefono_contactoE', models.CharField(max_length=10, verbose_name='telefono del contacto de emergencia')),
                 ('relacion_contactoE', models.CharField(max_length=100, verbose_name='relacion con el alumno')),
-                ('firma', models.FileField(upload_to=Estudiantes_Profesores.models.guardar_firma)),
+                ('firma', models.FileField(upload_to=Estudiantes_Profesores.models.guardar_exoneracion)),
                 ('documento_A', models.FileField(upload_to=Estudiantes_Profesores.models.guardar_documento)),
                 ('seguro_A', models.FileField(upload_to=Estudiantes_Profesores.models.guardar_seguro)),
                 ('tipo_clase', models.CharField(choices=[('1', 'Clase puntual'), ('2', 'Mensualidad')], max_length=15)),

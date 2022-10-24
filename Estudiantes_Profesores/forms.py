@@ -13,7 +13,7 @@ class CrearEstudianteForm(forms.ModelForm):
         "barrio","ciudad","seguro","poliza","comprobante_seguro_medico",
         "comprobante_documento_identidad","nombre_completo_madre","cedula_madre","lugar_expedicion_madre","celular_madre",
         "email_madre","nombre_completo_padre","cedula_padre","lugar_expedicion_padre", "celular_padre", "email_padre", "direccion_A","barrio_A",
-        "ciudad_A","nombre_contactoE","telefono_contactoE","relacion_contactoE","firma",
+        "ciudad_A","nombre_contactoE","telefono_contactoE","relacion_contactoE","exoneracion",
         "documento_A","seguro_A","tipo_clase","estado","aceptaContrato")
 
         widgets = {
@@ -46,7 +46,7 @@ class CrearEstudianteForm(forms.ModelForm):
         "nombre_contactoE": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
         "telefono_contactoE": forms.NumberInput(attrs={"class":"form-control", "autocomplete":"off"}),
         "relacion_contactoE": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
-        "firma": forms.FileInput(attrs={"class":"form-control"}),
+        "exoneracion": forms.FileInput(attrs={"class":"form-control"}),
         "documento_A": forms.FileInput(attrs={"class":"form-control"}),
         "seguro_A": forms.FileInput(attrs={"class":"form-control"}),
         "tipo_clase": forms.Select(attrs={"class":"form-select"}),
@@ -81,7 +81,7 @@ class CrearEstudianteForm(forms.ModelForm):
         self.fields['nombre_contactoE'].required = True
         self.fields['telefono_contactoE'].required = True
         self.fields['relacion_contactoE'].required = True
-        self.fields['firma'].required = True
+        self.fields['exoneracion'].required = True
         self.fields['documento_A'].required = True
         self.fields['seguro_A'].required = True
         self.fields['tipo_clase'].required = True
@@ -102,7 +102,7 @@ class EstudianteForm(forms.ModelForm):
         "barrio","ciudad","seguro","poliza","comprobante_seguro_medico",
         "comprobante_documento_identidad","nombre_completo_madre","cedula_madre","lugar_expedicion_madre","celular_madre",
         "email_madre","nombre_completo_padre","cedula_padre","lugar_expedicion_padre", "celular_padre", "email_padre", "direccion_A","barrio_A",
-        "ciudad_A","nombre_contactoE","telefono_contactoE","relacion_contactoE","firma",
+        "ciudad_A","nombre_contactoE","telefono_contactoE","relacion_contactoE","exoneracion",
         "documento_A","seguro_A","tipo_clase","estado")
 
         widgets = {
@@ -134,7 +134,7 @@ class EstudianteForm(forms.ModelForm):
         "nombre_contactoE": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
         "telefono_contactoE": forms.NumberInput(attrs={"class":"form-control", "autocomplete":"off"}),
         "relacion_contactoE": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
-        "firma": forms.FileInput(attrs={"class":"form-control"}),
+        "exoneracion": forms.FileInput(attrs={"class":"form-control"}),
         "documento_A": forms.FileInput(attrs={"class":"form-control"}),
         "seguro_A": forms.FileInput(attrs={"class":"form-control"}),
         "tipo_clase": forms.Select(attrs={"class":"form-select"}),
@@ -169,7 +169,7 @@ class EstudianteForm(forms.ModelForm):
         self.fields['nombre_contactoE'].required = True
         self.fields['telefono_contactoE'].required = True
         self.fields['relacion_contactoE'].required = True
-        self.fields['firma'].required = True
+        self.fields['exoneracion'].required = True
         self.fields['documento_A'].required = True
         self.fields['seguro_A'].required = True
         self.fields['tipo_clase'].required = True

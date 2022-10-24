@@ -23,12 +23,12 @@ ESTADOS_CLASES = (
     ("1","Clase puntual"),("2","Mensualidad")
 )
 
-def guardar_firma(instance, filename):
-    return  f"Archivos_Estudiantes/{instance.nombre_completo}_{instance.documento}/firma-{filename}"
+def guardar_exoneracion(instance, filename):
+    return  f"Archivos_Estudiantes/{instance.nombre_completo}_{instance.documento}/exoneracion"
 def guardar_documento(instance, filename):
-    return  f"Archivos_Estudiantes/{instance.nombre_completo}_{instance.documento}/documento-{filename}"
+    return  f"Archivos_Estudiantes/{instance.nombre_completo}_{instance.documento}/documento"
 def guardar_seguro(instance, filename):
-    return  f"Archivos_Estudiantes/{instance.nombre_completo}_{instance.documento}/seguro-{filename}"
+    return  f"Archivos_Estudiantes/{instance.nombre_completo}_{instance.documento}/seguro"
 
 class Profesor(models.Model):
     id = models.CharField(primary_key=True, unique=True, max_length=5) 
@@ -107,7 +107,7 @@ class Estudiante(models.Model):
     telefono_contactoE = models.IntegerField("telefono del contacto de emergencia",null=False, blank=False)
     relacion_contactoE = models.CharField("relacion con el alumno",null=False, blank=False,  max_length = 100)
     #archivos
-    firma =models.FileField(upload_to=guardar_firma, null=False, blank=False)
+    exoneracion =models.FileField(upload_to=guardar_exoneracion, null=False, blank=False)
     documento_A =models.FileField(upload_to=guardar_documento, null=False, blank=False)
     seguro_A =models.FileField(upload_to=guardar_seguro, null=False, blank=False) 
     #datos para el sistema
@@ -119,8 +119,8 @@ class Estudiante(models.Model):
     def save(self, *args, **kwargs):
         try:
             this = Estudiante.objects.get(id=self.id)
-            if this.firma != self.firma:
-                this.firma.delete()
+            if this.exoneracion != self.exoneracion:
+                this.exoneracion.delete()
 
             if this.documento_A != self.documento_A:
                 this.documento_A.delete()

@@ -83,7 +83,7 @@ function ModificarEstudiante(url){
           "info_estudiante":["nombre_completo","fecha_nacimiento","documento","celular","telefono","email","direccion","barrio","seguro_medico","documento_identidad","ciudad"],
           "info_acudiente":["nombre_completo_acudiente","cedula_acudiente","celular_acudiente","email_acudiente","lugar_expedicion_acudiente"],
           "info_emergencia":["nombre_contactoE","telefono_contactoE","relacion_contactoE"],
-          "info_documentos":["documento_A","seguro_A","firma"]
+          "info_documentos":["documento_A","seguro_A","exoneracion"]
         }
 
         for(campo in pestañas["info_estudiante"]){
