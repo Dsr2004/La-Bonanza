@@ -13,12 +13,12 @@
           <h5>{{estudiante.get_estudiante}}</h5>
           <p id="estudiante" class="bg-light text-danger" style="color: #dc3545;"></p>
           <br>
-          <Label><strong>Inicio de clases: <sup style="color: #dc3545;">(*)</sup></strong></Label>
-          {{form.inicioClase}}
+          <Label><strong>Dia  de la  clase: <sup style="color: #dc3545;">(*)</sup></strong></Label>
+         <input type="date" name="inicioClase"  autocomplete="off" class="form-control">
           <p id="inicioClase" class="bg-light text-danger" style="color: #dc3545;"></p>
           <br>
           <Label><strong>Hora de la clase: <sup style="color: #dc3545;">(*)</sup></strong></Label>
-          {{form.horaClase}}
+           <input type="time" name="horaClase" class="form-control" step="3600">
           <p id="horaClase" class="bg-light text-danger" style="color: #dc3545;"></p>
           <br>
           <Label><strong>Profesor: <sup style="color: #dc3545;">(*)</sup></strong></Label>
@@ -36,7 +36,7 @@
             <p id="pagado" class="bg-light text-danger" style="color: #dc3545;"></p>
             <br>
           <input type="hidden" name="estudiante" value="{{estudiante.pk}}">
-          <button type="button" onclick="RegistrarEstudianteSinRegistro()"  class="btn btn-success w-100">Registrar Estudiante </button>
+          <button type="button" onclick="RegistrarEstudianteSinRegistroClasePuntual()"  class="btn btn-success w-100">Registrar Estudiante </button>
           
       </form>
     {% elif estudiante.tipo_clase == '2'%}
@@ -47,7 +47,7 @@
       <p id="estudiante" class="bg-light text-danger" style="color: #dc3545;"></p>
       <br>
       <Label><strong>Inicio de clases: <sup style="color: #dc3545;">(*)</sup></strong></Label>
-      {{form.inicioClase}}
+     <input type="date" name="inicioClase"  autocomplete="off" class="form-control">
       <p id="inicioClase" class="bg-light text-danger" style="color: #dc3545;"></p>
       <br>
       <div class="headerHorario" style="display: flex; justify-content:space-between;">

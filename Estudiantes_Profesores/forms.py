@@ -181,21 +181,10 @@ class RegistroForm(forms.ModelForm):
 
         widgets = {
             "pagado": forms.CheckboxInput(attrs={"class":"form-check-input", "autocomplete":"off"}),
-            "inicioClase": forms.DateInput(attrs={"class":"form-control", "autocomplete":"off", "type":"date"}),
             "nivel": forms.Select(attrs={"class":"form-select"}),
             "profesor": forms.Select(attrs={"class":"form-select"}),
         }
     
-    def clean_inicioClase(self):
-        inicioClase=self.cleaned_data['inicioClase']
-        self.inicioClase = inicioClase
-        return inicioClase
-
-    def clean_finClase(self):
-        finClase=self.cleaned_data['finClase']
-        if finClase<self.inicioClase:
-            raise forms.ValidationError('La fecha de finalizacion de la clase debe ser mayor al de inicio de la clase')
-        return finClase
         
     
 class ProfesorForm(forms.ModelForm):

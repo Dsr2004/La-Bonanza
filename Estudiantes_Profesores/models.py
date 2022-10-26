@@ -4,7 +4,7 @@ from Picaderos.models import Clase, InfoPicadero, Picadero
 from Usuarios.models import Usuario
 from Niveles.models import Nivel
 import json
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 def DIA_INGLES(dia):
     dias = {"Monday":"Lunes","Tuesday":"Martes","Wednesday":"Miércoles","Thursday":"Jueves","Friday":"Viernes","Saturday":"Sábado","Sunday":"Domingo"}
     dia = dias.get(str(dia))
@@ -161,7 +161,6 @@ class Estudiante(models.Model):
 class Registro(models.Model):
     estudiante = models.OneToOneField(Estudiante, on_delete=models.CASCADE)
     nivel = models.ForeignKey(Nivel, db_column="nivel_id", on_delete=models.SET_NULL, verbose_name="nivel del estudiante", null=True)
-    inicioClase = models.TextField(null=True,blank=True)
     profesor = models.ForeignKey(Profesor, db_column="profesor_id", on_delete=models.SET_NULL, verbose_name="profesor del estudiante",null=True)
     pagado = models.BooleanField(default=False)
    
@@ -197,25 +196,30 @@ class Registro(models.Model):
     def get_estudiante_nivel(self):
         return self.nivel.nivel
 
-    @property
-    def get_dias_clase(self):
-        dias = []
-        for i in self.diaClase:
-            dias.append(i)
-        return list(dias)
+    # @property
+    # def get_dias_clase(self):
+    #     dias = []
+    #     for i in self.diaClase:
+    #         dias.append(i)
+    #     return list(dias)
 
 
 class Calendario(models.Model):
-    diaClase = models.TextField(max_length=10, choices=DIAS_SEMANA)
+    diaClase = models.CharField(max_length=10, choices=DIAS_SEMANA)
     inicioClase = models.DateField()
     finClase = models.DateField()
     horaClase = models.TimeField()
-    registro = models.ForeignKey(Registro, db_column="calendario_id", on_delete=models.CASCADE, verbose_name="calendario", null=True, blank=True)
+    registro = models.ForeignKey(Registro, db_column="registro_id", on_delete=models.CASCADE, verbose_name="registro", null=True, blank=True)
+    
+    
+    def __str__(self):
+        return f"{self.registro.estudiante.get_estudiante} el dia {self.get_diaClase_display()} a las {self.horaClase.strftime('%I:%M %p')}"
 class Asistencia(models.Model):
     registro = models.ForeignKey(Registro, on_delete=models.CASCADE, db_column="estudiante_id", verbose_name="estudiante")
     estado = models.CharField(max_length=15,choices=ESTADOS_ASISTENCIA)
     dia = models.DateField()
     hora = models.TimeField()
+    picadero = models.ForeignKey(Picadero, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return self.registro.estudiante.nombre_completo
@@ -247,66 +251,18 @@ def serialiserValidation(lista, i, iPicadero, tipo):
             errores[i] = {"tipo":tipo,'contenido':{'nombre':iPicadero.picadero.nombre,'dias':iPicadero.get_dia_display(),'hora':iPicadero.hora.strftime('%I:%M %p')}}
     return errores
 
-def pre_save_registro_receiver(sender, instance, *args, **kwargs):
-    if instance.horaClase:
-        instance.horaClase = instance.horaClase.replace(minute=0, second=0)
-        
-    if  instance._state.adding: 
-        errores = [{},{}]
-        try:
-            picaderoNivel =  Picadero.objects.get(nivel=instance.nivel)
-        except:
-            raise FormValidationNiveleError("No se puede agregar este estudiante porque no hay un picadero con el nivel seleccionado")  
-        
-        max_estudiantes = picaderoNivel.max_estudiantes
-        max_profes = picaderoNivel.max_profesores
-        print(max_estudiantes)
-        picaderos = InfoPicadero.objects.all()
-        picaderos = picaderos.filter(dia__in = instance.diaClase).filter(hora=instance.horaClase).filter(picadero=picaderoNivel)
-        for picadero in picaderos:
-            if picadero.hora == instance.horaClase:
-                try:
-                    iPicadero = picadero
-                    print("estoy dentro del try")
-                except:
-                    print("error al buscar info del picadero")
-                    iPicadero = "" 
-                      
-                if iPicadero != "":
-                    print(iPicadero)
-                    clases = iPicadero.clases.all()
-                    profesores = clases.values_list("profesor").distinct().count()
-                    estudiantes = clases.values_list("estudiante").distinct().count()
-                    print(estudiantes)
-                    ElProfeEstaEnLaClase = clases.filter(profesor=instance.profesor).distinct()
-                    
-                    if estudiantes >= max_estudiantes:
-                        errores = serialiserValidation(errores, 0, iPicadero, 'estudiante')
-                        
-                    if ElProfeEstaEnLaClase:
-                        if  profesores-1 >= max_profes:
-                            errores = serialiserValidation(errores, 1, iPicadero, 'profesor al estudiante')
-                    else:
-                        if  profesores >= max_profes:
-                            errores = serialiserValidation(errores, 1, iPicadero, 'profesor al estudiante')
-        if errores!=[]:    
-            if errores[0]!={}:
-                raise FormValidationEstudianteError(f"No puede asignar este {errores[0]['tipo']} porque el picadero: {errores[0]['contenido']['nombre']} los dias {errores[0]['contenido']['dias']} a las {errores[0]['contenido']['hora']} no admite más estudiantes")  
-            elif errores[1]!={}:
-                raise FormValidationProfesorError(f"No puede asignar este {errores[1]['tipo']} porque el picadero: {errores[1]['contenido']['nombre']} los dias {errores[1]['contenido']['dias']} a las {errores[1]['contenido']['hora']} no admite más profesores")  
-    # raise Exception("para que no se guarde")
+    
             
-            
-def post_save_registro_receiver(sender, instance, created, **kwargs):
-    if created:
-        picadero =  Picadero.objects.get(nivel=instance.nivel)
-        clase =  Clase.objects.create(estudiante=instance, profesor=instance.profesor)
-        clase.save()
-        for dia in instance.diaClase:
-            iPicadero, creado = InfoPicadero.objects.get_or_create(picadero=picadero,hora=instance.horaClase, dia=dia) 
-            iPicadero.save()
-            iPicadero.clases.add(clase)
+# def post_save_registro_receiver(sender, instance, created, **kwargs):
+#     if created:
+#         picadero =  Picadero.objects.get(nivel=instance.nivel)
+#         clase =  Clase.objects.create(estudiante=instance, profesor=instance.profesor)
+#         clase.save()
+#         for dia in instance.diaClase:
+#             iPicadero, creado = InfoPicadero.objects.get_or_create(picadero=picadero,hora=instance.horaClase, dia=dia) 
+#             iPicadero.save()
+#             iPicadero.clases.add(clase)
         
 
-pre_save.connect(pre_save_registro_receiver,sender=Registro)
-post_save.connect(post_save_registro_receiver,sender=Registro)
+# pre_save.connect(pre_save_registro_receiver,sender=Registro)
+# post_save.connect(post_save_registro_receiver,sender=Registro)

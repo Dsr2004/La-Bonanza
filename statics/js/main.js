@@ -158,9 +158,36 @@ function ModificarRegistroEstudiante(){
     },
   })
 }
+function RegistrarEstudianteSinRegistroClasePuntual(){
+  let form = $("#RegistrarEstudianteForm")
+  $.ajax({
+    url: form.attr("action"),
+    data: form.serialize(),
+    type: form.attr("method"),
+    success: function (response) {
+      location.reload()
+    },
+    error: function(errores){
+      errors = errores.responseJSON["errores"]
+      console.log(errors)
+      form.find('.text-danger').text('');
+      form.find('.is-invalid').removeClass('is-invalid');
+      for (let i in errors){
+        let x=form.find('input[name='+i+']')
+        let y=form.find('select[name='+i+']')
+        x.addClass("is-invalid")
+        y.addClass("is-invalid")
+        $("#"+i).text(errors[i])
+    }
+    }
+  });
+ }
 function RegistrarEstudianteSinRegistro(forj){
   let form = $("#RegistrarEstudianteForm")
-  
+  let p = document.getElementById('horarios-p')
+  let div = document.getElementById('horarios')
+  div.style.border = "1px solid #ced4da"
+  p.style.display="none"
   try {
     let div = document.getElementById('Calendario'+errors['identificador'])
     document.getElementById('pCalendario').remove()
@@ -194,7 +221,8 @@ function RegistrarEstudianteSinRegistro(forj){
       'nivel':nivel.value,
       'horaClase':JSON.stringify(calendario[1]),
       'diaClase':JSON.stringify(calendario[0]),
-      'estudiante':idEs
+      'estudiante':idEs,
+      "pagado":JSON.stringify(pago.checked)
     },
     type: form.attr("method"),
     success: function (response) {
@@ -204,10 +232,22 @@ function RegistrarEstudianteSinRegistro(forj){
       errors = errores.responseJSON["errores"]
       console.log(errors)
       try {
+        if (errors['identificador']==null){
+          let p = document.getElementById('horarios-p')
+          let div = document.getElementById('horarios')
+          if(errors['Calendario']==undefined){
+            p.innerHTML = 'Este campo es obligatorio'
+          }else{
+            p.innerHTML = errors['Calendario']
+          }
+          p.style.color = "#dc3545"
+          p.style.display = "block"
+          div.style.border = "1px solid #dc3545"
+        }
         let div = document.getElementById('Calendario'+errors['identificador'])
         let pCalendario = document.createElement("p");
         pCalendario.innerHTML = errors['Calendario']
-        pCalendario.style.color = "red"
+        pCalendario.style.color = "#dc3545"
         pCalendario.id = "pCalendario"
         div.appendChild(pCalendario)
         div.childNodes[0].classList.add("is-invalid")
@@ -445,3 +485,11 @@ function Borrar_Nivel(url, id){
       }
     })
 }
+// let tables = document.querySelectorAll('table')
+// for (let i = 0; i < tables.length; i++) {
+//   tables[i].classList.add('display')
+//   tables[i].classList.add('nowrap')
+//   tables[i].cellspacing="0"
+//   tables[i].width = "100%"
+//   console.log(tables[i])
+// }

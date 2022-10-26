@@ -14,7 +14,7 @@
 <div class="container">
     <a href="{% url 'asistencia' %}" class="btn btn-outline-secondary w-100">Gestionar Aistencia</a>
 </div>
-<div id="calendar" style="padding: 40px;"></div>
+<div id="calendar" style="padding: 40px"></div>
 
 <div class="modal fade" id="ModalInfoEstudianteCalendario" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>
 {% endblock contenido %}
@@ -43,15 +43,15 @@
             events: [
             {%for clase in clases %}
                 {
-                id: '{%url 'verInfoEstudianteCalendario' clase.pk%}',
-                title : '{{clase.get_estudiante}}',
+                id: '{%url 'verInfoEstudianteCalendario' clase.registro.pk%}',
+                title : '{{clase.registro.get_estudiante}}',
                 startRecur : '{{clase.inicioClase|date:"Y-m-d"}}',
                 endRecur : '{{clase.finClase|date:"Y-m-d"}}',
 
                 startTime: '{{clase.horaClase|date:"H:i"}}',
-                daysOfWeek: {{clase.get_dias_clase|safe}},
-                color: '{{clase.nivel.color_fondo}}',
-                textColor: '{{clase.nivel.color_letra}}',
+                daysOfWeek: ['{{clase.diaClase|safe}}'],
+                color: '{{clase.registro.nivel.color_fondo}}',
+                textColor: '{{clase.registro.nivel.color_letra}}',
                 },
                 
             {%endfor%}
