@@ -273,7 +273,40 @@
                     <button class="btn btn-success w-100" onclick="ModificarEstudiante('{%url 'modificarEstudiante' object.pk%}')">Modificar estudiante</button>
                     <br>
                 </div>
+                <script>
+                    var inicioClase = ""
+                    var finClase = ""
+                    var diaClase = []
+                    var horaClase = []
+                    var dicc={}
+                </script>
                 
+                {% for dia in  diaClase%}
+                    {% for d in dia %}
+                        {% if  forloop.counter == 1 %}
+                            <script>dicc.id = '{{d}}'</script>
+                        {% else %}
+                            <script>dicc.value = '{{d}}'</script>
+                            <script>diaClase.push(dicc);dicc={}</script>
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+                    
+                {% for calendary in calendario %}
+                {% if  forloop.counter == 1 %}
+                    <script>
+                        inicioClase = "{{calendary.inicioClase|date:'Y-m-d'}}"
+                        finClase = "{{calendary.finClase|date:'d/m/Y'}}"
+                    </script>
+                {% endif %}
+                
+                {% endfor %}
+                
+                {% for hora in horas %}
+                    
+                <script>horaClase.push('{{hora}}')</script>
+                {% endfor %}
+                    
                 <div class="tab-pane fade" id="disabled-tab-pane" role="tabpanel" aria-labelledby="disabled-tab" tabindex="0">
                     <br>
                     <h3>Información del Registro </h3>
@@ -284,14 +317,16 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <Label><strong>Inicio de clases: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  style="color: #dc3545;">*</sup></strong></Label>
-                                {{formRegistro.inicioClase}}
+                                <input type="date" name="inicioClase" class="form-control" id="inicioClaseinput">
+                                <script>document.getElementById('inicioClaseinput').value=inicioClase</script>
                                 <p id="inicioClase" class="bg-light text-danger" style="color: #dc3545;"></p>
                                 <br>
                             </div>
                             <div class="col-md-6">
                                 <Label  style="margin-bottom: 10px;"><strong>Fin de las clases: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  style="color: #dc3545;">*</sup></strong></Label>
                                 <br>
-                                {{formRegistro.finClase.value|date:'d/m/Y'}}
+                                <p type="date" name="finClase" class="" id="finClaseinput"></p>
+                                <script>document.getElementById('finClaseinput').innerHTML=finClase</script>
                                 <p id="finClase" class="bg-light text-danger" style="color: #dc3545;"></p>
                                 <br>
                             </div>
@@ -336,25 +371,33 @@
                     <div class="row">
                         <div class="col-md-6">
                             <Label><strong>Inicio de clases: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  style="color: #dc3545;">*</sup></strong></Label>
-                            {{formRegistro.inicioClase}}
+                            <input type="date" name="inicioClase" class="form-control" id="inicioClaseinput">
+                            <script>document.getElementById('inicioClaseinput').value=inicioClase</script>
                             <p id="inicioClase" class="bg-light text-danger" style="color: #dc3545;"></p>
                             <br>
                         </div>
                         <div class="col-md-6">
                             <Label  style="margin-bottom: 10px;"><strong>Fin de las clases: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  style="color: #dc3545;">*</sup></strong></Label>
                             <br>
-                            {{formRegistro.finClase.value|date:'d/m/Y'}}
+                            <p type="date" name="finClase" class="" id="finClaseinput"></p>
+                                <script>document.getElementById('finClaseinput').innerHTML=finClase</script>
                             <p id="finClase" class="bg-light text-danger" style="color: #dc3545;"></p>
                             <br>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-6">
-                            <Label><strong>Hora de la clase: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  style="color: #dc3545;">*</sup></strong></Label>
-                            {{formRegistro.horaClase}}
-                            <p id="horaClase" class="bg-light text-danger" style="color: #dc3545;"></p>
-                            <br>
+                        <div class="col-md-12" style="margin-bottom: 15px; padding-bottom: -10px;">
+                            <div class="headerHorario" style="display: flex; justify-content:space-between;">
+                                <label><strong>Calendario:</strong></label>
+                                <div style="display: grid;grid-template-columns:1fr 1fr;grid-gap:5px;"><div style="width:100%;background-color:red; padding:0 0px 0 12px;margin-bottom:5px;border-radius:5px; cursor:pointer;" onclick="eliminarHoras()"><i class="fa fa-remove"style="font-size:16px;"></i> </div><div style="width:100%;background-color:cyan; padding:0 10px;margin-bottom:5px;border-radius:5px; cursor:pointer;" onclick="agregarHoras()"><i class="fa fa-plus"style="font-size:15px;"></i></div></div>
+                            </div>
+                            <div class="form-control" id="horarios" style="height: 80%;  display: flex; justify-content:start; overflow: auto;">
+                            </div>
+                            <p id="horarios-p" style="display: none;"></p>
                         </div>
+                    </div>
+                    <br>
+                    <div class="row">
                         <div class="col-md-6">
                             <Label><strong>Meses de suscripción: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  style="color: #dc3545;">*</sup></strong></Label>
                             <select name="meseSus" id="mesesSus"  class="form-select">
@@ -365,14 +408,6 @@
                                 <option value="5">5 Meses</option>
                                 <option value="6">6 Meses</option>
                             </select>
-                            <br>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <Label><strong>Días de la clase: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  style="color: #dc3545;">*</sup></strong></Label>
-                            {{formRegistro.diaClase}}
-                            <p id="diaClase" class="bg-light text-danger" style="color: #dc3545;"></p>
                             <br>
                         </div>
                         <div class="col-md-6">
@@ -416,7 +451,9 @@
 <script src="{% static 'libs/datepicker/dist/datepicker.js' %}"></script>
 <script src="{% static 'libs/datepicker/i18n/datepicker.es-ES.js' %}"></script>
 <script>
+    var idCal = 0
     $(document).ready(function(){
+        cargarHoras(horaClase,diaClase)
         $('#profile-tab-pane').tab('show')
         $("#id_fecha_nacimiento").datepicker({
             language: 'es-ES',
@@ -437,6 +474,79 @@
             
         });
     })
-
+    function cargarHoras(Horarios, dia){
+        days = dia
+        for(var i=0;i<Horarios.length;i++) {
+            horas = Horarios[i];
+            const divHorario = document.createElement('div');
+            const inputHorario = document.createElement("input");
+            inputHorario.type = "time";
+            inputHorario.className = "form-control";
+            inputHorario.autocomplete = "off";
+            inputHorario.value = horas
+            const dateDay = document.createElement("select");
+            dateDay.className = "dia";
+            dateDay.classList.add("form-select")
+            dateDay.style.marginBottom = "5px";
+            dateDay.autocomplete = "off";
+            let optionSelected = document.createElement("option");
+            optionSelected.value = days[i].id
+            optionSelected.innerHTML = days[i].value
+            optionSelected.selected = true
+            dateDay.appendChild(optionSelected)
+            let dias = {"0":"Lunes","1":"Martes","2":"Miércoles","3":"Jueves","4":"Viernes","5":"Sábado","6":"Domingo"}
+            for (let i = 0; i < 7; i++) {
+                let option = document.createElement("option");
+                option.value = dias[i]
+                option.innerHTML = dias[i]
+                dateDay.appendChild(option)
+            }   
+            divHorario.appendChild(dateDay);
+            divHorario.appendChild(inputHorario);
+            divHorario.style.margin = "0 10px"
+            divHorario.id = "Calendario"+idCal
+            idCal= idCal+1
+            document.getElementById('horarios').appendChild(divHorario);
+        }
+    }
+    function agregarHoras(){
+        const divHorario = document.createElement('div');
+        const inputHorario = document.createElement("input");
+        inputHorario.type = "time";
+        inputHorario.className = "form-control";
+        inputHorario.autocomplete = "off";
+        const dateDay = document.createElement("select");
+        dateDay.className = "dia";
+        dateDay.classList.add("form-select")
+        dateDay.style.marginBottom = "5px";
+        dateDay.autocomplete = "off";
+        let optionSelected = document.createElement("option");
+        optionSelected.innerHTML = "Eliga un día"
+        optionSelected.selected = true
+        dateDay.appendChild(optionSelected)
+        let dias = {"1":"Lunes","2":"Martes","3":"Miércoles","4":"Jueves","5":"Viernes","6":"Sábado","0":"Domingo"}
+        for (let i = 0; i < 7; i++) {
+            let option = document.createElement("option");
+            option.value = i
+            option.innerHTML = dias[i]
+            dateDay.appendChild(option)
+        }
+        let pHorario = document.createElement("div");
+        pHorario.textContent = "a"
+        pHorario.style.textAlign = "center";
+        let cloneInput = inputHorario.cloneNode(true);
+        divHorario.appendChild(dateDay);
+        divHorario.appendChild(inputHorario);
+        divHorario.style.margin = "0 10px"
+        divHorario.id = "Calendario"+idCal
+        idCal= idCal+1
+        document.getElementById('horarios').appendChild(divHorario);
+        cargar()
+    }
+    function eliminarHoras(){
+        let child = document.getElementById('horarios').lastChild;
+        document.getElementById('horarios').removeChild(child);
+        idCal = idCal - 1
+    }
 </script>
 {%endblock scripts%}
