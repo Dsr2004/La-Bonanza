@@ -293,6 +293,38 @@
                 </div>
                 <br>
             </div>
+            <script>
+                var inicioClase = ""
+                var finClase = ""
+                var diaClase = []
+                var horaClase = []
+                var dicc={}
+            </script>
+            
+            {% for dia in  diaClase%}
+                {% for d in dia %}
+                    {% if  forloop.counter == 1 %}
+                        <script>dicc.id = '{{d}}'</script>
+                    {% else %}
+                        <script>dicc.value = '{{d}}'</script>
+                        <script>diaClase.push(dicc);dicc={}</script>
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+                
+            {% for calendary in calendario %}
+            {% if  forloop.counter == 1 %}
+                <script>
+                    inicioClase = "{{calendary.inicioClase|date:'d/m/Y'}}"
+                    finClase = "{{calendary.finClase|date:'d/m/Y'}}"
+                </script>
+            {% endif %}
+            
+            <script>horaClase.push('{{calendary.horaClase}}')</script>
+            {% endfor %}
+            
+                
+                
             <div class="tab-pane fade" id="disabled-tab-pane" role="tabpanel" aria-labelledby="disabled-tab" tabindex="0">
                 <br>
                 <h3>Información del Registro </h3>
@@ -300,24 +332,21 @@
                 <div class="row">
                     <div class="col-md-6">
                         <h5><strong>Inicio de clases: </strong></h5>
-                        {{registro.inicioClase|date:'d/m/Y'}}
+                        <p id="inicioClase-p"></p>
+                        <script>document.getElementById('inicioClase-p').innerHTML=inicioClase</script>
                     </div>
                     <div class="col-md-6">
                         <h5><strong>Fin de clases:</strong></h5>
-                        {{registro.finClase|date:'d/m/Y'}}
+                        <p id="finClase-p"></p>
+                        <script>document.getElementById('finClase-p').innerHTML=finClase</script>
                     </div>
                 </div>
-                <br> 
-                <br>
                 <div class="row">
-                    <div class="col-md-6">
-                       
-                        <h5><strong>Hora de la clase: </strong></h5>
-                        {{registro.horaClase|date:'P'}}
-                    </div>
-                    <div class="col-md-6">
-                        <h5><strong>Dia de la clase: </strong></h5>
-                        {{registro.get_diaClase_display }}
+                    <div class="col-md-12">
+                        <h5><strong>Calendario:</strong></h5>
+                        <div class="" id="horarios" style="height: 55px; display: flex; justify-content:start; overflow: auto;">
+                        </div>
+                        <p id="horarios-p" style="display: none;"></p>
                     </div>
                 </div>
                 <br>
@@ -357,8 +386,26 @@
 
 {% block scripts %}
     <script>
+        cargarHoras(horaClase,diaClase)
         let documento = $("#documento")
-        console.log(documento)
+        function cargarHoras(Horarios, dia){
+            days = dia
+            for(var i=0;i<Horarios.length;i++) {
+                horas = Horarios[i];
+                console.log(horas)
+                const divHorario = document.createElement('div');
+                const inputHorario = document.createElement("h6");
+                inputHorario.innerHTML = horas
+                const dateDay = document.createElement("h5");
+                dateDay.innerHTML = days[i].value;
+                inputHorario.classList.add("from")
+                divHorario.appendChild(dateDay);
+                divHorario.appendChild(inputHorario);
+                divHorario.style.margin = "0 10px"
+                document.getElementById('horarios').appendChild(divHorario);
+            }
+        }
+        
     </script>
 {% endblock scripts %}
     

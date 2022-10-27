@@ -1,8 +1,6 @@
 import json
-import pandas as pd
 from datetime import datetime, timedelta, date
 from dateutil.relativedelta import relativedelta
-from io import BytesIO
 from django.shortcuts import render, redirect
 from django.views.generic import View, CreateView, ListView, UpdateView, DetailView, TemplateView
 from django.urls import reverse_lazy
@@ -108,7 +106,19 @@ class GestionDeAsistencia(View):
         for clases in clasesHoy:
             if clases.inicioClase  <= hoyA <= clases.finClase:
                 clasesHoyRango.append(clases)
-             
+                
+        """
+        !Important messages for David Soto
+        TODO: You made a new use the model "CalendarioModel", this model have a foreign key relaction with "registro", you used for filter the information for the "asistencia"
+        * EXAMPLE: [calendario.registro for calendario in CalendarioModel.objects.all()]
+        ? The list show in the example return all "registros-Estudiantes"
+        TODO: CalendarioModel have the next properties:
+        ? diaClase
+        ? horaClase
+        ? finClase
+        ? inicioClase
+        ? registro
+        """
         
         ctx["dia"]=hoy.date()
         ctx["hora"]=hoy.time()
@@ -349,26 +359,30 @@ class VerInfoEstudiante(IsAdminMixin, DetailView):
         contexto =  super().get_context_data(**kwargs)
         estudiante = Estudiante.objects.get(pk=self.kwargs["pk"])
         registro = Registro.objects.get(estudiante=estudiante)
+        calendario = CalendarioModel.objects.filter(registro=registro)
         contexto["registro"] = registro
+        contexto['calendario']=calendario
+        calendario = [[i for i in [dia for dia in DIAS_SEMANA] if int(i[0]) in [int(cl) for cl in [dias.diaClase for dias in calendario]]]][0]
+        contexto['diaClase']=calendario
         return contexto
 
 class ModificarEstudiante(IsAdminMixin, UpdateView):
     model = Estudiante
     form_class = EstudianteForm
     template_name = "Estudiantes/editarInfoEstudiante.html"
-    success_url = reverse_lazy("estudiantes")
-
     def get_context_data(self, **kwargs):
         contexto = super().get_context_data(**kwargs)
         estudiante = Estudiante.objects.get(pk=self.kwargs["pk"])
         registro = Registro.objects.get(estudiante=estudiante)
         contexto["registro"] = registro
         contexto["formRegistro"] = RegistroForm(instance=registro)
+        calendario = CalendarioModel.objects.filter(registro=registro)
+        contexto['calendario']=calendario
+        contexto['horas'] = [[i.strftime('%H:%M') for i in [hora.horaClase for hora in calendario]]][0]
+        calendario = [[i for i in [dia for dia in DIAS_SEMANA] if int(i[0]) in [int(cl) for cl in [dias.diaClase for dias in calendario]]]][0]
+        contexto['diaClase']=calendario
         return contexto
 
-    def form_invalid(self, form):
-        print(form.errors)
-        return JsonResponse({"errores": form.errors}, status=404)
 
 
 class ModificarDocsEstudiante(IsAdminMixin, UpdateView):
@@ -428,27 +442,79 @@ class ModificarRegistroEstudiante(IsAdminMixin, UpdateView):
 
     def post(self, request, *args, **kwargs):
         copia = request.POST.copy()
+        dia = request.POST.get('inicioClase')
+        diaOriginal = dia   
+        if not dia:
+            return JsonResponse({"errores":{"inicioClase":["Este campo es obligatorio."]}}, status=400)
+        
         if "meseSus" not in request.POST:
-            dia = request.POST.get('inicioClase')
-            dia = datetime.strptime(dia, "%Y-%m-%d")
-            diaClase = dia.weekday()
-            copia["finClase"]=dia+relativedelta(days=1)
-            copia["diaClase"]=arreglarFormatoDia(dia=int(diaClase))
+            if dia:
+                dia = datetime.strptime(dia, "%Y-%m-%d")
+                diaClase = dia.weekday()
+                finClases =dia+timedelta(days=1)
+                diasClases=[str(arreglarFormatoDia(dia=int(diaClase)))]
+                horas = [copia["horaClase"]]
+                print("meses sus")
         else:
             meses = request.POST.get("meseSus")
-            dia = request.POST.get('inicioClase') 
-            finClases = datetime.strptime(dia, "%Y-%m-%d")+relativedelta(months=int(meses))
-            copia["finClase"]=finClases
-        form = self.form_class(copia, instance=self.get_object())
+            finClases = datetime.strptime(dia, "%Y-%m-%d")+relativedelta(months=int(meses))+timedelta(days=1)
+            horas = json.loads(request.POST.get('horaClase'))
+            diasClases = json.loads(request.POST.get('diaClase'))
+            print("sin meses sus")
+        get_object = Registro.objects.get(pk = kwargs['pk'])
+        form = self.form_class(copia or None, instance=get_object)
+        
         if form.is_valid():
-            form.save()
-            return JsonResponse({"mensaje":"guardado correctamente"}, status=200)
+            try:
+                profesor = form.cleaned_data["profesor"]
+                horario = profesor.horarios
+                horario = json.loads(horario)
+                hora = [] 
+                
+                if horas == []:
+                    return JsonResponse({"errores":{"Calendario":'Este campo es obligatorio','identificador':None}}, status=400)
+                for i in range(len(horas)):
+                    if diasClases[0].replace('í', 'i') == 'Eliga un dia':
+                        return JsonResponse({"errores":{"Calendario":'El día es un campo obligatorio','identificador':i}}, status=400)
+                    if horas[0] == '':
+                        return JsonResponse({"errores":{"Calendario":'La hora es un campo obligatorio','identificador':i}}, status=400)
+                    hora.append(datetime.strptime(horas[i], '%H:%M').replace(minute = 0, second = 0))
+                dias = [[str(i[1]) for i in [dia for dia in DIAS_SEMANA] if int(i[0]) in [int(cl) for cl in diasClases]]][0]
+                for i in range(len(hora)):
+                    for i in range(len(dias)):
+                        if dias[i] not in [horary['day'] for horary in horario]:
+                            if "meseSus"  in request.POST:
+                                return JsonResponse({"errores":{"Calendario":f'El profesor {profesor} no trabaja el dia {dias[i]}','identificador':i}}, status=400)
+                            else:
+                                return JsonResponse({"errores":{"profesor":f'El profesor {profesor} no trabaja el dia {dias[i]}','identificador':None}}, status=400)
+                    diasNo = 'los días '+str(dias[i])+' a las '+hora[i].strftime('%I:%M %p')+' el profesor no esta disponible'
+                    if [hor for hor in [horary for horary in horario if horary['day'] in [dia for dia in dias]] if datetime.strptime(hor['from'], '%H:%M').time() <= hora[i].time() and (datetime.strptime(hor['through'], '%H:%M')-timedelta(hours=1)).time() >= hora[i].time()] == []:
+                        if "meseSus"  in request.POST:
+                            return JsonResponse({"errores":{"Calendario":diasNo,'identificador':i}}, status=400)
+                        else:
+                            return JsonResponse({"errores":{"profesor":diasNo,'identificador':None}}, status=400)
+                horarios = CalendarioModel.objects.filter(registro=get_object)
+                for i in range(len(horarios)):
+                    horarios[i].delete()
+                objecto = form.save()   
+                for i in range(len(hora)):
+                    calendario = CalendarioModel.objects.create(horaClase=hora[i],finClase=finClases,inicioClase=diaOriginal,diaClase = str(diasClases[i]), registro=objecto)
+                    calendario.save()
+                return redirect('estudiantes')
+            except Exception as error:
+                print(error)
+                if type(error).__name__ == "FormValidationEstudianteError":
+                    return JsonResponse({"errores": {"estudiante":[str(error)]}}, status=400)
+                elif type(error).__name__ == "FormValidationProfesorError":
+                    print("tengo algun error aqui")
+                    return JsonResponse({"errores": {"profesor":[str(error)]}}, status=400)
+                elif type(error).__name__ == "FormValidationNiveleError":
+                    return JsonResponse({"errores": {"nivel":[str(error)]}}, status=400)
+            
         else:
             return JsonResponse({"errores": form.errors}, status=400)
-
-    def form_invalid(self, form):
-        print(form.errors)
-        return JsonResponse({"errores": form.errors}, status=404)
+        return JsonResponse({"mensaje":"estudiante modificado con exito"}, status=400)
+        return redirect('estudiantes')
 
 
 class Profesores(ListView):
@@ -572,7 +638,12 @@ class editProfesor(IsAdminMixin, TemplateView):
         try:
             datos = json.loads(request.POST.get('datos'))
             profesor = self.model.objects.get(pk = kwargs['pk'])
-            profesor.horarios = json.dumps(json.loads(datos['horarios']))
+            horarios = []
+            for horario in json.loads(datos['horarios']):
+                if horario['day'] not in [horary['day'] for horary in horarios]:
+                    horarios.append(horario)
+            print(horarios)
+            profesor.horarios = json.dumps(horarios)
             niveles = datos['niveles']
             profesor.niveles.clear()
             for nivel in niveles:
