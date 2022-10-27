@@ -229,6 +229,8 @@ function RegistrarEstudianteSinRegistro(forj){
       location.reload()
     },
     error: function(errores){
+      form.find('.text-danger').text('');
+      form.find('.is-invalid').removeClass('is-invalid');
       errors = errores.responseJSON["errores"]
       console.log(errors)
       try {
