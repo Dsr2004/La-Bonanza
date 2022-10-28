@@ -1,3 +1,4 @@
+from email.policy import default
 from random import choices
 from secrets import choice
 from django.db import models
@@ -25,19 +26,18 @@ class Picadero(models.Model):
 
 class Clase(models.Model):
     profesor = models.ForeignKey(to="Estudiantes_Profesores.Profesor", on_delete=models.SET_NULL, blank=True, null=True)
-    estudiante = models.OneToOneField(to="Estudiantes_Profesores.Registro", on_delete=models.CASCADE)
-    
+    calendario = models.OneToOneField(to="Estudiantes_Profesores.Calendario", on_delete=models.CASCADE)
     class Meta:
-        db_table = "clases"
+        db_table = "clasesOlvidadas"
 
     def __str__(self):
-        return f"{self.estudiante}"
-
+        return f"{self.calendario.registro.get_estudiante}"
+    
 class InfoPicadero(models.Model):
     picadero = models.ForeignKey(Picadero, on_delete=models.CASCADE)
     dia = models.CharField(max_length=15, choices=DIAS_SEMANA)
     hora = models.TimeField()
-    clases = models.ManyToManyField(Clase)
+    clases = models.ManyToManyField(Clase, through='EstadoClase')
 
     class Meta:
         db_table = "infoPicaderos"
@@ -49,6 +49,16 @@ class InfoPicadero(models.Model):
         print(self)
         # self.clases_set.all()
 
+class EstadoClase(models.Model):
+    clase = models.ForeignKey(Clase, on_delete=models.CASCADE)
+    InfoPicadero = models.ForeignKey(InfoPicadero, on_delete=models.CASCADE)
+    estado = models.BooleanField(default=True)
+    
+    class Meta():
+        db_table="clases"
+    
+    def __str__(self):
+        return f'Jodase perro inmundo animal hp {self.clase} coma mierda {self.InfoPicadero}'
 
 #SIGNALS
 def pre_save_picadero_receiver(sender, instance, *args, **kwargs):
@@ -56,8 +66,9 @@ def pre_save_picadero_receiver(sender, instance, *args, **kwargs):
         instance.slug=slugify(instance.nombre)
         
 def pre_save_clase_receiver(sender, instance, *args, **kwargs):
-    if  not instance.estudiante.profesor:
-        instance.profesor = instance.estudiante.profesor
+    print(instance.calendario.registro.profesor)
+    if  not instance.calendario.registro.profesor:
+        instance.profesor = instance.calendario.registro.profesor
         
 def pre_save_infoPicadero_receiver(sender, instance, *args, **kwargs):       
     if instance.hora:

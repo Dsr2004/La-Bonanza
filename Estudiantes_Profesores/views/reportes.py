@@ -1,12 +1,13 @@
 import pandas as pd
 from io import BytesIO
-from datetime import datetime
-from django.views.generic import ListView
+from datetime import datetime, time
+from django.views.generic import ListView, View
 from django.http import JsonResponse, HttpResponse
 from django.contrib import messages
 from django.shortcuts import  redirect
 from La_Bonanza. mixins import IsAdminMixin
-from .models import Asistencia, Registro
+from Picaderos.models import Picadero as PicaderoModel, InfoPicadero as infoPicaderoModel
+from ..models import Asistencia, Estudiante, Registro
 from Niveles.models import Nivel
 
 
@@ -190,3 +191,59 @@ class reporteEstudiantes(IsAdminMixin, ListView):
             response['Content-Disposition'] = 'attachment; filename="' + filename + '.xlsx"'
             return response
         return JsonResponse({'hola':'hola'})
+
+class ReportePicadero(IsAdminMixin, View):
+    def post(self, request, *args, **kwargs):
+        picadero = PicaderoModel.objects.get(pk=self.kwargs["pk"])
+        hora = request.POST.get("hora")
+        dia = request.POST.get("dia")
+        TodoElDia = request.POST.get("TodoElDia")
+        if hora:
+            hora = datetime.strptime(hora, "%H:%M").time()
+            hora=time(hora.hour,0,0)
+            try:
+                if TodoElDia == "SI":
+                    InformacionPicadero = infoPicaderoModel.objects.filter(picadero=picadero).filter(dia=dia)
+                    Estudiante, Profesor, Picadero, Dia, Hora =[[],[],[],[],[]]
+                    for info in InformacionPicadero:
+                        clases = info.clases.all()
+                        for clase in clases:
+                            Estudiante.append(clase.calendario.registro.get_estudiante)
+                            Profesor.append(clase.profesor.get_profesor)
+                            Picadero.append(picadero.nombre)
+                            Dia.append(info.get_dia_display())
+                            Hora.append(info.hora.strftime("%I:%M %p")) 
+                 
+                elif TodoElDia == "NO":
+                    InformacionPicadero = infoPicaderoModel.objects.get(picadero=picadero,hora=hora,dia=dia)
+                    clases = InformacionPicadero.clases.all()
+                    Estudiante, Profesor, Picadero, Dia, Hora =[[],[],[],[],[]]
+                    for clase in clases:
+                        Estudiante.append(clase.calendario.registro.get_estudiante)
+                        Profesor.append(clase.profesor.get_profesor)
+                        Picadero.append(picadero.nombre)
+                        Dia.append(InformacionPicadero.get_dia_display())
+                        Hora.append(hora.strftime("%I:%M %p"))
+                
+            except Exception as e:
+                print(e)
+                return JsonResponse({"error":"No se encontraron Clases en esa Hora"},status=400)
+        if len(Estudiante) == 0:
+            return JsonResponse({"error":"No se encontraron Clases"},status=400)
+        excel = pd.DataFrame()
+        excel['Estudiante'] = Estudiante
+        excel['Profesor'] = Profesor 
+        excel['Dia'] = Dia 
+        excel['Hora'] = Hora 
+        excel['Picadero'] = Picadero
+        excel['Caballo'] = ""
+        with BytesIO() as b:
+            # Use the StringIO object as the filehandle.
+            writer = pd.ExcelWriter(b, engine='xlsxwriter')
+            excel.to_excel(writer, sheet_name='Estudiantes')
+            writer.save()
+            filename = "ReportePicadero"
+            content_type = 'application/vnd.ms-excel'
+            response = HttpResponse(b.getvalue(), content_type=content_type)
+            response['Content-Disposition'] = 'attachment; filename="' + filename + '.xlsx"'
+            return response

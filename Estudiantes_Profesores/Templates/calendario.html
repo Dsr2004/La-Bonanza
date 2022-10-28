@@ -43,7 +43,7 @@
             events: [
             {%for clase in clases %}
                 {
-                id: '{%url 'verInfoEstudianteCalendario' clase.registro.pk%}',
+                id: '{%url 'verInfoEstudianteCalendario' clase.pk%}',
                 title : '{{clase.registro.get_estudiante}}',
                 startRecur : '{{clase.inicioClase|date:"Y-m-d"}}',
                 endRecur : '{{clase.finClase|date:"Y-m-d"}}',

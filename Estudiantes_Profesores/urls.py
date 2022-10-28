@@ -1,7 +1,9 @@
 from django.urls import path
 from django.contrib.auth.decorators import login_required
-from .views import *
-from . reportes import reporteEstudiantes, reporteAsistencia
+from .views.views import *
+from .views.estudiantes import *
+from .views.profesores import *
+from .views.reportes import reporteEstudiantes, reporteAsistencia
 
 
 

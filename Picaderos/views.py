@@ -7,7 +7,7 @@ from django.http import JsonResponse
 from La_Bonanza. mixins import IsAdminMixin
 from .models import Picadero, InfoPicadero as infoPicaderoModel
 from .forms import PicaderoForm
-from Estudiantes_Profesores.views import arreglarFormatoDia
+from Estudiantes_Profesores.views.views import arreglarFormatoDia
 
 class Picaderos(IsAdminMixin, ListView):
     model = Picadero
@@ -42,7 +42,6 @@ class InfoPicadero(IsAdminMixin, DetailView):
     def post(self, request, *args, **kwargs):
         hora = request.POST.get("hora")
         dia = request.POST.get("dia")
-        print("el dia es", dia)
         if hora:
             hora = datetime.strptime(hora, "%H:%M").time()
             hora=time(hora.hour,0,0)
@@ -51,7 +50,7 @@ class InfoPicadero(IsAdminMixin, DetailView):
                 clases = InformacionPicadero.clases.all()
                 clasesList=[]
                 for clase in clases:
-                    clasesList.append({"estudiante":clase.estudiante.get_estudiante, "profesor":clase.profesor.get_profesor})
+                    clasesList.append({"estudiante":clase.calendario.registro.get_estudiante, "profesor":clase.profesor.get_profesor})
                 print(clasesList)
                 return JsonResponse({"clases":clasesList},status=200)
             except Exception as e:

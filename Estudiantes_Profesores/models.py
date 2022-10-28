@@ -209,11 +209,12 @@ class Calendario(models.Model):
     inicioClase = models.DateField()
     finClase = models.DateField()
     horaClase = models.TimeField()
+    estado = models.BooleanField(default=True)
     registro = models.ForeignKey(Registro, db_column="registro_id", on_delete=models.CASCADE, verbose_name="registro", null=True, blank=True)
     
     
     def __str__(self):
-        return f"{self.registro.estudiante.get_estudiante} el dia {self.get_diaClase_display()} a las {self.horaClase.strftime('%I:%M %p')}"
+        return f"C-{self.registro.estudiante.get_estudiante} el dia {self.get_diaClase_display()} a las {self.horaClase.strftime('%I:%M %p')}"
 class Asistencia(models.Model):
     registro = models.ForeignKey(Registro, on_delete=models.CASCADE, db_column="estudiante_id", verbose_name="estudiante")
     estado = models.CharField(max_length=15,choices=ESTADOS_ASISTENCIA)
@@ -225,32 +226,6 @@ class Asistencia(models.Model):
         return self.registro.estudiante.nombre_completo
 
 # SIGNALS 
-
-class FormValidationProfesorError(Exception):
-    pass
-
-class FormValidationEstudianteError(Exception):
-    pass
-
-class FormValidationNiveleError(Exception):
-    pass
-
-def serialiserValidation(lista, i, iPicadero, tipo):
-    errores = list(lista)
-    if errores!=[]:
-        if errores[i]!={}:
-            nombre = errores[i]['contenido']['nombre']
-            dias = errores[i]['contenido']['dias']
-            horas = errores[i]['contenido']['hora']
-            if iPicadero.get_dia_display() not in errores[i]['contenido']['dias'].split(', '):
-                dias = errores[i]['contenido']['dias'].split(', ')
-                dias.append(iPicadero.get_dia_display())
-                dias = ', '.join(list(reversed(dias)))
-            errores[i] = {"tipo":tipo,'contenido':{'nombre':nombre,'dias':dias,'hora':horas}}
-        else:
-            errores[i] = {"tipo":tipo,'contenido':{'nombre':iPicadero.picadero.nombre,'dias':iPicadero.get_dia_display(),'hora':iPicadero.hora.strftime('%I:%M %p')}}
-    return errores
-
     
             
 # def post_save_registro_receiver(sender, instance, created, **kwargs):

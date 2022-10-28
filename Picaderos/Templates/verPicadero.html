@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block titulo %}Ver Picadero {{picadero.nombre|title}}{% endblock titulo %}
 
@@ -72,6 +73,8 @@
             </div>
             <div class="col-2"></div>
            <div class="col-2">
+
+            <a type="button"  class="btn btn-success " onclick="reporteEstudiantePicadero('{%url 'reportePicadero' picadero.pk %}', '{{picadero.nombre|title}}')" > <i class="fa-solid fa-file-excel"></i></a>
             {% if not infoPicadero %}
             <a href="" class="btn btn-outline-info"><i class="fa-solid fa-plus"></i></a>
             {% else %}
@@ -98,7 +101,7 @@
                 {% for clase in clases %}
                     <tr>
                         <th scope="row">{{forloop.counter}}</th>
-                        <td>{{clase.estudiante.get_estudiante}}</td>
+                        <td>{{clase.calendario.registro.get_estudiante}}</td>
                         <td>{{clase.profesor}}</td>
                     </tr>
                 {% endfor %}
@@ -107,7 +110,8 @@
         </div>
     </div>
 {% endblock contenido %}
-{%block scripts%}   
+{%block scripts%}
+<script src="{% static 'js/picaderos.js' %}"></script>
 <script>
     function togglePikachu(){
         let btn = document.getElementById('togglePicadero');
@@ -149,7 +153,9 @@
                     icon: 'error',
                     title: 'No se pudieron encontrar clases ese dia a esa hora',
                     showConfirmButton: false,
-                    timer: 1000
+                    timer: 2000
+                    }).then(function(){
+                        window.location.href=window.location.href
                     })
             }
         })

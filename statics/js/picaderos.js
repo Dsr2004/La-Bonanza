@@ -153,3 +153,67 @@ function Borrar_picadero(url, id){
         }
       })
 }
+
+function reporteEstudiantePicadero(url, nombre){
+  let TodoElDia = ""
+  Swal.fire({
+    title: '¿Quiere descargar todo el día o solo la hora especificada?',
+    showDenyButton: true,
+    confirmButtonText: 'Todo el día',
+    denyButtonText: 'Solo la hora especificada',
+  }).then((result) => {
+    /* Read more about isConfirmed, isDenied below */
+    if (result.isConfirmed) {
+      TodoElDia = "SI"
+    } else if (result.isDenied) {
+      TodoElDia = "NO"
+    }
+
+    let hora = $("#HoraClase").val()
+    let dia = $("#DiaClase").val()
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: {"csrfmiddlewaretoken":csrftoken, "hora":hora, "dia":dia, "TodoElDia":TodoElDia},
+            cache: false,
+            xhr: function () {
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState == 2) {
+                        if (xhr.status == 200) {
+                            xhr.responseType = "blob";
+                        } else {
+                            xhr.responseType = "text";
+                        }
+                    }
+                };
+                return xhr;
+            },
+            success: function (data) {
+                var blob = new Blob([data], { type: "application/octetstream" });
+                var isIE = false || !!document.documentMode;
+                if (isIE) {
+                    window.navigator.msSaveBlob(blob, fileName);
+                } else {
+                    var url = window.URL || window.webkitURL;
+                    link = url.createObjectURL(blob);
+                    var a = $("<a />");
+                    a.attr("download", nombre+" el dia "+$("#DiaClase option:selected").text()+" a las "+hora.replace("_",":")+".xlsx");
+                    a.attr("href", link);
+                    $("body").append(a);
+                    a[0].click();
+                    $("body").remove(a);
+                }
+            },
+            error: function(data){
+              Swal.fire({
+                  position: 'top-end',
+                  icon: 'error',
+                  title: 'No se pudieron encontrar clases ese dia a esa hora',
+                  showConfirmButton: false,
+                  timer: 1000
+                  })
+          }
+        });
+  })
+}

@@ -55,20 +55,20 @@
                             <div class="row">
                                 <div class="col-md-9">
                                     <div class="tooltipE">
-                                        <button class="btn btn-light btn-sm"> <i class="fa-solid fa-circle" style="color: {{estudiante.nivel.color_fondo}};"></i></button>
-                                        <span class="tooltiptextE" style="color: {{estudiante.nivel.color_letra}}; background-color: {{estudiante.nivel.color_fondo}};">{{estudiante.nivel.nivel}}</span>
+                                        <button class="btn btn-light btn-sm"> <i class="fa-solid fa-circle" style="color: {{estudiante.registro.nivel.color_fondo}};"></i></button>
+                                        <span class="tooltiptextE" style="color: {{estudiante.registro.nivel.color_letra}}; background-color: {{estudiante.registro.nivel.color_fondo}};">{{estudiante.registro.nivel.nivel}}</span>
                                     </div>
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <h6 style="line-height: 1.9; display: inline-block; vertical-align: middle;">{{estudiante.estudiante.nombre_completo}}</h6>
+                                    <h6 style="line-height: 1.9; display: inline-block; vertical-align: middle;">{{estudiante.registro.estudiante.nombre_completo}}</h6>
                                 </div>
                                 <div class="col-md-3">
-                                    <select name="estudiante{{estudiante.estudiante.pk}}" id="" class="form-select">
+                                    <select name="estudiante{{estudiante.registro.estudiante.registro.pk}}" id="" class="form-select">
                                         <option value="1" selected>Asistió</option>
                                         <option value="2">No asistió </option>
                                         <option value="3">Cancelo con excusa</option>
                                         <option value="4">Cancelo por enfermedad</option>
                                     </select>
-                                    <input type="hidden" name="estudiante{{estudiante.estudiante.pk}}" value="{{estudiante.estudiante.pk}}">
+                                    <input type="hidden" name="estudiante{{estudiante.registro.estudiante.registro.pk}}" value="{{estudiante.registro.estudiante.pk}}">
         
                                 </div>
                             </div>

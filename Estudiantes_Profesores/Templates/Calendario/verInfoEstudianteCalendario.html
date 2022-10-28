@@ -8,9 +8,9 @@
       <div class="modal-body">
         <h3>Información del estudiante</h3>
         <h4>Nombre: </h4>
-        <h6>{{object.estudiante.nombre_completo}}</h6>
+        <h6>{{object.registro.estudiante.nombre_completo}}</h6>
         <h4>Nivel: </h4>
-        <h6>{{object.nivel}}</h6>
+        <h6>{{object.registro.nivel}}</h6>
         <hr>
         <h3>Información de la clase</h3>
         <h4>Dia: </h4>
@@ -18,7 +18,7 @@
         <h4>Hora: </h4>
         <h6>{{object.horaClase|time:"h:00 A"}}</h6>
         <h4>Profesor: </h4>
-        <h6>{{object.profesor.usuario}}</h6>
+        <h6>{{object.registro.profesor.usuario}}</h6>
         <hr>
         <h3>Asistencia del estudiante</h3>
         <hr>
@@ -100,7 +100,7 @@
         fechas=$("#fechaFiltro").val()
         $.ajax({
           type: "POST",
-          url: "{%url 'conteoClasesFecha' object.pk %}",
+          url: "{%url 'conteoClasesFecha' object.registro.pk %}",
           data: {"csrfmiddlewaretoken":csrftoken,"fechas":fechas},
           success: function (response) {
             let Total = response["totalClases"]
