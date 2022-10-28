@@ -6,7 +6,7 @@ from django.http import JsonResponse
 from django.contrib import messages
 from django.db.models import Q
 
-from Picaderos.models import Picadero
+from Picaderos.models import EstadoClase, Picadero
 from ..models import DIAS_SEMANA, Estudiante, Registro, Profesor, Asistencia, Calendario as CalendarioModel
 
 
@@ -118,7 +118,7 @@ class GestionDeAsistencia(View):
         
         clasesHoy = self.model.objects.filter(diaClase = diaSemana)
         clasesHoy = clasesHoy.filter(registro__in = [x.registro.pk  for x in clasesHoy if x.registro.estudiante.estado == True]).order_by("horaClase")
-        
+        print([clases.clase.calendario for clases in EstadoClase.objects.all()], 'n',clasesHoy)
         if not request.user.administrador:
             clasesHoy = clasesHoy.filter(registro__in=[x.registro.pk for x in clasesHoy if x.registro.profesor.pk == request.user.pk ]).order_by("horaClase")
         clasesHoy = list(clasesHoy)
@@ -151,6 +151,7 @@ class GestionDeAsistencia(View):
                 asistencia, creado = Asistencia.objects.get_or_create(registro=registro, dia=datetime.now().date(), hora=hora, picadero=picadero)
                 calendario = CalendarioModel.objects.filter(registro=registro)
                 calendario = [objecto for objecto in calendario if int([dia[0] for dia in DIAS_SEMANA if int(dia[0]) == int(objecto.diaClase)][0]) == int(diaSemana) and objecto.horaClase == hora][0]
+                print([clases for clases in EstadoClase.objects.all() if clases.clase.calendario == calendario])
                 if creado:
                     asistencia.estado = clase["estado"]
                     asistencia.save()
