@@ -118,9 +118,9 @@ class GestionDeAsistencia(View):
         
         clasesHoy = self.model.objects.filter(diaClase = diaSemana)
         clasesHoy = clasesHoy.filter(registro__in = [x.registro.pk  for x in clasesHoy if x.registro.estudiante.estado == True]).order_by("horaClase")
-        print([clases.clase.calendario for clases in EstadoClase.objects.all()], 'n',clasesHoy)
         if not request.user.administrador:
             clasesHoy = clasesHoy.filter(registro__in=[x.registro.pk for x in clasesHoy if x.registro.profesor.pk == request.user.pk ]).order_by("horaClase")
+        clasesHoy = [clases.clase.calendario for clases in EstadoClase.objects.all() if clases.clase.calendario in clasesHoy and clases.estado != False]
         clasesHoy = list(clasesHoy)
         clasesHoyRango = []
         for clases in clasesHoy:
@@ -151,7 +151,8 @@ class GestionDeAsistencia(View):
                 asistencia, creado = Asistencia.objects.get_or_create(registro=registro, dia=datetime.now().date(), hora=hora, picadero=picadero)
                 calendario = CalendarioModel.objects.filter(registro=registro)
                 calendario = [objecto for objecto in calendario if int([dia[0] for dia in DIAS_SEMANA if int(dia[0]) == int(objecto.diaClase)][0]) == int(diaSemana) and objecto.horaClase == hora][0]
-                print([clases for clases in EstadoClase.objects.all() if clases.clase.calendario == calendario])
+                claseObject = [clases for clases in EstadoClase.objects.all() if clases.clase.calendario == calendario][0]
+                print(claseObject)
                 if creado:
                     asistencia.estado = clase["estado"]
                     asistencia.save()
@@ -159,12 +160,13 @@ class GestionDeAsistencia(View):
                 else:
                     if asistencia.estado != clase["estado"]:
                         if clase['estado'] == '3' or clase['estado'] == '4':
-                            calendario.estado = False
-                            calendario.save()
+                            claseObject.estado = False
+                            claseObject.save()
+                            messages.add_message(request, messages.WARNING, f"{registro.estudiante.nombre_completo} ha pasado a la lista de clases canceladas correctamente")
                         else:
-                            calendario.estado = True
+                            claseObject.estado = True
                             # objecto.objects.filter(dia='martes').filter(estado=False).count()x
-                            calendario.save()
+                            claseObject.save()
                         asistencia.estado=clase["estado"]
                         asistencia.save()
                         messages.add_message(request, messages.WARNING, f"{registro.estudiante.nombre_completo} ha sido modificado, porque ya estaba en la asistencia del día")
