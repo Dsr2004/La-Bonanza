@@ -174,7 +174,7 @@ function reporteEstudiantePicadero(url, nombre){
         $.ajax({
             url: url,
             type: "POST",
-            data: {"csrfmiddlewaretoken":csrftoken, "hora":hora, "dia":dia, "TodoElDia":TodoElDia},
+            data: {"csrfmiddlewaretoken":csrftoken, "hora":hora, "dia":dia, "TodoElDia":w},
             cache: false,
             xhr: function () {
                 var xhr = new XMLHttpRequest();

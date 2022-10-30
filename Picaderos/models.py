@@ -1,6 +1,3 @@
-from email.policy import default
-from random import choices
-from secrets import choice
 from django.db import models
 from django.db.models.signals import pre_save
 from django.utils.text import slugify
