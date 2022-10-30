@@ -5,7 +5,7 @@ from django.views.generic import View, ListView, DetailView, CreateView, UpdateV
 from django.urls import reverse_lazy
 from django.http import JsonResponse
 from La_Bonanza. mixins import IsAdminMixin
-from .models import Picadero, InfoPicadero as infoPicaderoModel
+from .models import EstadoClase, Picadero, InfoPicadero as infoPicaderoModel
 from .forms import PicaderoForm
 from Estudiantes_Profesores.views.views import arreglarFormatoDia
 
@@ -47,11 +47,12 @@ class InfoPicadero(IsAdminMixin, DetailView):
             hora=time(hora.hour,0,0)
             try:
                 InformacionPicadero = infoPicaderoModel.objects.get(picadero=self.get_object(),hora=hora,dia=dia)
-                clases = InformacionPicadero.clases.all()
+                clases = EstadoClase.objects.filter(InfoPicadero = InformacionPicadero)
                 clasesList=[]
                 for clase in clases:
-                    clasesList.append({"estudiante":clase.calendario.registro.get_estudiante, "profesor":clase.profesor.get_profesor})
-                print(clasesList)
+                    if {"estudiante":clase.clase.calendario.registro.get_estudiante, "profesor":clase.clase.profesor.get_profesor} not in clasesList:
+                        if (clase.dia-datetime.now().date()).days + 1 > -7 and (clase.dia-datetime.now().date()).days + 1 <7:
+                            clasesList.append({"estudiante":clase.clase.calendario.registro.get_estudiante, "profesor":clase.clase.profesor.get_profesor})
                 return JsonResponse({"clases":clasesList},status=200)
             except Exception as e:
                 print("no", str(e))
