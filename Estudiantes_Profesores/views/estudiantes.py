@@ -338,9 +338,28 @@ class ModificarRegistroEstudiante(IsAdminMixin, UpdateView):
                 for i in range(len(horarios)):
                     horarios[i].delete()
                 objecto = form.save()   
+                picadero = Picadero.objects.get(nivel = objecto.nivel)
+                rangeDays = []
+                for diaClaseF in diasClases:
+                    print(diaOriginal)
+                    first_date = datetime.strptime(diaOriginal, '%Y-%m-%d')
+                    last_date = finClases
+                    week_day = arreglarFormatoDia(int(diaClaseF))
+                    dates = [(first_date + timedelta(days=d)) for d in range((last_date - first_date).days + 1)if (first_date + timedelta(days=d)).weekday() == week_day] 
+                    rangeDays.append(dates)
                 for i in range(len(hora)):
                     calendario = CalendarioModel.objects.create(horaClase=hora[i],finClase=finClases,inicioClase=diaOriginal,diaClase = str(diasClases[i]), registro=objecto)
                     calendario.save()
+                    iPicadero, creado = InfoPicadero.objects.get_or_create(picadero=picadero,hora=hora[i], dia=diasClases[i]) 
+                    iPicadero.save()
+                    for fecha in rangeDays[i]:
+                        clase =  Clase.objects.create(calendario=calendario, profesor=objecto.profesor)
+                        clase.save()
+                        iPicadero.clases.add(clase)
+                        claseE = EstadoClase.objects.get(clase=clase)
+                        claseE.dia = fecha
+                        claseE.save()
+                        print(claseE)
                 return redirect('estudiantes')
             except Exception as error:
                 print(error)

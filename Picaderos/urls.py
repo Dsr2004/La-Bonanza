@@ -10,6 +10,5 @@ urlpatterns = [
     path("ModificarPicadero/<int:pk>", login_required(ModificarPicadero.as_view()), name="modificarPicadero"),
     path("BorrarPicadero/", login_required(BorrarPicadero.as_view()), name="borrarPicadero"),
     path("ReportePicadero/<int:pk>", login_required(ReportePicadero.as_view()), name="reportePicadero"),
-    
-    
+    path('EditarProfesorClase/<int:pk>', login_required(editarProfesorClase.as_view()), name="editarProfesorClase"),
 ]
