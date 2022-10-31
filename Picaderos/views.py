@@ -1,6 +1,4 @@
 from datetime import date, datetime, time
-from gc import get_objects
-from django.shortcuts import render
 from django.views.generic import View, ListView, DetailView, CreateView, UpdateView
 from django.urls import reverse_lazy
 from django.http import JsonResponse
