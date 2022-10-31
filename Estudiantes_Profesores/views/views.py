@@ -6,7 +6,7 @@ from django.http import JsonResponse
 from django.contrib import messages
 from django.db.models import Q
 
-from Picaderos.models import EstadoClase, Picadero
+from Picaderos.models import EstadoClase, InfoPicadero, Picadero
 from ..models import DIAS_SEMANA, Estudiante, Registro, Profesor, Asistencia, Calendario as CalendarioModel
 
 
@@ -45,19 +45,20 @@ def serialiserValidation(lista, i, iPicadero, tipo):
 
 class Calendario(View):
     template_name = "calendario.html"
-    model = CalendarioModel
+    model = EstadoClase
     def get(self, request, *args, **kwargs):
         estudiantes = Estudiante.objects.filter(estado=True)
         registros = []
         if estudiantes:
             if request.user.administrador:
-                calendarios = CalendarioModel.objects.all()
-                for calendario in calendarios:
+                estadoClase = EstadoClase.objects.filter(estado = True)
+                for clases in estadoClase:
+                    calendario = clases.clase.calendario
                     if calendario.registro.estudiante.estado==True:
                         registros.append(calendario)
             else:
                 registros = Registro.objects.filter(estudiante__in=[x.pk for x in estudiantes]).filter(profesor=request.user.pk)
-        ctx = {"clases":registros}
+        ctx = {"clases":list(set(registros))}
         print(ctx["clases"])
         return render(request, self.template_name ,ctx)
 
@@ -121,7 +122,7 @@ class GestionDeAsistencia(View):
         if not request.user.administrador:
             clasesHoy = clasesHoy.filter(registro__in=[x.registro.pk for x in clasesHoy if x.registro.profesor.pk == request.user.pk ]).order_by("horaClase")
         clasesHoy = [clases.clase.calendario for clases in EstadoClase.objects.all() if clases.clase.calendario in clasesHoy and clases.estado != False]
-        clasesHoy = list(clasesHoy)
+        clasesHoy = list(set(clasesHoy))
         clasesHoyRango = []
         for clases in clasesHoy:
             if clases.inicioClase  <= hoyA <= clases.finClase:

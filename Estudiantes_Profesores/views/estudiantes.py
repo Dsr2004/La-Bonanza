@@ -1,5 +1,6 @@
 import json
 from datetime import datetime, timedelta
+from time import strptime
 from dateutil.relativedelta import relativedelta
 from django.shortcuts import render, redirect
 from django.views.generic import View, CreateView, ListView, UpdateView, DetailView, TemplateView
@@ -152,7 +153,6 @@ class CrearNuevosEstudiantes(IsAdminMixin, CreateView):
                     else:
                         if  profesores >= max_profes:
                             errores = serialiserValidation(errores, 1, iPicadero, 'profesor al estudiante')
-            print(errores)                
             if errores!=[]:    
                 if errores[0]!={}:
                     return JsonResponse({"errores":{"estudiante":[f"No puede asignar este {errores[0]['tipo']} porque el picadero: {errores[0]['contenido']['nombre']} los dias {errores[0]['contenido']['dias']} a las {errores[0]['contenido']['hora']} no admite más estudiantes"]}}, status=400)
@@ -162,15 +162,28 @@ class CrearNuevosEstudiantes(IsAdminMixin, CreateView):
             # FIN VALIDACIÓN PARA LOS PICADEROS
             objecto = form.save()
             picadero = Picadero.objects.get(nivel = objecto.nivel)
+            rangeDays = []
+            for diaClaseF in diasClases:
+                print(diaOriginal)
+                first_date = datetime.strptime(diaOriginal, '%Y-%m-%d')
+                last_date = finClases
+                week_day = arreglarFormatoDia(int(diaClaseF))
+                dates = [(first_date + timedelta(days=d)) for d in range((last_date - first_date).days + 1)if (first_date + timedelta(days=d)).weekday() == week_day] 
+                rangeDays.append(dates)
+            
             for i in range(len(hora)):
                 calendario = CalendarioModel.objects.create(horaClase=hora[i],finClase=finClases,inicioClase=diaOriginal,diaClase = str(diasClases[i]), registro=objecto)
                 calendario.save()
-                clase =  Clase.objects.create(calendario=calendario, profesor=objecto.profesor)
-                clase.save()
                 iPicadero, creado = InfoPicadero.objects.get_or_create(picadero=picadero,hora=hora[i], dia=diasClases[i]) 
                 iPicadero.save()
-                iPicadero.clases.add(clase)
-                # raise Exception("para que no me guarde gracias")
+                for fecha in rangeDays[i]:
+                    clase =  Clase.objects.create(calendario=calendario, profesor=objecto.profesor)
+                    clase.save()
+                    iPicadero.clases.add(clase)
+                    claseE = EstadoClase.objects.get(clase=clase)
+                    claseE.dia = fecha
+                    claseE.save()
+                    print(claseE)
             return redirect('estudiantes') 
         else:
             return JsonResponse({"errores": form.errors}, status=400)

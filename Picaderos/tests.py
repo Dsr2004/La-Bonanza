@@ -1,6 +1,11 @@
-from datetime import datetime
+import time
+from datetime import timedelta, datetime
 
-inicio = datetime.strptime("2022-10-01", "%Y-%M-%d").date()
-fin = datetime.strptime("2022-10-31", "%Y-%M-%d").date()
+first_date = '2021-01-01'
+final_date = '2021-12-31'
+first_date = datetime.strptime(first_date, '%Y-%m-%d')
+last_date = datetime.strptime(final_date, '%Y-%m-%d')
+week_day = 1
+dates = [first_date + timedelta(days=x) for x in range((last_date - first_date).days + 1) if (first_date + timedelta(days=x)).weekday() == 1]
 
-print(fin-inicio)
+print(first_date.strftime('%A'))

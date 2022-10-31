@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models.signals import pre_save
 from django.utils.text import slugify
 from Niveles.models import Nivel
+from datetime import datetime
 
 DIAS_SEMANA = (
     ("1","Lunes"),("2","Martes"),("3","Miércoles"),("4","Jueves"),("5","Viernes"),("6","Sábado"),("0","Domingo")
@@ -23,7 +24,7 @@ class Picadero(models.Model):
 
 class Clase(models.Model):
     profesor = models.ForeignKey(to="Estudiantes_Profesores.Profesor", on_delete=models.SET_NULL, blank=True, null=True)
-    calendario = models.OneToOneField(to="Estudiantes_Profesores.Calendario", on_delete=models.CASCADE)
+    calendario = models.ForeignKey(to="Estudiantes_Profesores.Calendario", on_delete=models.CASCADE)
     class Meta:
         db_table = "clasesOlvidadas"
 
@@ -46,16 +47,19 @@ class InfoPicadero(models.Model):
         print(self)
         # self.clases_set.all()
 
+
+
 class EstadoClase(models.Model):
     clase = models.ForeignKey(Clase, on_delete=models.CASCADE)
     InfoPicadero = models.ForeignKey(InfoPicadero, on_delete=models.CASCADE)
+    dia = models.DateField(default=datetime.now())
     estado = models.BooleanField(default=True)
     
     class Meta():
-        db_table="clases"
+        db_table="HistorialClases"
     
     def __str__(self):
-        return f'Jodase perro inmundo animal hp {self.clase} coma mierda {self.InfoPicadero}'
+        return f'clase {self.clase} relacionada {self.InfoPicadero} dia {self.dia}'
 
 #SIGNALS
 def pre_save_picadero_receiver(sender, instance, *args, **kwargs):
