@@ -224,4 +224,18 @@
   .tooltipE:hover .tooltiptextE {
     visibility: visible;
   }
-
+/* Style button sup in edit mr in picadero's list */
+.supEditMr{
+    cursor:pointer;
+    float:right;
+    margin-right:-10px; 
+    margin-top:2px;
+    font-size:13px;
+    padding:2.5px 5px;
+    color:#ffc107!important;
+}
+.supEditMr:hover{
+    margin-right:-10px; 
+    margin-top:4px;
+    font-size:15px;
+}

@@ -75,11 +75,6 @@
            <div class="col-2">
 
             <a type="button"  class="btn btn-success " onclick="reporteEstudiantePicadero('{%url 'reportePicadero' picadero.pk %}', '{{picadero.nombre|title}}')" > <i class="fa-solid fa-file-excel"></i></a>
-            {% if not infoPicadero %}
-            <a href="" class="btn btn-outline-info"><i class="fa-solid fa-plus"></i></a>
-            {% else %}
-            <a href="" class="btn btn-outline-warning" ><i class="fa-solid fa-pencil"></i></a>
-            {% endif %}
             
            </div>
         </div>
@@ -110,6 +105,32 @@
         </div>
     </div>
 {% endblock contenido %}
+
+{% block modals %}
+  <!-- Modal -->
+    <div id="mode">
+        <div class="modal fade" id="editarProfesor" tabindex="-1" aria-labelledby="editarProfesorLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="editarProfesorLabel"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="" method="post" id="editarProfesorClaseForm">
+                        {% csrf_token %}
+                    </form>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-success" onclick="document.getElementById('editarProfesorClaseForm').submit()">Editar</button>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+{% endblock modals %}
+    
 {%block scripts%}
 <script src="{% static 'js/picaderos.js' %}"></script>
 <script>
@@ -132,20 +153,33 @@
             type: "post",
             data: {"csrfmiddlewaretoken":csrftoken, "hora":hora, "dia":dia},
             success: function(response){
-            let contenido = ''
             clases = response["clases"]
             console.log(clases)
+            let div = document.getElementById('ClasesTabla').getElementsByTagName('tbody')[0]
+            div.innerHTML = ""
             for (var i = 0; i < clases.length; i++) {
-                contenido += '<tr>';
-                contenido += '<th scope="row">' + String(i+1) + '</th>';
-                contenido += '<td>' + clases[i]["estudiante"] + '</td>';
-                contenido += '<td>' + clases[i]["profesor"] + '</td>';
-                contenido += '</tr>';
-                
+                let tr = document.createElement('tr')
+                let td = document.createElement('td')
+                let th = document.createElement('th')
+                let sup = document.createElement('sup')
+                let iTag = document.createElement('i')
+                th.innerHTML = String(i+1)
+                td.innerHTML = clases[i].estudiante
+                tr.appendChild(th)
+                tr.appendChild(td)
+                let copy = td.cloneNode(true)
+                copy.innerHTML = clases[i].profesor
+                iTag.className = "fa-solid fa-pencil"
+                sup.appendChild(iTag)
+                sup.classList.add('supEditMr')
+                sup.setAttribute('onclick','editarProfesor('+clases[i].id+')')
+                sup.setAttribute('data-bs-toggle','modal')
+                sup.setAttribute('data-bs-target', '#editarProfesor')
+                copy.appendChild(sup)
+                tr.appendChild(copy)
+                console.log(tr)
+                div.appendChild(tr)
             }
-            $('#ClasesTabla tbody').html(contenido); 
-
-            console.log(contenido)
             },
             error: function(data){
                 Swal.fire({
@@ -160,6 +194,56 @@
             }
         })
     })
+    function editarProfesor(id){
+        document.getElementById('mode').style.display = 'block'
+        url = '{%url "editarProfesorClase" 1%}'.split('/')
+        url[url.length-1] = id
+        url=url.join('/')
+        $.ajax({
+            url:url,
+            type:'get',
+            success: function (data){
+                console.log(data)
+                document.getElementById('editarProfesorLabel').innerHTML = 'Cambiar profesor a '+data.nombreEstudiante    
+                let form = document.getElementById('editarProfesorClaseForm')
+                let select = document.createElement('select')
+                let subtitle = document.createElement('Label')
+                subtitle.innerHTML = 'Profesores:'
+                select.name = 'profesor'
+                select.id = 'profesoresSelect'
+                select.classList.add('form-select')
+                for(let i = 0; i < data.Profesores.profesoresPk.length; i++){
+                    let option = document.createElement('option')
+                    option.value = data.Profesores.profesoresPk[i]
+                    option.innerHTML = data.Profesores.profesoresName[i]
+                    if(data.Profesores.profesoresPk == data.ActualProfesor.profesorPk){
+                        option.selected = true
+                    }
+                    select.appendChild(option)
+                }
+                form.setAttribute('action', url)
+                form.appendChild(subtitle)
+                form.appendChild(select)
+            },
+            error: function (error){
+                document.getElementById('mode').style.display = 'none'
+                let modals = document.querySelectorAll('.modal-backdrop')
+                for(let i = 0; i < modals.length; i++){
+                    modals[i].classList.remove('show')
+                }
+                console.log(error)
+                Swal.fire({
+                position: 'top-end',
+                icon: 'error',
+                title: error['responseJSON'].error,
+                showConfirmButton: false,
+                timer: 5000
+                }).then(function(){
+                    window.location.href = window.location.href
+                })
+            }
+        })
+    }
 </script> 
 {%endblock scripts%}    
     

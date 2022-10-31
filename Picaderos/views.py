@@ -1,11 +1,15 @@
+from ast import Try
+from calendar import calendar
 from datetime import date, datetime, time
 from gc import get_objects
-from django.shortcuts import render
-from django.views.generic import View, ListView, DetailView, CreateView, UpdateView
+from pipes import Template
+from django.shortcuts import render, redirect
+from django.views.generic import View, ListView, DetailView, CreateView, UpdateView, TemplateView
 from django.urls import reverse_lazy
 from django.http import JsonResponse
+from Estudiantes_Profesores.models import Profesor
 from La_Bonanza. mixins import IsAdminMixin
-from .models import EstadoClase, Picadero, InfoPicadero as infoPicaderoModel
+from .models import Clase, EstadoClase, Picadero, InfoPicadero as infoPicaderoModel
 from .forms import PicaderoForm
 from Estudiantes_Profesores.views.views import arreglarFormatoDia
 
@@ -50,9 +54,8 @@ class InfoPicadero(IsAdminMixin, DetailView):
                 clases = EstadoClase.objects.filter(InfoPicadero = InformacionPicadero)
                 clasesList=[]
                 for clase in clases:
-                    if {"estudiante":clase.clase.calendario.registro.get_estudiante, "profesor":clase.clase.profesor.get_profesor} not in clasesList:
-                        if (clase.dia-datetime.now().date()).days + 1 > -7 and (clase.dia-datetime.now().date()).days + 1 <7:
-                            clasesList.append({"estudiante":clase.clase.calendario.registro.get_estudiante, "profesor":clase.clase.profesor.get_profesor})
+                    if (clase.dia-datetime.now().date()).days + 1 > 0 and (clase.dia-datetime.now().date()).days + 1 <7:
+                        clasesList.append({'id':clase.clase.pk,"estudiante":clase.clase.calendario.registro.get_estudiante, "profesor":clase.clase.profesor.get_profesor})
                 return JsonResponse({"clases":clasesList},status=200)
             except Exception as e:
                 print("no", str(e))
@@ -90,3 +93,29 @@ class BorrarPicadero(View):
             except:
                 print("ha ocurrido error")
                 return JsonResponse({"error":"no se pudo encontrar el picadero porque no existe"}, status=400)
+
+
+class editarProfesorClase(TemplateView):
+    model = Clase
+    def get(self, request, *args, **kwargs):
+        try:
+            clase = EstadoClase.objects.get(clase = self.model.objects.get(pk=kwargs['pk']))
+        except Exception as e:
+            if str(e) == 'Clase matching query does not exist.':
+                return JsonResponse({"error":"La consulta que se busca no existe o fue modificada recientemente, por favor intentelo nuevamente","type":True}, status=400)
+            else:
+                return JsonResponse({"error":"Ocurrio un error interno en el servidor, por favor intentelo mas tarde","type":False}, status=400)
+        profesores = [profesor.pk for profesor in Profesor.objects.all() if clase.InfoPicadero.picadero.nivel in profesor.niveles.all()]
+        calendario = clase.clase.calendario
+        data = {'Profesores':{'profesoresPk':profesores,'profesoresName': [profesor.usuario.nombres for profesor in Profesor.objects.all() if clase.InfoPicadero.picadero.nivel in profesor.niveles.all()]}, 'ActualProfesor':{'ProfesorPk':clase.clase.profesor.pk,'ProfesorName':clase.clase.profesor.usuario.nombres}, 'nombreEstudiante':calendario.registro.estudiante.nombre_completo}
+        return JsonResponse(data, status=200)
+    def post(self, request, *args, **kwargs):
+        try:
+            Eclase = EstadoClase.objects.get(clase = self.model.objects.get(pk=kwargs['pk']))
+            clase = Eclase.clase
+            clase.profesor = Profesor.objects.get(pk =request.POST['profesor'])
+            clase.save()
+            return redirect('../InfoPicadero/'+str(Eclase.InfoPicadero.picadero.slug))
+        except Exception as e:
+            return JsonResponse({'error':f'No se pudo realizar la modificación porque {str(e)}'}, status=400)
+            
