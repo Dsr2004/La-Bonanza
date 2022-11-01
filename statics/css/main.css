@@ -239,3 +239,13 @@
     margin-top:4px;
     font-size:15px;
 }
+
+.Nosepuedemodificar{
+    background-color: red !important;
+    border-color:red !important;
+}
+.PrecaucionTodavidsepuedemodificar{
+    background-color: rgb(184, 184, 184) !important;
+    border-color:rgb(168, 168, 168) !important;
+    color: #000!important;
+}

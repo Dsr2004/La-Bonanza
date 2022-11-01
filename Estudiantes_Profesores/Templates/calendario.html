@@ -17,7 +17,7 @@
             <a href="{% url 'asistencia' %}" class="btn btn-outline-secondary w-100">Gestionar Aistencia</a>
         </div>
         <div class="col-2">
-            <a href="{% url 'asistencia' %}" class="btn btn-danger w-100">Clases Canceladas</a>
+            <a href="{% url 'clasesCanceladas' %}" class="btn btn-danger w-100">Clases Canceladas</a>
         </div>
     </div>
     
@@ -53,14 +53,11 @@
             {%for clase in clases %}
                 {
                 id: '{%url 'verInfoEstudianteCalendario' clase.pk%}',
-                title : '{{clase.registro.get_estudiante}}',
-                startRecur : '{{clase.inicioClase|date:"Y-m-d"}}',
-                endRecur : '{{clase.finClase|date:"Y-m-d"}}',
-
-                startTime: '{{clase.horaClase|date:"H:i"}}',
-                daysOfWeek: ['{{clase.diaClase|safe}}'],
-                color: '{{clase.registro.nivel.color_fondo}}',
-                textColor: '{{clase.registro.nivel.color_letra}}',
+                title : '{{clase.clase.calendario.registro.get_estudiante}}',
+                start: '{{clase.get_date_time}}',
+               
+                color: '{{clase.clase.calendario.registro.nivel.color_fondo}}',
+                textColor: '{{clase.clase.calendario.registro.nivel.color_letra}}',
                 },
                 
             {%endfor%}

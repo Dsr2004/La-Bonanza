@@ -167,8 +167,9 @@ class CrearNuevosEstudiantes(IsAdminMixin, CreateView):
                 print(diaOriginal)
                 first_date = datetime.strptime(diaOriginal, '%Y-%m-%d')
                 last_date = finClases
-                week_day = arreglarFormatoDia(int(diaClaseF))
-                dates = [(first_date + timedelta(days=d)) for d in range((last_date - first_date).days + 1)if (first_date + timedelta(days=d)).weekday() == week_day] 
+                week_day = int(diaClaseF)
+                print(first_date, finClases, week_day, (last_date - first_date).days + 1, [(first_date + timedelta(days=d)).weekday() for d in range((last_date - first_date).days + 1)])
+                dates = [+first_date  for d in range((last_date - first_date).days + 1) if int((first_date + timedelta(days=d)).weekday()) == int(week_day)] 
                 rangeDays.append(dates)
             
             for i in range(len(hora)):
@@ -184,6 +185,8 @@ class CrearNuevosEstudiantes(IsAdminMixin, CreateView):
                     claseE.dia = fecha
                     claseE.save()
                     print(claseE)
+            # return JsonResponse({"errores": form.errors}, status=400)
+                    
             return redirect('estudiantes') 
         else:
             return JsonResponse({"errores": form.errors}, status=400)

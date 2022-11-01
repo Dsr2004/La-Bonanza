@@ -95,7 +95,7 @@
             <tbody>
                 {% for clase in clases %}
                     <tr>
-                        <th scope="row">{{forloop.counter}}</th>
+                        
                         <td>{{clase.calendario.registro.get_estudiante}}</td>
                         <td>{{clase.profesor}}</td>
                     </tr>
@@ -108,6 +108,9 @@
 
 {% block modals %}
   <!-- Modal -->
+  <form action="" method="post" id="editarProfesorClaseForm">
+        {% csrf_token %}
+    </form>
     <div id="mode">
         <div class="modal fade" id="editarProfesor" tabindex="-1" aria-labelledby="editarProfesorLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
@@ -117,12 +120,10 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="" method="post" id="editarProfesorClaseForm">
-                        {% csrf_token %}
-                    </form>
+                    <div id="modalBody"></div>
                     <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-success" onclick="document.getElementById('editarProfesorClaseForm').submit()">Editar</button>
+                    <button type="button" class="btn btn-success" onclick="document.getElementById('FormularioVerdadero').submit()">Editar</button>
                     </div>
                 </div>
             </div>
@@ -203,11 +204,14 @@
             url:url,
             type:'get',
             success: function (data){
-                console.log(data)
                 document.getElementById('editarProfesorLabel').innerHTML = 'Cambiar profesor a '+data.nombreEstudiante    
-                let form = document.getElementById('editarProfesorClaseForm')
+                let div = document.getElementById('modalBody')
+                div.innerHTML=""
+                let form = document.getElementById('editarProfesorClaseForm').cloneNode(true)
                 let select = document.createElement('select')
                 let subtitle = document.createElement('Label')
+                form.id = "FormularioVerdadero"
+
                 subtitle.innerHTML = 'Profesores:'
                 select.name = 'profesor'
                 select.id = 'profesoresSelect'
@@ -224,6 +228,7 @@
                 form.setAttribute('action', url)
                 form.appendChild(subtitle)
                 form.appendChild(select)
+                div.appendChild(form)
             },
             error: function (error){
                 document.getElementById('mode').style.display = 'none'

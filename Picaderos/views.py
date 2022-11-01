@@ -50,7 +50,7 @@ class InfoPicadero(IsAdminMixin, DetailView):
                 clases = EstadoClase.objects.filter(InfoPicadero = InformacionPicadero)
                 clasesList=[]
                 for clase in clases:
-                    if (clase.dia-datetime.now().date()).days + 1 > 0 and (clase.dia-datetime.now().date()).days + 1 <7:
+                    if (clase.dia-datetime.now().date()).days + 1 > 0 and (clase.dia-datetime.now().date()).days + 1 <8:
                         clasesList.append({'id':clase.clase.pk,"estudiante":clase.clase.calendario.registro.get_estudiante, "profesor":clase.clase.profesor.get_profesor})
                 return JsonResponse({"clases":clasesList},status=200)
             except Exception as e:
@@ -101,9 +101,9 @@ class editarProfesorClase(TemplateView):
                 return JsonResponse({"error":"La consulta que se busca no existe o fue modificada recientemente, por favor intentelo nuevamente","type":True}, status=400)
             else:
                 return JsonResponse({"error":"Ocurrio un error interno en el servidor, por favor intentelo mas tarde","type":False}, status=400)
-        profesores = [profesor.pk for profesor in Profesor.objects.all() if clase.InfoPicadero.picadero.nivel in profesor.niveles.all()]
+        profesores = [profesor.pk for profesor in Profesor.objects.all() if clase.InfoPicadero.picadero.nivel in profesor.niveles.all()and profesor.usuario.estado == True]
         calendario = clase.clase.calendario
-        data = {'Profesores':{'profesoresPk':profesores,'profesoresName': [profesor.usuario.nombres for profesor in Profesor.objects.all() if clase.InfoPicadero.picadero.nivel in profesor.niveles.all()]}, 'ActualProfesor':{'ProfesorPk':clase.clase.profesor.pk,'ProfesorName':clase.clase.profesor.usuario.nombres}, 'nombreEstudiante':calendario.registro.estudiante.nombre_completo}
+        data = {'Profesores':{'profesoresPk':profesores,'profesoresName': [profesor.usuario.nombres for profesor in Profesor.objects.all() if clase.InfoPicadero.picadero.nivel in profesor.niveles.all()and profesor.usuario.estado == True]}, 'ActualProfesor':{'ProfesorPk':clase.clase.profesor.pk,'ProfesorName':clase.clase.profesor.usuario.nombres}, 'nombreEstudiante':calendario.registro.estudiante.nombre_completo}
         return JsonResponse(data, status=200)
     def post(self, request, *args, **kwargs):
         try:
@@ -111,7 +111,8 @@ class editarProfesorClase(TemplateView):
             clase = Eclase.clase
             clase.profesor = Profesor.objects.get(pk =request.POST['profesor'])
             clase.save()
-            return redirect('../InfoPicadero/'+str(Eclase.InfoPicadero.picadero.slug))
+            
+            return redirect('verPicadero',slug = Eclase.InfoPicadero.picadero.slug)
         except Exception as e:
             return JsonResponse({'error':f'No se pudo realizar la modificación porque {str(e)}'}, status=400)
             

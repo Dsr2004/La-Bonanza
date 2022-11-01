@@ -1,3 +1,4 @@
+import json
 from datetime import datetime, timedelta, date
 from time import time
 from django.shortcuts import render, redirect
@@ -5,11 +6,9 @@ from django.views.generic import View,  DetailView
 from django.http import JsonResponse
 from django.contrib import messages
 from django.db.models import Q
-
-from Picaderos.models import EstadoClase, InfoPicadero, Picadero
+from Picaderos.models import EstadoClase, InfoPicadero, Picadero, EstadoClase
+from Niveles.models import Nivel
 from ..models import DIAS_SEMANA, Estudiante, Registro, Profesor, Asistencia, Calendario as CalendarioModel
-
-
 
 def arreglarFormatoDia(dia):
     if type(dia)  != list:
@@ -47,29 +46,32 @@ class Calendario(View):
     template_name = "calendario.html"
     model = EstadoClase
     def get(self, request, *args, **kwargs):
-        estudiantes = Estudiante.objects.filter(estado=True)
         registros = []
-        if estudiantes:
-            if request.user.administrador:
-                estadoClase = EstadoClase.objects.filter(estado = True)
-                for clases in estadoClase:
-                    calendario = clases.clase.calendario
+        estadoClase = EstadoClase.objects.filter(estado = True)
+        if request.user.administrador:
+            for clases in estadoClase:
+                calendario = clases.clase.calendario
+                if calendario.registro.estudiante.estado==True:
+                    registros.append(clases)
+        else:
+             for clases in estadoClase:
+                calendario = clases.clase.calendario
+                if calendario.registro.profesor == request.user.pk:
                     if calendario.registro.estudiante.estado==True:
-                        registros.append(calendario)
-            else:
-                registros = Registro.objects.filter(estudiante__in=[x.pk for x in estudiantes]).filter(profesor=request.user.pk)
+                        registros.append(clases)
         ctx = {"clases":list(set(registros))}
+        
         print(ctx["clases"])
         return render(request, self.template_name ,ctx)
 
 class VerInfoEstudianteCalendario(DetailView):
-    model=CalendarioModel
+    model=EstadoClase
     template_name = "Calendario/verInfoEstudianteCalendario.html"
 
     def get_context_data(self, **kwargs):
         ctx =  super().get_context_data(**kwargs)
-        registro = self.get_object()
-        clases = Asistencia.objects.filter(registro=registro.registro)
+        registro = self.get_object().clase.calendario.registro
+        clases = Asistencia.objects.filter(registro=registro)
         conteoClases = clases.count()
         conteoClaesAsistidas = clases.filter(estado=1).count()
         conteoClaesNoAsistidas = clases.filter(estado=2).count()
@@ -85,7 +87,8 @@ class ConteoClasesFecha(View):
         fechas = request.POST.get("fechas").split(" - ")
         fechas=[datetime.strptime(fechas[0], '%m/%d/%Y').date(), datetime.strptime(fechas[1], '%m/%d/%Y').date()]
         id = self.kwargs["pk"]
-        registro = Registro.objects.get(pk=id)
+        clase = EstadoClase.objects.get(pk=id)
+        registro = clase.clase.calendario.registro
         clases = Asistencia.objects.filter(registro=registro)
         conteoClases=0
         conteoClaesAsistidas=0
@@ -162,11 +165,11 @@ class GestionDeAsistencia(View):
                     if asistencia.estado != clase["estado"]:
                         if clase['estado'] == '3' or clase['estado'] == '4':
                             claseObject.estado = False
+                            claseObject.fecha_cancelacion = datetime.now().time()
                             claseObject.save()
                             messages.add_message(request, messages.WARNING, f"{registro.estudiante.nombre_completo} ha pasado a la lista de clases canceladas correctamente")
                         else:
                             claseObject.estado = True
-                            # objecto.objects.filter(dia='martes').filter(estado=False).count()x
                             claseObject.save()
                         asistencia.estado=clase["estado"]
                         asistencia.save()
@@ -213,3 +216,115 @@ class ControlAsistencia(View):
         ctx = {"dia":dia,"asistencia":asistencia}
         return render(request, self.template_name, ctx)
 
+class ClasesCanceladas(View):
+    def get(self, request, *args, **kwargs):
+        clases = EstadoClase.objects.filter(estado=False)
+        clasesV = []
+        hoy = datetime.now().date()
+        for clase in clases:
+            if len([d for d in clasesV if d['fecha'] == clase.fecha_cancelacion]) > 0:
+                indice = clasesV.index([d for d in clasesV if d['fecha'] == clase.fecha_cancelacion][0])
+                clasesV[indice]['clases'].append(clase)
+            else:
+                if (hoy-clase.fecha_cancelacion).days+1 >= 0 and (hoy-clase.fecha_cancelacion).days+1 <= 22:
+                    clasesV.append({'fecha':clase.fecha_cancelacion,'clases':[clase],'validacion':True})
+                else:
+                    clasesV.append({'fecha':clase.fecha_cancelacion,'clases':[clase], 'validacion':False})
+        ctx = {"clases":clasesV}
+        return render(request, "clasesCanceladas.html",ctx)
+    
+    
+class ReponerClase(View):
+    def get(self, request, *args, **kwargs):
+        clase = EstadoClase.objects.get(pk=self.kwargs["pk"])
+        return render(request, "Clases/editarClaseCancelada.html",{"clase":clase})
+    def post(self, request, *args, **kwargs):
+        if request.POST.get('tipo') == 'consultaProfesor':
+            clase = EstadoClase.objects.get(pk = kwargs['pk'])
+            profesores = [profesor.pk for profesor in Profesor.objects.all() if clase.InfoPicadero.picadero.nivel in profesor.niveles.all() and profesor.usuario.estado == True]
+            calendario = clase.clase.calendario
+            data = {'Profesores':{'profesoresPk':profesores,'profesoresName': [profesor.usuario.nombres for profesor in Profesor.objects.all() if clase.InfoPicadero.picadero.nivel in profesor.niveles.all() and profesor.usuario.estado == True]}, 'ActualProfesor':{'ProfesorPk':clase.clase.profesor.pk,'ProfesorName':clase.clase.profesor.usuario.nombres}}
+            return JsonResponse(data, status=200)
+        elif  request.POST.get('tipo') == 'editar':
+            dia = request.POST.get("dia")
+            hora =request.POST.get("hora")
+            profesor = request.POST.get("profesor")
+            
+            errores = {}
+            if not dia:
+                errores["dia"]="Este campo es obligatorio."
+            if not hora:
+                errores["dia"]="Este campo es obligatorio."
+            if not profesor:
+                errores["dia"]="Este campo es obligatorio."
+            if errores:
+                return JsonResponse({"errores":errores}, status=400)
+            dia = datetime.strptime(dia, "%Y-%m-%d")
+            hora = datetime.strptime(hora, "%H:%M")
+            profesor = Profesor.objects.get(pk=profesor)
+            horario = profesor.horarios
+            horario = json.loads(horario)
+            clase = EstadoClase.objects.get(pk = kwargs['pk'])
+            # validacion de disponibilidad de profesores 
+            dias = [[str(i[1]) for i in [dia for dia in DIAS_SEMANA] if int(i[0]) == arreglarFormatoDia(dia.weekday())]][0]
+            diasNo = 'los días '+str(dias[0])+' a las '+hora.strftime('%I:%M %p')+' el profesor no esta disponible'
+            if [hor for hor in [horary for horary in horario if horary['day'] in [dia for dia in dias]] if datetime.strptime(hor['from'], '%H:%M').time() <= hora.time() and (datetime.strptime(hor['through'], '%H:%M')-timedelta(hours=1)).time() >= hora.time()] == []:
+                if "meseSus"  in request.POST:
+                    return JsonResponse({"errores":{"Calendario":diasNo,'identificador':1}}, status=400)
+                else:
+                    return JsonResponse({"errores":{"profesor":diasNo,'identificador':None}}, status=400)
+
+             # VALIDACIÓN PARA LOS PICADEORS 
+            try:
+                picadero =  clase.InfoPicadero.picadero
+            except:
+                return JsonResponse({"errores":{"nivel":"No se puede agregar este estudiante porque no hay un picadero con el nivel seleccionado"}}, status=400)
+            errores = [{},{}]
+            max_estudiantes = picadero.max_estudiantes
+            max_profes = picadero.max_profesores
+            picaderos = InfoPicadero.objects.all()
+            picaderos = picaderos.filter(dia = arreglarFormatoDia(dia.weekday())).filter(hora=hora).filter(picadero=picadero)
+            for picadero in picaderos:
+                try:
+                    iPicadero = picadero
+                except:
+                    iPicadero = ""
+                if iPicadero != "":
+                    profesores = len(list(set([clases.clase.profesor for clases in EstadoClase.objects.filter(InfoPicadero=iPicadero)])))
+                    estudiantes = len(list(set([clases.clase.calendario.registro for clases in EstadoClase.objects.filter(InfoPicadero=iPicadero)])))
+                    ElProfeEstaEnLaClase = profesor in [clases.clase.profesor for clases in EstadoClase.objects.filter(InfoPicadero=iPicadero)] 
+                    if estudiantes >= max_estudiantes:
+                        errores = serialiserValidation(errores, 0, iPicadero, 'estudiante')
+                    claseSelected = [diasC for diasC in EstadoClase.objects.all() if dia.date() == diasC.dia and hora.time() == diasC.clase.calendario.horaClase]
+                    print(dia.date() in [diasC.dia for diasC in EstadoClase.objects.all() if  hora.time() == diasC.clase.calendario.horaClase])
+                    if len(claseSelected)>0:
+                        Clases = [pro.clases.all() for pro in InfoPicadero.objects.filter(picadero=clase.InfoPicadero.picadero) if int(pro.dia) == arreglarFormatoDia(dia.weekday()) and pro.hora == hora.time()]
+                        for pforsor in [clase[0].profesor for clase in Clases]:
+                            if profesor != pforsor:
+                                if ElProfeEstaEnLaClase:
+                                    if  profesores-1 >= max_profes+1:
+                                        errores = serialiserValidation(errores, 1, iPicadero, 'profesor al estudiante')
+                                else:
+                                    if  profesores >= max_profes:
+                                        errores = serialiserValidation(errores, 1, iPicadero, 'profesor al estudiante')
+                            else:
+                                if ElProfeEstaEnLaClase:
+                                    if  profesores-1 >= max_profes+1:
+                                        errores = serialiserValidation(errores, 1, iPicadero, 'profesor al estudiante')
+                                else:
+                                    if  profesores >= max_profes+1:
+                                        errores = serialiserValidation(errores, 1, iPicadero, 'profesor al estudiante')
+                    else:
+                        return JsonResponse({"errores":{"errores":"No hay clases este dia como sera posible editar algo inexistente?"}}, status=400)
+                        
+            print(errores)
+            if errores!=[]:    
+                if errores[0]!={}:
+                    return JsonResponse({"errores":{"estudiante":[f"No puede asignar este {errores[0]['tipo']} porque el picadero: {errores[0]['contenido']['nombre']} los dias {errores[0]['contenido']['dias']} a las {errores[0]['contenido']['hora']} no admite más estudiantes"]}}, status=400)
+                elif errores[1]!={}:
+                    return JsonResponse({"errores":{"profesor":[f"No puede asignar este {errores[1]['tipo']} porque el picadero: {errores[1]['contenido']['nombre']} los dias {errores[1]['contenido']['dias']} a las {errores[1]['contenido']['hora']} no admite más profesores"]}}, status=400)
+           
+            # FIN VALIDACIÓN PARA LOS PICADEROS
+            
+            return JsonResponse({'dh':request.POST}, status=200)
+            
