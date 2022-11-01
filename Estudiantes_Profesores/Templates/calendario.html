@@ -13,11 +13,11 @@
 <br>
 <div class="container">
     <div class="row">
-        <div class="col-10">
-            <a href="{% url 'asistencia' %}" class="btn btn-outline-secondary w-100">Gestionar Aistencia</a>
+        <div class="{%if cancelada > 0 %}col-10{%else%}col-12{%endif%}">
+            <a href="{% url 'asistencia' %}" class="btn btn-outline-secondary w-100">Gestionar Asistencia</a>
         </div>
         <div class="col-2">
-            <a href="{% url 'clasesCanceladas' %}" class="btn btn-danger w-100">Clases Canceladas</a>
+            <a href="{% url 'clasesCanceladas' %}" style="display: {%if cancelada > 0 %}block{%else%}none{%endif%};" class="btn btn-danger w-100">Clases Canceladas</a>
         </div>
     </div>
     
