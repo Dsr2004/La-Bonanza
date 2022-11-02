@@ -38,12 +38,15 @@ class RegistrarEstudiante(CreateView):
     success_url = reverse_lazy("estudiantes")
 
     def form_valid(self, form):
+        print(form)
         if self.request.user.is_authenticated:
             if self.request.user.administrador:
+                form.estado = True
                 form.save()
                 return redirect("estudiantes")
         else:
             nombre = str(form.cleaned_data['nombre_completo']).capitalize()
+            form.estado = True
             form.save()
             return render(self.request, "gracias.html",{"nombre":nombre})
 
@@ -165,7 +168,7 @@ class CrearNuevosEstudiantes(IsAdminMixin, CreateView):
                 first_date = datetime.strptime(diaOriginal, '%Y-%m-%d')
                 last_date = finClases
                 week_day = int(diaClaseF)
-                dates = [first_date + timedelta(days=d)  for d in range((last_date - first_date).days + 1) if int((first_date + timedelta(days=d)).weekday()) == int(week_day)] 
+                dates = [first_date + timedelta(days=d)-timedelta(days=1)  for d in range((last_date - first_date).days + 1) if int((first_date + timedelta(days=d)).weekday()) == int(week_day)] 
                 rangeDays.append(dates)
             print(rangeDays)
             for i in range(len(hora)):

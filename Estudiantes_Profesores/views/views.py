@@ -126,7 +126,7 @@ class GestionDeAsistencia(View):
         clasesHoy = [calendario for calendario in clasesHoy if calendario.dia == datetime.now().date()]
         clasesHoyRango = []
         for clases in clasesHoy:
-            if clases.inicioClase  <= hoyA <= clases.finClase:
+            if clases.clase.calendario.inicioClase  <= hoyA <= clases.clase.calendario.finClase:
                 clasesHoyRango.append(clases)
           
         
