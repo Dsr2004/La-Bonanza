@@ -3,6 +3,7 @@ import json
 from django import forms
 from .models import Estudiante, Registro, Profesor
 from django.core.exceptions import ValidationError
+from Usuarios.models import Usuario
 
 
 class CrearEstudianteForm(forms.ModelForm):
@@ -13,7 +14,7 @@ class CrearEstudianteForm(forms.ModelForm):
         "comprobante_documento_identidad","nombre_completo_madre","cedula_madre","lugar_expedicion_madre","celular_madre",
         "email_madre","nombre_completo_padre","cedula_padre","lugar_expedicion_padre", "celular_padre", "email_padre", "direccion_A","barrio_A",
         "ciudad_A","nombre_contactoE","telefono_contactoE","relacion_contactoE","exoneracion",
-        "documento_A","seguro_A","tipo_clase","estado","aceptaContrato")
+        "documento_A","seguro_A","tipo_clase","aceptaContrato")
 
         widgets = {
         "nombre_completo": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
@@ -102,7 +103,7 @@ class EstudianteForm(forms.ModelForm):
         "comprobante_documento_identidad","nombre_completo_madre","cedula_madre","lugar_expedicion_madre","celular_madre",
         "email_madre","nombre_completo_padre","cedula_padre","lugar_expedicion_padre", "celular_padre", "email_padre", "direccion_A","barrio_A",
         "ciudad_A","nombre_contactoE","telefono_contactoE","relacion_contactoE","exoneracion",
-        "documento_A","seguro_A","tipo_clase","estado")
+        "documento_A","seguro_A","tipo_clase")
 
         widgets = {
         "nombre_completo": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
@@ -175,6 +176,9 @@ class EstudianteForm(forms.ModelForm):
 
 
 class RegistroForm(forms.ModelForm):
+    def __init__(self,*args,**kwargs):
+        super (RegistroForm,self ).__init__(*args,**kwargs)
+        self.fields['profesor'].queryset = Profesor.objects.filter(usuario__in = [x for x in Usuario.objects.filter(estado=True)])
     class Meta:
         model = Registro
         fields = "__all__"
@@ -184,6 +188,8 @@ class RegistroForm(forms.ModelForm):
             "nivel": forms.Select(attrs={"class":"form-select"}),
             "profesor": forms.Select(attrs={"class":"form-select"}),
         }
+
+
     
         
     
