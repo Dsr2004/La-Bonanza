@@ -83,6 +83,7 @@ class RegistroUsuario(TemplateView):
         if request.user.administrador!=1:
             return redirect("calendario")
         tipo = request.GET.get('type')
+        print(tipo)
         data={'formUsuario':UsuarioForm, 'formProfesor':ProfesorForm,'title':'profesor'}
         filter = {"value":"","cont":''}
         filter['value']=request.GET.get('type')
@@ -91,6 +92,7 @@ class RegistroUsuario(TemplateView):
             cont = 'Profesores'
         if filter['value']=='A':
             cont = 'Administradores'
+            data['title']='administrador'
         filter['cont']=cont
         data['filter']=filter
         return render(request, 'Usuarios/crearUsuario.html', {'forms':data})
@@ -139,6 +141,7 @@ class RegistroUsuario(TemplateView):
                         return HttpResponse(data, content_type="application/json", status=400)
                         
                 usuario.set_password(form.cleaned_data['cedula'])
+                print(request.POST.get('function'))
                 if request.POST.get('function') == 'User':
                     print(request.POST.get('function'))
                     usuario.administrador = 1
