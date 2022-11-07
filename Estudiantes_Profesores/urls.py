@@ -16,6 +16,7 @@ urlpatterns=[
     path("CrearNuevosEstudiantes/<int:pk>", login_required(CrearNuevosEstudiantes.as_view()), name="crearNuevosEstudiantes"),
     path("ValidarRegistroEstudiante/", login_required(ValidarRegistroEstudiante.as_view()), name="validarRegistroEstudiante"),
     path("VerInfoEstudiante/<int:pk>", login_required(VerInfoEstudiante.as_view()), name="verInfoEstudiante"),
+    path("VerInfoEstudianteSinRegistro/<int:pk>", login_required(VerInfoEstudianteSinRegistro.as_view()), name="verInfoEstudianteSinRegistro"),
     path("ModificarEstudiante/<int:pk>", login_required(ModificarEstudiante.as_view()), name="modificarEstudiante"),
     path("ModificarDocsEstudiante/<int:pk>", login_required(ModificarDocsEstudiante.as_view()), name="modificarDocsEstudiante"),
     path("ModificarRegistroEstudiante/<int:pk>", login_required(ModificarRegistroEstudiante.as_view()), name="modificarRegistroEstudiante"),

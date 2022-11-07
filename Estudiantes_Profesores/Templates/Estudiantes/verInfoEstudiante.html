@@ -115,6 +115,18 @@
                     </div>
                 </div>
                 <br>
+                <div class="row">
+                    <h5><strong>¿El Estudiante desea facturación electrónica?:</strong></h5>
+                    <p>
+                        {% if object.facturacion_electronica %}
+                        SI
+                        {% else %}
+                        NO
+                        {% endif %}
+                    </p>
+                               
+                </div>
+                <br>
                
             </div>
             <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">

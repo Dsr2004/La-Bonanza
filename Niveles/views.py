@@ -4,12 +4,14 @@ from .models import Nivel
 from .forms import NivelForm
 from django.http import JsonResponse
 
-class Niveles(ListView):
+from La_Bonanza.mixins import IsAdminMixin
+
+class Niveles(IsAdminMixin, ListView):
     model=Nivel
     context_object_name="niveles"
     template_name="niveles.html"
 
-class CrearNivel(CreateView):
+class CrearNivel(IsAdminMixin, CreateView):
     model=Nivel
     form_class= NivelForm
     template_name="agregarNivel.html"
@@ -18,7 +20,7 @@ class CrearNivel(CreateView):
     def form_invalid(self, form):
         return JsonResponse({"errores":form.errors}, status=400)
 
-class ModificarNivel(UpdateView):
+class ModificarNivel(IsAdminMixin, UpdateView):
     model=Nivel
     form_class= NivelForm
     template_name="modificarNivel.html"
@@ -28,7 +30,7 @@ class ModificarNivel(UpdateView):
         return JsonResponse({"errores":form.errors}, status=400)
 
 
-class BorrarNivel(View):
+class BorrarNivel(IsAdminMixin, View):
     def post(self, request, *args, **kwargs):
         id = request.POST.get("id")
         try:

@@ -66,7 +66,7 @@ class EstadoClase(models.Model):
     
     @property
     def get_date_time(self):
-        return f"{self.dia.strftime('%Y-%m-%d')}T{self.clase.calendario.horaClase}"
+        return f"{self.dia.strftime('%Y-%m-%d')}T{self.InfoPicadero.hora}"
     
 
 #SIGNALS

@@ -1,0 +1,338 @@
+{% extends 'base.html' %}
+{% block titulo %}Información de Estudiantes{% endblock titulo %}
+
+
+{% block contenido %}
+    <div class="container">
+        <h1>Ver información de {{object.get_estudiante}}</h1>
+        <hr>
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Información del Estudiante</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Información del Acudiente</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">Información del Contacto de emergencia</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="docs-tab" data-bs-toggle="tab" data-bs-target="#docs-tab-pane" type="button" role="tab" aria-controls="docs-tab-pane" aria-selected="false">Documentos</button>
+            </li>
+          </ul>
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+                <br>
+                <h3>Información del estudiante</h3>
+                <br>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5><strong>Nombre Completo: </strong></h5>
+                        {{object.get_estudiante}}
+                    </div>
+                    <div class="col-md-6">
+                        <h5><strong>Fecha de nacimiento:
+                        </strong></h5>
+                        {{object.fecha_nacimiento|date:'d/m/Y'}}
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5><strong>Numero de documento:</strong></h5>
+                        {{object.documento}}
+                    </div>
+                    <div class="col-md-6">
+                        <h5><strong>Numero de celular:</strong></h5>
+                        {{object.celular}}
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5><strong>Edad:</strong></h5>
+                        {{object.get_edad}}
+                    </div>
+                    <div class="col-md-6">
+                        <h5><strong>Correo electronico:</strong></h5>
+                        {{object.email}}
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5><strong>Direccion de residencia:</strong></h5>
+                        {{object.direccion}}
+                    </div>
+                    <div class="col-md-6">
+                        <h5><strong>Barrio de resdencia:</strong></h5>
+                        {{object.barrio}}
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5><strong>Ciudad de residencia:</strong></h5>
+                        {{object.ciudad}}
+                    </div>
+                    <div class="col-md-6">
+                        <h5><strong>Tipo de Clase:</strong></h5>
+                        {{object.get_tipo_clase_display}}
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5><strong>Seguro:</strong></h5>
+                        {{object.seguro}}
+                    </div>
+                    <div class="col-md-6">
+                        <h5><strong>Poliza:</strong></h5>
+                        {{object.poliza}}
+                    </div>
+                    
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5><strong>Tiene comprobante de seguro medico:</strong></h5>
+                        {% if object.comprobante_seguro_medico %}
+                        SI
+                        {% else %}
+                        NO
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <h5><strong>Tiene comprobante de documento de identidad:</strong></h5>
+                        {% if object.comprobante_documento_identidad %}
+                        SI
+                        {% else %}
+                        NO
+                        {% endif %}
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <h5><strong>¿El Estudiante desea facturación electrónica?:</strong></h5>
+                    <p>
+                        {% if object.facturacion_electronica %}
+                        SI
+                        {% else %}
+                        NO
+                        {% endif %}
+                    </p>
+                               
+                </div>
+                <br>
+               
+            </div>
+            <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+                <br>
+                <h3>Información de los padres</h3>
+                <h5><center>Información de la Madre</center></h5>
+                <br>
+                <div class="row">
+                    {% if object.nombre_completo_madre %}
+                        <div class="col-md-6">
+                            <h5><strong>Nombre completo de la Madre:</strong></h5>
+                            {{object.nombre_completo_madre}}
+                        </div>
+                    {% endif %}
+                    {% if object.cedula_madre %}
+                        <div class="col-md-6">
+                            <h5><strong>Numero de cedula de la Madre:</strong></h5>
+                            {{object.cedula_madre}}
+                        </div>
+                    {% endif %}
+                </div>
+                <br>
+                <div class="row">
+                    {% if object.celular_madre %}
+                        <div class="col-md-6">
+                            <h5><strong>Numero de celular de la Madre :</strong></h5>
+                            {{object.celular_madre}}
+                        </div>
+                    {% endif %}
+                    {% if object.email_madre %}
+                        <div class="col-md-6">
+                            <h5><strong> Correo electronico de la Madre:</strong></h5>
+                            {{object.email_madre}}
+                        </div>
+                    {% endif %}
+                    
+                </div>
+                <br>
+                <div class="row">
+                   
+                   {% if object.lugar_expedicion_madre %}
+                   <div class="col-md-6">
+                    <h5><strong>Lugar de expedicion de la cedula de la Madre:</strong></h5>
+                    {{object.lugar_expedicion_madre}}
+                </div>
+                   {% endif %}
+                </div>
+                <hr>
+                <h5><center>Información del Padre</center></h5>
+                <br>
+                <div class="row">
+                    {% if object.nombre_completo_padre %}
+                        <div class="col-md-6">
+                            <h5><strong>Nombre completo del Padre:</strong></h5>
+                            {{object.nombre_completo_padre}}
+                        </div>
+                    {% endif %}
+                    {% if object.cedula_padre %}
+                        <div class="col-md-6">
+                            <h5><strong>Numero de cedula Del Padre:</strong></h5>
+                            {{object.cedula_padre}}
+                        </div>
+                    {% endif %}
+                </div>
+                <br>
+                <div class="row">
+                    {% if object.celular_padre %}
+                        <div class="col-md-6">
+                            <h5><strong>Numero de celular Del Padre :</strong></h5>
+                            {{object.celular_padre}}
+                        </div>
+                    {% endif %}
+                    {% if object.email_padre %}
+                        <div class="col-md-6">
+                            <h5><strong> Correo electronico Del Padre:</strong></h5>
+                            {{object.email_padre}}
+                        </div>
+                    {% endif %} 
+                </div>
+                <br>
+                <div class="row">
+                   {% if object.lugar_expedicion_padre %}
+                   <div class="col-md-6">
+                    <h5><strong>Lugar de expedicion de la cedula Del Padre:</strong></h5>
+                    {{object.lugar_expedicion_padre}}
+                </div>
+                   {% endif %}
+                </div>
+                <br>
+                <hr>
+                <h5><center>Información de ubicación del acudiente</center></h5>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5><strong>Direccion: </strong></h5>
+                        {{object.direccion_A}}
+                    </div>
+                    <div class="col-md-6">
+                        <h5><strong>Barrio:</strong></h5>
+                        {{object.barrio_A}}
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5><strong>Ciudad: </strong></h5>
+                        {{object.ciudad_A}}
+                    </div>
+                </div>
+                <br>
+            </div>
+            <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
+                <br>
+                <h3>Información del contacto de emergencia </h3>
+                <br>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5><strong>Nombre del contacto de emergencia:</strong></h5>
+                        {{object.nombre_contactoE}}
+                    </div>
+                    <div class="col-md-6">
+                        <h5><strong> Telefono del contacto de emergencia:</strong></h5>
+                        {{object.telefono_contactoE}}
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5><strong> Relacion con el alumno:</strong></h5>
+                        {{object.relacion_contactoE}}
+                    </div>
+                </div>
+                <br>
+            </div>
+            <div class="tab-pane fade" id="docs-tab-pane" role="tabpanel" aria-labelledby="docs-tab" tabindex="0">
+                <br>
+                <h3>Documentos </h3>
+                <br>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-8">
+                                <h5><strong>Documento de identidad:</strong></h5>
+                            </div>
+                            <div class="col-4">
+                                <a href="/media/{{object.documento_A}}" download="output.png" class="btn btn-primary btn-sm"><i class="fa-solid fa-download"></i></a>
+                            </div>
+                        </div>
+                        <img src="/media/{{object.documento_A}}" alt="" class="img-fluid">
+                       <input type="hidden" id="documento" value="{{object.documento_A}}">
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-8">
+                                <h5><strong>Seguro:</strong></h5>
+                            </div>
+                            <div class="col-1">
+                                <a href="/media/{{object.seguro_A}}" download="output.png" class="btn btn-primary btn-sm"><i class="fa-solid fa-download"></i></a>
+                            </div>
+                        </div>
+                        <img src="/media/{{object.seguro_A}}" alt="" class="img-fluid">
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-8">
+                                <h5><strong>Consentimiento para asumir riesgo y Exoneración de responsabilidad::</strong></h5>
+                            </div>
+                            <div class="col-1">
+                                <a href="/media/{{object.exoneracion}}" download="output.png" class="btn btn-primary btn-sm"><i class="fa-solid fa-download"></i></a>
+                            </div>
+                        </div>
+                        <img src="/media/{{object.exoneracion}}" alt="" class="img-fluid">
+                    </div>
+                </div>
+                <br>
+            </div>
+           
+          </div>
+            </div>
+    </div>
+{% endblock contenido %}
+
+
+{% block scripts %}
+    <script>
+        cargarHoras(horaClase,diaClase)
+        let documento = $("#documento")
+        function cargarHoras(Horarios, dia){
+            days = dia
+            for(var i=0;i<Horarios.length;i++) {
+                horas = Horarios[i];
+                console.log(horas)
+                const divHorario = document.createElement('div');
+                const inputHorario = document.createElement("h6");
+                inputHorario.innerHTML = horas
+                const dateDay = document.createElement("h5");
+                dateDay.innerHTML = days[i].value;
+                inputHorario.classList.add("from")
+                divHorario.appendChild(dateDay);
+                divHorario.appendChild(inputHorario);
+                divHorario.style.margin = "0 10px"
+                document.getElementById('horarios').appendChild(divHorario);
+            }
+        }
+        
+    </script>
+{% endblock scripts %}
+    
+
+    

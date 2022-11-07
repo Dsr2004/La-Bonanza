@@ -1,5 +1,8 @@
+import os
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models.signals import pre_save,post_save
+from django.core.validators import MaxValueValidator
 from Picaderos.models import Clase, InfoPicadero, Picadero
 from Usuarios.models import Usuario
 from Niveles.models import Nivel
@@ -20,14 +23,24 @@ ESTADOS_ASISTENCIA = (
 ESTADOS_CLASES = (
     ("1","Clase puntual"),("2","Mensualidad")
 )
+def extension(file):
+        name, extension = os.path.splitext(file)
+        return extension
+
 
 def guardar_exoneracion(instance, filename):
-    return  f"Archivos_Estudiantes/{instance.nombre_completo}_{instance.documento}/exoneracion"
+    return  f"Archivos_Estudiantes/{instance.nombre_completo}_{instance.documento}/exoneracion{extension(filename)}"
 def guardar_documento(instance, filename):
-    return  f"Archivos_Estudiantes/{instance.nombre_completo}_{instance.documento}/documento"
+    return  f"Archivos_Estudiantes/{instance.nombre_completo}_{instance.documento}/documento{extension(filename)}"
 def guardar_seguro(instance, filename):
-    return  f"Archivos_Estudiantes/{instance.nombre_completo}_{instance.documento}/seguro"
+    return  f"Archivos_Estudiantes/{instance.nombre_completo}_{instance.documento}/seguro{extension(filename)}"
 
+def validar_extencion_archivo(value):
+    
+    ext = os.path.splitext(value.name)[1] 
+    valid_extensions = ['.pdf', '.jpg', '.jpeg', '.png']
+    if not ext.lower() in valid_extensions:
+        raise ValidationError('Tipo de archivo invalido, solo adjunte archivos .pdf, .jpg, jpeg, .png.')
 class Profesor(models.Model):
     id = models.CharField(primary_key=True, unique=True, max_length=5) 
     usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE)
@@ -105,10 +118,11 @@ class Estudiante(models.Model):
     telefono_contactoE = models.IntegerField("telefono del contacto de emergencia",null=False, blank=False)
     relacion_contactoE = models.CharField("relacion con el alumno",null=False, blank=False,  max_length = 100)
     #archivos
-    exoneracion =models.FileField(upload_to=guardar_exoneracion, null=False, blank=False)
-    documento_A =models.FileField(upload_to=guardar_documento, null=False, blank=False)
-    seguro_A =models.FileField(upload_to=guardar_seguro, null=False, blank=False) 
+    exoneracion =models.FileField(upload_to=guardar_exoneracion, validators = [validar_extencion_archivo],null=False, blank=False)
+    documento_A =models.FileField(upload_to=guardar_documento, validators = [validar_extencion_archivo],null=False, blank=False)
+    seguro_A =models.FileField(upload_to=guardar_seguro, validators = [validar_extencion_archivo],null=False, blank=False) 
     #datos para el sistema
+    facturacion_electronica = models.BooleanField("¿Desea facturación electrónica?", default=False)
     tipo_clase = models.CharField(max_length=15, choices=ESTADOS_CLASES, null=False, blank=False)
     estado = models.BooleanField(default=True)
     aceptaContrato = models.BooleanField(blank=False, null=False)

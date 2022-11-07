@@ -6,58 +6,30 @@
       </div>
       <div class="modal-body">
         <div id="modalBody"></div>
-          <form action="{% url 'reponerClase' clase.pk %}" method="post" id="reponerClaseForm" style="display: none;">
+          <form action="{% url 'reponerClase' clase.pk %}" method="post" id="reponerClaseForm">
+            <p id="errorestudiante" class="error_text"></p>
+            <p id="errorCalendario" class="error_text"></p>
             {% csrf_token %}
             <input type="hidden" value="editar" name="tipo">
             <label><b>Día de la clase: </b></label>
            <input type="date" class="form-control" name="dia" id="dia" value="{{clase.dia|date:'Y-m-d'}}">
+           <p id="errordia" class="error_text"></p>
            <br>
            <label><b>Hora de la clase: </b></label>
            <input type="time" class="form-control" name="hora" id="hora" value="{{clase.clase.calendario.horaClase|date:'H:i:s'}}">
+           <p id="errorhora" class="error_text"></p>
            <br>
+           <select name="profesor" id="profesor" class="form-select">
+            {% for profesor in profesores %}
+            <option value="{{profesor.pk}}" {% if profesor ==  profeActual %}selected{% endif %}>{{profesor}}</option>
+                  {{profesor}}
+            {% endfor %}
+           </select>
+           <p id="errorprofesor" class="error_text"></p>
           </form>   
-          <script>
-            url = $('#reponerClaseForm').attr('action')
-            console.log(url)
-            $.ajax({
-              url:url,
-              data:{
-                'csrfmiddlewaretoken':csrftoken,
-                'tipo':'consultaProfesor'
-              },
-              type:'post',
-              success:function(data){
-                let div = document.getElementById('modalBody')
-                div.innerHTML=""
-                let form = document.getElementById('reponerClaseForm').cloneNode(true)
-                let select = document.createElement('select')
-                let subtitle = document.createElement('Label')
-                form.id = "reponerClaseFormVerdadero"
-                form.style.display = "block"
-                subtitle.innerHTML = 'Profesores:'
-                subtitle.style.fontWeight = "700"
-                select.name = 'profesor'
-                select.id = 'profesoresSelect'
-                select.classList.add('form-select')
-                for(let i = 0; i < data.Profesores.profesoresPk.length; i++){
-                    let option = document.createElement('option')
-                    option.value = data.Profesores.profesoresPk[i]
-                    option.innerHTML = data.Profesores.profesoresName[i]
-                    if(data.Profesores.profesoresPk == data.ActualProfesor.profesorPk){
-                        option.selected = true
-                    }
-                    select.appendChild(option)
-                }
-                form.setAttribute('action', url)
-                form.appendChild(subtitle)
-                form.appendChild(select)
-                div.appendChild(form)
-              }
-            })
-           </script>
       </div>
       <div class="modal-footer">
-        <button onclick="document.getElementById('reponerClaseFormVerdadero').submit()" class="btn btn-success w-100">Modificar Clase</button>
+        <button onclick="reponerClases()" class="btn btn-success w-100">Modificar Clase</button>
       </div>
     </div>
 </div>

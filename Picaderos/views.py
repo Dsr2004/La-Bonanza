@@ -29,7 +29,12 @@ class InfoPicadero(IsAdminMixin, DetailView):
         dia = arreglarFormatoDia(dia)
         try:
             InformacionPicadero = infoPicaderoModel.objects.get(picadero=self.get_object(),hora=hora)
-            contexto["clases"]= InformacionPicadero.clases.all()
+            clases = EstadoClase.objects.filter(InfoPicadero = InformacionPicadero)
+            clasesList=[]
+            for clase in clases:
+                if (clase.dia-datetime.now().date()).days + 1 > 0 and (clase.dia-datetime.now().date()).days + 1 <8:
+                    clasesList.append({'id':clase.clase.pk,"estudiante":clase.clase.calendario.registro.get_estudiante, "profesor":clase.clase.profesor.get_profesor})
+            contexto["clases"]= clasesList
         except:
             InformacionPicadero = []
         contexto["infoPicadero"]=InformacionPicadero

@@ -117,7 +117,7 @@ class reporteEstudiantes(IsAdminMixin, ListView):
         #     today = date.today() 
         #     age = today.year - birthDate.year -((today.month, today.day) < (birthDate.month, birthDate.day)) 
         #     return age 
-        Estudiante, Profesor, Nivele, Estado, Pagado, Tipo_Clase, fecha_de_nacimiento,direccion,barrio,ciudad,seguro,documento,email_madre,celular_madre,lugar_expedicion_madre,nombre_completo_madre,email_padre,celular_padre,lugar_expedicion_padre,nombre_completo_padre,relacion_contactoE,telefono_contactoE,nombre_contactoE,edad,docuemntoq = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
+        Estudiante, Profesor, Nivele, Estado, Pagado, Tipo_Clase, fecha_de_nacimiento,direccion,barrio,ciudad,seguro,documento,email_madre,celular_madre,lugar_expedicion_madre,nombre_completo_madre,email_padre,celular_padre,lugar_expedicion_padre,nombre_completo_padre,relacion_contactoE,telefono_contactoE,nombre_contactoE,edad,docuemntoq,facturacion = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
         for row in consulta:
             Estudiante.append(row.estudiante)
             Profesor.append(row.profesor)
@@ -158,6 +158,11 @@ class reporteEstudiantes(IsAdminMixin, ListView):
                 Pagado.append("Pagada")
             else:
                 Pagado.append("No ha pagado")
+            if row.estudiante.facturacion_electronica:
+                facturacion.append("SI")
+            else:
+                facturacion.append("NO") 
+            
         excel = pd.DataFrame()
         excel['Estudiante'] = Estudiante
         excel['Profesor'] = Profesor
@@ -180,6 +185,7 @@ class reporteEstudiantes(IsAdminMixin, ListView):
         excel['Relacion con el contacto de emergencia'] = relacion_contactoE
         excel['Teléfono del contacto de emergencia'] = telefono_contactoE
         excel['Nombre del contacto de emergencia'] = nombre_contactoE
+        excel['Factiración electrónica'] = facturacion
         with BytesIO() as b:
             # Use the StringIO object as the filehandle.
             writer = pd.ExcelWriter(b, engine='xlsxwriter')

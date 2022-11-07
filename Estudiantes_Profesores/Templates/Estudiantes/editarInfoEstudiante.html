@@ -130,6 +130,11 @@
                         {{form.tipo_clase}}
                         <p id="tipo_clase" class="error_text"></p>
                     </div>
+                    <div class="col-md-12">
+                        <label for="" style="font-weight: 500;">{{form.facturacion_electronica.label}}: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
+                        {{form.facturacion_electronica}}
+                        <p id="facturacion_electronica" class="error_text"></p>
+                    </div>
                 </div>
                 <div class="formEstudianteUpdate tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
                     <br>
@@ -334,7 +339,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <Label><strong>Hora de la clase: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  style="color: #dc3545;">*</sup></strong></Label>
-                                {{formRegistro.horaClase}}
+                                <input type="time" name="horaClase" id="horaClase" class="form-control" value="{% for calenday in calendario  %}{{calenday.horaClase}}{% endfor %}">
                                 <p id="horaClase" class="bg-light text-danger" style="color: #dc3545;"></p>
                                 <br>
                             </div>
@@ -362,7 +367,7 @@
                             </div>
                         </div>
                         <input type="hidden" name="estudiante" value="{{object.pk}}">
-                        <button type="button" class="btn btn-success w-100" onclick="ModificarRegistroEstudiante()">Modificar Registro del estudiante </button>
+                        <button type="button" class="btn btn-success w-100" onclick="ModificarRegistroEstudiantej()">Modificar Registro del estudiante </button>
                     </form>
 
                     {% elif object.tipo_clase == '2'%}
@@ -497,7 +502,7 @@
             let dias = {"0":"Lunes","1":"Martes","2":"Miércoles","3":"Jueves","4":"Viernes","5":"Sábado","6":"Domingo"}
             for (let i = 0; i < 7; i++) {
                 let option = document.createElement("option");
-                option.value = dias[i]
+                option.value = days[i]
                 option.innerHTML = dias[i]
                 dateDay.appendChild(option)
             }   

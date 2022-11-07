@@ -11,6 +11,7 @@ reglamento = [
     {'title':'ACEPTACIÓN','datos':'Por medio de la suscripción de este documento declaro en forma clara y expresa que he leído y comprendido el presente reglamento, razón por lo acepto en su integridad y me comprometo a cumplirlo en su integridad, así como velar por su cumplimiento por parte de mi hijo y/o representado. La dirección de este club pide el consentimiento a los padres o tutores legales para publicar las imágenes, en las cuales aparezcan individualmente o en grupo los niños(a), en las diferentes secuencias y actividades realizadas en el club y fuera del mismo.'},
 ]
 function verContrato(){
+    $("#alertDocumentDownload").hide()
     let div = document.getElementById("fondoContrato");
     div.style.display="block";
     document.getElementById("titleContrato").innerHTML = title;
@@ -27,6 +28,7 @@ function verContrato(){
     }
 }
 function hideContrato(){
+    $("#alertDocumentDownload").show()
     let div = document.getElementById("fondoContrato");
     div.style.display="none";
     document.getElementById("CrearEstudianteForm").style.display = "block"

@@ -95,9 +95,9 @@
             <tbody>
                 {% for clase in clases %}
                     <tr>
-                        
-                        <td>{{clase.calendario.registro.get_estudiante}}</td>
-                        <td>{{clase.profesor}}</td>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{clase.estudiante}}</td>
+                        <td>{{clase.profesor}} <sup class="supEditMr" onclick="editarProfesor('{{clase.id}}')" data-bs-toggle="modal" data-bs-target="#editarProfesor"><i class="fa-solid fa-pencil"></i></sup></td>
                     </tr>
                 {% endfor %}
             </tbody>

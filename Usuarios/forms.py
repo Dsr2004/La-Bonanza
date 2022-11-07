@@ -66,7 +66,7 @@ class UsuarioForm(forms.ModelForm):
             "nombres": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
             "apellidos": forms.DateInput(attrs={"class":"form-control", "autocomplete":"off"}),
             "cedula": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
-            "fecha_nacimiento": forms.DateInput(attrs={"type":"date", "class":"form-control", "autocomplete":"off"}),
+            "fecha_nacimiento": forms.DateInput(attrs={"type":"date", "class":"form-control", "autocomplete":"off"},format=('%Y-%m-%d'),),
             "email": forms.EmailInput(attrs={"class":"form-control", "autocomplete":"off"}),
             "celular": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
             
