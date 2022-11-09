@@ -2,7 +2,7 @@ import json
 from datetime import datetime, timedelta
 from django.http import JsonResponse
 from Estudiantes_Profesores.models import DIAS_SEMANA
-from Picaderos.models import EstadoClase, InfoPicadero
+from Picaderos.models import EstadoClase, InfoPicadero, Picadero
 
 def arreglarFormatoDia(dia):
     if type(dia)  != list:
@@ -38,31 +38,37 @@ def serialiserValidation(lista, i, iPicadero, tipo):
     return errores   
     
 class ValidationClass():
-    
-   
-    def ReponerClase(self):
-        pass
         
-    def HorarioProfesor(self, profesor,dia, hora, **kwargs):
+    def HorarioProfesor(self, profesor,dia, hora):
         horario = profesor.horarios
         horario = json.loads(horario)
-        dias = [[str(i[1]) for i in [dia for dia in DIAS_SEMANA] if int(i[0]) == arreglarFormatoDia(dia.weekday())]][0]
-        diasNo = 'los días '+str(dias[0])+' a las '+hora.strftime('%I:%M %p')+' el profesor no esta disponible.'
+        dias = []
+        for d in DIAS_SEMANA:
+            if d[0] == str(dia):
+                dias.append(str(d[1]))
+        diasNo = 'los días '+str(dias[0])+' a las '+hora.strftime('%I:%M %p')+' el profesor no esta disponible'
         if [hor for hor in [horary for horary in horario if horary['day'] in [dia for dia in dias]] if datetime.strptime(hor['from'], '%H:%M').time() <= hora.time() and (datetime.strptime(hor['through'], '%H:%M')-timedelta(hours=1)).time() >= hora.time()] == []:
-            
             return diasNo
-    
-    def ValidacionPicadero(self, profesor, dia, hora, clasepk):
-        clase = EstadoClase.objects.get(pk = clasepk)
+        
+    def ValidacionPicadero(self, profesor, dia, hora:datetime, clasepk, estado):
+       
         try:
-            picadero =  clase.InfoPicadero.picadero
+            if estado == "CREADO":
+                picadero = Picadero.objects.get(pk = clasepk)
+               
+            elif estado == "BUSCAR":
+                clase = EstadoClase.objects.get(pk = clasepk)
+                picadero =  clase.InfoPicadero.picadero
         except:
             return JsonResponse({"errores":{"nivel":"No se puede agregar este estudiante porque no hay un picadero con el nivel seleccionado"}}, status=400)
         errores = [{},{}]
         max_estudiantes = picadero.max_estudiantes
         max_profes = picadero.max_profesores
         picaderos = InfoPicadero.objects.all()
-        picaderos = picaderos.filter(dia = arreglarFormatoDia(dia.weekday())).filter(hora=hora).filter(picadero=picadero)
+        print(picadero)
+        print(hora, type(hora))
+        picaderos = picaderos.filter(dia = dia).filter(hora=hora).filter(picadero=picadero)
+       
         for picadero in picaderos:
             try:
                 iPicadero = picadero
@@ -101,21 +107,6 @@ class ValidationClass():
                 
             elif errores[1]!={}:
                 return{"tipo":"profesor","errores":{"profesor":[f"No puede asignar este {errores[1]['tipo']} porque el picadero: {errores[1]['contenido']['nombre']} los dias {errores[1]['contenido']['dias']} a las {errores[1]['contenido']['hora']} no admite más profesores"]}}
-        else:
-            return{"tipo":"NO"}
-            
-        clase.dia = dia
-        clase.fecha_cancelacion = None
-        clase.estado = True
-        Ipicadero = [newInfoPicadero for newInfoPicadero in InfoPicadero.objects.all() if int(newInfoPicadero.dia) == arreglarFormatoDia(dia.weekday()) and newInfoPicadero.hora == hora.time()]
-        if Ipicadero == []:
-            infoP = InfoPicadero.objects.create(picadero = clase.InfoPicadero.picadero, dia = arreglarFormatoDia(dia.weekday()), hora=hora.time())
-            infoP.save()
-            clase.save()
-            EstadoClase.objects.create(InfoPicadero=infoP, clase=clase.clase, dia=clase.dia, estado=clase.estado, fecha_cancelacion=clase.fecha_cancelacion)
-            clase.delete()
-        else:
-            clase.InfoPicadero = Ipicadero[0]
-            clase.save()
-        print(clase.InfoPicadero.dia, arreglarFormatoDia(dia.weekday()), clase.InfoPicadero.hora, hora.time())
+            else:
+                 return{"tipo":"NO"}
         

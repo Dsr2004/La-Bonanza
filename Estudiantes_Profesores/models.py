@@ -81,7 +81,11 @@ class Profesor(models.Model):
     def get_profesor(self):
         return f"{self.usuario.nombres.capitalize()} {self.usuario.apellidos.capitalize()}"
     
-
+class Servicio(models.Model):
+    nombre = models.CharField("Nombre del servicio", max_length=15, null=False, blank=False)
+    descripcion = models.CharField("Descripción del servicio", max_length=1, null=True, blank=True)
+    tipo = models.BooleanField("Si es verdadero es Mensualidad sino es Esporadica")
+    
 
 
 class Estudiante(models.Model):
@@ -124,6 +128,7 @@ class Estudiante(models.Model):
     #datos para el sistema
     facturacion_electronica = models.BooleanField("¿Desea facturación electrónica?", default=False)
     tipo_clase = models.CharField(max_length=15, choices=ESTADOS_CLASES, null=False, blank=False)
+    tipo_servicio  = models.ForeignKey(Servicio, on_delete=models.SET_NULL, null=True)
     estado = models.BooleanField(default=True)
     aceptaContrato = models.BooleanField(blank=False, null=False)
     fecha_inscripcion = models.DateField(auto_now_add=True)

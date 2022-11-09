@@ -248,6 +248,7 @@ class ReponerClase(View):
         profesores = [profesor for profesor in Profesor.objects.all() if clase.InfoPicadero.picadero.nivel in profesor.niveles.all() and profesor.usuario.estado == True]
         profeActual = clase.clase.profesor
         return render(request, "Clases/editarClaseCancelada.html",{"clase":clase, "profesores":profesores, "profeActual":profeActual})
+    
     def post(self, request, *args, **kwargs):
         dia = request.POST.get("dia")
         hora =request.POST.get("hora")
@@ -262,6 +263,7 @@ class ReponerClase(View):
         if errores:
             return JsonResponse({"errores":errores}, status=400)
         dia = datetime.strptime(dia, "%Y-%m-%d")
+        numeroDia = arreglarFormatoDia(dia.weekday())
         try:
             hora = datetime.strptime(hora, "%H:%M:%S")
         except:
@@ -269,19 +271,18 @@ class ReponerClase(View):
             
         profesor = Profesor.objects.get(pk=profesor)
         validacion = ValidationClass()
-        diasNo = validacion.HorarioProfesor(profesor=profesor, dia=dia, hora=hora)
+        diasNo = validacion.HorarioProfesor(profesor=profesor, dia=numeroDia, hora=hora)
         
         if diasNo:
              return JsonResponse({"errores":{"profesor":diasNo,'identificador':None}}, status=400)
 
-        error = validacion.ValidacionPicadero(profesor=profesor, dia=dia, hora=hora, clasepk=kwargs["pk"])
-        
+        error = validacion.ValidacionPicadero(profesor=profesor, dia=dia, hora=hora, clasepk=kwargs["pk"], estado="BUSCAR")
         if error["tipo"] != "NO":
             if error["tipo"] == "estudiante":
                 return JsonResponse({"errores":error["errores"]}, status=400)
             elif error["tipo"] == "profesor":
                 return JsonResponse({"errores":error["errores"]}, status=400)
-        raise Exception("djflnsfkj") 
+        clase = EstadoClase.objects.get(pk=kwargs["pk"])
         clase.dia = dia
         clase.fecha_cancelacion = None
         clase.estado = True
@@ -295,8 +296,5 @@ class ReponerClase(View):
         else:
             clase.InfoPicadero = Ipicadero[0]
             clase.save()
-        print(clase.InfoPicadero.dia, arreglarFormatoDia(dia.weekday()), clase.InfoPicadero.hora, hora.time())
-        # FIN VALIDACIÓN PARA LOS PICADEROS
-        
         return redirect('clasesCanceladas')
             
