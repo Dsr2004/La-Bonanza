@@ -3,6 +3,7 @@ import json
 from django import forms
 from .models import Estudiante, Registro, Profesor
 from django.core.exceptions import ValidationError
+from Usuarios.models import Usuario
 
 
 class CrearEstudianteForm(forms.ModelForm):
@@ -13,11 +14,11 @@ class CrearEstudianteForm(forms.ModelForm):
         "comprobante_documento_identidad","nombre_completo_madre","cedula_madre","lugar_expedicion_madre","celular_madre",
         "email_madre","nombre_completo_padre","cedula_padre","lugar_expedicion_padre", "celular_padre", "email_padre", "direccion_A","barrio_A",
         "ciudad_A","nombre_contactoE","telefono_contactoE","relacion_contactoE","exoneracion",
-        "documento_A","seguro_A","tipo_clase","estado","aceptaContrato")
+        "documento_A","seguro_A","tipo_clase","aceptaContrato","facturacion_electronica")
 
         widgets = {
         "nombre_completo": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
-        "fecha_nacimiento": forms.DateInput(attrs={"type":"date","class":"form-control", "autocomplete":"off"}),
+        "fecha_nacimiento": forms.DateInput(attrs={"type":"date","class":"form-control", "autocomplete":"off"},format=('%Y-%m-%d')),
         "documento": forms.NumberInput(attrs={"class":"form-control", "autocomplete":"off"}),
         "celular": forms.NumberInput(attrs={"class":"form-control", "autocomplete":"off"}),
         "email": forms.EmailInput(attrs={"class":"form-control", "autocomplete":"off"}),
@@ -49,6 +50,7 @@ class CrearEstudianteForm(forms.ModelForm):
         "documento_A": forms.FileInput(attrs={"class":"form-control"}),
         "seguro_A": forms.FileInput(attrs={"class":"form-control"}),
         "tipo_clase": forms.Select(attrs={"class":"form-select"}),
+        "facturacion_electronica": forms.CheckboxInput(attrs={"class":"form-check-input", "autocomplete":"off"}),
         }
     def __init__(self, *args, **kwargs):
         super(CrearEstudianteForm, self).__init__(*args, **kwargs)
@@ -85,6 +87,7 @@ class CrearEstudianteForm(forms.ModelForm):
         self.fields['seguro_A'].required = True
         self.fields['tipo_clase'].required = True
         self.fields['aceptaContrato'].required = False
+        self.fields['facturacion_electronica'].required = False
 
 
     def clean_aceptaContrato(self):
@@ -93,6 +96,51 @@ class CrearEstudianteForm(forms.ModelForm):
             return contrato
         else:
             raise forms.ValidationError('Si no acepta el contrato no podrá realizar el registro')
+        
+    def clean_documento(self):
+        documento = self.cleaned_data["documento"]
+        if len(str(documento))<=15:
+            return documento
+        else:
+            raise forms.ValidationError('Asegúrese de que este valor sea menor o igual a 15.')
+    def clean_celular(self):
+        celular = self.cleaned_data["celular"]
+        if len(str(celular))<=15:
+            return celular
+        else:
+            raise forms.ValidationError('Asegúrese de que este valor sea menor o igual a 15.')
+    def clean_cedula_madre(self):
+        cedula_madre = self.cleaned_data["cedula_madre"]
+        if len(str(cedula_madre))<=15:
+            return cedula_madre
+        else:
+            raise forms.ValidationError('Asegúrese de que este valor sea menor o igual a 15.')
+    def clean_celular_madre(self):
+        celular_madre = self.cleaned_data["celular_madre"]
+        if len(str(celular_madre))<=15:
+            return celular_madre
+        else:
+            raise forms.ValidationError('Asegúrese de que este valor sea menor o igual a 15.')
+        
+    def clean_cedula_padre(self):
+        celular_madre = self.cleaned_data["celular_madre"]
+        if len(str(celular_madre))<=15:
+            return celular_madre
+        else:
+            raise forms.ValidationError('Asegúrese de que este valor sea menor o igual a 15.')
+    def clean_celular_padre(self):
+        celular_padre = self.cleaned_data["celular_padre"]
+        if len(str(celular_padre))<=15:
+            return celular_padre
+        else:
+            raise forms.ValidationError('Asegúrese de que este valor sea menor o igual a 15.')
+    def clean_telefono_contactoE(self):
+        telefono_contactoE = self.cleaned_data["telefono_contactoE"]
+        if len(str(telefono_contactoE))<=15:
+            return telefono_contactoE
+        else:
+            raise forms.ValidationError('Asegúrese de que este valor sea menor o igual a 15.')
+
 
 class EstudianteForm(forms.ModelForm):
     class Meta:
@@ -102,11 +150,11 @@ class EstudianteForm(forms.ModelForm):
         "comprobante_documento_identidad","nombre_completo_madre","cedula_madre","lugar_expedicion_madre","celular_madre",
         "email_madre","nombre_completo_padre","cedula_padre","lugar_expedicion_padre", "celular_padre", "email_padre", "direccion_A","barrio_A",
         "ciudad_A","nombre_contactoE","telefono_contactoE","relacion_contactoE","exoneracion",
-        "documento_A","seguro_A","tipo_clase","estado")
+        "documento_A","seguro_A","tipo_clase","facturacion_electronica")
 
         widgets = {
         "nombre_completo": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
-        "fecha_nacimiento": forms.DateInput(attrs={"type":"date","class":"form-control", "autocomplete":"off"}),
+        "fecha_nacimiento": forms.DateInput(attrs={"type":"date","class":"form-control", "autocomplete":"off"},format=('%Y-%m-%d')),
         "documento": forms.NumberInput(attrs={"class":"form-control", "autocomplete":"off"}),
         "celular": forms.NumberInput(attrs={"class":"form-control", "autocomplete":"off"}),
         "email": forms.EmailInput(attrs={"class":"form-control", "autocomplete":"off"}),
@@ -137,6 +185,7 @@ class EstudianteForm(forms.ModelForm):
         "documento_A": forms.FileInput(attrs={"class":"form-control"}),
         "seguro_A": forms.FileInput(attrs={"class":"form-control"}),
         "tipo_clase": forms.Select(attrs={"class":"form-select"}),
+        "facturacion_electronica": forms.CheckboxInput(attrs={"class":"form-check-input", "autocomplete":"off"}),
         }
     def __init__(self, *args, **kwargs):
         super(EstudianteForm, self).__init__(*args, **kwargs)
@@ -172,9 +221,13 @@ class EstudianteForm(forms.ModelForm):
         self.fields['documento_A'].required = True
         self.fields['seguro_A'].required = True
         self.fields['tipo_clase'].required = True
+        self.fields['facturacion_electronica'].required = False
 
 
 class RegistroForm(forms.ModelForm):
+    def __init__(self,*args,**kwargs):
+        super (RegistroForm,self ).__init__(*args,**kwargs)
+        self.fields['profesor'].queryset = Profesor.objects.filter(usuario__in = [x for x in Usuario.objects.filter(estado=True)])
     class Meta:
         model = Registro
         fields = "__all__"
@@ -184,6 +237,8 @@ class RegistroForm(forms.ModelForm):
             "nivel": forms.Select(attrs={"class":"form-select"}),
             "profesor": forms.Select(attrs={"class":"form-select"}),
         }
+
+
     
         
     

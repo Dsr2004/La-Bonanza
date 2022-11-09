@@ -10,6 +10,9 @@
             <div id="FormularioUsuariosE" class="FormularioUsuariosE">
                 {%csrf_token%}
                 {%for campo in form %}
+                {% if campo.label == "Fecha de nacimiento:" %}
+        
+                {% endif %}
                 <div>
                     <label for="" style="font-weight: 500;">{{campo.label}}:</label>
                     <br>{{campo}}<br class="beforeCampoUserE">

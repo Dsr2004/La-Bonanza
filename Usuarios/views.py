@@ -27,7 +27,6 @@ class Login(LoginView):
             nombre = form.cleaned_data.get("username")
             contrasena = form.cleaned_data.get("password")
             usuario = authenticate(username=nombre, password = contrasena)
-            print(form.cleaned_data)
             if usuario is not None:
                 if usuario.estado == 1:
                     login(request, usuario)
@@ -168,7 +167,7 @@ class UserFunction(TemplateView):
                 return redirect('index')
             form = self.form_class(instance=get_object)
         except Exception as e:
-            return redirect('index')
+            return redirect('login')
         return render(request, self.template_name, {'form':form,'title':get_object.usuario,'pk':get_object.pk})
     
     def post(self, request, *args, **kwargs):

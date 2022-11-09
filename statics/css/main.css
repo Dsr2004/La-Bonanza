@@ -37,18 +37,17 @@
     color: red !important;
     display: none;
 }
-
+.containerPrincipal{
+    height: 80px;
+}
 .nivelStyle{
     width: 100%;
-    height: auto;
-    min-height: 80px;
-    max-height: 100px;
+    height: 100%;
     border-top-right-radius: 30px;
     border-bottom-right-radius: 30px;
-    line-height: 100px;
-    text-align: center;
+    border: 1px solid rgba(0,0,0,0.1);
+    margin-bottom: 10px;
 }
-
 
 .NivelText{
     width: 100%;
@@ -60,14 +59,25 @@
 }
 
 .NivelText p{
-    margin-top: 5%;
-    margin-left: 20%;
-    padding-right: 10%;
+    position: relative;
+    top: 5%;
+    left: 20%;
+    right: 10%;
     display: inline-block;
     vertical-align: middle;
     font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    font-size: 2.5ch;
+    font-size: medium;
     word-break: break-all;
+}
+@media(max-width:1000px) {
+    .NivelText p{
+        font-size: small;
+    }
+}
+@media(max-width:760px) {
+    .NivelText p{
+        font-size: medium;
+    }
 }
 
 .required{
@@ -238,4 +248,14 @@
     margin-right:-10px; 
     margin-top:4px;
     font-size:15px;
+}
+
+.Nosepuedemodificar{
+    background-color: red !important;
+    border-color:red !important;
+}
+.PrecaucionTodavidsepuedemodificar{
+    background-color: rgb(184, 184, 184) !important;
+    border-color:rgb(168, 168, 168) !important;
+    color: #000!important;
 }

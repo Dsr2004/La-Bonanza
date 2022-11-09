@@ -114,13 +114,14 @@
 </div>
 {% endblock modals %}
 {% block scripts %}
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <script>
     $(document).ready(function(){
-        $("#UsuariosTable").DataTable({responsive:true});
+        $("table").DataTable({
+            responsive:true,
+        })
     })
     function cargar(){
         console.log('carga')

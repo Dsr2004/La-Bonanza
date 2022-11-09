@@ -27,7 +27,7 @@
 </style>
 <div id="fondoContrato"style="display:none; width:100%; position:fixed; top:0; height:100vh; background-color:rgba(0,0,0,0.5);"><div id="DivContrato" style="width:90%;height: 90vh;background-color: #fff; position:absolute; top:2.5%;left: 5%; border: 1px solid rgba(0,0,0,1); z-index: 100; border-radius: 5px;overflow: auto;"><div id="header" style="width: 88%; margin: 0 1%; height:60px; border-bottom: 1px solid rgba(0,0,0,0.3); display:grid;grid-template-columns: 96% 4%; padding: 0 10px; position: fixed; background-color: #fff;"><h1 id="titleContrato"></h1><i class="fa fa-close" style="position:relative; right: -5px!important; top: 17px; font-size: 24px; cursor: pointer;" onclick="hideContrato()"></i></div><div id="contentContrato" style="margin-top: 70px; display: grid;grid-template-columns: 1fr; grid-gap:5px; padding: 15px;"></div><div><label for="AceptacionContrato" style="padding: 0 20px;">Aceptación del contrato <sup class="required"  class="required"  class="required"  class="required"  style="color: red;">*</sup></label><div class="form-check form-switch" ><input class="form-check-input" type="checkbox" style="margin-left: -20px; width: 50px;" role="switching" name="AceptacionContrato" id="AceptacionContrato"  onclick="if (document.getElementById('LAC').innerHTML == 'No'){document.getElementById('LAC').innerHTML='Si'}else{document.getElementById('LAC').innerHTML='No'}"> <label for="AceptacionContrato" style="margin-top: 5px; margin-left: 10px;" id="LAC">No</label></div><br><div style="float: right; margin-right: 40px ;"><button type="button" class="btn btn-default" style="background-color: #ccc; margin-right: 10px;"onclick="hideContrato()">Cancelar</button><button type="button" class="btn btn-info"onclick="guardarContrato()">Guardar</button><br><br></div></div></div></div>
 <div class="container-fluid">
-    <div class="container alert alert-danger" role="alert" >
+    <div class="container alert alert-danger" role="alert" id="alertDocumentDownload">
         <button style="float: right;" type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         <h4 class="alert-heading">Antes de continuar con el registro tenga en cuenta lo siguiente!</h4>
         <p>En la pestaña "Documentos" deberá adjuntar 3 archivos entre ellos la exoneración de responsabilidades</p>
@@ -140,6 +140,11 @@
                         <label for="" style="font-weight: 500;">{{form.tipo_clase.label}}: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
                         {{form.tipo_clase}}
                         <p id="tipo_clase" class="error_text"></p>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="" style="font-weight: 500;">{{form.facturacion_electronica.label}}: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
+                        {{form.facturacion_electronica}}
+                        <p id="facturacion_electronica" class="error_text"></p>
                     </div>
                 </div>
                 <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">

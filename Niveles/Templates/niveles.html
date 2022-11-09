@@ -15,13 +15,13 @@
      <div class="row">
         {% for nivel in niveles  %}
           <div class="col-md-3" style="cursor: pointer;" onclick="GetNivel('{%url 'modifcarNivel' nivel.pk %}')">
-            <div class="card">
+            <div class="card" style="margin: 15px 5px;">
                 <div class="card-body" style="padding: 0 !important;">
-                    <div class="row">
+                    <div class="row containerPrincipal">
                         <div class="col-3">
                             <div class="nivelStyle" style="background: linear-gradient(90deg, {{nivel.color_fondo}} 0%, rgba(255,255,255,1) 99%);;"></div>
                         </div>
-                        <div class="col-9 NivelText">
+                        <div class="col-7 NivelText">
                             <p >{{nivel.nivel}}</p>
                         </div>
                     </div>

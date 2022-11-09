@@ -12,9 +12,20 @@
 {% block contenido %}
 <br>
 <div class="container">
-    <a href="{% url 'asistencia' %}" class="btn btn-outline-secondary w-100">Gestionar Asistencia</a>
+    <div class="row">
+        <div class="{%if cancelada > 0 %}col-10{%else%}col-12{%endif%}">
+            <a href="{% url 'asistencia' %}" class="btn btn-outline-secondary w-100">Gestionar Asistencia</a>
+        </div>
+        <div class="col-2">
+            <a href="{% url 'clasesCanceladas' %}" style="display: {%if cancelada > 0 %}block{%else%}none{%endif%};" class="btn btn-danger w-100">Clases Canceladas</a>
+        </div>
+    </div>
+    
+   
 </div>
 <div id="calendar" style="padding: 40px"></div>
+
+    
 
 <div class="modal fade" id="ModalInfoEstudianteCalendario" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>
 {% endblock contenido %}
@@ -44,14 +55,11 @@
             {%for clase in clases %}
                 {
                 id: '{%url 'verInfoEstudianteCalendario' clase.pk%}',
-                title : '{{clase.registro.get_estudiante}}',
-                startRecur : '{{clase.inicioClase|date:"Y-m-d"}}',
-                endRecur : '{{clase.finClase|date:"Y-m-d"}}',
-
-                startTime: '{{clase.horaClase|date:"H:i"}}',
-                daysOfWeek: ['{{clase.diaClase|safe}}'],
-                color: '{{clase.registro.nivel.color_fondo}}',
-                textColor: '{{clase.registro.nivel.color_letra}}',
+                title : '{{clase.clase.calendario.registro.get_estudiante}}',
+                start: '{{clase.get_date_time}}',
+               
+                color: '{{clase.clase.calendario.registro.nivel.color_fondo}}',
+                textColor: '{{clase.clase.calendario.registro.nivel.color_letra}}',
                 },
                 
             {%endfor%}

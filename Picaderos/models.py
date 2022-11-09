@@ -2,7 +2,9 @@ from django.db import models
 from django.db.models.signals import pre_save
 from django.utils.text import slugify
 from Niveles.models import Nivel
-from datetime import datetime
+from datetime import date, datetime, timedelta
+from django.utils import timezone
+
 
 DIAS_SEMANA = (
     ("1","Lunes"),("2","Martes"),("3","Miércoles"),("4","Jueves"),("5","Viernes"),("6","Sábado"),("0","Domingo")
@@ -52,14 +54,20 @@ class InfoPicadero(models.Model):
 class EstadoClase(models.Model):
     clase = models.ForeignKey(Clase, on_delete=models.CASCADE)
     InfoPicadero = models.ForeignKey(InfoPicadero, on_delete=models.CASCADE)
-    dia = models.DateField(default=datetime.now())
+    dia = models.DateField(default=timezone.now)
     estado = models.BooleanField(default=True)
+    fecha_cancelacion = models.DateField(null=True, blank=True)
     
     class Meta():
         db_table="HistorialClases"
     
     def __str__(self):
         return f'clase {self.clase} relacionada {self.InfoPicadero} dia {self.dia}'
+    
+    @property
+    def get_date_time(self):
+        return f"{self.dia.strftime('%Y-%m-%d')}T{self.InfoPicadero.hora}"
+    
 
 #SIGNALS
 def pre_save_picadero_receiver(sender, instance, *args, **kwargs):

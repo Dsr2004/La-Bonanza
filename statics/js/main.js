@@ -407,51 +407,65 @@ function cambiar_estado_estudiante(url,id){
     }
   })
 }
-
 function cambiar_estado_usuario(id){
   let ids = id
-    let token = $("#EstadoUsuarioForm").find('input[name=csrfmiddlewaretoken]').val()
-    swal.fire({
-        title: "¿Estás seguro?",
-        text: "Se modificara el estado del Usuario",
-        icon: "warning",
-        buttons: {
-            confirm: { text: 'Confirmar', className: 'btn-success' },
-            cancel: 'Cancelar'
-        },
-        dangerMode: true,
-    }).then((changeStatus) => {
-        if (changeStatus) {
-            $(document).ready(function() {
-                $.ajax({
-                    data: { "csrfmiddlewaretoken": token, "estado": ids },
-                    url: $("#EstadoUsuarioForm").attr('action'),
-                    type: $("#EstadoUsuarioForm").attr('method'),
-                    success: function(datas) {
-                        swal.fire("¡OK! Se ha modificado el Usuario", {
-                            icon: "success",
-                        }).then(function() {
-                            location.reload()
-                        });
-                    },
-                    error: function(error) {
-                      Error = error['responseJSON']
-                      Swal.fire({
-                          icon: 'info',
-                          title: 'Atención.',
-                          text: Error['error'] + '.',
-                      })
-                    }
-                });
-            })
-        } else {
-            swal("¡OK! Ningún dato del usuario ha sido modificado").then(function() {
-                location.reload()
-            });
+  let token = $("#EstadoUsuarioForm").find('input[name=csrfmiddlewaretoken]').val()
+  const swalWithBootstrapButtons = Swal.mixin({
+    customClass: {
+      confirmButton: 'btn btn-success',
+      cancelButton: 'btn btn-danger'
+    },
+    buttonsStyling: false
+  })
 
-        }
-    });
+  swalWithBootstrapButtons.fire({
+    title: '¿Estas Seguro?',
+    text: "¡Se cambiará el estado del usuario por lo que ya no podrá iniciar sesión.!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: '¡Si, Modificar!',
+    cancelButtonText: '¡No, Cancelar!',
+    confirmButtonClass: "buttonSweetalert",
+    reverseButtons: true
+  }).then((result) => {
+    if (result.isConfirmed) {
+      $(document).ready(function() {
+        $.ajax({
+            data: { "csrfmiddlewaretoken": token, "estado": ids },
+            url: $("#EstadoUsuarioForm").attr('action'),
+            type: $("#EstadoUsuarioForm").attr('method'),
+            success: function(datas) {
+                swal.fire("¡OK! Se ha modificado el Usuario", {
+                    icon: "success",
+                }).then(function() {
+                    location.reload()
+                });
+            },
+            error: function(error) {
+              Error = error['responseJSON']
+              Swal.fire({
+                  icon: 'info',
+                  title: 'Atención.',
+                  text: Error['error'] + '.',
+              })
+            }
+        });
+    })
+    } else if (
+      /* Read more about handling dismissals below */
+      result.dismiss === Swal.DismissReason.cancel
+    ) {
+      swalWithBootstrapButtons.fire(
+        'Cancelado',
+        'No se han aplicado cambios',
+        'error'
+      ).then(function(){
+        location.reload()
+      })
+    }
+  })
 }
+
 
 function ModificarNivel(){
   let form = $("#ModificarNivelForm")

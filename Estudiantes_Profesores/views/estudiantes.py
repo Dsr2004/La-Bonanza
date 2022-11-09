@@ -38,6 +38,7 @@ class RegistrarEstudiante(CreateView):
     success_url = reverse_lazy("estudiantes")
 
     def form_valid(self, form):
+        print(form)
         if self.request.user.is_authenticated:
             if self.request.user.administrador:
                 form.save()
@@ -128,6 +129,7 @@ class CrearNuevosEstudiantes(IsAdminMixin, CreateView):
             errores = [{},{}]
             max_estudiantes = picaderoNivel.max_estudiantes
             max_profes = picaderoNivel.max_profesores
+            print(max_estudiantes)
             picaderos = InfoPicadero.objects.all()
             picaderos = picaderos.filter(dia__in = diasClases).filter(hora__in=hora).filter(picadero=picaderoNivel)
             profesor = Profesor.objects.get(pk=copia["profesor"])
@@ -138,12 +140,10 @@ class CrearNuevosEstudiantes(IsAdminMixin, CreateView):
                     iPicadero = ""
                     
                 if iPicadero != "":
-                    print(iPicadero)
-                    # for profesor in profesores:
-                    profesores = len(list(set([clases.clase.profesor for clases in EstadoClase.objects.filter(InfoPicadero=iPicadero)])))
-                    estudiantes = len([clases.clase.calendario.registro for clases in EstadoClase.objects.filter(InfoPicadero=iPicadero)])
-                    print(estudiantes, profesores, "\n----------------\n")
-                    ElProfeEstaEnLaClase = profesor in [clases.clase.profesor for clases in EstadoClase.objects.filter(InfoPicadero=iPicadero)] 
+                    profesores = len(list(set([clases.clase.profesor for clases in EstadoClase.objects.filter(InfoPicadero=iPicadero).filter(estado=True)])))
+                    estudiantes = len(list(set([clases.clase.calendario.registro for clases in EstadoClase.objects.filter(InfoPicadero=iPicadero).filter(estado=True)])))
+                    print(estudiantes)
+                    ElProfeEstaEnLaClase = profesor in [clases.clase.profesor for clases in EstadoClase.objects.filter(InfoPicadero=iPicadero).filter(estado =True)] 
                     if estudiantes >= max_estudiantes:
                         errores = serialiserValidation(errores, 0, iPicadero, 'estudiante')
                         
@@ -164,13 +164,12 @@ class CrearNuevosEstudiantes(IsAdminMixin, CreateView):
             picadero = Picadero.objects.get(nivel = objecto.nivel)
             rangeDays = []
             for diaClaseF in diasClases:
-                print(diaOriginal)
                 first_date = datetime.strptime(diaOriginal, '%Y-%m-%d')
                 last_date = finClases
-                week_day = arreglarFormatoDia(int(diaClaseF))
-                dates = [(first_date + timedelta(days=d)) for d in range((last_date - first_date).days + 1)if (first_date + timedelta(days=d)).weekday() == week_day] 
+                week_day = int(diaClaseF)
+                dates = [first_date + timedelta(days=d)-timedelta(days=1)  for d in range((last_date - first_date).days + 1) if int((first_date + timedelta(days=d)).weekday()) == int(week_day)] 
                 rangeDays.append(dates)
-            
+            print(rangeDays)
             for i in range(len(hora)):
                 calendario = CalendarioModel.objects.create(horaClase=hora[i],finClase=finClases,inicioClase=diaOriginal,diaClase = str(diasClases[i]), registro=objecto)
                 calendario.save()
@@ -183,7 +182,8 @@ class CrearNuevosEstudiantes(IsAdminMixin, CreateView):
                     claseE = EstadoClase.objects.get(clase=clase)
                     claseE.dia = fecha
                     claseE.save()
-                    print(claseE)
+            # return JsonResponse({"errores": form.errors}, status=400)
+                    
             return redirect('estudiantes') 
         else:
             return JsonResponse({"errores": form.errors}, status=400)
@@ -206,6 +206,11 @@ class VerInfoEstudiante(IsAdminMixin, DetailView):
         calendario = [[i for i in [dia for dia in DIAS_SEMANA] if int(i[0]) in [int(cl) for cl in [dias.diaClase for dias in calendario]]]][0]
         contexto['diaClase']=calendario
         return contexto
+    
+class VerInfoEstudianteSinRegistro(IsAdminMixin, DetailView):
+    model=Estudiante
+    template_name = "Estudiantes/verInfoEstudianteSinRegistro.html"
+    
 
 class ModificarEstudiante(IsAdminMixin, UpdateView):
     model = Estudiante
@@ -223,6 +228,16 @@ class ModificarEstudiante(IsAdminMixin, UpdateView):
         calendario = [[i for i in [dia for dia in DIAS_SEMANA] if int(i[0]) in [int(cl) for cl in [dias.diaClase for dias in calendario]]]][0]
         contexto['diaClase']=calendario
         return contexto
+    
+    
+    def form_invalid(self, form):
+        print(form.errors)
+        print("soy invalido care pija ")
+        return super().form_invalid(form)
+    
+    def get_success_url(self):
+          id=self.kwargs['pk']
+          return reverse_lazy('modificarEstudiante', kwargs={'pk': id})
 
 
 
@@ -234,7 +249,7 @@ class ModificarDocsEstudiante(IsAdminMixin, UpdateView):
 
     def post(self, request, *args, **kwargs):
         estudiante = Estudiante.objects.get(pk=self.kwargs["pk"])
-        acciones = []
+        print(request.FILES)
         if request.FILES:
             if "documento_A" in request.FILES:
                 estudiante.documento_A = request.FILES["documento_A"]
@@ -265,7 +280,6 @@ class CambiarEstadoEstudiante(IsAdminMixin, View):
 class ValidarRegistroEstudiante(IsAdminMixin, View):
     def post(self, request, *args, **kwargs):
         # dia = request.POST.get("dia")[2]
-        # print(dia)
         # estudiante = request.POST.get("estudiante")
         # estudiante = Estudiante.objects.get(pk=estudiante)
         # registro = Registro.objects.get(estudiante=estudiante)
@@ -283,6 +297,7 @@ class ModificarRegistroEstudiante(IsAdminMixin, UpdateView):
 
     def post(self, request, *args, **kwargs):
         copia = request.POST.copy()
+        print(copia)
         dia = request.POST.get('inicioClase')
         diaOriginal = dia   
         if not dia:
@@ -295,14 +310,13 @@ class ModificarRegistroEstudiante(IsAdminMixin, UpdateView):
                 finClases =dia+timedelta(days=1)
                 diasClases=[str(arreglarFormatoDia(dia=int(diaClase)))]
                 horas = [copia["horaClase"]]
-                print("meses sus")
         else:
             meses = request.POST.get("meseSus")
             finClases = datetime.strptime(dia, "%Y-%m-%d")+relativedelta(months=int(meses))+timedelta(days=1)
             horas = json.loads(request.POST.get('horaClase'))
             diasClases = json.loads(request.POST.get('diaClase'))
-            print("sin meses sus")
         get_object = Registro.objects.get(pk = kwargs['pk'])
+        
         form = self.form_class(copia or None, instance=get_object)
         
         if form.is_valid():
@@ -334,6 +348,7 @@ class ModificarRegistroEstudiante(IsAdminMixin, UpdateView):
                             return JsonResponse({"errores":{"Calendario":diasNo,'identificador':i}}, status=400)
                         else:
                             return JsonResponse({"errores":{"profesor":diasNo,'identificador':None}}, status=400)
+                
                 horarios = CalendarioModel.objects.filter(registro=get_object)
                 for i in range(len(horarios)):
                     horarios[i].delete()
@@ -341,11 +356,10 @@ class ModificarRegistroEstudiante(IsAdminMixin, UpdateView):
                 picadero = Picadero.objects.get(nivel = objecto.nivel)
                 rangeDays = []
                 for diaClaseF in diasClases:
-                    print(diaOriginal)
                     first_date = datetime.strptime(diaOriginal, '%Y-%m-%d')
                     last_date = finClases
-                    week_day = arreglarFormatoDia(int(diaClaseF))
-                    dates = [(first_date + timedelta(days=d)) for d in range((last_date - first_date).days + 1)if (first_date + timedelta(days=d)).weekday() == week_day] 
+                    week_day =int(diaClaseF)
+                    dates = [(first_date + timedelta(days=d))-timedelta(days=1) for d in range((last_date - first_date).days + 1)if (first_date + timedelta(days=d)).weekday() == week_day] 
                     rangeDays.append(dates)
                 for i in range(len(hora)):
                     calendario = CalendarioModel.objects.create(horaClase=hora[i],finClase=finClases,inicioClase=diaOriginal,diaClase = str(diasClases[i]), registro=objecto)
@@ -359,14 +373,11 @@ class ModificarRegistroEstudiante(IsAdminMixin, UpdateView):
                         claseE = EstadoClase.objects.get(clase=clase)
                         claseE.dia = fecha
                         claseE.save()
-                        print(claseE)
                 return redirect('estudiantes')
             except Exception as error:
-                print(error)
                 if type(error).__name__ == "FormValidationEstudianteError":
                     return JsonResponse({"errores": {"estudiante":[str(error)]}}, status=400)
                 elif type(error).__name__ == "FormValidationProfesorError":
-                    print("tengo algun error aqui")
                     return JsonResponse({"errores": {"profesor":[str(error)]}}, status=400)
                 elif type(error).__name__ == "FormValidationNiveleError":
                     return JsonResponse({"errores": {"nivel":[str(error)]}}, status=400)

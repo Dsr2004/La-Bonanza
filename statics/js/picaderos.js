@@ -174,7 +174,7 @@ function reporteEstudiantePicadero(url, nombre){
         $.ajax({
             url: url,
             type: "POST",
-            data: {"csrfmiddlewaretoken":csrftoken, "hora":hora, "dia":dia, "TodoElDia":w},
+            data: {"csrfmiddlewaretoken":csrftoken, "hora":hora, "dia":dia, "TodoElDia":TodoElDia},
             cache: false,
             xhr: function () {
                 var xhr = new XMLHttpRequest();
@@ -211,7 +211,7 @@ function reporteEstudiantePicadero(url, nombre){
                   icon: 'error',
                   title: 'No se pudieron encontrar clases ese dia a esa hora',
                   showConfirmButton: false,
-                  timer: 1000
+                  timer: 2000
                   })
           }
         });
