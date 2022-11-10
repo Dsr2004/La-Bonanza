@@ -82,9 +82,12 @@ class Profesor(models.Model):
         return f"{self.usuario.nombres.capitalize()} {self.usuario.apellidos.capitalize()}"
     
 class Servicio(models.Model):
-    nombre = models.CharField("Nombre del servicio", max_length=15, null=False, blank=False)
-    descripcion = models.CharField("Descripción del servicio", max_length=1, null=True, blank=True)
-    tipo = models.BooleanField("Si es verdadero es Mensualidad sino es Esporadica")
+    nombre = models.CharField("Nombre del servicio", max_length=55, null=False, blank=False)
+    descripcion = models.CharField("Descripción del servicio", max_length=50, null=True, blank=True)
+    tipo_clase = models.CharField(max_length=15, choices=ESTADOS_CLASES, null=False, blank=False)
+
+    def __str__(self):
+        return self.descripcion
     
 
 

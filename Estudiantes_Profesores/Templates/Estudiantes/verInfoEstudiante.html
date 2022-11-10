@@ -79,8 +79,14 @@
                         {{object.ciudad}}
                     </div>
                     <div class="col-md-6">
-                        <h5><strong>Tipo de Clase:</strong></h5>
-                        {{object.get_tipo_clase_display}}
+                    <h5><strong>¿El Estudiante desea facturación electrónica?:</strong></h5>
+                    <p>
+                        {% if object.facturacion_electronica %}
+                        SI
+                        {% else %}
+                        NO
+                        {% endif %}
+                    </p>
                     </div>
                 </div>
                 <br>
@@ -116,15 +122,17 @@
                 </div>
                 <br>
                 <div class="row">
-                    <h5><strong>¿El Estudiante desea facturación electrónica?:</strong></h5>
-                    <p>
-                        {% if object.facturacion_electronica %}
-                        SI
-                        {% else %}
-                        NO
-                        {% endif %}
-                    </p>
-                               
+                    <div class="col-md-6">
+                        <h5><strong>Tipo servicio:</strong></h5>
+                        <p>
+                            {{object.tipo_servicio}}
+                        </p>
+                                   
+                    </div>   
+                    <div class="col-md-6">
+                        <h5><strong>Tipo de Clase:</strong></h5>
+                        {{object.get_tipo_clase_display}}
+                    </div>     
                 </div>
                 <br>
                

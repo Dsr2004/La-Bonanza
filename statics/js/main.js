@@ -151,6 +151,14 @@ function ModificarRegistroEstudiante(){
   nivel = document.getElementsByName('nivel')[0]
   pago = document.getElementsByName('pagado')[0]
   idEs = document.getElementsByName('estudiante')[0]
+  servicio = document.getElementsByName('tipo_servicio')[0]
+  // console.log(servicio)
+  let ruta = window.location.href.split('/')
+  let resta = 0
+  let id = ruta[ruta.length-1]
+  if(isNaN(ruta[ruta.length-1])==true){
+      id = ruta[ruta.length-1].split('?')[0]
+  }
   $.ajax({
     url: form.attr("action"),
     data: {
@@ -162,11 +170,25 @@ function ModificarRegistroEstudiante(){
       'horaClase':JSON.stringify(calendario[1]),
       'diaClase':JSON.stringify(calendario[0]),
       'estudiante':idEs.value,
-      "pagado":JSON.stringify(pago.checked)
+      "pagado":JSON.stringify(pago.checked),
+      "servicio":servicio.value,
+      'idEstudiante':id
     },
     type: form.attr("method"),
     success: function (response) {
-      location.reload()
+      form.find('.error_text').text('');
+      form.find('.is-invalid').removeClass('is-invalid');
+      $("#icon_danger_REGISTRO").css("display","none")
+      Swal.fire({
+        position: 'top-end',
+        icon: 'success',
+        title: 'Registro del Estudiante Modificado',
+        showConfirmButton: false,
+        timer: 2000
+      }).then(function(){
+       location.reload()
+      })
+      // location.reload()
     },
     error: function(errores){
       errors = errores.responseJSON["errores"]

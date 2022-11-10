@@ -136,11 +136,18 @@
                             <p id="comprobante_documento_identidad" class="error_text"></p>
                         </div>
                     </div>
+                    <!-- Tipo clase -->
                     <div class="col-md-12">
                         <label for="" style="font-weight: 500;">{{form.tipo_clase.label}}: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
                         {{form.tipo_clase}}
                         <p id="tipo_clase" class="error_text"></p>
                     </div>
+                    <div class="col-md-12" style="display: none;" id="divTipoServicio">
+                        <label for="" style="font-weight: 500;">Tipo servicio: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
+                        <select name="tipo_servicio" id="id_tipo_servicio"></select>
+                        <p id="tipo_servicio" class="error_text"></p>
+                    </div>
+
                     <div class="col-md-12">
                         <label for="" style="font-weight: 500;">{{form.facturacion_electronica.label}}: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
                         {{form.facturacion_electronica}}
@@ -395,6 +402,33 @@
     this.submit()
     
 })
+
+// tipo servicio
+let tipoClase = document.getElementsByName('tipo_clase')[0]
+tipoClase.onchange = function(tipo){
+    $.ajax({
+        url: '{%url "cambiarTipoClase"%}',
+        data: {
+            'csrfmiddlewaretoken':csrftoken,
+            'tipo_clase':tipo.target.value
+        },
+        type:'POST',
+        success: function(data){
+            data = data.Servicios
+            let div = document.getElementById('divTipoServicio')
+            let select = div.getElementsByTagName('select')[0]
+            select.innerHTML = ""
+            for(let i = 0; i < data.length; i++) {
+                let option = document.createElement('option')
+                option.innerHTML = data[i].value
+                option.value = data[i].id
+                select.appendChild(option)
+                console.log(data[i])
+            }
+            div.style.display = 'block'
+        }
+    })
+}
 </script>
 <!-- <script>
 

@@ -14,7 +14,7 @@ class CrearEstudianteForm(forms.ModelForm):
         "comprobante_documento_identidad","nombre_completo_madre","cedula_madre","lugar_expedicion_madre","celular_madre",
         "email_madre","nombre_completo_padre","cedula_padre","lugar_expedicion_padre", "celular_padre", "email_padre", "direccion_A","barrio_A",
         "ciudad_A","nombre_contactoE","telefono_contactoE","relacion_contactoE","exoneracion",
-        "documento_A","seguro_A","tipo_clase","aceptaContrato","facturacion_electronica")
+        "documento_A","seguro_A","tipo_clase","aceptaContrato","facturacion_electronica",'tipo_servicio')
 
         widgets = {
         "nombre_completo": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
@@ -50,6 +50,7 @@ class CrearEstudianteForm(forms.ModelForm):
         "documento_A": forms.FileInput(attrs={"class":"form-control"}),
         "seguro_A": forms.FileInput(attrs={"class":"form-control"}),
         "tipo_clase": forms.Select(attrs={"class":"form-select"}),
+        "tipo_servicio": forms.Select(attrs={"class":"form-select"}),
         "facturacion_electronica": forms.CheckboxInput(attrs={"class":"form-check-input", "autocomplete":"off"}),
         }
     def __init__(self, *args, **kwargs):
@@ -86,6 +87,7 @@ class CrearEstudianteForm(forms.ModelForm):
         self.fields['documento_A'].required = True
         self.fields['seguro_A'].required = True
         self.fields['tipo_clase'].required = True
+        self.fields['tipo_servicio'].required = True
         self.fields['aceptaContrato'].required = False
         self.fields['facturacion_electronica'].required = False
 
@@ -150,7 +152,7 @@ class EstudianteForm(forms.ModelForm):
         "comprobante_documento_identidad","nombre_completo_madre","cedula_madre","lugar_expedicion_madre","celular_madre",
         "email_madre","nombre_completo_padre","cedula_padre","lugar_expedicion_padre", "celular_padre", "email_padre", "direccion_A","barrio_A",
         "ciudad_A","nombre_contactoE","telefono_contactoE","relacion_contactoE","exoneracion",
-        "documento_A","seguro_A","tipo_clase","facturacion_electronica")
+        "documento_A","seguro_A","facturacion_electronica")
 
         widgets = {
         "nombre_completo": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
@@ -184,7 +186,6 @@ class EstudianteForm(forms.ModelForm):
         "exoneracion": forms.FileInput(attrs={"class":"form-control"}),
         "documento_A": forms.FileInput(attrs={"class":"form-control"}),
         "seguro_A": forms.FileInput(attrs={"class":"form-control"}),
-        "tipo_clase": forms.Select(attrs={"class":"form-select"}),
         "facturacion_electronica": forms.CheckboxInput(attrs={"class":"form-check-input", "autocomplete":"off"}),
         }
     def __init__(self, *args, **kwargs):
@@ -220,7 +221,6 @@ class EstudianteForm(forms.ModelForm):
         self.fields['exoneracion'].required = True
         self.fields['documento_A'].required = True
         self.fields['seguro_A'].required = True
-        self.fields['tipo_clase'].required = True
         self.fields['facturacion_electronica'].required = False
 
 

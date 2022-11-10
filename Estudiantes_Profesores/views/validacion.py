@@ -80,7 +80,7 @@ class ValidationClass():
                 ElProfeEstaEnLaClase = profesor in [clases.clase.profesor for clases in EstadoClase.objects.filter(InfoPicadero=iPicadero)] 
                 if estudiantes >= max_estudiantes:
                     errores = serialiserValidation(errores, 0, iPicadero, 'estudiante')
-                claseSelected = [diasC for diasC in EstadoClase.objects.all() if dia.date() == diasC.dia and hora.time() == diasC.clase.calendario.horaClase]
+                claseSelected = [diasC for diasC in EstadoClase.objects.all() if int(dia) == int(diasC.dia.weekday()) and hora.time() == diasC.clase.calendario.horaClase]
                 if len(claseSelected)>0:
                     Clases = [pro.clases.all() for pro in InfoPicadero.objects.filter(picadero=clase.InfoPicadero.picadero) if int(pro.dia) == arreglarFormatoDia(dia.weekday()) and pro.hora == hora.time()]
                     try:

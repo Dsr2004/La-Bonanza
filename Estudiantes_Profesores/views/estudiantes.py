@@ -10,10 +10,22 @@ from django.contrib import messages
 from La_Bonanza. mixins import IsAdminMixin
 from Niveles.models import Nivel
 from Picaderos.models import EstadoClase, Picadero, InfoPicadero, Clase
-from ..models import Estudiante, Registro, Profesor, Calendario as CalendarioModel
+from ..models import Estudiante, Registro, Profesor, Calendario as CalendarioModel, Servicio
 from ..forms import EstudianteForm,CrearEstudianteForm, RegistroForm,ProfesorForm
 from ..models import DIAS_SEMANA
 from .validacion import ValidationClass, arreglarFormatoDia
+
+
+def cambiarTipoClase(request):
+    if request.POST.get('tipo') == 'edit':
+        id = request.POST.get('id')
+        estudiante = Estudiante.objects.get(pk = id)
+        estudiante.tipo_clase = request.POST.get('tipo_clase')
+        estudiante.save()
+        return JsonResponse({"Servicios":'si'}, status=200)
+        
+    servicios = [{'id':s.pk,'value':s.descripcion} for s in Servicio.objects.filter(tipo_clase = request.POST.get('tipo_clase'))]
+    return JsonResponse({"Servicios":servicios}, status=200)
 
 class Estudiantes(IsAdminMixin, ListView):
     template_name = "estudiantes.html"
@@ -36,7 +48,7 @@ class RegistrarEstudiante(CreateView):
     form_class = CrearEstudianteForm
     template_name = "crearEstudiante.html"
     success_url = reverse_lazy("estudiantes")
-
+    
     def form_valid(self, form):
         print(form)
         if self.request.user.is_authenticated:
@@ -47,9 +59,7 @@ class RegistrarEstudiante(CreateView):
             nombre = str(form.cleaned_data['nombre_completo']).capitalize()
             form.save()
             return render(self.request, "gracias.html",{"nombre":nombre})
-
-        return super().form_valid(form)
-    
+        return super().form_valid(form) 
 
 class BuscarNuevosEstudiantes(IsAdminMixin, View):
      def get(self, request, *args, **kwargs):
@@ -57,6 +67,8 @@ class BuscarNuevosEstudiantes(IsAdminMixin, View):
             return redirect("calendario")
         EstudiantesConRegisto = Estudiante.objects.all()
         EstudiantesSinRegisto = []
+        if len(EstudiantesSinRegisto) == 0:
+            return redirect('estudiantes')
         for registro in EstudiantesConRegisto:
             if not hasattr(registro, "registro"):
                EstudiantesSinRegisto.append(registro)
@@ -199,6 +211,10 @@ class ModificarEstudiante(IsAdminMixin, UpdateView):
         contexto['horas'] = [[i.strftime('%H:%M') for i in [hora.horaClase for hora in calendario]]][0]
         calendario = [[i for i in [dia for dia in DIAS_SEMANA] if int(i[0]) in [int(cl) for cl in [dias.diaClase for dias in calendario]]]][0]
         contexto['diaClase']=calendario
+        contexto['tiposClases'] = [{"value":"1","inner":"Clase puntual"},{"value":"2","inner":"Mensualidad"}]
+        contexto['selected'] = estudiante.tipo_clase
+        contexto['servicio']=estudiante.tipo_servicio
+        contexto['tiposServicios'] = [{'id':s.pk,'value':s.descripcion} for s in Servicio.objects.filter(tipo_clase = estudiante.tipo_clase)]
         return contexto
     
     
@@ -268,6 +284,9 @@ class ModificarRegistroEstudiante(IsAdminMixin, UpdateView):
     success_url = reverse_lazy("estudiantes")
 
     def post(self, request, *args, **kwargs):
+        EstudianteMio = Estudiante.objects.get(pk = request.POST.get('idEstudiante'))
+        EstudianteMio.tipo_servicio = Servicio.objects.get(pk = request.POST.get('servicio'))
+        EstudianteMio.save()
         copia = request.POST.copy()
         print(copia)
         dia = request.POST.get('inicioClase')
@@ -345,7 +364,7 @@ class ModificarRegistroEstudiante(IsAdminMixin, UpdateView):
                         claseE = EstadoClase.objects.get(clase=clase)
                         claseE.dia = fecha
                         claseE.save()
-                return redirect('estudiantes')
+                return JsonResponse({'mensaje':'Se modifico correctamente'},status=200)
             except Exception as error:
                 if type(error).__name__ == "FormValidationEstudianteError":
                     return JsonResponse({"errores": {"estudiante":[str(error)]}}, status=400)

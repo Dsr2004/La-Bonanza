@@ -126,11 +126,6 @@
                         </div>
                     </div>
                     <div class="col-md-12">
-                        <label for="" style="font-weight: 500;">{{form.tipo_clase.label}}: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
-                        {{form.tipo_clase}}
-                        <p id="tipo_clase" class="error_text"></p>
-                    </div>
-                    <div class="col-md-12">
                         <label for="" style="font-weight: 500;">{{form.facturacion_electronica.label}}: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
                         {{form.facturacion_electronica}}
                         <p id="facturacion_electronica" class="error_text"></p>
@@ -316,6 +311,35 @@
                     <br>
                     <h3>Información del Registro </h3>
                     <br>
+                    <div class="col-md-12">
+                        <label for="" style="font-weight: 500;">Tipo clase: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
+                        <select type="text" name="tipo_clase" class="form-select">
+                            {% for tipo in tiposClases %}
+                            {% if tipo.value == selected %}
+                            <option value="{{tipo.value}}" selected>{{tipo.inner}}</option>
+                            {% else %}
+                            <option value="{{tipo.value}}">{{tipo.inner}}</option>
+                            {% endif %}
+                            {% endfor %}
+                        </select>
+                        <p id="tipo_clase" class="error_text"></p>
+                    </div>
+                    <div class="col-md-12" id="divTipoServicio">
+                        <label for="" style="font-weight: 500;">Tipo servicio: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
+                        <select name="tipo_servicio" id="id_tipo_servicio" class="form-select">
+                            
+                            {% for tipo in tiposServicios %}
+                                {% if tipo.id == servicio.pk %}
+                                <option value="{{tipo.id}}" selected>{{tipo.value}}</option>
+                                {% else %}
+                                <option value="{{tipo.id}}">{{tipo.value}}</option>
+                                {% endif %}
+                            {% endfor %}
+                                
+                        </select>
+                        <p id="tipo_servicio" class="error_text"></p>
+                    </div>
+
                     {%if object.tipo_clase == '1' %}
                         <form action="{%url 'modificarRegistroEstudiante' registro.pk%}" method="post" id="ModificarRegistroEstudianteForm">
                         {% csrf_token %}
@@ -456,6 +480,13 @@
 <script src="{% static 'libs/datepicker/dist/datepicker.js' %}"></script>
 <script src="{% static 'libs/datepicker/i18n/datepicker.es-ES.js' %}"></script>
 <script>
+    const valores = window.location.search;
+    const urlParams = new URLSearchParams(valores);
+    if(urlParams.has('page')){
+        let pages = [].slice.call(document.querySelectorAll('#myTab a'))
+        let registro =  new bootstrap.Tab(pages[pages.length-1])
+        registro.show()
+    };
     var idCal = 0
     $(document).ready(function(){
         cargarHoras(horaClase,diaClase)
@@ -553,5 +584,39 @@
         document.getElementById('horarios').removeChild(child);
         idCal = idCal - 1
     }
+
+
+let tipoClase = document.getElementsByName('tipo_clase')[0]
+tipoClase.onchange = function(tipo){
+    let ruta = window.location.href.split('/')
+    let resta = 0
+    let id = ruta[ruta.length-1]
+    if(isNaN(ruta[ruta.length-1])==true){
+        id = ruta[ruta.length-1].split('?')[0]
+    }
+    $.ajax({
+        url: '{%url "cambiarTipoClase"%}',
+        data: {
+            'csrfmiddlewaretoken':csrftoken,
+            'tipo_clase':tipo.target.value,
+            'tipo':'edit',
+            'id':id
+        },
+        type:'POST',
+        success: function(data){
+            let form = document.createElement('form')
+            let input = document.createElement('input')
+            form.action = window.location.href
+            form.method = 'get'
+            input.value = 'registro'
+            input.name = 'page'
+            form.appendChild(input)
+            document.getElementsByTagName('body')[0].appendChild(form)
+            form.submit()
+        }
+    })
+}
 </script>
+
+
 {%endblock scripts%}
