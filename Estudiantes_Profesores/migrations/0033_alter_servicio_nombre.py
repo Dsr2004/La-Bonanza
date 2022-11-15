@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("Estudiantes_Profesores", "0032_remove_servicio_tipo_servicio_tipo_clase"),
     ]

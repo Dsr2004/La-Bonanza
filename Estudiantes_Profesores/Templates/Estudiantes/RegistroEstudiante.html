@@ -1,3 +1,6 @@
+{% load static %}
+
+<link rel="stylesheet" href="{%static 'css/horarioPuntual.css'%}">
 <div class="modal-dialog modal-lg" role="document">
   <div class="modal-content">
     <div class="modal-header">
@@ -13,13 +16,38 @@
           <h5>{{estudiante.get_estudiante}}</h5>
           <p id="estudiante" class="bg-light text-danger" style="color: #dc3545;"></p>
           <br>
-          <Label><strong>Dia  de la  clase: <sup style="color: #dc3545;">(*)</sup></strong></Label>
-         <input type="date" name="inicioClase"  autocomplete="off" class="form-control">
-          <p id="inicioClase" class="bg-light text-danger" style="color: #dc3545;"></p>
-          <br>
-          <Label><strong>Hora de la clase: <sup style="color: #dc3545;">(*)</sup></strong></Label>
-           <input type="time" name="horaClase" class="form-control" step="3600">
-          <p id="horaClase" class="bg-light text-danger" style="color: #dc3545;"></p>
+
+
+          <div class="container">
+              <!-- cabezera -->
+              <div class="headerPuntual" style="display: flex; justify-content:space-between;">
+                  <label for="" style="font-size: 17px; font-weight: 700;">Horarios:</label>
+                  <div style="display: grid;grid-template-columns:1fr 1fr;grid-gap:5px;"><div style="width:100%;background-color:red; padding:0 0px 0 12px;margin-bottom:5px;border-radius:5px; cursor:pointer;" onclick="eliminarClase()"><i class="fa fa-times"style="font-size:16px;"></i> </div><div style="width:100%;background-color:cyan; padding:0 10px;margin-bottom:5px;border-radius:5px; cursor:pointer;" onclick="agregarClase()"><i class="fa fa-plus"style="font-size:15px;"></i></div></div>
+              </div>
+              <!-- cartas -->
+              <div class="containerPuntual">
+                  <div class="cartaPuntual">
+                      <div class="toggleView" style="visibility: hidden;" onclick="act(this)">
+                          <i class="fa fa-compress"></i>
+                      </div>
+                      <div class="cardContenido">
+                          <h4 class="tituloCarta">
+                              Horario 1
+                          </h4>
+                          <div class="bodyCarta">
+                              <Label><strong>Dia  de la  clase: <sup style="color: #dc3545;">(*)</sup></strong></Label>
+                              <input type="date" idPer="inicioClase0" name="inicioClase"  autocomplete="off" class="form-control">
+                              <p id="inicioClase0" class="bg-light text-danger" style="color: #dc3545;"></p>
+                              
+                              <Label><strong>Hora de la clase: <sup style="color: #dc3545;">(*)</sup></strong></Label>
+                              <input type="time" idPer="horaClase0" name="horaClase" class="form-control" step="3600">
+                              <p id="horaClase0" class="bg-light text-danger" style="color: #dc3545;"></p>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
           <br>
           <Label><strong>Profesor: <sup style="color: #dc3545;">(*)</sup></strong></Label>
           {{form.profesor}}
@@ -62,11 +90,11 @@
       <Label><strong>Meses de suscripción: <sup style="color: #dc3545;">(*)</sup></strong></Label>
       <select name="meseSus" id="mesesSus"  class="form-select">
         <option value="1">1 Mes</option>
-        <option value="2">2 Meses</option>
         <option value="3">3 Meses</option>
-        <option value="4">4 Meses</option>
-        <option value="5">5 Meses</option>
         <option value="6">6 Meses</option>
+        <option value="12">1 año</option>
+        <option value="24">2 año</option>
+        <option value="36">3 año</option>
       </select>
       <p id="meses" class="bg-light text-danger" style="color: #dc3545;"></p>
       <br>
@@ -165,3 +193,5 @@ function eliminarHoras(){
   idCal = idCal - 1
 }
 </script>
+
+<script src="{%static 'js/clases.js' %}"></script>

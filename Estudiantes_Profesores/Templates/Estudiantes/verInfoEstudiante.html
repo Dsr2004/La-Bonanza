@@ -349,25 +349,34 @@
                 <br>
                 <h3>Información del Registro </h3>
                 <br>
-                <div class="row">
-                    <div class="col-md-6">
-                        <h5><strong>Inicio de clases: </strong></h5>
-                        <p id="inicioClase-p"></p>
-                        <script>document.getElementById('inicioClase-p').innerHTML=inicioClase</script>
-                    </div>
-                    <div class="col-md-6">
-                        <h5><strong>Fin de clases:</strong></h5>
-                        <p id="finClase-p"></p>
-                        <script>document.getElementById('finClase-p').innerHTML=finClase</script>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <h5><strong>Calendario:</strong></h5>
-                        <div class="" id="horarios" style="height: 55px; display: flex; justify-content:start; overflow: auto;">
+                <div class="container" style="display: flex;">
+                    {% for horario in  calendario %}
+                    <div style="margin: 0 35px;">
+                        <div class="">
+                            <h5><strong>Inicio de clases: </strong></h5>
+                            <p id="inicioClase-p">{{horario.inicioClase}}</p>
                         </div>
-                        <p id="horarios-p" style="display: none;"></p>
+                        <div class="">
+                            <h5><strong>Fin de clases:</strong></h5>
+                            <p id="finClase-p">{{horario.finClase}}</p>
+                        </div>
+                        <div>
+                            <h5><strong>Hora de la clase:</strong></h5>
+                            {{horario.horaClase|date:"g A"}}
+                        </div>
+                        <div>
+                            <h5><strong>Dia de la clase:</strong></h5>
+                            <p id="diaClase-p{{forloop.counter}}"></p>
+                            <script>
+                                for (var i = 0; i < diaClase.length; i++) {
+                                    if(diaClase[i].id == '{{horario.diaClase}}'){
+                                        document.getElementById('diaClase-p{{forloop.counter}}').innerHTML = diaClase[i].value;
+                                    }
+                                }
+                            </script>
+                        </div>
                     </div>
+                    {% endfor %}
                 </div>
                 <br>
                     <div class="row">
@@ -405,28 +414,6 @@
 
 
 {% block scripts %}
-    <script>
-        cargarHoras(horaClase,diaClase)
-        let documento = $("#documento")
-        function cargarHoras(Horarios, dia){
-            days = dia
-            for(var i=0;i<Horarios.length;i++) {
-                horas = Horarios[i];
-                console.log(horas)
-                const divHorario = document.createElement('div');
-                const inputHorario = document.createElement("h6");
-                inputHorario.innerHTML = horas
-                const dateDay = document.createElement("h5");
-                dateDay.innerHTML = days[i].value;
-                inputHorario.classList.add("from")
-                divHorario.appendChild(dateDay);
-                divHorario.appendChild(inputHorario);
-                divHorario.style.margin = "0 10px"
-                document.getElementById('horarios').appendChild(divHorario);
-            }
-        }
-        
-    </script>
 {% endblock scripts %}
     
 

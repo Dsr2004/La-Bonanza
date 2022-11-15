@@ -154,7 +154,6 @@ function ModificarRegistroEstudiante(){
   servicio = document.getElementsByName('tipo_servicio')[0]
   // console.log(servicio)
   let ruta = window.location.href.split('/')
-  let resta = 0
   let id = ruta[ruta.length-1]
   if(isNaN(ruta[ruta.length-1])==true){
       id = ruta[ruta.length-1].split('?')[0]
@@ -232,11 +231,56 @@ function ModificarRegistroEstudiante(){
 
 function ModificarRegistroEstudiantej(){
   let form = $("#ModificarRegistroEstudianteForm")
+  let servicio = document.getElementsByName('tipo_servicio')[0]
+  let datos = form.serializeArray()
+  let dias = []  
+  let horas = []
+  let profesor = ''
+  let nivel = ''
+  let pagado = ''
+  let estudiante = ''
+  let ruta = window.location.href.split('/')
+  let id = ruta[ruta.length-1]
+  if(isNaN(ruta[ruta.length-1])==true){
+      id = ruta[ruta.length-1].split('?')[0]
+  }
+  for (let i = 0; i < datos.length; i++) {
+        if(datos[i].name=='inicioClase'){
+          dias.push(datos[i].value)
+        }
+        if(datos[i].name=='horaClase'){
+          console.log(datos[i])
+          horas.push(datos[i].value)
+        }
+        if(datos[i].name=='profesor'){
+          profesor = datos[i].value
+        }
+        if(datos[i].name=='nivel'){
+          nivel = datos[i].value
+        }
+        if(datos[i].name=='pagado'){
+          pagado = datos[i].value
+        }
+        if(datos[i].name=='estudiante'){
+          estudiante = datos[i].value
+        }
+    }
   $.ajax({
     url:form.attr("action"),
     type:form.attr("method"),
-    data:form.serialize(),
+    data: {
+      'csrfmiddlewaretoken':datos[0].value,
+      'diaClase':dias,
+      'profesor':profesor,
+      'nivel':nivel,
+      'horaClase':horas,
+      'estudiante':estudiante,
+      "pagado":pagado,
+      "servicio":servicio.value,
+      'idEstudiante':id
+    },
     success: function(){
+        console.log('hola')
         form.find('.error_text').text('');
         form.find('.is-invalid').removeClass('is-invalid');
         $("#icon_danger_REGISTRO").css("display","none")
@@ -251,25 +295,83 @@ function ModificarRegistroEstudiantej(){
         })
     },
     error: function(errores){
-      form.find('.error_text').text('');
-      form.find('.is-invalid').removeClass('is-invalid');
-      $("#icon_danger_REGISTRO").css("display","inline-block")
       errors = errores.responseJSON["errores"]
+      console.log(errors)
+      form.find('.text-danger').text('');
+      form.find('.is-invalid').removeClass('is-invalid');
       for (let i in errors){
-        let x=form.find('input[name='+i+']')
-        let y=form.find('select[name='+i+']')
-        x.addClass("is-invalid")
-        y.addClass("is-invalid")
-        $("#"+i).text(errors[i])
+        if (i == 'horarios'){
+          Swal.fire({
+            title: '<strong>Atención</strong>',
+            icon: 'info',
+            html:
+              'Se han puesto más de 5 clases, recuerde que este registro es del tipo <b>Clase Puntual</b> por lo que agregar más clases no lo convertirá en una mensualidad.',
+            showCloseButton: true,
+            showCancelButton: false,
+            focusConfirm: false,
+            confirmButtonText:
+              '<i class="fa fa-thumbs-up"></i> Si, entendí',
+          })
+        }
+          else{
+          let x=form.find('input[name='+i+']')
+          let y=form.find('select[name='+i+']')
+          if(x.length == 0 && y.length == 0){
+            x = form.find('input[idPer='+i+']')
+            console.log(x, i)
+            y = form.find('select[idPer='+i+']')
+            x[0].parentNode.parentNode.parentNode.classList.add('form-control')
+            x[0].parentNode.parentNode.parentNode.classList.add('is-invalid')
+          }
+          x.addClass("is-invalid")
+          y.addClass("is-invalid")
+          $("#"+i).text(errors[i])
+      }
     }
     },
   })
 }
 function RegistrarEstudianteSinRegistroClasePuntual(){
   let form = $("#RegistrarEstudianteForm")
+  let datos = form.serializeArray()
+  let dias = []  
+  let horas = []
+  let profesor = ''
+  let nivel = ''
+  let pagado = ''
+  let estudiante = ''
+  for (let i = 0; i < datos.length; i++) {
+        if(datos[i].name=='inicioClase'){
+          dias.push(datos[i].value)
+        }
+        if(datos[i].name=='horaClase'){
+          console.log(datos[i])
+          horas.push(datos[i].value)
+        }
+        if(datos[i].name=='profesor'){
+          profesor = datos[i].value
+        }
+        if(datos[i].name=='nivel'){
+          nivel = datos[i].value
+        }
+        if(datos[i].name=='pagado'){
+          pagado = datos[i].value
+        }
+        if(datos[i].name=='estudiante'){
+          estudiante = datos[i].value
+        }
+    }
   $.ajax({
     url: form.attr("action"),
-    data: form.serialize(),
+    data: {
+      'csrfmiddlewaretoken':datos[0].value,
+      'diaClase':dias,
+      'horaClase':horas,
+      'profesor':profesor,
+      'nivel':nivel,
+      'pagado':pagado,
+      'estudiante':estudiante
+    },
     type: form.attr("method"),
     success: function (response) {
       location.reload()
@@ -280,15 +382,38 @@ function RegistrarEstudianteSinRegistroClasePuntual(){
       form.find('.text-danger').text('');
       form.find('.is-invalid').removeClass('is-invalid');
       for (let i in errors){
-        let x=form.find('input[name='+i+']')
-        let y=form.find('select[name='+i+']')
-        x.addClass("is-invalid")
-        y.addClass("is-invalid")
-        $("#"+i).text(errors[i])
+        if (i == 'horarios'){
+          Swal.fire({
+            title: '<strong>Atención</strong>',
+            icon: 'info',
+            html:
+              'Se han puesto más de 5 clases, recuerde que este registro es del tipo <b>Clase Puntual</b> por lo que agregar más clases no lo convertirá en una mensualidad.',
+            showCloseButton: true,
+            showCancelButton: false,
+            focusConfirm: false,
+            confirmButtonText:
+              '<i class="fa fa-thumbs-up"></i> Si, entendí',
+          })
+        }
+          else{
+          let x=form.find('input[name='+i+']')
+          let y=form.find('select[name='+i+']')
+          if(x.length == 0 && y.length == 0){
+            x = form.find('input[idPer='+i+']')
+            console.log(x)
+            y = form.find('select[idPer='+i+']')
+            x[0].parentNode.parentNode.parentNode.classList.add('form-control')
+            x[0].parentNode.parentNode.parentNode.classList.add('is-invalid')
+          }
+          x.addClass("is-invalid")
+          y.addClass("is-invalid")
+          $("#"+i).text(errors[i])
+      }
     }
     }
   });
  }
+ 
 function RegistrarEstudianteSinRegistro(forj){
   let form = $("#RegistrarEstudianteForm")
   let p = document.getElementById('horarios-p')

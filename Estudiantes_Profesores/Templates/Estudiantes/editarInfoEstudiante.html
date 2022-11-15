@@ -4,6 +4,7 @@
 
 {% block estilos %}
 <link rel="stylesheet" href="{% static 'libs/datepicker/dist/datepicker.css' %}">
+<link rel="stylesheet" href="{%static 'css/horarioPuntual.css'%}">
 {% endblock estilos %}
     
 
@@ -343,30 +344,44 @@
                     {%if object.tipo_clase == '1' %}
                         <form action="{%url 'modificarRegistroEstudiante' registro.pk%}" method="post" id="ModificarRegistroEstudianteForm">
                         {% csrf_token %}
+                            <div class="container">
+                                <!-- cabezera -->
+                                <div class="headerPuntual" style="display: flex; justify-content:space-between;">
+                                    <label for="" style="font-size: 17px; font-weight: 700;">Horarios:</label>
+                                    <div style="display: grid;grid-template-columns:1fr 1fr;grid-gap:5px;"><div style="width:100%;background-color:red; padding:0 0px 0 12px;margin-bottom:5px;border-radius:5px; cursor:pointer;" onclick="eliminarClase()"><i class="fa fa-times"style="font-size:16px;"></i> </div><div style="width:100%;background-color:cyan; padding:0 10px;margin-bottom:5px;border-radius:5px; cursor:pointer;" onclick="agregarClase()"><i class="fa fa-plus"style="font-size:15px;"></i></div></div>
+                                </div>
+                                <!-- cartas -->
+                                <div class="containerPuntual">
+                                    {% for horario in  calendario%}
+                                    <div class="cartaPuntual">
+                                        <div class="toggleView" {% if forloop.counter == 1 %}style="visibility: hidden;" {% endif %} onclick="act(this)">
+                                            <i class="fa fa-compress"></i>
+                                        </div>
+                                        <div class="cardContenido">
+                                            <h4 class="tituloCarta">
+                                                Horario {{forloop.counter}}
+                                            </h4>
+                                            <div class="bodyCarta" {% if forloop.counter != 1 %}style="display:none;"{% endif %}>
+                                                <Label><strong>Dia  de la  clase: <sup style="color: #dc3545;">(*)</sup></strong></Label>
+                                                <input type="date" idPer="inicioClase{{forloop.counter}}" name="inicioClase"  autocomplete="off" class="form-control" value="{{horario.inicioClase|date:'Y-n-j'}}">
+                                                <p id="inicioClase{{forloop.counter}}" class="bg-light text-danger" style="color: #dc3545;"></p>
+                                                
+                                                <Label><strong>Hora de la clase: <sup style="color: #dc3545;">(*)</sup></strong></Label>
+                                                <input type="time" idPer="horaClase{{forloop.counter}}" name="horaClase" class="form-control" step="3600" value="{{horario.horaClase}}">
+                                                <p id="horaClase{{forloop.counter}}" class="bg-light text-danger" style="color: #dc3545;"></p>
+                                                <Label  style="margin-bottom: 10px;"><strong>Fin de la clase: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  style="color: #dc3545;">*</sup></strong></Label>
+                                                <br>
+                                                <p type="date" name="finClase" class="" id="finClaseinput{{forloop.counter}}">{{horario.finClase}}</p>
+                                                <p id="finClase{{forloop.counter}}" class="bg-light text-danger" style="color: #dc3545;"></p>
+                                                <br>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {%endfor%}
+                                </div>
+                            </div>
+                        <br><br><br>
                         <div class="row">
-                            <div class="col-md-6">
-                                <Label><strong>Inicio de clases: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  style="color: #dc3545;">*</sup></strong></Label>
-                                <input type="date" name="inicioClase" class="form-control" id="inicioClaseinput">
-                                <script>document.getElementById('inicioClaseinput').value=inicioClase</script>
-                                <p id="inicioClase" class="bg-light text-danger" style="color: #dc3545;"></p>
-                                <br>
-                            </div>
-                            <div class="col-md-6">
-                                <Label  style="margin-bottom: 10px;"><strong>Fin de las clases: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  style="color: #dc3545;">*</sup></strong></Label>
-                                <br>
-                                <p type="date" name="finClase" class="" id="finClaseinput"></p>
-                                <script>document.getElementById('finClaseinput').innerHTML=finClase</script>
-                                <p id="finClase" class="bg-light text-danger" style="color: #dc3545;"></p>
-                                <br>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <Label><strong>Hora de la clase: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  style="color: #dc3545;">*</sup></strong></Label>
-                                <input type="time" name="horaClase" id="horaClase" class="form-control" value="{% for calenday in calendario  %}{{calenday.horaClase}}{% endfor %}">
-                                <p id="horaClase" class="bg-light text-danger" style="color: #dc3545;"></p>
-                                <br>
-                            </div>
                             <div class="col-md-6">
                                 <Label><strong>Profesor: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  style="color: #dc3545;">*</sup></strong></Label>
                                 {{formRegistro.profesor}}
@@ -618,5 +633,6 @@ tipoClase.onchange = function(tipo){
 }
 </script>
 
+<script src="{%static 'js/clases.js' %}"></script>
 
 {%endblock scripts%}

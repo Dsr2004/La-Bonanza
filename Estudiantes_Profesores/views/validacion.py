@@ -1,8 +1,9 @@
 import json
 from datetime import datetime, timedelta
 from django.http import JsonResponse
-from Estudiantes_Profesores.models import DIAS_SEMANA
+from Estudiantes_Profesores.models import DIAS_SEMANA, Calendario as CalendarioModel, Clase, Registro
 from Picaderos.models import EstadoClase, InfoPicadero, Picadero
+from Niveles.models import Nivel
 
 def arreglarFormatoDia(dia):
     if type(dia)  != list:
@@ -109,4 +110,47 @@ class ValidationClass():
                 return{"tipo":"profesor","errores":{"profesor":[f"No puede asignar este {errores[1]['tipo']} porque el picadero: {errores[1]['contenido']['nombre']} los dias {errores[1]['contenido']['dias']} a las {errores[1]['contenido']['hora']} no admite más profesores"]}}
             else:
                  return{"tipo":"NO"}
+
+def guardarRegistro(objecto, diasClases, hora, copia, finClase, diaOriginal):
+        picadero = Picadero.objects.get(nivel = objecto.nivel)
+        rangeDays = []
+        if "meseSus" not in copia:
+            for i in range(len(diasClases)):
+                first_date = datetime.strptime(diaOriginal[i], '%Y-%m-%d')
+                last_date = finClase[i]
+                week_day = int(diasClases[i])
+                dates = [first_date + timedelta(days=d)-timedelta(days=1)  for d in range((last_date - first_date).days + 1) if int((first_date + timedelta(days=d)).weekday()) == int(week_day)] 
+                rangeDays.append(dates)
+                calendario = CalendarioModel.objects.create(horaClase=hora[i],finClase=finClase[i],inicioClase=diaOriginal[i],diaClase = str(diasClases[i]), registro=objecto)
+                calendario.save()
+                iPicadero, creado = InfoPicadero.objects.get_or_create(picadero=picadero,hora=hora[i], dia=diasClases[i]) 
+                iPicadero.save()
+                for fecha in rangeDays[i]:
+                    clase =  Clase.objects.create(calendario=calendario, profesor=objecto.profesor)
+                    clase.save()
+                    iPicadero.clases.add(clase)
+                    claseE = EstadoClase.objects.get(clase=clase)
+                    claseE.dia = fecha
+                    claseE.save()
+            return True
+        else:
+            for diaClaseF in diasClases:
+                first_date = datetime.strptime(diaOriginal, '%Y-%m-%d')
+                last_date = finClase
+                week_day = int(diaClaseF)
+                dates = [first_date + timedelta(days=d)-timedelta(days=1)  for d in range((last_date - first_date).days + 1) if int((first_date + timedelta(days=d)).weekday()) == int(week_day)] 
+                rangeDays.append(dates)
+            for i in range(len(hora)):
+                calendario = CalendarioModel.objects.create(horaClase=hora[i],finClase=finClase,inicioClase=diaOriginal,diaClase = str(diasClases[i]), registro=objecto)
+                calendario.save()
+                iPicadero, creado = InfoPicadero.objects.get_or_create(picadero=picadero,hora=hora[i], dia=diasClases[i]) 
+                iPicadero.save()
+                for fecha in rangeDays[i]:
+                    clase =  Clase.objects.create(calendario=calendario, profesor=objecto.profesor)
+                    clase.save()
+                    iPicadero.clases.add(clase)
+                    claseE = EstadoClase.objects.get(clase=clase)
+                    claseE.dia = fecha
+                    claseE.save()
+            return True
         

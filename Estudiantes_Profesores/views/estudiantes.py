@@ -13,7 +13,7 @@ from Picaderos.models import EstadoClase, Picadero, InfoPicadero, Clase
 from ..models import Estudiante, Registro, Profesor, Calendario as CalendarioModel, Servicio
 from ..forms import EstudianteForm,CrearEstudianteForm, RegistroForm,ProfesorForm
 from ..models import DIAS_SEMANA
-from .validacion import ValidationClass, arreglarFormatoDia
+from .validacion import ValidationClass, arreglarFormatoDia, guardarRegistro
 
 
 def cambiarTipoClase(request):
@@ -67,12 +67,12 @@ class BuscarNuevosEstudiantes(IsAdminMixin, View):
             return redirect("calendario")
         EstudiantesConRegisto = Estudiante.objects.all()
         EstudiantesSinRegisto = []
-        if len(EstudiantesSinRegisto) == 0:
-            return redirect('estudiantes')
         for registro in EstudiantesConRegisto:
             if not hasattr(registro, "registro"):
                EstudiantesSinRegisto.append(registro)
         ctx={"estudiantes":EstudiantesSinRegisto}
+        if len(EstudiantesSinRegisto) == 0:
+            return redirect('estudiantes')
         return render(request, "Estudiantes/estudiantesSinRegistro.html", ctx)
 
 class CrearNuevosEstudiantes(IsAdminMixin, CreateView):
@@ -89,23 +89,41 @@ class CrearNuevosEstudiantes(IsAdminMixin, CreateView):
     
     def post(self, request, *args, **kwargs):
         copia = request.POST.copy()
-        dia = request.POST.get('inicioClase')
-        diaOriginal = dia
-        if not dia:
-            return JsonResponse({"errores":{"inicioClase":["Este campo es obligatorio."]}}, status=400)
-        
         if "meseSus" not in request.POST:
-            if dia:
-                dia = datetime.strptime(dia, "%Y-%m-%d")
-                diaClase = dia.weekday()
-                finClases =dia+timedelta(days=1)
-                diasClases=[str(arreglarFormatoDia(dia=int(diaClase)))]
-                horas = [copia["horaClase"]]
+            cont = 0
+            diasClases = []
+            finesClases = []
+            diaOriginal = []
+            if len(copia.getlist('diaClase[]')) > 5:
+                return  JsonResponse({"errores":{"horarios":[""]}}, status=400)
+            for dia in copia.getlist('diaClase[]'):
+                diaOriginal.append(dia)
+                if not dia:
+                    return JsonResponse({"errores":{"inicioClase"+str(cont):["Este campo es obligatorio."]}}, status=400)
+                if dia:
+                    if len([dia for dia in copia.getlist('diaClase[]') if dia]) == len(copia.getlist('diaClase[]')):
+                        dia = datetime.strptime(dia, "%Y-%m-%d")
+                        diaClase = dia.weekday()
+                        finClases =dia+timedelta(days=1)
+                        finesClases.append(finClases)
+                        diasClases.append(str(arreglarFormatoDia(dia=int(diaClase))))
+                    horas = copia.getlist("horaClase[]")
+                    contHora = 0
+                    for hora in horas:
+                        if not hora:
+                            return JsonResponse({"errores":{"horaClase"+str(contHora):["Este campo es obligatorio."]}}, status=400)
+                        contHora = contHora + 1
+                cont = cont + 1
         else:
+            dia = request.POST.get('inicioClase')
+            diaOriginal = dia
+            if not dia:
+                return JsonResponse({"errores":{"inicioClase":["Este campo es obligatorio."]}}, status=400)
             meses = request.POST.get("meseSus")
             finClases = datetime.strptime(dia, "%Y-%m-%d")+relativedelta(months=int(meses))+timedelta(days=1)
             horas = json.loads(request.POST.get('horaClase'))
             diasClases = json.loads(request.POST.get('diaClase'))
+            
         form = self.form_class(copia)
         
         if form.is_valid():
@@ -146,32 +164,17 @@ class CrearNuevosEstudiantes(IsAdminMixin, CreateView):
                     elif error["tipo"] == "profesor":
                         return JsonResponse({"errores":error["errores"]}, status=400)
             objecto = form.save()
-            picadero = Picadero.objects.get(nivel = objecto.nivel)
-            rangeDays = []
-            for diaClaseF in diasClases:
-                first_date = datetime.strptime(diaOriginal, '%Y-%m-%d')
-                last_date = finClases
-                week_day = int(diaClaseF)
-                dates = [first_date + timedelta(days=d)-timedelta(days=1)  for d in range((last_date - first_date).days + 1) if int((first_date + timedelta(days=d)).weekday()) == int(week_day)] 
-                rangeDays.append(dates)
-            for i in range(len(hora)):
-                calendario = CalendarioModel.objects.create(horaClase=hora[i],finClase=finClases,inicioClase=diaOriginal,diaClase = str(diasClases[i]), registro=objecto)
-                calendario.save()
-                iPicadero, creado = InfoPicadero.objects.get_or_create(picadero=picadero,hora=hora[i], dia=diasClases[i]) 
-                iPicadero.save()
-                for fecha in rangeDays[i]:
-                    clase =  Clase.objects.create(calendario=calendario, profesor=objecto.profesor)
-                    clase.save()
-                    iPicadero.clases.add(clase)
-                    claseE = EstadoClase.objects.get(clase=clase)
-                    claseE.dia = fecha
-                    claseE.save()
-            # return JsonResponse({"errores": form.errors}, status=400)
-                    
-            return redirect('estudiantes') 
+            if "meseSus" not in copia:
+                response = guardarRegistro(objecto, diasClases, hora, copia, finesClases, diaOriginal)
+                if response:
+                    return redirect('estudiantes')
+            else:
+                response = guardarRegistro(objecto, diasClases, hora, copia, finClases, diaOriginal)
+                if response:
+                    return redirect('estudiantes')
         else:
             return JsonResponse({"errores": form.errors}, status=400)
-           
+        
 
     def form_invalid(self, form):
         return JsonResponse({"errores": form.errors}, status=400)
@@ -288,20 +291,39 @@ class ModificarRegistroEstudiante(IsAdminMixin, UpdateView):
         EstudianteMio.tipo_servicio = Servicio.objects.get(pk = request.POST.get('servicio'))
         EstudianteMio.save()
         copia = request.POST.copy()
-        print(copia)
-        dia = request.POST.get('inicioClase')
-        diaOriginal = dia   
-        if not dia:
-            return JsonResponse({"errores":{"inicioClase":["Este campo es obligatorio."]}}, status=400)
-        
+        if len(copia.getlist('diaClase[]')) > 5:
+            return  JsonResponse({"errores":{"horarios":[""]}}, status=400)
         if "meseSus" not in request.POST:
-            if dia:
-                dia = datetime.strptime(dia, "%Y-%m-%d")
-                diaClase = dia.weekday()
-                finClases =dia+timedelta(days=1)
-                diasClases=[str(arreglarFormatoDia(dia=int(diaClase)))]
-                horas = [copia["horaClase"]]
+            cont = 0
+            diasClases = []
+            finesClases = []
+            diaOriginal = []
+            if len(copia.getlist('diaClase[]')) > 5:
+                return  JsonResponse({"errores":{"horarios":[""]}}, status=400)
+            print(copia.getlist('diaClase[]'))
+            for dia in copia.getlist('diaClase[]'):
+                diaOriginal.append(dia)
+                if not dia:
+                    return JsonResponse({"errores":{"inicioClase"+str(cont+1):["Este campo es obligatorio."]}}, status=400)
+                if dia:
+                    if len([dia for dia in copia.getlist('diaClase[]') if dia]) == len(copia.getlist('diaClase[]')):
+                        dia = datetime.strptime(dia, "%Y-%m-%d")
+                        diaClase = dia.weekday()
+                        finClases =dia+timedelta(days=1)
+                        finesClases.append(finClases)
+                        diasClases.append(str(arreglarFormatoDia(dia=int(diaClase))))
+                    horas = copia.getlist("horaClase[]")
+                    contHora = 0
+                    for hora in horas:
+                        if not hora:
+                            return JsonResponse({"errores":{"horaClase"+str(contHora+1):["Este campo es obligatorio."]}}, status=400)
+                        contHora = contHora + 1
+                cont = cont + 1
         else:
+            dia = request.POST.get('inicioClase')
+            diaOriginal = dia
+            if not dia:
+                return JsonResponse({"errores":{"inicioClase":["Este campo es obligatorio."]}}, status=400)
             meses = request.POST.get("meseSus")
             finClases = datetime.strptime(dia, "%Y-%m-%d")+relativedelta(months=int(meses))+timedelta(days=1)
             horas = json.loads(request.POST.get('horaClase'))
@@ -344,26 +366,14 @@ class ModificarRegistroEstudiante(IsAdminMixin, UpdateView):
                 for i in range(len(horarios)):
                     horarios[i].delete()
                 objecto = form.save()   
-                picadero = Picadero.objects.get(nivel = objecto.nivel)
-                rangeDays = []
-                for diaClaseF in diasClases:
-                    first_date = datetime.strptime(diaOriginal, '%Y-%m-%d')
-                    last_date = finClases
-                    week_day =int(diaClaseF)
-                    dates = [(first_date + timedelta(days=d))-timedelta(days=1) for d in range((last_date - first_date).days + 1)if (first_date + timedelta(days=d)).weekday() == week_day] 
-                    rangeDays.append(dates)
-                for i in range(len(hora)):
-                    calendario = CalendarioModel.objects.create(horaClase=hora[i],finClase=finClases,inicioClase=diaOriginal,diaClase = str(diasClases[i]), registro=objecto)
-                    calendario.save()
-                    iPicadero, creado = InfoPicadero.objects.get_or_create(picadero=picadero,hora=hora[i], dia=diasClases[i]) 
-                    iPicadero.save()
-                    for fecha in rangeDays[i]:
-                        clase =  Clase.objects.create(calendario=calendario, profesor=objecto.profesor)
-                        clase.save()
-                        iPicadero.clases.add(clase)
-                        claseE = EstadoClase.objects.get(clase=clase)
-                        claseE.dia = fecha
-                        claseE.save()
+                if "meseSus" not in copia:
+                    response = guardarRegistro(objecto, diasClases, hora, copia, finesClases, diaOriginal)
+                    if response:
+                        return JsonResponse({"mensaje":"estudiante modificado con exito"}, status=200)
+                else:
+                    response = guardarRegistro(objecto, diasClases, hora, copia, finClases, diaOriginal)
+                    if response:
+                        return JsonResponse({"mensaje":"estudiante modificado con exito"}, status=200)      
                 return JsonResponse({'mensaje':'Se modifico correctamente'},status=200)
             except Exception as error:
                 if type(error).__name__ == "FormValidationEstudianteError":
@@ -376,4 +386,3 @@ class ModificarRegistroEstudiante(IsAdminMixin, UpdateView):
         else:
             return JsonResponse({"errores": form.errors}, status=400)
         return JsonResponse({"mensaje":"estudiante modificado con exito"}, status=400)
-        return redirect('estudiantes')
