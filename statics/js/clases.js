@@ -45,6 +45,21 @@ let containerCards = document.getElementsByClassName('containerPuntual')[0]
 function cargarSize(){  
     var nth = document.querySelector(".containerPuntual div:nth-child(1)")
     nth.style.gridRow = '1/'+containerCards.childElementCount
+    nth.style.overflow = 'auto'
+    if (containerCards.childElementCount == 2) {
+        containerCards.style.gridTemplateRows = "100%"
+    }
+    else{
+        if (containerCards.childElementCount == 3) {
+            containerCards.style.gridTemplateRows = '65%'
+        }
+        if (containerCards.childElementCount == 4) {
+            containerCards.style.gridTemplateRows = '30%'
+        }
+        if (containerCards.childElementCount > 4) {
+            containerCards.style.gridTemplateRows = (100/containerCards.childElementCount)+'%'
+        }
+    }
 }
 cargarSize()
 function act(toggle){
@@ -94,6 +109,7 @@ function eliminarClase(){
 function agregarClase(){
     let clone = containerCards.lastElementChild.cloneNode(true)
     clone.style.gridRow = ""
+    clone.style.overflow = ""
     clone.lastElementChild.firstElementChild.innerHTML = "Horario "+(containerCards.childElementCount+1)
     clone.lastElementChild.lastElementChild.childNodes[3].value = ""
     clone.lastElementChild.lastElementChild.childNodes[9].value = ""
