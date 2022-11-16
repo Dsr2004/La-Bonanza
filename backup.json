@@ -1,0 +1,27 @@
+[
+    {"model": "Niveles.nivel", "pk": 1, "fields": {"nivel": "AVANZADO", "color_fondo": "#bdddfd", "color_letra": "#000000"}},
+    {"model": "Niveles.nivel", "pk": 2, "fields": {"nivel": "CLASE PRUEBA", "color_fondo": "#00ff00", "color_letra": "#000000"}},
+    {"model": "Niveles.nivel", "pk": 3, "fields": {"nivel": "COMPETENCIA", "color_fondo": "#00ffff", "color_letra": "#000000"}},
+    {"model": "Niveles.nivel", "pk": 4, "fields": {"nivel": "INTERMEDIO", "color_fondo": "#f395df", "color_letra": "#000000"}},
+    {"model": "Niveles.nivel", "pk": 5, "fields": {"nivel": "PRINCIPIANTE", "color_fondo": "#e6e799", "color_letra": "#000000"}},
+    {"model": "Niveles.nivel", "pk": 6, "fields": {"nivel": "ESTIMULACIÓN", "color_fondo": "#ffa76c", "color_letra": "#000000"}},
+    {"model": "Niveles.nivel", "pk": 7, "fields": {"nivel": "EQUINOTERAPIA", "color_fondo": "#6abe90", "color_letra": "#000000"}},
+    {"model": "Niveles.nivel", "pk": 8, "fields": {"nivel": "NUEVOS", "color_fondo": "#f1c232", "color_letra": "#000000"}},
+    {"model": "Niveles.nivel", "pk": 9, "fields": {"nivel": "ESPORADICA", "color_fondo": "#bf9000", "color_letra": "#000000"}},
+    {"model": "Niveles.nivel", "pk": 10, "fields": {"nivel": "CLASE PAUSADA", "color_fondo": "#ffffff", "color_letra": "#ff0000"}},
+    {"model": "Niveles.nivel", "pk": 11, "fields": {"nivel": "NO PAGO", "color_fondo": "#000000", "color_letra": "#ffffff"}},
+    {"model": "Niveles.nivel", "pk": 12, "fields": {"nivel": "NO ASISTE + 3 CLASES", "color_fondo": "#9966ff", "color_letra": "#000000"}},
+
+    {"model": "Picaderos.picadero", "pk": 1, "fields": {"nombre": "Avanzados", "max_estudiantes": 1, "max_profesores": 1, "nivel": 1, "slug": "avanzados"}},
+    {"model": "Picaderos.picadero", "pk": 2, "fields": {"nombre": "Intermedios", "max_estudiantes": 7, "max_profesores": 2, "nivel": 4, "slug": "intermedios"}},
+    {"model": "Picaderos.picadero", "pk": 3, "fields": {"nombre": "Competenica", "max_estudiantes": 7, "max_profesores": 2, "nivel": 3, "slug": "competenica"}},
+    {"model": "Picaderos.picadero", "pk": 4, "fields": {"nombre": "Principiantes", "max_estudiantes": 7, "max_profesores": 4, "nivel": 5, "slug": "principiantes"}},
+    {"model": "Picaderos.picadero", "pk": 5, "fields": {"nombre": "Estimulación", "max_estudiantes": 4, "max_profesores": 4, "nivel": 6, "slug": "estimulacion"}},
+
+    {"model": "Estudiantes_Profesores.servicio", "pk": 1, "fields": {"nombre": "Estimulación", "descripcion": "estimulación"}},
+    {"model": "Estudiantes_Profesores.servicio", "pk": 2, "fields": {"nombre": "Chalanería", "descripcion": "chalanería"}}
+
+]
+
+
+
