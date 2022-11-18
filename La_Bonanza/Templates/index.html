@@ -117,15 +117,21 @@
 
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
 <script>
     $(document).ready(function(){
         $("table").DataTable({
             responsive:true,
         })
+        $('.selectpicker').selectpicker();
     })
     function cargar(){
         console.log('carga')
-        $('.selectpicker').selectpicker();
+        $('[data-toggle="tooltip"]').tooltip()
+        $('.selectpicker').selectpicker({
+            'selectedText': 'cat'
+        });
         $("#fecha_nacimiento").datepicker({ 
             language: 'es-ES',
             format: "dd/mm/YYYY",

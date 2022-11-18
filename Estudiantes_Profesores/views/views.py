@@ -155,9 +155,11 @@ class GestionDeAsistencia(View):
                 calendario = CalendarioModel.objects.filter(registro=registro)
                 calendario = [objecto for objecto in calendario if int([dia[0] for dia in DIAS_SEMANA if int(dia[0]) == int(objecto.diaClase)][0]) == int(diaSemana) and objecto.horaClase == hora][0]
                 claseObject = [clases for clases in EstadoClase.objects.all() if clases.clase.calendario == calendario][0]
-                print(claseObject)
+                print(creado)
                 if creado:
                     if clase['estado'] == '3' or clase['estado'] == '4':
+                        asistencia.estado = clase["estado"]
+                        asistencia.save()
                         claseObject.estado = False
                         claseObject.fecha_cancelacion = datetime.now().date()
                         claseObject.save()
@@ -180,6 +182,7 @@ class GestionDeAsistencia(View):
                         asistencia.save()
                         print(claseObject)
                         messages.add_message(request, messages.WARNING, f"{registro.estudiante.nombre_completo} ha sido modificado, porque ya estaba en la asistencia del día")
+                        
             except  Exception as e:
                 print(e)
                 messages.add_message(request, messages.INFO, f"No se encontro al estudiante en la base de datos")

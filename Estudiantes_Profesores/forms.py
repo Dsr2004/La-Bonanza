@@ -125,9 +125,9 @@ class CrearEstudianteForm(forms.ModelForm):
             raise forms.ValidationError('Asegúrese de que este valor sea menor o igual a 15.')
         
     def clean_cedula_padre(self):
-        celular_madre = self.cleaned_data["celular_madre"]
-        if len(str(celular_madre))<=15:
-            return celular_madre
+        cedula_padre = self.cleaned_data["cedula_padre"]
+        if len(str(cedula_padre))<=15:
+            return cedula_padre
         else:
             raise forms.ValidationError('Asegúrese de que este valor sea menor o igual a 15.')
     def clean_celular_padre(self):
@@ -222,6 +222,50 @@ class EstudianteForm(forms.ModelForm):
         self.fields['documento_A'].required = True
         self.fields['seguro_A'].required = True
         self.fields['facturacion_electronica'].required = False
+    
+    def clean_documento(self):
+        documento = self.cleaned_data["documento"]
+        if len(str(documento))<=15:
+            return documento
+        else:
+            raise forms.ValidationError('Asegúrese de que este valor sea menor o igual a 15.')
+    def clean_celular(self):
+        celular = self.cleaned_data["celular"]
+        if len(str(celular))<=15:
+            return celular
+        else:
+            raise forms.ValidationError('Asegúrese de que este valor sea menor o igual a 15.')
+    def clean_cedula_madre(self):
+        cedula_madre = self.cleaned_data["cedula_madre"]
+        if len(str(cedula_madre))<=15:
+            return cedula_madre
+        else:
+            raise forms.ValidationError('Asegúrese de que este valor sea menor o igual a 15.')
+    def clean_celular_madre(self):
+        celular_madre = self.cleaned_data["celular_madre"]
+        if len(str(celular_madre))<=15:
+            return celular_madre
+        else:
+            raise forms.ValidationError('Asegúrese de que este valor sea menor o igual a 15.')
+        
+    def clean_cedula_padre(self):
+        cedula_padre = self.cleaned_data["cedula_padre"]
+        if len(str(cedula_padre))<=15:
+            return cedula_padre
+        else:
+            raise forms.ValidationError('Asegúrese de que este valor sea menor o igual a 15.')
+    def clean_celular_padre(self):
+        celular_padre = self.cleaned_data["celular_padre"]
+        if len(str(celular_padre))<=15:
+            return celular_padre
+        else:
+            raise forms.ValidationError('Asegúrese de que este valor sea menor o igual a 15.')
+    def clean_telefono_contactoE(self):
+        telefono_contactoE = self.cleaned_data["telefono_contactoE"]
+        if len(str(telefono_contactoE))<=15:
+            return telefono_contactoE
+        else:
+            raise forms.ValidationError('Asegúrese de que este valor sea menor o igual a 15.')
 
 
 class RegistroForm(forms.ModelForm):

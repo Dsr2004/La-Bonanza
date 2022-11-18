@@ -84,7 +84,7 @@ class Profesor(models.Model):
 class Servicio(models.Model):
     nombre = models.CharField("Nombre del servicio", max_length=55, null=False, blank=False)
     descripcion = models.CharField("Descripción del servicio", max_length=50, null=True, blank=True)
-
+    tipo_clase = models.CharField(max_length=15, choices=ESTADOS_CLASES, null=False, blank=False)
     def __str__(self):
         return self.nombre.capitalize()
     
@@ -246,19 +246,4 @@ class Asistencia(models.Model):
     def __str__(self):
         return self.registro.estudiante.nombre_completo
 
-# SIGNALS 
-    
-            
-# def post_save_registro_receiver(sender, instance, created, **kwargs):
-#     if created:
-#         picadero =  Picadero.objects.get(nivel=instance.nivel)
-#         clase =  Clase.objects.create(estudiante=instance, profesor=instance.profesor)
-#         clase.save()
-#         for dia in instance.diaClase:
-#             iPicadero, creado = InfoPicadero.objects.get_or_create(picadero=picadero,hora=instance.horaClase, dia=dia) 
-#             iPicadero.save()
-#             iPicadero.clases.add(clase)
-        
 
-# pre_save.connect(pre_save_registro_receiver,sender=Registro)
-# post_save.connect(post_save_registro_receiver,sender=Registro)
