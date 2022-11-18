@@ -8,10 +8,11 @@ from  django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 
 class UsuarioManager(BaseUserManager):
-    def create_user(self,usuario,nombres,apellidos,celular,email,cedula,fecha_nacimiento,password=None):
+    def create_user(self,id,usuario,nombres,apellidos,celular,email,cedula,fecha_nacimiento,password=None):
         if  not email:
             raise ValueError('El usuario debe tener un correo electronico!')
         usuario = self.model(
+            id = id,
             usuario=usuario, 
             nombres = nombres, 
             apellidos = apellidos,
@@ -25,10 +26,11 @@ class UsuarioManager(BaseUserManager):
         return usuario
 
 
-    def create_superuser(self,usuario,nombres,apellidos,celular,email,cedula,fecha_nacimiento,password=None):
+    def create_superuser(self,id,usuario,nombres,apellidos,celular,email,cedula,fecha_nacimiento,password=None):
         if  not email:
             raise ValueError('El usuario debe tener un correo electronico!')
         usuario = self.model(
+            id = id,
             usuario=usuario, 
             nombres = nombres, 
             apellidos = apellidos,
@@ -58,7 +60,7 @@ class Usuario(AbstractBaseUser):
 
 
     USERNAME_FIELD='usuario' 
-    REQUIRED_FIELDS=["nombres", "apellidos","celular","email","cedula","fecha_nacimiento"]
+    REQUIRED_FIELDS=["nombres", "apellidos","celular","email","cedula","fecha_nacimiento",'id']
 
     class Meta:
         db_table = "usuarios"
