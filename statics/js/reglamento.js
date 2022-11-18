@@ -87,4 +87,5 @@ function guardarContrato(){
     document.getElementById("CrearEstudianteForm").style.display = "block"
     
     console.log(document.getElementById("aceptaContrato").checked)
+    $("#alertDocumentDownload").show()
 }

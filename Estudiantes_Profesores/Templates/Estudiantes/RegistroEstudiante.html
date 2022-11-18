@@ -14,6 +14,8 @@
           {% csrf_token %}
           <Label><strong>Estudiante:</strong></Label>
           <h5>{{estudiante.get_estudiante}}</h5>
+          <Label><strong>Tipo de clase:</strong></Label>
+          <h5>{{estudiante.get_tipo_clase_display}} de {{estudiante.tipo_servicio}}</h5>
           <p id="estudiante" class="bg-light text-danger" style="color: #dc3545;"></p>
           <br>
 
@@ -72,6 +74,8 @@
       {% csrf_token %}
       <Label><strong>Estudiante:</strong></Label>
       <h5>{{estudiante.get_estudiante}}</h5>
+      <Label><strong>Tipo de clase:</strong></Label>
+      <h5>{{estudiante.get_tipo_clase_display}} de {{estudiante.tipo_servicio}}</h5>
       <p id="estudiante" class="bg-light text-danger" style="color: #dc3545;"></p>
       <br>
       <Label><strong>Inicio de clases: <sup style="color: #dc3545;">(*)</sup></strong></Label>
@@ -93,8 +97,8 @@
         <option value="3">3 Meses</option>
         <option value="6">6 Meses</option>
         <option value="12">1 año</option>
-        <option value="24">2 año</option>
-        <option value="36">3 año</option>
+        <option value="24">2 años</option>
+        <option value="36">3 años</option>
       </select>
       <p id="meses" class="bg-light text-danger" style="color: #dc3545;"></p>
       <br>

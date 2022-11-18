@@ -49,6 +49,10 @@ class RegistrarEstudiante(CreateView):
     template_name = "crearEstudiante.html"
     success_url = reverse_lazy("estudiantes")
     
+    def post(self, request, *args, **kwargs):
+        print(request.POST)
+        return super().post(request, *args, **kwargs)
+    
     def form_valid(self, form):
         print(form)
         if self.request.user.is_authenticated:
@@ -138,11 +142,9 @@ class CrearNuevosEstudiantes(IsAdminMixin, CreateView):
                 if horas[0] == '':
                     return JsonResponse({"errores":{"Calendario":'La hora es un campo obligatorio','identificador':i}}, status=400)
                 hora.append(datetime.strptime(horas[i], '%H:%M').replace(minute = 0, second = 0))
-                
-            dias = [[str(i[0]) for i in [dia for dia in DIAS_SEMANA] if int(i[0]) in [int(cl) for cl in diasClases]]][0]
+            dias = [int(cl) for cl in diasClases if int(cl) in [int(i[0]) for i in [dia for dia in DIAS_SEMANA]]]
             dias = sorted(dias, reverse=False)
             validacion = ValidationClass()
-            
             for i in range(len(hora)):
                 diasNo = validacion.HorarioProfesor(profesor=profesor, dia=dias[i], hora=hora[i])
                 if diasNo:

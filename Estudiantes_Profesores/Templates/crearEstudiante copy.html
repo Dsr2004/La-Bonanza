@@ -34,10 +34,8 @@
         <hr>
         <p class="mb-0">Debera diligenciar el archivo y luego subirlo, puede descargarlo  <a href="{% static 'Exoneracion de responsabilidades/2021_Exoneracion_de_Responsabilidad.pdf' %}" download="Exoneracion_de_Responsabilidad.pdf" class="alert-link">desde este link </a>. </p>
         
-    </div>
-    <br>
-    <form action="{% url 'registrarEstudiante' %}" method="post" enctype="multipart/form-data" id="CrearEstudianteForm">
-        {% csrf_token %}
+      </div>
+      <br>
         <br>
         <h1><center>Registro Estudiante</center></h1>
         <br>
@@ -56,7 +54,9 @@
                   <button class="nav-link" id="pills-disabled-tab" data-bs-toggle="pill" data-bs-target="#pills-disabled" type="button" role="tab" aria-controls="pills-disabled" aria-selected="false"><i id="icon_danger_DOCUMENTOS" class="fa-solid fa-circle-exclamation"></i>  Documentos</button>
                 </li>
             </ul>
-            <div class="tab-content" id="pills-tabContent">
+              <div class="tab-content" id="pills-tabContent">
+                <form action="{% url 'registrarEstudiante' %}" method="post" enctype="multipart/form-data" id="CrearEstudianteForm">
+                {% csrf_token %}
                 <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
                     <h3>Información del estudiante</h3>
                     <hr>
@@ -111,6 +111,7 @@
                             <p id="ciudad" class="error_text"></p>
                         </div>
                    </div>
+                   <br>
                    <div class="row">
                         <div class="col-md-6">
                             <label for="" style="font-weight: 500;">{{form.seguro.label}}:</label>
@@ -144,11 +145,9 @@
                             <p id="tipo_clase" class="error_text"></p>
                         </div>
                         <div class="col-md-6">
-                            <div class="col-md-12">
-                                <label for="" style="font-weight: 500;">{{form.tipo_servicio.label}}: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
-                                {{form.tipo_servicio}}
-                                <p id="tipo_servicio" class="error_text"></p>
-                            </div>
+                            <label for="" style="font-weight: 500;">{{form.tipo_servicio.label}}: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
+                            {{form.tipo_servicio}}
+                            <p id="tipo_servicio" class="error_text"></p>
                         </div>
                    </div>
                    <br>
@@ -291,19 +290,19 @@
                             
                     </div>
                 </div>
+            </form>
+            <button type="submit" form="CrearEstudianteForm" class="btn btn-success w-100" style="float: right">Enviar</button>
             </div>
-       <br>
+            <br>
    
        
-        <button type="submit" class="btn btn-success w-100" style="float: right">Enviar</button>
+        
                 </div>
               </div>
-    
         </div>
-
-        <br><br><br>
-    </form>
+    
 </div>
+
 {% endblock contenido %}
 
 
@@ -412,7 +411,7 @@
         // console.log("solto el archivo")
     }
 
-</script>
+</script> -->
 
 <script src="{% static 'libs/datepicker/dist/datepicker.js' %}"></script>
 <script src="{% static 'libs/datepicker/i18n/datepicker.es-ES.js' %}"></script>
