@@ -88,4 +88,4 @@ function guardarContrato(){
     
     console.log(document.getElementById("aceptaContrato").checked)
     $("#alertDocumentDownload").show()
-}
+} 
