@@ -97,7 +97,7 @@ class CrearEstudianteForm(forms.ModelForm):
         if contrato:
             return contrato
         else:
-            raise forms.ValidationError('Si no acepta el contrato no podrá realizar el registro')
+            raise forms.ValidationError('Si no acepta el reglamento no podrá realizar el registro')
         
     def clean_documento(self):
         documento = self.cleaned_data["documento"]

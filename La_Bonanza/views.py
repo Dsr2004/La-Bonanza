@@ -12,10 +12,11 @@ class index(TemplateView):
         if request.user.administrador!=1:
             return redirect("calendario")
         Usuarios =  {
-            'Usuarios':Usuario.objects.exclude(pk = request.user.pk),
+            'Usuarios':Usuario.objects.exclude(pk = request.user.pk).exclude(pk = ''),
             'filter':{"value":"All","cont":'Todos'}
         }
         return render(request, "index.html", Usuarios)
+    
     @method_decorator(csrf_exempt, name='dispatch')
     def post(self, request, *args, **kwargs):
         if request.user.administrador!=1:

@@ -84,7 +84,12 @@ class ValidationClass():
                     errores = serialiserValidation(errores, 0, iPicadero, 'estudiante')
                 claseSelected = [diasC for diasC in EstadoClase.objects.all() if int(dia) == int(diasC.dia.weekday()) and hora.time() == diasC.clase.calendario.horaClase]
                 if len(claseSelected)>0:
-                    Clases = [pro.clases.all() for pro in InfoPicadero.objects.filter(picadero=clase.InfoPicadero.picadero) if int(pro.dia) == arreglarFormatoDia(dia.weekday()) and pro.hora == hora.time()]
+                    if estado == "CREADO":
+                        Clases = [pro.clases.all() for pro in InfoPicadero.objects.filter(picadero=picadero.picadero) if int(pro.dia) == arreglarFormatoDia(dia) and pro.hora == hora.time()]
+                    
+                    elif estado == "BUSCAR":
+                        Clases = [pro.clases.all() for pro in InfoPicadero.objects.filter(picadero=clase.InfoPicadero.picadero) if int(pro.dia) == arreglarFormatoDia(dia) and pro.hora == hora.time()]
+                    print(Clases)
                     try:
                         for pforsor in [clase[0].profesor for clase in Clases]:
                             if profesor != pforsor:

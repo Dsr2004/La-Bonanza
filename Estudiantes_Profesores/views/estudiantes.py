@@ -142,12 +142,10 @@ class CrearNuevosEstudiantes(IsAdminMixin, CreateView):
                 if horas[0] == '':
                     return JsonResponse({"errores":{"Calendario":'La hora es un campo obligatorio','identificador':i}}, status=400)
                 hora.append(datetime.strptime(horas[i], '%H:%M').replace(minute = 0, second = 0))
-                
-            dias = [[str(i[0]) for i in [dia for dia in DIAS_SEMANA] if int(i[0]) in [int(cl) for cl in diasClases]]][0]
+            dias = [int(cl) for cl in diasClases if int(cl) in [int(i[0]) for i in [dia for dia in DIAS_SEMANA]]]
             dias = sorted(dias, reverse=False)
             validacion = ValidationClass()
             for i in range(len(hora)):
-                print(hora[i],dias[i])
                 diasNo = validacion.HorarioProfesor(profesor=profesor, dia=dias[i], hora=hora[i])
                 if diasNo:
                     if "meseSus"  in request.POST:
