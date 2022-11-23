@@ -259,3 +259,15 @@
     border-color:rgb(168, 168, 168) !important;
     color: #000!important;
 }
+
+/* SPINNER */
+#spinnerLoad{
+    margin-top: 20vh;
+}
+.ocultar{
+    display: none;
+}
+
+.mostrar{
+    display: block;
+}

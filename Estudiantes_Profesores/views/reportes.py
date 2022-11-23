@@ -21,7 +21,40 @@ class reporteAsistencia(ListView):
         if todos == None:
             name = "reporte-asistencia-desde:{fecha1}-hasta:{fecha2}".format(fecha1 = fechas[0], fecha2 = fechas[1])
             for asistencia in Asistencia.objects.all().order_by("dia"):
-                if asistencia.dia <= fechas[1] and asistencia.dia >= fechas[0]:
+                if request.user.administrador:
+                    if asistencia.dia <= fechas[1] and asistencia.dia >= fechas[0]:
+                        Estudiante.append(asistencia.registro.estudiante)
+                        Documento.append(asistencia.registro.estudiante.documento)
+                        Nivele.append(asistencia.registro.nivel.nivel)
+                        Profesor.append(asistencia.registro.profesor)
+                        Dia.append(datetime.strftime(asistencia.dia, '%Y/%m/%d'))
+                        Hora.append(asistencia.hora.strftime('%I:%M %p'))
+                        Estado.append(asistencia.get_estado_display())
+                        Tipo_Clase.append(asistencia.registro.estudiante.get_tipo_clase_display())
+                        if asistencia.picadero:
+                            Picadero.append(asistencia.picadero.nombre)
+                        else:
+                            Picadero.append("El picadero se ha borrado")
+                else:
+                    if asistencia.registro.profesor == request.user.pk:
+                        if asistencia.dia <= fechas[1] and asistencia.dia >= fechas[0]:
+                            Estudiante.append(asistencia.registro.estudiante)
+                            Documento.append(asistencia.registro.estudiante.documento)
+                            Nivele.append(asistencia.registro.nivel.nivel)
+                            Profesor.append(asistencia.registro.profesor)
+                            Dia.append(datetime.strftime(asistencia.dia, '%Y/%m/%d'))
+                            Hora.append(asistencia.hora.strftime('%I:%M %p'))
+                            Estado.append(asistencia.get_estado_display())
+                            Tipo_Clase.append(asistencia.registro.estudiante.get_tipo_clase_display())
+                            if asistencia.picadero:
+                                Picadero.append(asistencia.picadero.nombre)
+                            else:
+                                Picadero.append("El picadero se ha borrado")
+                    
+        else:
+            name="reporte-todas-las-asistencias"
+            if request.user.administrador:
+                for asistencia in Asistencia.objects.all().order_by("dia"):
                     Estudiante.append(asistencia.registro.estudiante)
                     Documento.append(asistencia.registro.estudiante.documento)
                     Nivele.append(asistencia.registro.nivel.nivel)
@@ -30,26 +63,25 @@ class reporteAsistencia(ListView):
                     Hora.append(asistencia.hora.strftime('%I:%M %p'))
                     Estado.append(asistencia.get_estado_display())
                     Tipo_Clase.append(asistencia.registro.estudiante.get_tipo_clase_display())
-                    print(type(asistencia.picadero))
                     if asistencia.picadero:
                         Picadero.append(asistencia.picadero.nombre)
                     else:
                         Picadero.append("El picadero se ha borrado")
-        else:
-            name="reporte-todas-las-asistencias"
-            for asistencia in Asistencia.objects.all().order_by("dia"):
-                Estudiante.append(asistencia.registro.estudiante)
-                Documento.append(asistencia.registro.estudiante.documento)
-                Nivele.append(asistencia.registro.nivel.nivel)
-                Profesor.append(asistencia.registro.profesor)
-                Dia.append(datetime.strftime(asistencia.dia, '%Y/%m/%d'))
-                Hora.append(asistencia.hora.strftime('%I:%M %p'))
-                Estado.append(asistencia.get_estado_display())
-                Tipo_Clase.append(asistencia.registro.estudiante.get_tipo_clase_display())
-                if asistencia.picadero:
-                    Picadero.append(asistencia.picadero.nombre)
-                else:
-                    Picadero.append("El picadero se ha borrado")
+            else:
+                for asistencia in Asistencia.objects.all().order_by("dia"):
+                    if asistencia.registro.profesor == request.user.pk:
+                        Estudiante.append(asistencia.registro.estudiante)
+                        Documento.append(asistencia.registro.estudiante.documento)
+                        Nivele.append(asistencia.registro.nivel.nivel)
+                        Profesor.append(asistencia.registro.profesor)
+                        Dia.append(datetime.strftime(asistencia.dia, '%Y/%m/%d'))
+                        Hora.append(asistencia.hora.strftime('%I:%M %p'))
+                        Estado.append(asistencia.get_estado_display())
+                        Tipo_Clase.append(asistencia.registro.estudiante.get_tipo_clase_display())
+                        if asistencia.picadero:
+                            Picadero.append(asistencia.picadero.nombre)
+                        else:
+                            Picadero.append("El picadero se ha borrado")
         
         excel = pd.DataFrame()
         excel['Estudiante'] = Estudiante

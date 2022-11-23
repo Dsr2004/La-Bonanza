@@ -62,6 +62,7 @@ class ValidationClass():
                 picadero =  clase.InfoPicadero.picadero
         except:
             return JsonResponse({"errores":{"nivel":"No se puede agregar este estudiante porque no hay un picadero con el nivel seleccionado"}}, status=400)
+        print("las clases son ", clase)
         errores = [{},{}]
         max_estudiantes = picadero.max_estudiantes
         max_profes = picadero.max_profesores

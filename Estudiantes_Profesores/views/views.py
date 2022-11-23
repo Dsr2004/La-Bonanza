@@ -1,6 +1,7 @@
 import json
 from datetime import datetime, timedelta, date
-from time import time
+from dateutil.relativedelta import relativedelta
+import time
 from django.shortcuts import render, redirect
 from django.views.generic import View,  DetailView
 from django.http import JsonResponse
@@ -46,13 +47,24 @@ def serialiserValidation(lista, i, iPicadero, tipo):
 class Calendario(View):
     template_name = "calendario.html"
     model = EstadoClase
+   
     def get(self, request, *args, **kwargs):
+        inicio = datetime.today().replace(day=1)
+        if request.GET.get("fecha"):
+            inicio = request.GET.get("fecha")
+            inicio = datetime.strptime(inicio, "%m/%d/%Y")
         registros = []
+        fin = inicio+relativedelta(months=1)
+        print(inicio,fin)
+        
         estadoClase = EstadoClase.objects.filter(estado = True)
+        estadoClase = [x for x in estadoClase if x.dia >= inicio.date() and x.dia<fin.date() ]
+        print(estadoClase)
         if request.user.administrador:
             for clases in estadoClase:
                 calendario = clases.clase.calendario
                 if calendario.registro.estudiante.estado==True:
+                    
                     registros.append(clases)
         else:
              for clases in estadoClase:
@@ -60,7 +72,7 @@ class Calendario(View):
                 if calendario.registro.profesor == request.user.pk:
                     if calendario.registro.estudiante.estado==True:
                         registros.append(clases)
-        ctx = {"clases":list(set(registros)),'cancelada':EstadoClase.objects.filter(estado = False).count()}
+        ctx = {"clases":list(set(registros)),'cancelada':EstadoClase.objects.filter(estado = False).count(), "fecha":inicio}
         return render(request, self.template_name ,ctx)
 
 class VerInfoEstudianteCalendario(DetailView):

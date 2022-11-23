@@ -221,7 +221,13 @@
                     <br>
                     <h3>Documentos </h3>
                     <br>
-                    <form action="{%url 'modificarDocsEstudiante' object.pk%}" method="post" enctype="multipart/form-data">
+                    <div class="text-center ocultar"  id="spinnerLoad">
+                        <div class="spinner-grow " style="width: 3rem; height: 3rem;" role="status">
+                          <span class="visually-hidden">Cargando...</span>
+                        </div>
+                        <h4 id="titleSpinner">Subiendo Archivos<br> <sub>Espere Un Momento Por Favor</sub></h4>
+                    </div>
+                    <form action="{%url 'modificarDocsEstudiante' object.pk%}" method="post" enctype="multipart/form-data" id="modificarDocsEstudiante">
                         {% csrf_token %}
                         <div class="row">
                             <div class="col-md-6">
@@ -241,7 +247,7 @@
                             </div>
                         </div>
                         <br>
-                        <button type="submit" class="btn btn-success w-100">Actualizar documentos</button>
+                        <button type="button" onclick="modificarDocsEstudiante()" class="btn btn-success w-100">Actualizar documentos</button>
                     </form>
                     <br>
                 </div>
