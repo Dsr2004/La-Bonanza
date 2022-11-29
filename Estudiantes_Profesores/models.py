@@ -44,7 +44,7 @@ def validar_extencion_archivo(value):
 class Profesor(models.Model):
     id = models.CharField(primary_key=True, unique=True, max_length=5) 
     usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE)
-    horarios = models.CharField("horarios del profesor", max_length=300) # "[{"day": "Lunes","from": "11:42", "through": "23:42"},...]"
+    horarios = models.CharField("horarios del profesor", max_length=300) 
     niveles = models.ManyToManyField(Nivel)   
     trabaja_sabado = models.BooleanField("el profesor trabaja los sabados", default=False)
 
@@ -54,6 +54,7 @@ class Profesor(models.Model):
 
     def __str__(self):
         return self.usuario.nombres
+    
     @property
     def get_days(self):
         days = []
@@ -61,6 +62,7 @@ class Profesor(models.Model):
         for horario in horarios:
             days.append(horario.get('day'))
         return days
+    
     @property
     def get_hora_inicial(self):
         horas = []
@@ -86,7 +88,7 @@ class Servicio(models.Model):
     descripcion = models.CharField("Descripción del servicio", max_length=50, null=True, blank=True)
     tipo_clase = models.CharField(max_length=15, choices=ESTADOS_CLASES, null=False, blank=False)
     def __str__(self):
-        return self.nombre.capitalize()
+        return f"{self.nombre.capitalize()} {self.get_tipo_clase_display()}"
     
 
 

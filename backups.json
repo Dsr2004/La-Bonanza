@@ -1,1 +1,0 @@
-[{"model": "Estudiantes_Profesores.servicio", "pk": 1, "fields": {"nombre": "Estimulación", "descripcion": "estimulación"}}, {"model": "Estudiantes_Profesores.servicio", "pk": 2, "fields": {"nombre": "Chalanería", "descripcion": "chalanería"}}]

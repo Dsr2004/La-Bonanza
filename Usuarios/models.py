@@ -1,8 +1,3 @@
-from enum import unique
-from platform import mac_ver
-from pyexpat import model
-from statistics import mode
-from tkinter import CASCADE
 from django.db import models
 from  django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 

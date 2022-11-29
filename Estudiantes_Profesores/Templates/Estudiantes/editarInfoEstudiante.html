@@ -369,7 +369,7 @@
                                             </h4>
                                             <div class="bodyCarta" {% if forloop.counter != 1 %}style="display:none;"{% endif %}>
                                                 <Label><strong>Dia  de la  clase: <sup style="color: #dc3545;">(*)</sup></strong></Label>
-                                                <input type="date" idPer="inicioClase{{forloop.counter}}" name="inicioClase"  autocomplete="off" class="form-control" value="{{horario.inicioClase|date:'Y-n-j'}}">
+                                                <input type="date" idPer="inicioClase{{forloop.counter}}" name="inicioClase"  autocomplete="off" class="form-control" value="{{horario.inicioClase|date:'Y-m-d'}}">
                                                 <p id="inicioClase{{forloop.counter}}" class="bg-light text-danger" style="color: #dc3545;"></p>
                                                 
                                                 <Label><strong>Hora de la clase: <sup style="color: #dc3545;">(*)</sup></strong></Label>
@@ -412,6 +412,7 @@
                             </div>
                         </div>
                         <input type="hidden" name="estudiante" value="{{object.pk}}">
+                        <p id="estudiante" class="bg-light text-danger" style="color: #dc3545;"></p>
                         <button type="button" class="btn btn-success w-100" onclick="ModificarRegistroEstudiantej()">Modificar Registro del estudiante </button>
                     </form>
 
