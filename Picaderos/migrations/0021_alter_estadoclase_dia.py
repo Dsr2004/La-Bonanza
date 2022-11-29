@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("Picaderos", "0020_estadoclase_dia"),
+        ("Picaderos", "0020_auto_20221030_2040"),
     ]
 
     operations = [

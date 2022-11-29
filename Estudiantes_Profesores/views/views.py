@@ -52,6 +52,7 @@ class Calendario(View):
         inicio = datetime.today().replace(day=1)
         if request.GET.get("fecha"):
             inicio = request.GET.get("fecha")
+            
             inicio = datetime.strptime(inicio, "%m/%d/%Y")
         registros = []
         fin = inicio+relativedelta(months=1)
@@ -164,12 +165,12 @@ class GestionDeAsistencia(View):
                 registro = Registro.objects.get(estudiante=clase["estudiante"])
                 picadero = Picadero.objects.get(nivel=registro.nivel)
                 asistencia, creado = Asistencia.objects.get_or_create(registro=registro, dia=datetime.now().date(), hora=hora, picadero=picadero)
-                calendario = CalendarioModel.objects.filter(registro=registro)
+                calendario = CalendarioModel.objects.filter(registro=registro, inicioClase=hoy)
                 calendario = [objecto for objecto in calendario if int([dia[0] for dia in DIAS_SEMANA if int(dia[0]) == int(objecto.diaClase)][0]) == int(diaSemana) and objecto.horaClase == hora][0]
                 claseObject = [clases for clases in EstadoClase.objects.all() if clases.clase.calendario == calendario][0]
-                print(creado)
                 if creado:
                     if clase['estado'] == '3' or clase['estado'] == '4':
+                        print("fue creado",claseObject.estado)
                         asistencia.estado = clase["estado"]
                         asistencia.save()
                         claseObject.estado = False
@@ -181,6 +182,7 @@ class GestionDeAsistencia(View):
                         asistencia.save()
                         messages.add_message(request, messages.INFO, f"{registro.estudiante.nombre_completo} ha sido registrado correctamente en la asistencia del día")
                 else:
+                    print("modificasdo",claseObject.estado)
                     if asistencia.estado != clase["estado"]:
                         if clase['estado'] == '3' or clase['estado'] == '4':
                             claseObject.estado = False
@@ -248,7 +250,7 @@ class ClasesCanceladas(View):
                     indice = clasesV.index([d for d in clasesV if d['fecha'] == clase.fecha_cancelacion][0])
                     clasesV[indice]['clases'].append(clase)
                 else:
-                    if (hoy-clase.fecha_cancelacion).days+1 >= 0 and (hoy-clase.fecha_cancelacion).days+1 <= 22:
+                    if (clase.fecha_cancelacion-hoy).days+1 >= 0 and (clase.fecha_cancelacion-hoy).days+1 <= 36:
                         clasesV.append({'fecha':clase.fecha_cancelacion,'clases':[clase],'validacion':True})
                     else:
                         clasesV.append({'fecha':clase.fecha_cancelacion,'clases':[clase], 'validacion':False})
@@ -278,6 +280,7 @@ class ReponerClase(View):
         if errores:
             return JsonResponse({"errores":errores}, status=400)
         dia = datetime.strptime(dia, "%Y-%m-%d")
+        
         numeroDia = arreglarFormatoDia(dia.weekday())
         try:
             hora = datetime.strptime(hora, "%H:%M:%S")
@@ -291,7 +294,7 @@ class ReponerClase(View):
         if diasNo:
              return JsonResponse({"errores":{"profesor":diasNo,'identificador':None}}, status=400)
 
-        error = validacion.ValidacionPicadero(profesor=profesor, dia=dia, hora=hora, clasepk=kwargs["pk"], estado="BUSCAR")
+        error = validacion.ValidacionPicadero(profesor=profesor, dia=numeroDia, hora=hora, clasepk=kwargs["pk"], estado="BUSCAR")
         if error["tipo"] != "NO":
             if error["tipo"] == "estudiante":
                 return JsonResponse({"errores":error["errores"]}, status=400)

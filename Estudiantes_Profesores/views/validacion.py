@@ -52,7 +52,6 @@ class ValidationClass():
             return diasNo
         
     def ValidacionPicadero(self, profesor, dia, hora:datetime, clasepk, estado):
-       
         try:
             if estado == "CREADO":
                 picadero = Picadero.objects.get(pk = clasepk)
@@ -62,21 +61,19 @@ class ValidationClass():
                 picadero =  clase.InfoPicadero.picadero
         except:
             return JsonResponse({"errores":{"nivel":"No se puede agregar este estudiante porque no hay un picadero con el nivel seleccionado"}}, status=400)
-        print("las clases son ", clase)
         errores = [{},{}]
         max_estudiantes = picadero.max_estudiantes
         max_profes = picadero.max_profesores
         picaderos = InfoPicadero.objects.all()
-        print(picadero)
-        print(hora, type(hora))
         picaderos = picaderos.filter(dia = dia).filter(hora=hora).filter(picadero=picadero)
-       
+        
         for picadero in picaderos:
             try:
                 iPicadero = picadero
             except:
                 iPicadero = ""
             if iPicadero != "":
+                x = [clases.clase.calendario.registro for clases in EstadoClase.objects.filter(InfoPicadero=iPicadero)]
                 profesores = len(list(set([clases.clase.profesor for clases in EstadoClase.objects.filter(InfoPicadero=iPicadero)])))
                 estudiantes = len(list(set([clases.clase.calendario.registro for clases in EstadoClase.objects.filter(InfoPicadero=iPicadero)])))
                 ElProfeEstaEnLaClase = profesor in [clases.clase.profesor for clases in EstadoClase.objects.filter(InfoPicadero=iPicadero)] 
@@ -89,7 +86,6 @@ class ValidationClass():
                     
                     elif estado == "BUSCAR":
                         Clases = [pro.clases.all() for pro in InfoPicadero.objects.filter(picadero=clase.InfoPicadero.picadero) if int(pro.dia) == arreglarFormatoDia(dia) and pro.hora == hora.time()]
-                    print(Clases)
                     try:
                         for pforsor in [clase[0].profesor for clase in Clases]:
                             if profesor != pforsor:
@@ -107,7 +103,7 @@ class ValidationClass():
                                     if  profesores >= max_profes+1:
                                         errores = serialiserValidation(errores, 1, iPicadero, 'profesor al estudiante')
                     except:
-                        pass
+                        print("hay un error en la validacion del picadero")           
         if errores!=[]:    
             if errores[0]!={}:
                 return{"tipo":"estudiante","errores":{"estudiante":[f"No puede asignar este {errores[0]['tipo']} porque el picadero: {errores[0]['contenido']['nombre']} los dias {errores[0]['contenido']['dias']} a las {errores[0]['contenido']['hora']} no admite más estudiantes"]}}

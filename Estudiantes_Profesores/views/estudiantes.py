@@ -159,6 +159,7 @@ class CrearNuevosEstudiantes(IsAdminMixin, CreateView):
                     picaderoNivel =  Picadero.objects.get(nivel=nivel)
                 except:
                     return JsonResponse({"errores":{"nivel":"No se puede agregar este estudiante porque no hay un picadero con el nivel seleccionado"}}, status=400)
+                print("dia ", dias[i], "hora ", horas[i])
                 error = validacion.ValidacionPicadero(profesor=profesor, dia=dias[i], hora=hora[i], clasepk=picaderoNivel.pk, estado="CREADO")
                 if error["tipo"] != "NO":
                     if error["tipo"] == "estudiante":
@@ -302,7 +303,6 @@ class ModificarRegistroEstudiante(IsAdminMixin, UpdateView):
             diaOriginal = []
             if len(copia.getlist('diaClase[]')) > 5:
                 return  JsonResponse({"errores":{"horarios":[""]}}, status=400)
-            print(copia.getlist('diaClase[]'))
             for dia in copia.getlist('diaClase[]'):
                 diaOriginal.append(dia)
                 if not dia:
@@ -336,33 +336,49 @@ class ModificarRegistroEstudiante(IsAdminMixin, UpdateView):
         
         if form.is_valid():
             try:
+                registro = Registro.objects.get(estudiante = Estudiante.objects.get(pk=kwargs["pk"]))
                 profesor = form.cleaned_data["profesor"]
                 horario = profesor.horarios
                 horario = json.loads(horario)
                 hora = [] 
-                
                 if horas == []:
                     return JsonResponse({"errores":{"Calendario":'Este campo es obligatorio','identificador':None}}, status=400)
+                
                 for i in range(len(horas)):
                     if diasClases[0].replace('í', 'i') == 'Eliga un dia':
                         return JsonResponse({"errores":{"Calendario":'El día es un campo obligatorio','identificador':i}}, status=400)
                     if horas[0] == '':
                         return JsonResponse({"errores":{"Calendario":'La hora es un campo obligatorio','identificador':i}}, status=400)
                     hora.append(datetime.strptime(horas[i], '%H:%M').replace(minute = 0, second = 0))
-                dias = [[str(i[1]) for i in [dia for dia in DIAS_SEMANA] if int(i[0]) in [int(cl) for cl in diasClases]]][0]
+                dias = [int(cl) for cl in diasClases if int(cl) in [int(i[0]) for i in [dia for dia in DIAS_SEMANA]]]
+                validacion = ValidationClass()
                 for i in range(len(hora)):
-                    for i in range(len(dias)):
-                        if dias[i] not in [horary['day'] for horary in horario]:
-                            if "meseSus"  in request.POST:
-                                return JsonResponse({"errores":{"Calendario":f'El profesor {profesor} no trabaja el dia {dias[i]}','identificador':i}}, status=400)
-                            else:
-                                return JsonResponse({"errores":{"profesor":f'El profesor {profesor} no trabaja el dia {dias[i]}','identificador':None}}, status=400)
-                    diasNo = 'los días '+str(dias[i])+' a las '+hora[i].strftime('%I:%M %p')+' el profesor no esta disponible'
-                    if [hor for hor in [horary for horary in horario if horary['day'] in [dia for dia in dias]] if datetime.strptime(hor['from'], '%H:%M').time() <= hora[i].time() and (datetime.strptime(hor['through'], '%H:%M')-timedelta(hours=1)).time() >= hora[i].time()] == []:
+                    diasNo = validacion.HorarioProfesor(profesor=profesor, dia=dias[i], hora=hora[i])
+                    if diasNo:
                         if "meseSus"  in request.POST:
                             return JsonResponse({"errores":{"Calendario":diasNo,'identificador':i}}, status=400)
                         else:
                             return JsonResponse({"errores":{"profesor":diasNo,'identificador':None}}, status=400)
+                 
+                
+                for i in range(len(hora)):
+                    try:
+                        nivel = Nivel.objects.get(pk=copia["nivel"])
+                        picaderoNivel =  Picadero.objects.get(nivel=nivel)
+                    except:
+                        return JsonResponse({"errores":{"nivel":"No se puede agregar este estudiante porque no hay un picadero con el nivel seleccionado"}}, status=400)
+                    
+                    
+                    calendario = CalendarioModel.objects.filter(registro=registro).filter(inicioClase=diaOriginal[i]).filter(horaClase=hora[i])
+                    
+                    if not calendario:
+                        error = validacion.ValidacionPicadero(profesor=profesor, dia=dias[i], hora=hora[i], clasepk=picaderoNivel.pk, estado="CREADO")
+                        
+                        if error["tipo"] != "NO":
+                            if error["tipo"] == "estudiante":
+                                return JsonResponse({"errores":error["errores"]}, status=400)
+                            elif error["tipo"] == "profesor":
+                                return JsonResponse({"errores":error["errores"]}, status=400)
                 
                 horarios = CalendarioModel.objects.filter(registro=get_object)
                 for i in range(len(horarios)):

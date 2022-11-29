@@ -84,9 +84,35 @@ AUTH_USER_MODEL = "Usuarios.Usuario"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "dbTodo.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
 }
+
+# DATABASES = {
+#    'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'bonanza',
+#         'USER': 'root',
+#         'PASSWORD': '',
+#         'HOST': 'localhost',
+#         'PORT': '',
+#         'OPTIONS': {
+#             'charset': 'latin1',
+#             'use_unicode': True, 
+#         }
+#     }
+# }
+#DB Backup
+#https://django-dbbackup.readthedocs.io/en/master/installation.html
+
+
+DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
+DBBACKUP_STORAGE_OPTIONS = {'location': BASE_DIR/'backups'}
+
+CRONJOBS = [
+    ('*/1 * * * *', 'La_Bonanza.cron.my_backup')
+]
+
 
 
 # Password validation
