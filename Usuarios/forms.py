@@ -38,11 +38,6 @@ class CambiarContrasena(forms.ModelForm):
             'password': forms.PasswordInput(attrs={'class': 'form-control', "autocomplete": "off",'id':"password",'requerid':'requerid','name':'password',}),
         }
     def clean_password2(self):
-        """Validación de contraseña
-        
-        
-        Metodo que valida que ambas contraseñas ingresadas sean iguales, antes de ser encriptadas, Retorna la contraseña Validada.
-        """
         password1 = self.cleaned_data.get('password')
         password2 = self.cleaned_data.get('passwordC')
         

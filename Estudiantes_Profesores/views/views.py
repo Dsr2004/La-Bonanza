@@ -70,9 +70,11 @@ class Calendario(View):
         else:
              for clases in estadoClase:
                 calendario = clases.clase.calendario
-                if calendario.registro.profesor == request.user.pk:
-                    if calendario.registro.estudiante.estado==True:
-                        registros.append(clases)
+                if calendario.registro.profesor:
+                    if calendario.registro.profesor.pk == request.user.pk:
+                        print("es un profe")
+                        if calendario.registro.estudiante.estado==True:
+                            registros.append(clases)
         ctx = {"clases":list(set(registros)),'cancelada':EstadoClase.objects.filter(estado = False).count(), "fecha":inicio}
         return render(request, self.template_name ,ctx)
 

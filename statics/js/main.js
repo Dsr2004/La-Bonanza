@@ -508,60 +508,7 @@ function RegistrarEstudianteSinRegistro(forj){
   });
  }
 
-function cambiar_estado_estudiante(url,id){
-  const swalWithBootstrapButtons = Swal.mixin({
-    customClass: {
-      confirmButton: 'btn btn-success',
-      cancelButton: 'btn btn-danger'
-    },
-    buttonsStyling: false
-  })
   
-  swalWithBootstrapButtons.fire({
-    title: '¿Estas Seguro?',
-    text: "¡Se modificará el estado del estudiante!",
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: '¡Si, Modificar!',
-    cancelButtonText: '¡No, Cancelar!',
-    confirmButtonClass: "buttonSweetalert",
-    reverseButtons: true
-  }).then((result) => {
-    if (result.isConfirmed) {
-      console.log(csrftoken)
-     $.ajax({
-      url:url,
-      type:"POST",
-      data:{"csrfmiddlewaretoken":csrftoken,"id":id},
-      success: function(){
-         swalWithBootstrapButtons.fire(
-        'Modificado!',
-        'El estado del estudiante se ha modificado',
-        'success'
-      )
-      },
-      error: function(){
-         swalWithBootstrapButtons.fire(
-        'ERROR!',
-        'ha ocurrido un error.',
-        'error'
-      )
-      },
-     })
-    } else if (
-      /* Read more about handling dismissals below */
-      result.dismiss === Swal.DismissReason.cancel
-    ) {
-      swalWithBootstrapButtons.fire(
-        'Cancelado',
-        'No se han aplicado cambios',
-        'error'
-      ).then(function(){
-        location.reload()
-      })
-    }
-  })
-}
 function cambiar_estado_usuario(id){
   let ids = id
   let token = $("#EstadoUsuarioForm").find('input[name=csrfmiddlewaretoken]').val()
