@@ -1,59 +1,625 @@
-{%extends 'base.html' %}
-{% block titulo %}Niveles{% endblock titulo %}
-
+{% extends 'base.html' %}
+{% load static %}
+{% block titulo %}Crear alumno{% endblock titulo %}
+{% block estilos %}
+<link rel="stylesheet" href="{% static 'libs/datepicker/dist/datepicker.css' %}">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<style>
+    input{border: 1px solid #dadce0;border-radius: 4px;box-shadow: 0 0 0 transparent;font-size: 16px;line-height: 17px;outline: transparent;padding: 11px 16px;transition: border .3s, box-shadow .3s;width: 100%;}
+    select{border: 1px solid #dadce0;border-radius: 4px;box-shadow: 0 0 0 transparent;font-size: 17px;line-height: 24px;outline: transparent;padding: 11px 16px;transition: border .3s, box-shadow .3s;width: 100%;}
+    .formulario{display: grid;grid-template-columns:repeat(2, 1fr);grid-gap:30px;}
+    .checkbox{display: grid;grid-template-columns: 80% 20%;}
+    @media (max-width: 700px) {.formulario{display: grid;grid-template-columns:repeat(1, 1fr);grid-gap:30px;}}
+</style>{% endblock estilos %}
 {% block contenido %}
-<div class="container">
-    <div class="row">
-     <div class="col-md-10">
-         <h1>Administración de Niveles</h1>
-     </div>
-     <div class="col-md-2">
-        <a onclick="abrir_registro_nivel_modal('{%url 'craerNivel'%}')" class="btn btn-outline-success btn-lg" > <i class="fa-solid fa-circle-plus fa-lg"></i></a>
-     </div>
-    </div>
-     <hr>
-     <div class="row">
-        {% for nivel in niveles  %}
-          <div class="col-md-3" style="cursor: pointer;" onclick="GetNivel('{%url 'modifcarNivel' nivel.pk %}')">
-            <div class="card" style="margin: 15px 5px;">
-                <div class="card-body" style="padding: 0 !important;">
-                    <div class="row containerPrincipal">
-                        <div class="col-3">
-                            <div class="nivelStyle" style="background: linear-gradient(90deg, {{nivel.color_fondo}} 0%, rgba(255,255,255,1) 99%);;"></div>
-                        </div>
-                        <div class="col-7 NivelText">
-                            <p >{{nivel.nivel}}</p>
-                        </div>
-                    </div>
-                </div>  
-            </div>
-          </div>
-        {% endfor %}
-     </div>
-
- </div>
-
-<div class="modal fade" id="ModificarModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>
-<div class="modal fade" id="AbirModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>
-{%endblock contenido%}
-
-{% block scripts %}
-    <script>
-        function GetNivel(url){
-            $("#ModificarModal").load(url, function(){
-                $(this).appendTo("body").modal("show")
-            })
-        }
-    </script>
-{% endblock scripts %}
-    
-
-
-<div class="row">
-    <div class="col-3">
-        <div class="nivelStyle" style="background-color: {{nivel.color_fondo}};"></div>
-    </div>
-    <div class="col-9">
-        <p style="color: {{nivel.color_letra}};">{{nivel.nivel}}</p>
+<style>
+    #DivContrato::-webkit-scrollbar {
+        width: 8px;     /* Tamaño del scroll en vertical */
+        height: 8px;    /* Tamaño del scroll en horizontal */
+        border-radius: 5px;
+        background-color: #ccc;
+    }
+    #DivContrato::-webkit-scrollbar-thumb {
+        background: #0dcaf0;
+        border-radius: 4px;
+    }
+</style>
+<<<<<<< HEAD
+<div id="fondoContrato"style="display:none; width:100%; position:fixed; top:0; height:100vh; background-color:rgba(0,0,0,0.5);"><div id="DivContrato" style="width:90%;height: 90vh;background-color: #fff; position:absolute; top:2.5%;left: 5%; border: 1px solid rgba(0,0,0,1); z-index: 100; border-radius: 5px;overflow: auto;"><div id="header" style="width: 88%; margin: 0 1%; height:60px; border-bottom: 1px solid rgba(0,0,0,0.3); display:grid;grid-template-columns: 96% 4%; padding: 0 10px; position: fixed; background-color: #fff;"><h1 id="titleContrato"></h1><i class="fa fa-close" style="position:relative; right: -5px!important; top: 17px; font-size: 24px; cursor: pointer;" onclick="hideContrato()"></i></div><div id="contentContrato" style="margin-top: 70px; display: grid;grid-template-columns: 1fr; grid-gap:5px; padding: 15px;"></div><div><label for="AceptacionContrato" style="padding: 0 20px;"><strong>Aceptación del contrato: </strong>Por medio de la suscripción de este documento declaro en forma clara y expresa que he leído y comprendido el presente reglamento, razón por lo acepto en su integridad y me comprometo a cumplirlo en su integridad, así como velar por su cumplimiento por parte de mi hijo y/o representado.La dirección de este club pide el consentimiento a los padres o tutores legales para publicar las imágenes, en las cuales aparezcan individualmente o en grupo los niños(a), en las diferentes secuencias y actividades realizadas en el club y fuera del mismo.<sup class="required"  class="required"  class="required"  class="required"  style="color: red;">*</sup></label><div class="form-check form-switch" >
+<div style="margin-left: 0;" class="checkboxSiNo">
+    <input type="checkbox" name="AceptacionContrato" class="form-check-input" autocomplete="off" id="AceptacionContrato">
+    <label for="AceptacionContrato"></label>
+</div>
+</div>
+<br>
+<label for="AutorizacionClub" style="padding: 0 20px;">Yo,  autorizo  al  Club  de  Chalanería  y  Equinoterapia  La  Bonanza  el  uso  de  estas  imágenes  y  videos  realizados dentro y fuera del club, publicadas en diferentes medios de comunicación. <sup class="required"  class="required"  class="required"  class="required"  style="color: red;">*</sup></label><div class="form-check form-switch" >
+    <div style="margin-left: 0;" class="checkboxSiNo">
+        <input type="checkbox" name="AutorizacionClub" class="form-check-input" autocomplete="off" id="AutorizacionClub">
+        <label for="AutorizacionClub"></label>
     </div>
 </div>
+<br><div style="float: right; margin-right: 40px ;"><button type="button" class="btn btn-default" style="background-color: #ccc; margin-right: 10px;"onclick="hideContrato()">Cancelar</button><button type="button" class="btn btn-info"onclick="guardarContrato()">Guardar</button><br><br></div></div></div></div>
+=======
+<div id="fondoContrato"style="display:none; width:100%; position:fixed; top:0; height:100vh; background-color:rgba(0,0,0,0.5);"><div id="DivContrato" style="width:90%;height: 90vh;background-color: #fff; position:absolute; top:2.5%;left: 5%; border: 1px solid rgba(0,0,0,1); z-index: 100; border-radius: 5px;overflow: auto;"><div id="header" style="width: 88%; margin: 0 1%; height:60px; border-bottom: 1px solid rgba(0,0,0,0.3); display:grid;grid-template-columns: 96% 4%; padding: 0 10px; position: fixed; background-color: #fff;"><h1 id="titleContrato"></h1><i class="fa fa-close" style="position:relative; right: -5px!important; top: 17px; font-size: 24px; cursor: pointer;" onclick="hideContrato()"></i></div><div id="contentContrato" style="margin-top: 70px; display: grid;grid-template-columns: 1fr; grid-gap:5px; padding: 15px;"></div><div><label for="AceptacionContrato" style="padding: 0 20px;">Aceptación del Reglamento <sup class="required"  class="required"  class="required"  class="required"  style="color: red;">*</sup></label><div class="form-check form-switch" ><input class="form-check-input" type="checkbox" style="margin-left: -20px; width: 50px;" role="switching" name="AceptacionContrato" id="AceptacionContrato"  onclick="if (document.getElementById('LAC').innerHTML == 'No'){document.getElementById('LAC').innerHTML='Si'}else{document.getElementById('LAC').innerHTML='No'}"> <label for="AceptacionContrato" style="margin-top: 5px; margin-left: 10px;" id="LAC">No</label></div><br><div style="float: right; margin-right: 40px ;"><button type="button" class="btn btn-default" style="background-color: #ccc; margin-right: 10px;"onclick="hideContrato()">Cancelar</button><button type="button" class="btn btn-info"onclick="guardarContrato()">Guardar</button><br><br></div></div></div></div>
+>>>>>>> 871a898fe61a5d5dcb9f48be8fec4f9c8f023bb7
+<div class="container-fluid">
+    <div class="container alert alert-danger" role="alert" id="alertDocumentDownload">
+        <button style="float: right;" type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <h4 class="alert-heading">Antes de continuar con el registro tenga en cuenta lo siguiente!</h4>
+        <p>En la pestaña "Documentos" deberá adjuntar 3 archivos entre ellos la exoneración de responsabilidades</p>
+        <p>Por favor leer, aceptar y firmar nuestro reglamento (políticas de clases), en especial nuestra política de cancelación y exoneración de responsabilidades
+            </p>
+        <hr>
+        <p class="mb-0">Debera diligenciar el archivo y luego subirlo, puede descargarlo  <a href="{% static 'Exoneracion de responsabilidades/2021_Exoneracion_de_Responsabilidad.pdf' %}" download="Exoneracion_de_Responsabilidad.pdf" class="alert-link">desde este link </a>. </p>
+      </div>
+      <br>
+    <form action="{% url 'registrarEstudiante' %}" method="post" enctype="multipart/form-data" id="CrearEstudianteForm">
+        {% csrf_token %}
+        <br>
+        <h1><center>Registro alumno</center></h1>
+        <br>
+        <div class="container">
+            <ul class="nav nav-tabs" id="pills-tab" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true"><i id="icon_danger_ESTUDIANTE" class="fa-solid fa-circle-exclamation"></i> Alumno</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false"><i id="icon_danger_ACUDIENTE" class="fa-solid fa-circle-exclamation"></i>  Padres</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false"><i id="icon_danger_EMERGENCIA" class="fa-solid fa-circle-exclamation"></i>  Contacto de Emergencia</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-facturacion" type="button" role="tab" aria-controls="pills-contact" aria-selected="false"><i id="icon_danger_FACTURACION" class="fa-solid fa-circle-exclamation"></i>  Facturación</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="pills-disabled-tab" data-bs-toggle="pill" data-bs-target="#pills-disabled" type="button" role="tab" aria-controls="pills-disabled" aria-selected="false"><i id="icon_danger_DOCUMENTOS" class="fa-solid fa-circle-exclamation"></i>   Reglamento y exoneración</button>
+                </li>
+              </ul>
+              <div class="tab-content" id="pills-tabContent">
+                <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
+                    <h3>Información del alumno</h3>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="" style="font-weight: 500;">{{form.primer_nombre.label}}:<sup class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
+                            {{form.primer_nombre}}
+                            <p id="primer_nombre" class="error_text"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="" style="font-weight: 500;">{{form.segundo_nombre.label}}:</label>
+                            {{form.segundo_nombre}}
+                            <p id="segundo_nombre" class="error_text"></p>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="" style="font-weight: 500;">{{form.primer_apellido.label}}:<sup class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
+                            {{form.primer_apellido}}
+                            <p id="primer_apellido" class="error_text"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="" style="font-weight: 500;">{{form.segundo_apellido.label}}:<sup class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
+                            {{form.segundo_apellido}}
+                            <p id="segundo_apellido" class="error_text"></p>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-12" id="div_fecha_nacimiento">
+                            <label for="" style="font-weight: 500;position: relative; justify-content: space-around;">{{form.fecha_nacimiento.label}}: <sup class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
+                            {{form.fecha_nacimiento}}
+                            <p id="fecha_nacimiento" class="error_text"></p>
+                        </div>
+                        <div class="col-md-1" style="margin-top: 17px; display: none;"  id="birthday">
+                            <div><strong> Edad:</strong></div>
+                            <div id="edad"></div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="" style="font-weight: 500;">{{form.documento.label}}: <sup class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
+                            {{form.documento}}
+                            <p id="documento" class="error_text"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="" style="font-weight: 500;">{{form.celular.label}}:</label>
+                            {{form.celular}}
+                            <p id="celular" class="error_text"></p>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="" style="font-weight: 500;">{{form.email.label}}:</label>
+                            {{form.email}}
+                            <p id="email" class="error_text"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="" style="font-weight: 500;">{{form.direccion.label}}: <sup class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
+                            {{form.direccion}}
+                            <p id="direccion" class="error_text"></p>
+                        </div>
+                    </div>
+                   <br>
+                   <div class="row">
+                    <div class="col-md-6">
+                        <label for="" style="font-weight: 500;">{{form.documento_A.label}}: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
+                        {{form.documento_A}}
+                        <p id="documento_A" class="error_text"></p>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="" style="font-weight: 500;">{{form.seguro_A.label}}: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
+                        {{form.seguro_A}}
+                        <p id="seguro_A" class="error_text"></p>
+                    </div>
+                   </div>
+                   <br>
+                   <div class="row">
+                        <div class="col-md-6">
+                            <label for="" style="font-weight: 500;">{{form.barrio.label}}: <sup class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
+                            {{form.barrio}}
+                            <p id="barrio" class="error_text"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="" style="font-weight: 500;">{{form.ciudad.label}}: <sup class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
+                            {{form.ciudad}}
+                            <p id="ciudad" class="error_text"></p>
+                        </div>
+                   </div>
+                   <div class="row">
+                        <div class="col-md-6">
+                            <label for="" style="font-weight: 500;">{{form.seguro.label}}:</label>
+                            {{form.seguro}}
+                            <p id="seguro" class="error_text"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="" style="font-weight: 500;">{{form.poliza.label}}:</label>
+                            {{form.poliza}}
+                            <p id="poliza" class="error_text"></p>
+                        </div>
+                    </div>
+                    <br>
+                    <!-- Tipo clase -->
+                    <div class="col-md-12">
+                        <label for="" style="font-weight: 500;">{{form.tipo_clase.label}}: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
+                        {{form.tipo_clase}}
+                        <p id="tipo_clase" class="error_text"></p>
+                    </div>
+                    <div class="col-md-12" style="display: none;" id="divTipoServicio">
+                        <label for="" style="font-weight: 500;">Tipo servicio: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
+                        <select name="tipo_servicio" id="id_tipo_servicio">
+                        </select>
+                        <p id="tipo_servicio" class="error_text"></p>
+                    </div>
+                     <div class="col-md-12" style="display: grid; grid-template-columns: repeat(2,1fr);">
+                        <label for="" style="font-weight: 500;">{{form.facturacion_electronica.label}}: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
+                        <div class="checkboxSiNo">
+                            {{form.facturacion_electronica}}
+                            <label for="id_facturacion_electronica"></label>
+                        </div>
+                        <p id="facturacion_electronica" class="error_text"></p>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label for="" style="font-weight: 500;">{{form.nota.label}}: (<b>Opcional:</b> informar acerca de cualquier discapacidad o enfermedad que presente el alumno)</label>
+                            {{form.nota}}
+                            <p id="nota" class="error_text"></p>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-primary w-100" style="float: right" onclick="moveTab('icon_danger_ACUDIENTE')">Siguiente</button>
+                    <br>
+                </div>
+                <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
+                    <h3>Información de los padres</h3>
+                    <hr>
+                    <h5><center>Información de la Madre</center></h5>
+                    <div>
+                        <label for="" style="font-weight: 500;">{{form.nombre_completo_madre.label}}:</label>
+                        {{form.nombre_completo_madre}}
+                        <p id="nombre_completo_madre" class="error_text"></p>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="" style="font-weight: 500;">{{form.cedula_madre.label}}:</label>
+                            {{form.cedula_madre}}
+                            <p id="cedula_madre" class="error_text"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="" style="font-weight: 500;">{{form.celular_madre.label}}:</label>
+                            {{form.celular_madre}}
+                            <p id="celular_madre" class="error_text"></p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label for="" style="font-weight: 500;">{{form.email_madre.label}}:</label>
+                            {{form.email_madre}}
+                            <p id="email_madre" class="error_text"></p>
+                        </div>
+                    </div>
+                    <h5><center>Información del Padre</center></h5>
+                    <div>
+                        <label for="" style="font-weight: 500;">{{form.nombre_completo_padre.label}}:</label>
+                        {{form.nombre_completo_padre}}
+                        <p id="nombre_completo_padre" class="error_text"></p>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="" style="font-weight: 500;">{{form.cedula_padre.label}}:</label>
+                            {{form.cedula_padre}}
+                            <p id="cedula_padre" class="error_text"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="" style="font-weight: 500;">{{form.celular_padre.label}}:</label>
+                            {{form.celular_padre}}
+                            <p id="celular_padre" class="error_text"></p>
+                        </div>
+                    </div>
+                   <div class="row">
+                        <div class="col-md-12">
+                            <label for="" style="font-weight: 500;">{{form.email_padre.label}}:</label>
+                            {{form.email_padre}}
+                            <p id="email_padre" class="error_text"></p>
+                        </div>
+                   </div>
+                   <br>
+                    <button type="button" class="btn btn-primary w-100" style="float: right" onclick="moveTab('icon_danger_EMERGENCIA')">Siguiente</button>
+                </div>
+                <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab" tabindex="0">
+                    <div class="alert alert-warning d-flex align-items-center" role="alert">
+                        <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                            <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
+                              <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                            </symbol>
+                          </svg>
+                        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+                        <div>
+                          El contacto de emergencia no puede ser el padre ni la madre.
+                        </div>
+                      </div>
+                    <div>
+                        <label for="" style="font-weight: 500;">{{form.nombre_contactoE.label}}: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
+                        {{form.nombre_contactoE}}
+                        <p id="nombre_contactoE" class="error_text"></p>
+                    </div>
+                    <div>
+                        <label for="" style="font-weight: 500;">{{form.telefono_contactoE.label}}: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
+                        {{form.telefono_contactoE}}
+                        <p id="telefono_contactoE" class="error_text"></p>
+                    </div>
+                    <div>
+                        <label for="" style="font-weight: 500;">{{form.relacion_contactoE.label}}: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
+                        {{form.relacion_contactoE}}
+                        <p id="relacion_contactoE" class="error_text"></p>
+                    </div>
+                    <button type="button" class="btn btn-primary w-100" style="float: right" onclick="moveTab('icon_danger_FACTURACION')">Siguiente</button>
+                </div>
+                <div class="tab-pane fade" id="pills-facturacion" role="tabpanel" aria-labelledby="pills-contact-tab" tabindex="0">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label for="" style="font-weight: 500;">Elegir persona:</label>
+                            <select id="Facturado" class="form-select">
+                                <option value="1">Padre</option>
+                                <option value="2">Madre</option>
+                                <option value="3" selected>Otro</option>
+                            </select>
+                            <p id="p_Facturado" class="error_text" style="display: none;"></p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="" style="font-weight: 500;">{{form.nombre_facturar.label}}:<sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
+                            {{form.nombre_facturar}}
+                            <p id="nombre_facturar" class="error_text"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="" style="font-weight: 500;">{{form.identificacion_facturar.label}}:<sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
+                            {{form.identificacion_facturar}}
+                            <p id="identificacion_facturar" class="error_text"></p>
+                        </div>
+                   </div>
+                   <div class="row">
+                    <div class="col-md-6">
+                        <label for="" style="font-weight: 500;">{{form.direccion_facturar.label}}:<sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
+                        {{form.direccion_facturar}}
+                        <p id="direccion_facturar" class="error_text"></p>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="" style="font-weight: 500;">{{form.email_facturar.label}}:<sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
+                        {{form.email_facturar}}
+                        <p id="email_facturar" class="error_text"></p>
+                    </div>
+               </div>
+                    <button type="button" class="btn btn-primary w-100" style="float: right" onclick="moveTab('icon_danger_DOCUMENTOS')">Siguiente</button>
+                </div>
+                <div class="tab-pane fade" id="pills-disabled" role="tabpanel" aria-labelledby="pills-disabled-tab" tabindex="0">
+                    <h3>Documentos del alumno</h3>
+            <div class="row">
+                    <div style="display: flex;">
+                            <a style="margin-right: 10px; margin-bottom: 10px;" href="{% static 'Exoneracion de responsabilidades/2021_Exoneracion_de_Responsabilidad.pdf' %}" download="Exoneracion_de_Responsabilidad.pdf" class="btn btn-warning btn-sm"><i class="fa-solid fa-download"></i></a>
+                        <label for="" style="font-weight: 500;">Consentimiento para asumir riesgo y Exoneración de responsabilidad: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label></div>
+                    </div>
+                    <br>{{form.exoneracion}}
+                    <p id="exoneracion" class="error_text"></p>
+<<<<<<< HEAD
+                <div class="row">
+                    <label for="" style="font-weight: 500;">Reglamento: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label><br>
+                    <div style="display: flex;">
+                        <button id="verContratob" type="button" class="btn btn-xs" style="color: rgb(40, 40, 252);" onclick="verContrato()">Ver el reglamento</button><div></div>
+                    </div>
+                        <p id="aceptaContrato" class="error_text"></p>
+=======
+                </div>
+                   <br>
+                <div>
+                    <label for="" style="font-weight: 500;">Reglamento: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label><br>
+                    <div style="display: flex;">
+                        <button id="verContratob" type="button" class="btn btn-xs" style="color: rgb(40, 40, 252);" onclick="verContrato()">Ver el Reglamento</button><div></div>
+                    </div>
+                        <p id="aceptaContrato" class="error_text"></p>ñ
+>>>>>>> 871a898fe61a5d5dcb9f48be8fec4f9c8f023bb7
+                    </div>
+                    <button type="submit" class="btn btn-success w-100" style="float: right">Enviar</button>
+                </div>
+                </div>
+                   <br>
+              </div>
+        </div>
+       <br>
+                </div>
+              </div>
+            <!-- ------------------- -->
+            <script>
+                let campos = document.querySelectorAll("input");
+                let selects = document.querySelectorAll("select");
+                selects.forEach(function(select) {
+                    select.setAttribute("class", "form-control");
+                });
+                campos.forEach(function(campo) {
+                    campo.setAttribute("class", "form-control");
+                    if (campo.getAttribute('type')=="checkbox") {
+                        campo.classList.remove("form-control")
+                        try{
+                            campo.previousSibling.remove();
+                            campo.parentNode.childNodes[1].style.marginTop = "5px"
+                        }
+                        catch{
+                            console.log("hay errores")
+                        }
+                        campo.parentNode.classList.add("checkbox");
+                        campo.style.height = "32px";
+                    }
+                }); 
+            </script>
+        </div>
+        <br><br><br>
+    </form>
+</div>
+{% endblock contenido %}
+{% block scripts %}
+<script src="{% static 'js/reglamento.js' %}"></script>
+<script>
+    $(document).ready(function(){
+            let inputRequired = document.getElementsByTagName('input')
+            let selectRequired = document.getElementsByTagName('select')
+            for (let i = 0; i < inputRequired.length; i++) {
+                inputRequired[i].required = false
+            }
+            for (let i = 0; i < selectRequired.length; i++) {
+                selectRequired[i].required = false
+            }
+        })
+        var errores = []
+        var form = $("#CrearEstudianteForm")
+        form.find('.error_text').text('');
+        form.find('.is-invalid').removeClass('is-invalid');
+</script>
+{% if form.errors %}
+    {% for field in form %}
+    {% for error in field.errors %} 
+    <script>
+        name = "{{field.name}}"
+        value = "{{ error|escape }}"
+        x=form.find('input[name='+name+']')
+        y=form.find('select[name='+name+']')
+        x.addClass("is-invalid")
+        y.addClass("is-invalid")
+        $("#"+name).text(value)
+        errores.push(name)
+    </script>
+    {% endfor %}
+    {% endfor %}
+    <script>
+        console.log(errores)
+        $("#icon_danger_ESTUDIANTE").css("display","none")
+        $("#icon_danger_ACUDIENTE").css("display","none")
+        $("#icon_danger_EMERGENCIA").css("display","none")
+        $("#icon_danger_FACTURACION").css("display","none")
+        $("#icon_danger_DOCUMENTOS").css("display","none")
+<<<<<<< HEAD
+        pestañas = {
+          "info_estudiante":["primer_nombre","segundo_nombre","primer_apellido","segundo_apellido","nombre_completo","fecha_nacimiento","documento","celular","email","direccion","barrio","seguro","poliza","comprobante_seguro_medico","comprobante_documento_identidad","ciudad","documento_A","seguro_A","tipo_clase"],
+          "info_acudiente":["nombre_completo_madre","cedula_madre","celular_madre","email_madre","nombre_completo_padre","cedula_padre","celular_padre","email_padre"],
+          "info_emergencia":["nombre_contactoE","telefono_contactoE","relacion_contactoE"],
+          "info_documentos":["exoneracion","aceptaContrato",'autorizaClub'],
+          "info_facturacion":[]
+        }
+        for(campo in pestañas["info_estudiante"]){
+          if (pestañas["info_estudiante"][campo] in errores){
+            $("#icon_danger_ESTUDIANTE").css("display","inline-block")
+            break
+          }
+        }
+        for(campo in pestañas["info_acudiente"]){
+          if (pestañas["info_acudiente"][campo] in errores){
+            $("#icon_danger_ACUDIENTE").css("display","inline-block")
+            break
+          }
+        }
+        for(campo in pestañas["info_emergencia"]){
+          if (pestañas["info_emergencia"][campo] in errores){
+            $("#icon_danger_EMERGENCIA").css("display","inline-block")
+            break
+          }
+        }
+        for(campo in pestañas["info_facturacion"]){
+            if (pestañas["info_facturacion"][campo] in errores){
+              $("#icon_danger_FACTURACION").css("display","inline-block")
+              break
+            }
+          }
+        for(campo in pestañas["info_documentos"]){
+          if (pestañas["info_documentos"][campo] in errores){
+            $("#icon_danger_DOCUMENTOS").css("display","inline-block")
+            break
+          }
+        }
+        for (let i in errores){
+            let x=form.find('input[name='+i+']')
+            let y=form.find('select[name='+i+']')
+            x.addClass("is-invalid")
+            y.addClass("is-invalid")
+            $("#"+i).text(errores[i])
+            console.log(i, errores[i])
+=======
+        pestañas = {
+        "info_estudiante":["nombre_completo","fecha_nacimiento","documento","celular","email","direccion","barrio","seguro","poliza","comprobante_seguro_medico","comprobante_documento_identidad","ciudad","tipo_clase"],
+        "info_acudiente":["nombre_completo_madre","cedula_madre","celular_madre","email_madre","lugar_expedicion_madre","nombre_completo_padre","cedula_padre","celular_padre","email_padre","lugar_expedicion_padre","ciudad_A","direccion_A","barrio_A"],
+        "info_emergencia":["nombre_contactoE","telefono_contactoE","relacion_contactoE"],
+        "info_documentos":["documento_A","seguro_A","exoneracion","aceptaContrato"]
+>>>>>>> 871a898fe61a5d5dcb9f48be8fec4f9c8f023bb7
+        }
+        console.log("nombre_completo" in errores)
+        for(Campo in pestañas["info_estudiante"]){
+            for(error in errores){
+                if (pestañas["info_estudiante"][Campo] == errores[error]){
+                    $("#icon_danger_ESTUDIANTE").css("display","inline-block")
+                    break
+                }
+            }
+        }
+        for(Campo in pestañas["info_acudiente"]){
+            for(error in errores){
+                if (pestañas["info_acudiente"][Campo] == errores[error]){
+                    $("#icon_danger_ACUDIENTE").css("display","inline-block")
+                    break
+                }
+            }
+        }
+        for(Campo in pestañas["info_emergencia"]){
+            for(error in errores){
+                if (pestañas["info_emergencia"][Campo] == errores[error]){
+                    $("#icon_danger_EMERGENCIA").css("display","inline-block")
+                    break
+                }
+            }
+        }
+        for(Campo in pestañas["info_documentos"]){
+            for(error in errores){
+                if (pestañas["info_documentos"][Campo] == errores[error]){
+                    $("#icon_danger_DOCUMENTOS").css("display","inline-block")
+                    break
+                }
+            } 
+        }
+    </script>
+{% endif %}
+<script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
+<script>
+    $("#CrearEstudianteForm").submit(function(event){
+    event.preventDefault()
+    this.submit()
+})
+// Cargar informacion facturado
+let selectFacturacion = document.getElementById('Facturado')
+selectFacturacion.onchange = function (item){
+    tipo = item.target.value
+    if (tipo == '1'){
+        let nombre = document.getElementById('id_nombre_completo_padre').value
+        let cedula = document.getElementById('id_cedula_padre').value
+        let email = document.getElementById('id_email_padre').value
+        if (nombre == '' && cedula == '' && email == ''){
+            document.getElementById('p_Facturado').innerHTML = 'El padre no posee ningún dato'
+            document.getElementById('p_Facturado').style.display='block'
+        }
+        else{
+            document.getElementById('id_nombre_facturar').value = nombre
+            document.getElementById('id_identificacion_facturar').value = cedula
+            document.getElementById('id_email_facturar').value = email
+        }
+    }
+    if (tipo == '2'){
+        let nombre = document.getElementById('id_nombre_completo_madre').value
+        let cedula = document.getElementById('id_cedula_madre').value
+        let email = document.getElementById('id_email_madre').value
+        if (nombre == '' && cedula == '' && email == ''){
+            document.getElementById('p_Facturado').innerHTML = 'La madre no posee ningún dato'
+            document.getElementById('p_Facturado').style.display='block'
+        }
+        else{
+            document.getElementById('id_nombre_facturar').value = nombre
+            document.getElementById('id_identificacion_facturar').value = cedula
+            document.getElementById('id_email_facturar').value = email
+        }
+    }
+    if (tipo == '3'){
+        document.getElementById('p_Facturado').style.display='none'
+    }
+}
+// Mover pestaña
+function moveTab(nextID){
+    document.getElementById(nextID).parentElement.click()
+}
+// calcular edad
+let fecha_nacimiento = document.getElementById('id_fecha_nacimiento')
+fecha_nacimiento.onchange = function(nose){
+    let birthday = nose.target.value
+    var birthday_arr = birthday.split("-");
+    var birthday_date = new Date(birthday_arr[0], birthday_arr[1] - 1, birthday_arr[2]);
+    var ageDifMs = Date.now() - birthday_date.getTime();
+    var ageDate = new Date(ageDifMs);
+    let edad = Math.abs(ageDate.getUTCFullYear() - 1970);
+    document.getElementById('edad').innerHTML = edad+" años";
+    document.getElementById('birthday').style.display = 'block';
+    document.getElementById('div_fecha_nacimiento').classList = 'col-md-11'
+}
+// tipo servicio
+let tipoClase = document.getElementsByName('tipo_clase')[0]
+tipoClase.onchange = function(tipo){
+    $.ajax({
+        url: '{%url "cambiarTipoClase"%}',
+        data: {
+            'csrfmiddlewaretoken':csrftoken,
+            'tipo_clase':tipo.target.value
+        },
+        type:'POST',
+        success: function(data){
+            console.log(data)
+            data = data.Servicios
+            let div = document.getElementById('divTipoServicio')
+            let select = div.getElementsByTagName('select')[0]
+            select.innerHTML = ""
+            let selected = document.createElement('option')
+            selected.innerHTML = 'Seleccione un tipo de servicio'
+            selected.value = ''
+            selected.selected = true
+            select.appendChild(selected)
+            for(let i = 0; i < data.length; i++) {
+                let option = document.createElement('option')
+                option.innerHTML = data[i].value
+                option.value = data[i].id
+                select.appendChild(option)
+                console.log(data[i])
+            }
+            div.style.display = 'block'
+        }
+    })
+}
+</script>
+<script src="{% static 'libs/datepicker/dist/datepicker.js' %}"></script>
+<script src="{% static 'libs/datepicker/i18n/datepicker.es-ES.js' %}"></script>
+{% endblock scripts %}

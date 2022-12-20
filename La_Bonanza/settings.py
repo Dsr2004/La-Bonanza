@@ -88,7 +88,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'La_Bonanza',
         'USER': 'postgres',
-        'PASSWORD': 'AdminLambda2022',
+        'PASSWORD': 'Admin2022',
         'HOST': '127.0.0.1',
         'PORT': '5432',
     }
