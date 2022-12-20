@@ -36,7 +36,6 @@ def guardar_seguro(instance, filename):
     return  f"Archivos_Estudiantes/{instance.nombre_completo}_{instance.documento}/seguro{extension(filename)}"
 
 def validar_extencion_archivo(value):
-    
     ext = os.path.splitext(value.name)[1] 
     valid_extensions = ['.pdf', '.jpg', '.jpeg', '.png']
     if not ext.lower() in valid_extensions:
