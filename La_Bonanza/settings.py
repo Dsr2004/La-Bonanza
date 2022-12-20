@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-(la6$3b4*8lfexqchyqqx2!u8mgyo8*ob1)1v4pc#(t$@og97t
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -37,16 +37,17 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "jsonify",
     "Usuarios",
     "Estudiantes_Profesores",
     "Niveles",
     "Picaderos",
     "multiselectfield",
+    "jsonify",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -82,36 +83,16 @@ AUTH_USER_MODEL = "Usuarios.Usuario"
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'La_Bonanza',
+        'USER': 'postgres',
+        'PASSWORD': 'AdminLambda2022',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
     }
 }
-
-# DATABASES = {
-#    'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'bonanza',
-#         'USER': 'root',
-#         'PASSWORD': '',
-#         'HOST': 'localhost',
-#         'PORT': '',
-#         'OPTIONS': {
-#             'charset': 'latin1',
-#             'use_unicode': True, 
-#         }
-#     }
-# }
-#DB Backup
-#https://django-dbbackup.readthedocs.io/en/master/installation.html
-
-
-DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
-DBBACKUP_STORAGE_OPTIONS = {'location': BASE_DIR/'backups'}
-
-CRONJOBS = [
-    ('*/1 * * * *', 'La_Bonanza.cron.my_backup')
-]
 
 
 

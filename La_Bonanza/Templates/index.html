@@ -124,20 +124,15 @@
         $("table").DataTable({
             responsive:true,
         })
-        $('.selectpicker').selectpicker();
     })
     function cargar(){
         console.log('carga')
         $('[data-toggle="tooltip"]').tooltip()
-        $('.selectpicker').selectpicker({
-            'selectedText': 'cat'
-        });
         $("#fecha_nacimiento").datepicker({ 
             language: 'es-ES',
             format: "dd/mm/YYYY",
             autoHide: true,
         });
-        console.log('lso')
     }
     function filter(valor){
         document.getElementById("filterType").value=valor

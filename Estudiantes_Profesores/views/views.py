@@ -56,20 +56,20 @@ class Calendario(View):
             inicio = datetime.strptime(inicio, "%m/%d/%Y")
         registros = []
         fin = inicio+relativedelta(months=1)
-        print(inicio,fin)
         
         estadoClase = EstadoClase.objects.filter(estado = True)
         estadoClase = [x for x in estadoClase if x.dia >= inicio.date() and x.dia<fin.date() ]
-        print(estadoClase)
         if request.user.administrador:
+            print("es un admin")
             for clases in estadoClase:
                 calendario = clases.clase.calendario
                 if calendario.registro.estudiante.estado==True:
                     
                     registros.append(clases)
         else:
-             for clases in estadoClase:
+            for clases in estadoClase:
                 calendario = clases.clase.calendario
+                print(calendario, calendario.registro.profesor)
                 if calendario.registro.profesor:
                     if calendario.registro.profesor.pk == request.user.pk:
                         print("es un profe")

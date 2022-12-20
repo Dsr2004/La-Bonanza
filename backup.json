@@ -19,7 +19,7 @@
     {"model": "Picaderos.picadero", "pk": 5, "fields": {"nombre": "Estimulación", "max_estudiantes": 4, "max_profesores": 4, "nivel": 6, "slug": "estimulacion"}},
 
     {"model": "Estudiantes_Profesores.servicio", "pk": 1, "fields": {"nombre": "Estimulación", "descripcion": "Estimulación", "tipo_clase": "1"}},
-    {"model": "Estudiantes_Profesores.servicio", "pk": 2, "fields": {"nombre": "Estimulación", "descripcion": "estimulación", "tipo_clase": "2"}},
+    {"model": "Estudiantes_Profesores.servicio", "pk": 2, "fields": {"nombre": "Estimulación", "descripcion": "Estimulación", "tipo_clase": "2"}},
     {"model": "Estudiantes_Profesores.servicio", "pk": 3, "fields": {"nombre": "Chalanería", "descripcion": "chalanería", "tipo_clase": "1"}},
     {"model": "Estudiantes_Profesores.servicio", "pk": 4, "fields": {"nombre": "Chalanería", "descripcion": "Chalanería", "tipo_clase": "2"}}
     

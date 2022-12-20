@@ -198,7 +198,7 @@ class estudianteProfesor(ListView):
 
 def datosProfesores(request):
     if request.user.administrador!=1:
-        return redirect("calendario")
+        return redirect("calendario") 
     if request.method == 'POST':
         profesor = json.loads(request.POST.get('datos'))
         user = request.POST.get('usuario')
