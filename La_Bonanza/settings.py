@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-(la6$3b4*8lfexqchyqqx2!u8mgyo8*ob1)1v4pc#(t$@og97t
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -37,16 +37,17 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "jsonify",
     "Usuarios",
     "Estudiantes_Profesores",
     "Niveles",
     "Picaderos",
     "multiselectfield",
+    "jsonify",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",

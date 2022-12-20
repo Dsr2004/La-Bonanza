@@ -193,12 +193,12 @@ class estudianteProfesor(ListView):
         context = {}
         context['registro'] = Registro.objects.get(pk=request.GET.get('id_registro'))
         context['profesor'] = Profesor.objects.get(id=kwargs['pk'])
-        context['horaClase'] = datetime.strptime(str(context['registro'].horaClase), '%H:%M:%S').strftime('%I:%M %p')
+        # context['horaClase'] = datetime.strptime(str(context['registro'].horaClase), '%H:%M:%S').strftime('%I:%M %p')
         return render(request, self.template_name, context)
 
 def datosProfesores(request):
     if request.user.administrador!=1:
-        return redirect("calendario")
+        return redirect("calendario") 
     if request.method == 'POST':
         profesor = json.loads(request.POST.get('datos'))
         user = request.POST.get('usuario')

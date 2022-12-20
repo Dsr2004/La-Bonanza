@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-{% load jsonify %}
 {% load static %}
 {% block titulo %}Crear Estudiante{% endblock titulo %}
 {% block estilos %}
@@ -25,7 +24,7 @@
         border-radius: 4px;
     }
 </style>
-<div id="fondoContrato"style="display:none; width:100%; position:fixed; top:0; height:100vh; background-color:rgba(0,0,0,0.5);"><div id="DivContrato" style="width:90%;height: 90vh;background-color: #fff; position:absolute; top:2.5%;left: 5%; border: 1px solid rgba(0,0,0,1); z-index: 100; border-radius: 5px;overflow: auto;"><div id="header" style="width: 88%; margin: 0 1%; height:60px; border-bottom: 1px solid rgba(0,0,0,0.3); display:grid;grid-template-columns: 96% 4%; padding: 0 10px; position: fixed; background-color: #fff;"><h1 id="titleContrato"></h1><i class="fa fa-close" style="position:relative; right: -5px!important; top: 17px; font-size: 24px; cursor: pointer;" onclick="hideContrato()"></i></div><div id="contentContrato" style="margin-top: 70px; display: grid;grid-template-columns: 1fr; grid-gap:5px; padding: 15px;"></div><div><label for="AceptacionContrato" style="padding: 0 20px;">Aceptación del contrato <sup class="required"  class="required"  class="required"  class="required"  style="color: red;">*</sup></label><div class="form-check form-switch" ><input class="form-check-input" type="checkbox" style="margin-left: -20px; width: 50px;" role="switching" name="AceptacionContrato" id="AceptacionContrato"  onclick="if (document.getElementById('LAC').innerHTML == 'No'){document.getElementById('LAC').innerHTML='Si'}else{document.getElementById('LAC').innerHTML='No'}"> <label for="AceptacionContrato" style="margin-top: 5px; margin-left: 10px;" id="LAC">No</label></div><br><div style="float: right; margin-right: 40px ;"><button type="button" class="btn btn-default" style="background-color: #ccc; margin-right: 10px;"onclick="hideContrato()">Cancelar</button><button type="button" class="btn btn-info"onclick="guardarContrato()">Guardar</button><br><br></div></div></div></div>
+<div id="fondoContrato"style="display:none; width:100%; position:fixed; top:0; height:100vh; background-color:rgba(0,0,0,0.5);"><div id="DivContrato" style="width:90%;height: 90vh;background-color: #fff; position:absolute; top:2.5%;left: 5%; border: 1px solid rgba(0,0,0,1); z-index: 100; border-radius: 5px;overflow: auto;"><div id="header" style="width: 88%; margin: 0 1%; height:60px; border-bottom: 1px solid rgba(0,0,0,0.3); display:grid;grid-template-columns: 96% 4%; padding: 0 10px; position: fixed; background-color: #fff;"><h1 id="titleContrato"></h1><i class="fa fa-close" style="position:relative; right: -5px!important; top: 17px; font-size: 24px; cursor: pointer;" onclick="hideContrato()"></i></div><div id="contentContrato" style="margin-top: 70px; display: grid;grid-template-columns: 1fr; grid-gap:5px; padding: 15px;"></div><div><label for="AceptacionContrato" style="padding: 0 20px;">Aceptación del Reglamento <sup class="required"  class="required"  class="required"  class="required"  style="color: red;">*</sup></label><div class="form-check form-switch" ><input class="form-check-input" type="checkbox" style="margin-left: -20px; width: 50px;" role="switching" name="AceptacionContrato" id="AceptacionContrato"  onclick="if (document.getElementById('LAC').innerHTML == 'No'){document.getElementById('LAC').innerHTML='Si'}else{document.getElementById('LAC').innerHTML='No'}"> <label for="AceptacionContrato" style="margin-top: 5px; margin-left: 10px;" id="LAC">No</label></div><br><div style="float: right; margin-right: 40px ;"><button type="button" class="btn btn-default" style="background-color: #ccc; margin-right: 10px;"onclick="hideContrato()">Cancelar</button><button type="button" class="btn btn-info"onclick="guardarContrato()">Guardar</button><br><br></div></div></div></div>
 <div class="container-fluid">
     <div class="container alert alert-danger" role="alert" id="alertDocumentDownload">
         <button style="float: right;" type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -278,11 +277,11 @@
                    <br>
                
                 <div>
-                    <label for="" style="font-weight: 500;">Contrato: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label><br>
+                    <label for="" style="font-weight: 500;">Reglamento: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label><br>
                     <div style="display: flex;">
-                        <button id="verContratob" type="button" class="btn btn-xs" style="color: rgb(40, 40, 252);" onclick="verContrato()">Ver el contrato</button><div></div>
+                        <button id="verContratob" type="button" class="btn btn-xs" style="color: rgb(40, 40, 252);" onclick="verContrato()">Ver el Reglamento</button><div></div>
                     </div>
-                        <p id="aceptaContrato" class="error_text"></p>
+                        <p id="aceptaContrato" class="error_text"></p>ñ
            
                             
                     </div>
@@ -296,10 +295,9 @@
               </div>
             <!-- ------------------- -->
 
-           
+    
            
             <script>
-                console.log($('#id_tipo_clase'))
                 let campos = document.querySelectorAll("input");
                 let selects = document.querySelectorAll("select");
                 selects.forEach(function(select) {
@@ -308,10 +306,15 @@
                 campos.forEach(function(campo) {
                     campo.setAttribute("class", "form-control");
                     if (campo.getAttribute('type')=="checkbox") {
-                        campo.classList.remove("form-control");
-                        campo.previousSibling.remove();
+                        campo.classList.remove("form-control")
+                        try{
+                            campo.previousSibling.remove();
+                            campo.parentNode.childNodes[1].style.marginTop = "5px"
+                        }
+                        catch{
+                            console.log("hay errores")
+                        }
                         campo.parentNode.classList.add("checkbox");
-                        campo.parentNode.childNodes[1].style.marginTop = "5px"
                         campo.style.height = "32px";
                     }
                 }); 
@@ -338,60 +341,78 @@
                 
             }
         })
-</script>
-{% if form.errors %}
-    <script>
-        let errores = '{{form.errors|jsonify}}'
-        errores = JSON.parse(errores)
-        let form = $("#CrearEstudianteForm")
-
+        var errores = []
+        var form = $("#CrearEstudianteForm")
         form.find('.error_text').text('');
         form.find('.is-invalid').removeClass('is-invalid');
+</script>
+{% if form.errors %}
+    {% for field in form %}
+    {% for error in field.errors %} 
+    <script>
+        name = "{{field.name}}"
+        value = "{{ error|escape }}"
+        x=form.find('input[name='+name+']')
+        y=form.find('select[name='+name+']')
+        x.addClass("is-invalid")
+        y.addClass("is-invalid")
+        $("#"+name).text(value)
+        errores.push(name)
+    </script>
+    {% endfor %}
+    {% endfor %}
+    
+    <script>
+        console.log(errores)
+        
         $("#icon_danger_ESTUDIANTE").css("display","none")
         $("#icon_danger_ACUDIENTE").css("display","none")
         $("#icon_danger_EMERGENCIA").css("display","none")
         $("#icon_danger_DOCUMENTOS").css("display","none")
 
-        pestañas = {
-          "info_estudiante":["nombre_completo","fecha_nacimiento","documento","celular","email","direccion","barrio","seguro","poliza","comprobante_seguro_medico","comprobante_documento_identidad","ciudad","tipo_clase"],
-          "info_acudiente":["nombre_completo_madre","cedula_madre","celular_madre","email_madre","lugar_expedicion_madre","nombre_completo_padre","cedula_padre","celular_padre","email_padre","lugar_expedicion_padre","ciudad_A","direccion_A","barrio_A"],
-          "info_emergencia":["nombre_contactoE","telefono_contactoE","relacion_contactoE"],
-          "info_documentos":["documento_A","seguro_A","exoneracion","aceptaContrato"]
-        }
-        
-        for(campo in pestañas["info_estudiante"]){
-          if (pestañas["info_estudiante"][campo] in errores){
-            $("#icon_danger_ESTUDIANTE").css("display","inline-block")
-            break
-          }
-        }
-        for(campo in pestañas["info_acudiente"]){
-          if (pestañas["info_acudiente"][campo] in errores){
-            $("#icon_danger_ACUDIENTE").css("display","inline-block")
-            break
-          }
-        }
-        for(campo in pestañas["info_emergencia"]){
-          if (pestañas["info_emergencia"][campo] in errores){
-            $("#icon_danger_EMERGENCIA").css("display","inline-block")
-            break
-          }
-        }
-        for(campo in pestañas["info_documentos"]){
-          if (pestañas["info_documentos"][campo] in errores){
-            $("#icon_danger_DOCUMENTOS").css("display","inline-block")
-            break
-          }
-        }
 
-        for (let i in errores){
-            let x=form.find('input[name='+i+']')
-            let y=form.find('select[name='+i+']')
-            x.addClass("is-invalid")
-            y.addClass("is-invalid")
-            $("#"+i).text(errores[i])
+        pestañas = {
+        "info_estudiante":["nombre_completo","fecha_nacimiento","documento","celular","email","direccion","barrio","seguro","poliza","comprobante_seguro_medico","comprobante_documento_identidad","ciudad","tipo_clase"],
+        "info_acudiente":["nombre_completo_madre","cedula_madre","celular_madre","email_madre","lugar_expedicion_madre","nombre_completo_padre","cedula_padre","celular_padre","email_padre","lugar_expedicion_padre","ciudad_A","direccion_A","barrio_A"],
+        "info_emergencia":["nombre_contactoE","telefono_contactoE","relacion_contactoE"],
+        "info_documentos":["documento_A","seguro_A","exoneracion","aceptaContrato"]
         }
         
+        console.log("nombre_completo" in errores)
+        for(Campo in pestañas["info_estudiante"]){
+            for(error in errores){
+                if (pestañas["info_estudiante"][Campo] == errores[error]){
+                    $("#icon_danger_ESTUDIANTE").css("display","inline-block")
+                    break
+                }
+            }
+       
+        }
+        for(Campo in pestañas["info_acudiente"]){
+            for(error in errores){
+                if (pestañas["info_acudiente"][Campo] == errores[error]){
+                    $("#icon_danger_ACUDIENTE").css("display","inline-block")
+                    break
+                }
+            }
+        }
+        for(Campo in pestañas["info_emergencia"]){
+            for(error in errores){
+                if (pestañas["info_emergencia"][Campo] == errores[error]){
+                    $("#icon_danger_EMERGENCIA").css("display","inline-block")
+                    break
+                }
+            }
+        }
+        for(Campo in pestañas["info_documentos"]){
+            for(error in errores){
+                if (pestañas["info_documentos"][Campo] == errores[error]){
+                    $("#icon_danger_DOCUMENTOS").css("display","inline-block")
+                    break
+                }
+            } 
+        }
+      
     </script>
 {% endif %}
 
@@ -414,6 +435,7 @@ tipoClase.onchange = function(tipo){
         },
         type:'POST',
         success: function(data){
+            console.log(data)
             data = data.Servicios
             let div = document.getElementById('divTipoServicio')
             let select = div.getElementsByTagName('select')[0]
@@ -430,31 +452,6 @@ tipoClase.onchange = function(tipo){
     })
 }
 </script>
-<!-- <script>
-    function displayFile(drag){
-        let fileType = file.type
-        let validExtensions = ["image/jpeg", "image/jpg", "image/png", "application/pdf"]
-        if (validExtensions.includes(fileType)){
-            let fileReader = new FileReader()
-            fileReader.onload=()=>{
-                let fileURL = fileReader.result
-                let imgTag = '<img src="'+fileURL+'" alt="">'
-                drag.html(imgTag)
-            };
-            fileReader.readAsDataURL(file)
-        }else{
-            Swal.fire(
-            'TIPO DE ARCHIVO INVÁLIDO',
-            'Solo se pueden adjuntar imÁgenes JPG, JPEG, PNG y archivos PDF',
-            'error'
-            )
-            drag.removeClass("active")
-        }
-        console.log(fileType)
-        // console.log("solto el archivo")
-    }
-</script> -->
-
 <script src="{% static 'libs/datepicker/dist/datepicker.js' %}"></script>
 <script src="{% static 'libs/datepicker/i18n/datepicker.es-ES.js' %}"></script>
 

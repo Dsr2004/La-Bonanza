@@ -54,7 +54,6 @@ class RegistrarEstudiante(CreateView):
         return super().post(request, *args, **kwargs)
     
     def form_valid(self, form):
-        print(form)
         if self.request.user.is_authenticated:
             if self.request.user.administrador:
                 form.save()
@@ -65,6 +64,9 @@ class RegistrarEstudiante(CreateView):
             return render(self.request, "gracias.html",{"nombre":nombre})
         return super().form_valid(form) 
 
+    def form_invalid(self, form):
+        print(form.errors)
+        return super().form_invalid(form)
 class BuscarNuevosEstudiantes(IsAdminMixin, View):
      def get(self, request, *args, **kwargs):
         if request.user.administrador!=1:
@@ -368,7 +370,7 @@ class ModificarRegistroEstudiante(IsAdminMixin, UpdateView):
                     except:
                         return JsonResponse({"errores":{"nivel":"No se puede agregar este estudiante porque no hay un picadero con el nivel seleccionado"}}, status=400)
                     
-                    
+                    print("ccc", diaOriginal[i])
                     calendario = CalendarioModel.objects.filter(registro=registro).filter(inicioClase=diaOriginal[i]).filter(horaClase=hora[i])
                     
                     if not calendario:
@@ -394,6 +396,7 @@ class ModificarRegistroEstudiante(IsAdminMixin, UpdateView):
                         return JsonResponse({"mensaje":"estudiante modificado con exito"}, status=200)      
                 return JsonResponse({'mensaje':'Se modifico correctamente'},status=200)
             except Exception as error:
+                print(error)
                 if type(error).__name__ == "FormValidationEstudianteError":
                     return JsonResponse({"errores": {"estudiante":[str(error)]}}, status=400)
                 elif type(error).__name__ == "FormValidationProfesorError":
