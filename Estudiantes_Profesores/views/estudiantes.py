@@ -23,7 +23,6 @@ def cambiarTipoClase(request):
         estudiante.tipo_clase = request.POST.get('tipo_clase')
         estudiante.save()
         return JsonResponse({"Servicios":'si'}, status=200)
-        
     servicios = [{'id':s.pk,'value':s.descripcion} for s in Servicio.objects.filter(tipo_clase = request.POST.get('tipo_clase'))]
     return JsonResponse({"Servicios":servicios}, status=200)
 

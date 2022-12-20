@@ -26,6 +26,10 @@ function verContrato(){
         content.appendChild(divC)
         document.getElementById("CrearEstudianteForm").style.display = "none"
     }
+    let contenido = document.createElement("p")
+    contenido.innerHTML = "<b>He leído y acepto este reglamento en su totalidad</b>"
+    content.appendChild(contenido)
+
 }
 function hideContrato(){
     $("#alertDocumentDownload").show()
@@ -35,7 +39,11 @@ function hideContrato(){
 }
 function guardarContrato(){
     let checkbox = document.getElementById("AceptacionContrato")
+    let autoriza = document.getElementById("AutorizacionClub")
     let input = checkbox.cloneNode(true);
+    let auth = autoriza.cloneNode(true);
+    auth.id = "autorizaClubInput"
+    auth.style.display="none"
     input.id = "aceptaContratoInput"
     input.style.display="none"
     if (checkbox.checked) {
@@ -59,6 +67,52 @@ function guardarContrato(){
         }
         button.style.color = "#fff"
         button.nextSibling.style.display = "none"
+        if (autoriza.checked){
+            auth.name = "autorizaClub"
+            if(document.getElementById("autorizaClubInput")==null){
+                document.getElementById("CrearEstudianteForm").appendChild(auth)
+            }else{
+                let repl = document.getElementById("autorizaClubInput")
+                document.getElementById("CrearEstudianteForm").replaceChild(auth, repl)
+            }
+            let div = document.getElementById("fondoContrato");
+            div.style.display="none";
+            let button = document.getElementById("verContratob")
+            if (button.classList.contains("btn-xs")){
+                button.classList.remove("btn-xs")
+                button.classList.add('btn-success')
+            }
+            else{
+                button.classList.remove("btn-danger")
+                button.classList.add('btn-success')
+            }
+            button.style.color = "#fff"
+            button.nextSibling.style.display = "none"
+        }
+        else{
+            if(document.getElementById("autorizaClubInput")==null){
+                document.getElementById("CrearEstudianteForm").appendChild(auth)
+            }else{
+                let repl = document.getElementById("autorizaClubInput")
+                document.getElementById("CrearEstudianteForm").replaceChild(auth, repl)
+            }
+            let div = document.getElementById("fondoContrato");
+            div.style.display="none";
+            let button = document.getElementById("verContratob")
+            if (button.classList.contains("btn-xs")){
+                button.classList.remove("btn-xs")
+                button.classList.add('btn-danger')
+            }
+            else{
+                button.classList.remove("btn-success")
+                button.classList.add('btn-danger')
+            }
+            button.style.color = "#fff"
+            button.nextSibling.innerHTML = "<sub>No podrá realizar el registro</sub>"
+            button.nextSibling.style.display = "block"
+            button.nextSibling.style.color = "red"
+            button.nextSibling.style.marginLeft = "10px"
+        }
     }
     else{
         if(document.getElementById("aceptaContratoInput")==null){
@@ -83,9 +137,40 @@ function guardarContrato(){
         button.nextSibling.style.display = "block"
         button.nextSibling.style.color = "red"
         button.nextSibling.style.marginLeft = "10px"
+        if (autoriza.checked){
+            auth.name = "autorizaClub"
+            if(document.getElementById("autorizaClubInput")==null){
+                document.getElementById("CrearEstudianteForm").appendChild(auth)
+            }else{
+                let repl = document.getElementById("autorizaClubInput")
+                document.getElementById("CrearEstudianteForm").replaceChild(auth, repl)
+            }
+        }
+        else{
+            if(document.getElementById("autorizaClubInput")==null){
+                document.getElementById("CrearEstudianteForm").appendChild(auth)
+            }else{
+                let repl = document.getElementById("autorizaClubInput")
+                document.getElementById("CrearEstudianteForm").replaceChild(auth, repl)
+            }
+            let div = document.getElementById("fondoContrato");
+            div.style.display="none";
+            let button = document.getElementById("verContratob")
+            if (button.classList.contains("btn-xs")){
+                button.classList.remove("btn-xs")
+                button.classList.add('btn-danger')
+            }
+            else{
+                button.classList.remove("btn-success")
+                button.classList.add('btn-danger')
+            }
+            button.style.color = "#fff"
+            button.nextSibling.innerHTML = "<sub>No podrá realizar el registro</sub>"
+            button.nextSibling.style.display = "block"
+            button.nextSibling.style.color = "red"
+            button.nextSibling.style.marginLeft = "10px"
+        }
     }
     document.getElementById("CrearEstudianteForm").style.display = "block"
-    
-    console.log(document.getElementById("aceptaContrato").checked)
     $("#alertDocumentDownload").show()
 } 

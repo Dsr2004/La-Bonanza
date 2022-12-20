@@ -1,7 +1,7 @@
 <div class="modal-dialog modal-lg ">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="staticBackdropLabel">Editar información del profesor {{Profesor.profesor}}</h5>
+        <h5 class="modal-title" id="staticBackdropLabel">Editar información del instructor {{Profesor.profesor}}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body" style="height: 80vh; overflow: auto;">
@@ -227,7 +227,7 @@
                     }
                     else{
                         let p_errors = document.getElementById('horarios-p')
-                        p_errors.innerHTML = 'Por favor agrega almenos un horario para este profesor'
+                        p_errors.innerHTML = 'Por favor agrega almenos un horario para este instructor'
                         p_errors.style.display = 'block'
                         p_errors.style.color = 'red'
                         p_errors.previousSibling.previousSibling.classList.add('is-invalid');

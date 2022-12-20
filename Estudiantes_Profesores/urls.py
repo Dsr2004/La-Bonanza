@@ -11,7 +11,7 @@ urlpatterns=[
     path("Calendario/", login_required(Calendario.as_view()), name="calendario"),
     path("Estudiantes/", login_required(Estudiantes.as_view()), name="estudiantes"),
     path("Profesores/", login_required(Profesores.as_view()), name="profesores"),
-    path("RegistarEstudiante/", RegistrarEstudiante.as_view(), name="registrarEstudiante"),
+    path("RegistrarEstudiante/", RegistrarEstudiante.as_view(), name="registrarEstudiante"),
     path("BuscarNuevosEstudiantes/", login_required(BuscarNuevosEstudiantes.as_view()), name="buscarNuevosEstudiantes"),
     path("CrearNuevosEstudiantes/<int:pk>", login_required(CrearNuevosEstudiantes.as_view()), name="crearNuevosEstudiantes"),
     path("ValidarRegistroEstudiante/", login_required(ValidarRegistroEstudiante.as_view()), name="validarRegistroEstudiante"),
@@ -35,5 +35,5 @@ urlpatterns=[
     path("ConteoClasesFecha/<int:pk>", login_required(ConteoClasesFecha.as_view()), name="conteoClasesFecha"),
     path("ClasesCanceladas/", login_required(ClasesCanceladas.as_view()), name="clasesCanceladas"),
     path("ReponerClase/<int:pk>", login_required(ReponerClase.as_view()), name="reponerClase"),
-    path("CambiarTipoClase/", login_required(cambiarTipoClase), name="cambiarTipoClase"),
+    path("CambiarTipoClase/", cambiarTipoClase, name="cambiarTipoClase"),
 ]

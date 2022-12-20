@@ -1,0 +1,51 @@
+.checkboxSiNo input[type=checkbox] {
+    visibility: hidden;
+  }
+.checkboxSiNo{
+width: 100px;
+height: 40px;
+background: #fff;
+margin: 0 40px;
+border-radius: 50px;
+position: relative;
+font-family: 'Aldrich', sans-serif;
+/* border: 1.5px solid rgba(0,0,0,0.3); */
+}
+.checkboxSiNo:before {
+content: 'Sí';
+position: absolute;
+top: 0;
+left: 20px;
+color: rgb(21, 115, 71);
+font-size: 20px;
+line-height: 40px;
+text-shadow: 0 0 2px #FFFFFF;
+}
+
+.checkboxSiNo:after {
+content: 'No';
+color: #BCB589;
+position: absolute;
+top: 0px;
+right: 20px;
+font-size: 20px;
+line-height: 40px;
+text-shadow: 0 0 1px #000000;
+}
+.checkboxSiNo label {
+background: #BCB589;
+display: block;
+width: 40px;
+height: 25px;
+border-radius: 50px;
+transition: all .7s ease;
+cursor: pointer;
+position: absolute;
+top: 6px;
+z-index: 1;
+left: 10px;
+}
+.checkboxSiNo input[type=checkbox]:checked + label {
+    left: 45px;
+    background: rgb(21, 115, 71);   
+}

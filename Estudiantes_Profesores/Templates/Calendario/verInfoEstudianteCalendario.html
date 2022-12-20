@@ -6,7 +6,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <h3>Información del estudiante</h3>
+        <h3>Información del alumno</h3>
         <h4>Nombre: </h4>
         <h6>{{object.clase.calendario.registro.estudiante.nombre_completo}}</h6>
         <h4>Nivel: </h4>
@@ -17,7 +17,7 @@
         <h6>{{object.clase.calendario.get_diaClase_display}}</h6>
         <h4>Hora: </h4>
         <h6>{{object.clase.calendario.horaClase|time:"h:00 A"}}</h6>
-        <h4>Profesor: </h4>
+        <h4>Instructor: </h4>
         
         {% if object.clase.calendario.registro.profesor.usuario == object.clase.profesor.usuario %}
           <h6>{{object.clase.calendario.registro.profesor.usuario}}</h6>
@@ -26,7 +26,7 @@
           <h6><b>Sutituto: </b>{{object.clase.profesor.usuario}}</h6>
         {% endif %}
         <hr>
-        <h3>Asistencia del estudiante</h3>
+        <h3>Asistencia del alumno</h3>
         <hr>
           <label for="" style="font-weight: 500;"> Busque por un rango de fechas específicas:</label>
           <div class="input-group mb-3">

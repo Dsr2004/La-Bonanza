@@ -12,7 +12,7 @@
       {%if estudiante.tipo_clase == '1' %}
         <form action="{% url 'crearNuevosEstudiantes' estudiante.pk %}" method="post" id="RegistrarEstudianteForm">
           {% csrf_token %}
-          <Label><strong>Estudiante:</strong></Label>
+          <Label><strong>Alumno:</strong></Label>
           <h5>{{estudiante.get_estudiante}}</h5>
           <Label><strong>Tipo de clase:</strong></Label>
           <h5>{{estudiante.get_tipo_clase_display}} de {{estudiante.tipo_servicio}}</h5>
@@ -51,7 +51,7 @@
           </div>
 
           <br>
-          <Label><strong>Profesor: <sup style="color: #dc3545;">(*)</sup></strong></Label>
+          <Label><strong>Instructor: <sup style="color: #dc3545;">(*)</sup></strong></Label>
           {{form.profesor}}
           <p id="profesor" class="bg-light text-danger" style="color: #dc3545;"></p>
           <br>
@@ -66,13 +66,13 @@
             <p id="pagado" class="bg-light text-danger" style="color: #dc3545;"></p>
             <br>
           <input type="hidden" name="estudiante" value="{{estudiante.pk}}">
-          <button type="button" onclick="RegistrarEstudianteSinRegistroClasePuntual()"  class="btn btn-success w-100">Registrar Estudiante </button>
+          <button type="button" onclick="RegistrarEstudianteSinRegistroClasePuntual()"  class="btn btn-success w-100">Registrar alumno </button>
           
       </form>
     {% elif estudiante.tipo_clase == '2'%}
     <form action="{% url 'crearNuevosEstudiantes' estudiante.pk %}" method="post" id="RegistrarEstudianteForm">
       {% csrf_token %}
-      <Label><strong>Estudiante:</strong></Label>
+      <Label><strong>Alumno:</strong></Label>
       <h5>{{estudiante.get_estudiante}}</h5>
       <Label><strong>Tipo de clase:</strong></Label>
       <h5>{{estudiante.get_tipo_clase_display}} de {{estudiante.tipo_servicio}}</h5>
@@ -102,7 +102,7 @@
       </select>
       <p id="meses" class="bg-light text-danger" style="color: #dc3545;"></p>
       <br>
-      <Label><strong>Profesor: <sup style="color: #dc3545;">(*)</sup></strong></Label>
+      <Label><strong>Instructor: <sup style="color: #dc3545;">(*)</sup></strong></Label>
       {{form.profesor}}
       <p id="profesor" class="bg-light text-danger" style="color: #dc3545;"></p>
       <br>
@@ -117,7 +117,7 @@
         <p id="pagado" class="bg-light text-danger" style="color: #dc3545;"></p>
         <br>
       <input type="hidden" name="estudiante" value="{{estudiante.pk}}">
-      <button type="button" onclick="RegistrarEstudianteSinRegistro(this)"  class="btn btn-success w-100">Registrar Estudiante</button>
+      <button type="button" onclick="RegistrarEstudianteSinRegistro(this)"  class="btn btn-success w-100">Registrar alumno</button>
   </form>
     {%endif%}
       <div class="container alert alert-warning  alert-dismissible fade show" role="alert" id="EstudianteSinRegistrAlert">

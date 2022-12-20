@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block titulo %}Editar Estudiantes{% endblock titulo %}
+{% block titulo %}Editar Almunos{% endblock titulo %}
 
 {% block estilos %}
 <link rel="stylesheet" href="{% static 'libs/datepicker/dist/datepicker.css' %}">
@@ -21,7 +21,7 @@
             {% endfor %}
         {% else %}
             <div class="alert alert-light alert-dismissible fade show" role="alert">
-                <strong>¡Nota!</strong> El botón para modificar al estudiante está en la pestaña Información del Contacto de emergencia.
+                <strong>¡Nota!</strong> El botón para modificar al alumno está en la pestaña Información del Contacto de emergencia.
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         {% endif %}
@@ -29,7 +29,7 @@
         <hr>
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
-              <a class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true"><i id="icon_danger_ESTUDIANTE" class="fa-solid fa-triangle-exclamation"></i> Información del Estudiante</a>
+              <a class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true"><i id="icon_danger_ESTUDIANTE" class="fa-solid fa-triangle-exclamation"></i> Información del alumno</a>
             </li>
             <li class="nav-item" role="presentation">
               <a class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false"><i id="icon_danger_ACUDIENTE" class="fa-solid fa-triangle-exclamation"></i> Información del Acudiente</a>
@@ -47,7 +47,7 @@
             <div class="tab-content" id="myTabContent">
                 <div class="formEstudianteUpdate tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
                     <br>
-                    <h3>Información del estudiante</h3>
+                    <h3>Información del alumno</h3>
                     {% csrf_token %}
                     <br>
                     <div class="row">
@@ -277,7 +277,7 @@
                         <input type="hidden" name="estado" value="{{object.estado}}">
                     </div>
                     <br>
-                    <button class="btn btn-success w-100" onclick="ModificarEstudiante('{%url 'modificarEstudiante' object.pk%}')">Modificar estudiante</button>
+                    <button class="btn btn-success w-100" onclick="ModificarEstudiante('{%url 'modificarEstudiante' object.pk%}')">Modificar alumno</button>
                     <br>
                 </div>
                 <script>
@@ -413,7 +413,7 @@
                         </div>
                         <input type="hidden" name="estudiante" value="{{object.pk}}">
                         <p id="estudiante" class="bg-light text-danger" style="color: #dc3545;"></p>
-                        <button type="button" class="btn btn-success w-100" onclick="ModificarRegistroEstudiantej()">Modificar Registro del estudiante </button>
+                        <button type="button" class="btn btn-success w-100" onclick="ModificarRegistroEstudiantej()">Modificar Registro del alumno </button>
                     </form>
 
                     {% elif object.tipo_clase == '2'%}
@@ -485,7 +485,7 @@
                         </div>
                     </div>
                     <input type="hidden" name="estudiante" value="{{object.pk}}">
-                    <button type="button"  class="btn btn-success w-100"onclick="ModificarRegistroEstudiante()">Modificar Registro del estudiante</button>
+                    <button type="button"  class="btn btn-success w-100"onclick="ModificarRegistroEstudiante()">Modificar Registro del alumno</button>
                 </form>
                     {%endif%}
                     <br>

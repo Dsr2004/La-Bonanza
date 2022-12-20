@@ -1,5 +1,5 @@
 {%extends 'base.html' %}
-{% block titulo %}Estudiantes de {{Profesor}}{% endblock titulo %}
+{% block titulo %}Alumnos de {{Profesor}}{% endblock titulo %}
 {%block estilos%}
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
 <!-- CSS only -->
@@ -13,7 +13,7 @@
     </div>
     <div class="row">
         <div class="col-md-10">
-            <h1>Estudiantes de {{Profesor}}</h1>
+            <h1>Alumnos de {{Profesor}}</h1>
         </div>
         <div class="col-md-2">
            <button class="btn btn-outline-success btn-lg" onclick="agregarEstudiantes()"> <i class="fa-solid fa-person-circle-plus fa-xl"></i></button>
@@ -24,7 +24,7 @@
     <table id="RegistrosTable" class="table" width="100%">
         <thead>
            <tr>
-            <th>Estudiante</th>
+            <th>Alumno</th>
             <th>Nivel</th>
             <th>Madre</th>
             <th>Número de madre</th>
@@ -85,7 +85,7 @@
           
           swalWithBootstrapButtons.fire({
             title: 'Estás seguro?',
-            text: "El estudiante "+estudiante+" dejará de estar relacionado con el profesor {{Profesor}}",
+            text: "El alumno "+estudiante+" dejará de estar relacionado con el instructor {{Profesor}}",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Si, remover',
@@ -104,7 +104,7 @@
                     success: function(data) {
                         swalWithBootstrapButtons.fire(
                             'Removido!',
-                            'El estudiante '+estudiante+' ha dejado de estar relacionado con el profesor {{Profesor}}',
+                            'El alumno '+estudiante+' ha dejado de estar relacionado con el instructor {{Profesor}}',
                             'success'
                         )
                         window.location.reload()

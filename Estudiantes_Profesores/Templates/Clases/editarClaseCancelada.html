@@ -19,7 +19,7 @@
            <input type="time" class="form-control" name="hora" id="hora" value="{{clase.clase.calendario.horaClase|date:'H:i:s'}}">
            <p id="errorhora" class="error_text"></p>
            <br>
-           <label><b>Profesor: </b></label>
+           <label><b>Instructor: </b></label>
            <select name="profesor" id="profesor" class="form-select">
             {% for profesor in profesores %}
             <option value="{{profesor.pk}}" {% if profesor ==  profeActual %}selected{% endif %}>{{profesor}}</option>

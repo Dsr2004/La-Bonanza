@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load jsonify %}
 {% load static %}
-{% block titulo %}Crear Estudiante{% endblock titulo %}
+{% block titulo %}Crear Alumnos{% endblock titulo %}
 {% block estilos %}
 <link rel="stylesheet" href="{% static 'libs/datepicker/dist/datepicker.css' %}">
 
@@ -37,12 +37,12 @@
       </div>
       <br>
         <br>
-        <h1><center>Registro Estudiante</center></h1>
+        <h1><center>Registro alumno</center></h1>
         <br>
         <div class="container">
             <ul class="nav nav-tabs" id="pills-tab" role="tablist">
                 <li class="nav-item" role="presentation">
-                  <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true"><i id="icon_danger_ESTUDIANTE" class="fa-solid fa-circle-exclamation"></i> Estudiante</button>
+                  <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true"><i id="icon_danger_ESTUDIANTE" class="fa-solid fa-circle-exclamation"></i> Alumno</button>
                 </li>
                 <li class="nav-item" role="presentation">
                   <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false"><i id="icon_danger_ACUDIENTE" class="fa-solid fa-circle-exclamation"></i>  Padres</button>
@@ -58,7 +58,7 @@
                 <form action="{% url 'registrarEstudiante' %}" method="post" enctype="multipart/form-data" id="CrearEstudianteForm">
                 {% csrf_token %}
                 <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
-                    <h3>Información del estudiante</h3>
+                    <h3>Información del alumno</h3>
                     <hr>
                     <div class="row">
                         <div class="col-md-6">
@@ -258,7 +258,7 @@
                     </div>
                 </div>
                 <div class="tab-pane fade" id="pills-disabled" role="tabpanel" aria-labelledby="pills-disabled-tab" tabindex="0">
-                    <h3>Documentos del estudiante</h3>
+                    <h3>Documentos del alumno</h3>
         <div class="row">
                 <div class="col-md-6">
                     <label for="" style="font-weight: 500;">{{form.documento_A.label}}: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
