@@ -4,8 +4,6 @@ from django import forms
 from .models import Estudiante, Registro, Profesor
 from django.core.exceptions import ValidationError
 from Usuarios.models import Usuario
-
-
 class CrearEstudianteForm(forms.ModelForm):
     class Meta:
         model = Estudiante
