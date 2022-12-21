@@ -443,7 +443,6 @@
         $("#icon_danger_FACTURACION").css("display","none")
         $("#icon_danger_DOCUMENTOS").css("display","none")
 
-<<<<<<< HEAD
         pestañas = {
           "info_estudiante":["primer_nombre","segundo_nombre","primer_apellido","segundo_apellido","nombre_completo","fecha_nacimiento","documento","celular","email","direccion","barrio","seguro","poliza","comprobante_seguro_medico","comprobante_documento_identidad","ciudad","documento_A","seguro_A","tipo_clase"],
           "info_acudiente":["nombre_completo_madre","cedula_madre","celular_madre","email_madre","nombre_completo_padre","cedula_padre","celular_padre","email_padre"],
@@ -490,49 +489,6 @@
             y.addClass("is-invalid")
             $("#"+i).text(errores[i])
             console.log(i, errores[i])
-=======
-
-        pestañas = {
-        "info_estudiante":["nombre_completo","fecha_nacimiento","documento","celular","email","direccion","barrio","seguro","poliza","comprobante_seguro_medico","comprobante_documento_identidad","ciudad","tipo_clase"],
-        "info_acudiente":["nombre_completo_madre","cedula_madre","celular_madre","email_madre","lugar_expedicion_madre","nombre_completo_padre","cedula_padre","celular_padre","email_padre","lugar_expedicion_padre","ciudad_A","direccion_A","barrio_A"],
-        "info_emergencia":["nombre_contactoE","telefono_contactoE","relacion_contactoE"],
-        "info_documentos":["documento_A","seguro_A","exoneracion","aceptaContrato"]
->>>>>>> 871a898fe61a5d5dcb9f48be8fec4f9c8f023bb7
-        }
-        
-        console.log("nombre_completo" in errores)
-        for(Campo in pestañas["info_estudiante"]){
-            for(error in errores){
-                if (pestañas["info_estudiante"][Campo] == errores[error]){
-                    $("#icon_danger_ESTUDIANTE").css("display","inline-block")
-                    break
-                }
-            }
-       
-        }
-        for(Campo in pestañas["info_acudiente"]){
-            for(error in errores){
-                if (pestañas["info_acudiente"][Campo] == errores[error]){
-                    $("#icon_danger_ACUDIENTE").css("display","inline-block")
-                    break
-                }
-            }
-        }
-        for(Campo in pestañas["info_emergencia"]){
-            for(error in errores){
-                if (pestañas["info_emergencia"][Campo] == errores[error]){
-                    $("#icon_danger_EMERGENCIA").css("display","inline-block")
-                    break
-                }
-            }
-        }
-        for(Campo in pestañas["info_documentos"]){
-            for(error in errores){
-                if (pestañas["info_documentos"][Campo] == errores[error]){
-                    $("#icon_danger_DOCUMENTOS").css("display","inline-block")
-                    break
-                }
-            } 
         }
       
     </script>
