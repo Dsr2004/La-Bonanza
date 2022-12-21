@@ -40,6 +40,7 @@ function reponerClases() {
 }
 
 
+
 // Horarios Puntuales
 let containerCards = document.getElementsByClassName('containerPuntual')[0]
 function cargarSize(){  
