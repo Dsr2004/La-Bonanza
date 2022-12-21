@@ -537,7 +537,7 @@ function cambiar_estado_usuario(id){
             url: $("#EstadoUsuarioForm").attr('action'),
             type: $("#EstadoUsuarioForm").attr('method'),
             success: function(datas) {
-                swal.fire("¡OK! Se ha modificado el Usuario", {
+                swal.fire("¡OK! Se ha modificado el usuario", {
                     icon: "success",
                 }).then(function() {
                     location.reload()
@@ -568,6 +568,64 @@ function cambiar_estado_usuario(id){
   })
 }
 
+function cambiar_estado_estudiante(url, id){
+  let ids = id
+  let token = csrftoken
+  const swalWithBootstrapButtons = Swal.mixin({
+    customClass: {
+      confirmButton: 'btn btn-success',
+      cancelButton: 'btn btn-danger'
+    },
+    buttonsStyling: false
+  })
+
+  swalWithBootstrapButtons.fire({
+    title: '¿Estas Seguro?',
+    text: "¡Se cambiará el estado del alumno por lo que ya no aparecera en ninguna otra parte.!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: '¡Si, Modificar!',
+    cancelButtonText: '¡No, Cancelar!',
+    confirmButtonClass: "buttonSweetalert",
+    reverseButtons: true
+  }).then((result) => {
+    if (result.isConfirmed) {
+      $(document).ready(function() {
+        $.ajax({
+            data: { "csrfmiddlewaretoken": token, "id": ids },
+            url: url,
+            type: 'POST',
+            success: function(datas) {
+                swal.fire("¡OK! Se ha modificado el alumno", {
+                    icon: "success",
+                }).then(function() {
+                    location.reload()
+                });
+            },
+            error: function(error) {
+              Error = error['responseJSON']
+              Swal.fire({
+                  icon: 'info',
+                  title: 'Atención.',
+                  text: Error['error'] + '.',
+              })
+            }
+        });
+    })
+    } else if (
+      /* Read more about handling dismissals below */
+      result.dismiss === Swal.DismissReason.cancel
+    ) {
+      swalWithBootstrapButtons.fire(
+        'Cancelado',
+        'No se han aplicado cambios',
+        'error'
+      ).then(function(){
+        location.reload()
+      })
+    }
+  })
+}
 
 function ModificarNivel(){
   let form = $("#ModificarNivelForm")

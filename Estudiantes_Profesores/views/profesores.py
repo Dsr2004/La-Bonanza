@@ -5,8 +5,9 @@ from django.views.generic import  ListView, TemplateView
 from django.http import JsonResponse, HttpResponse
 from Usuarios.models import Usuario
 from La_Bonanza. mixins import IsAdminMixin
-from ..models import  Registro, Profesor
+from ..models import  Registro, Profesor, Calendario as ModelCalendario
 from ..forms import ProfesorForm
+from Picaderos.models import Clase, EstadoClase
 
 
 class Profesores(ListView):
@@ -188,11 +189,20 @@ class agregarEstudiantesProfesor(ListView):
     
 class estudianteProfesor(ListView):
     template_name = "Profesores/estudianteProfesor.html"
-    
+    def calculateAge(self, birthDate):
+        today = datetime.today()
+        age = today.year - birthDate.year -((today.month, today.day) < (birthDate.month, birthDate.day))
+        if age < 1:
+            age = f'{str(today.month - birthDate.month -((today.month, today.day) < (birthDate.month, birthDate.day)))} meses'
+        else:
+            age = f'{str(today.year - birthDate.year -((today.month, today.day) < (birthDate.month, birthDate.day)))} años'
+        return age
     def get(self, request, *args, **kwargs):
         context = {}
         context['registro'] = Registro.objects.get(pk=request.GET.get('id_registro'))
         context['profesor'] = Profesor.objects.get(id=kwargs['pk'])
+        context['edad'] = self.calculateAge(context['registro'].estudiante.fecha_nacimiento)
+        context['calendarios'] = ModelCalendario.objects.filter(registro = context['registro'])
         # context['horaClase'] = datetime.strptime(str(context['registro'].horaClase), '%H:%M:%S').strftime('%I:%M %p')
         return render(request, self.template_name, context)
 
@@ -225,3 +235,15 @@ def datosProfesores(request):
             return HttpResponse(data, content_type="application/json", status=400)
     return HttpResponse('Solo se admiten post', content_type="application/json", status=400)
 
+def getClasesProfesor(request):
+    if request.method == 'POST':
+        profesor = Profesor.objects.get(pk = request.POST.get('profesor'))
+        clases = [{
+            'Estudiante':clas.calendario.registro.__str__(),
+            'Fecha':EstadoClase.objects.get(clase = clas).dia,
+            'Hora':clas.calendario.horaClase.strftime('%I %p'),
+            'Estado':clas.calendario.estado
+            } for clas in Clase.objects.filter(profesor=profesor)if EstadoClase.objects.get(clase = clas).dia == datetime.strptime(request.POST.get('fecha'), '%d-%m-%Y').date()]
+        return JsonResponse({'data':clases})
+    else:
+        return JsonResponse({'error':'Solo se admite el metodo POST'})
