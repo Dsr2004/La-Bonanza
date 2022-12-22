@@ -1,0 +1,29 @@
+.encabezado{
+    display: flex;
+    justify-content: space-between;
+}
+.cont_list{
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    padding: 15px;
+}
+
+.titulo_seccion{
+    font-size: 25px;
+    font-weight: 700;
+}
+
+.btnAdd{
+    background-color: #14284b;
+    border-radius: 20px;
+    color: white;
+    font-weight: 500;
+}
+
+#UsuariosTable_filter input{
+    border-radius: 10px;
+    margin-left: 5px;
+}
+
+/* b1bc20 */

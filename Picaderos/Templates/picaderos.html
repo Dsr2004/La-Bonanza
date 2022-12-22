@@ -4,46 +4,76 @@
 {% block titulo %}Picaderos{% endblock titulo %}
 
 {% block contenido %}
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4" style="margin-bottom: 20px;" onclick="BuscarRuta('{{carro.placa}}')">
-                <div class="card" style="width: 18rem; padding: 15px;">
-                    <div class="card-body" style="display: grid; grid-template-columns: 20% 80%; grid-gap:10px;">
-                        <i class="fas fa-horse-head fa-2x1" style="font-size: 2pc;"></i>
-                         Agregar Picadero
-                    </div>
-                    <div class="card-footer">
-                        <div class=""><a onclick="abrir_modal_crear_picadero('{% url 'crearPicadero' %}')" class="btn btn-success btn-sm w-100"><i class="fa-solid fa-plus"></i></a></div>
-                    </div>
-                </div>
+<link rel="stylesheet" href="{% static 'css/picaderos.css' %}">
+    <div class="container mt-5">
+        <div class="row justify-content-between mb-5 encabezado">
+            <div class="col-md-8">
+                <h2>Picaderos registrados</h2>
+                <small>Sección que permite gestionar la informaciónd de los picaderos</small>
             </div>
+            <div class="col-md-3">
+                <button class="btn addPic" onclick="abrir_modal_crear_picadero('{% url 'crearPicadero' %}')">Crear nuevo &nbsp; <i class="fa-solid fa-plus"></i></button>
+            </div>
+        </div>
+        <div class="row">
+            
         {% for picadero in picaderos %}
-        <div class="col-md-4" style="margin-bottom: 20px;" onclick="BuscarRuta('{{carro.placa}}')">
-            <div class="card" style="width: 18rem; padding: 15px;">
-                <div class="card-body" style="display: grid; grid-template-columns: 20% 80%; grid-gap:10px;">
-                    <i class="fas fa-horse-head fa-2x1" style="font-size: 2pc;"></i>
-                    {{picadero.nombre}}
+        <div class="col-md-4" style="margin-bottom: 20px;">
+            <div class="card" style="width: 19rem; padding: 15px;">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="circ_icon">
+                                <i class="fas fa-horse-head fa-2x1" style="font-size: 2pc;"></i>
+                            </div>
+                        </div>
+                        <div class="col-md-9" >
+                            <h5 style="color: #b1bc20;">{{picadero.nombre}}</h5>
+                            <span style="font-size: 15px;"><strong>Nivel: </strong> {{picadero.nivel}}</span>
+                        </div>
+                    </div>
+                    
+                    
                     
                 </div>
-                <div class="card-footer">
-                    <div class="row">
-                        <div class="col-4"><a href="{%url 'verPicadero' picadero.slug%}" class="btn btn-info btn-sm w-100"><i class="fa-solid fa-plus"></i></a></div>
-                        <div class="col-4"><a onclick="abrir_modal_modificar_picadero('{%url 'modificarPicadero' picadero.pk %}')" class="btn btn-warning btn-sm w-100"><i class="fa-solid fa-pen-nib"></i></a></div>
-                        <div class="col-4"><a onclick="Borrar_picadero('{%url 'borrarPicadero' %}' , '{{picadero.pk}}')" class="btn btn-danger btn-sm w-100"><i class="fa-solid fa-trash"></i></a></div>
+                
+                <div class="row mt-3 justify-content-end" id="prueba" style="margin-bottom: -57px;" >
+                    <div class="dropdown" id="dropAcciones">
+                        <a class="icon_drop"  role="button" id="{{picadero.pk}}" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa-solid fa-ellipsis-vertical"></i>
+                        </a>
+                      
+                        <ul class="dropdown-menu" aria-labelledby="{{picadero.pk}}">
+                          <li><a class="dropdown-item" href="{%url 'verPicadero' picadero.slug%}"><i class="fa-solid fa-eye"></i> Ver picadero</a></li>
+                          <li><a class="dropdown-item" onclick="abrir_modal_modificar_picadero('{%url 'modificarPicadero' picadero.pk %}')"><i class="fa-solid fa-pen-to-square"></i> Editar</a></li>
+                          <li><a style="color: #cf3322;" class="dropdown-item" onclick="Borrar_picadero('{%url 'borrarPicadero' %}' , '{{picadero.pk}}')"><i class="fa-solid fa-trash"></i> Eliminar</a></li>
+                        </ul>
                     </div>
+                    <!-- <div class="col-4"><a href="{%url 'verPicadero' picadero.slug%}" class="btn btn-light btn-sm w-100"><i class="fa-solid fa-plus"></i></a></div>
+                    <div class="col-4"><a onclick="abrir_modal_modificar_picadero('{%url 'modificarPicadero' picadero.pk %}')" class="btn btn-light btn-sm w-100"><i class="fa-solid fa-pen-nib"></i></a></div>
+                    <div class="col-4"><a onclick="Borrar_picadero('{%url 'borrarPicadero' %}' , '{{picadero.pk}}')" class="btn btn-light btn-sm w-100"><i class="fa-solid fa-trash"></i></a></div> -->
                 </div>
             </div>
         </div>
         {% endfor %}
+            <div class="col-md-4" style="margin-bottom: 20px;">
+                <div class="card addcar" style="width: 19rem; padding: 15px; height: 164px;">
+                    <div class="circ_add">
+                        <i class="fa-solid fa-plus"></i>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
+    
 <div class="modal fade" id="crearPicaderoModal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true"></div>
 <div class="modal fade" id="modificarPicaderoModal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true"></div>
 
 {% endblock contenido %}
 
 {% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
     <script src="{% static 'js/picaderos.js' %}"></script>
 {% endblock scripts %}
     

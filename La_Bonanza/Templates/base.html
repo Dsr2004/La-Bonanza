@@ -8,11 +8,15 @@
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
     <link rel="stylesheet" href="{% static 'libs/bootstrap/css/bootstrap.css' %}">
     <link rel="stylesheet" href="{% static 'libs/fontawesome/css/all.css' %}">
+    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
     <!--  Datatables  -->
     <link rel="stylesheet" type="text/css" href="{%static 'libs/DataTables/jquery.dataTables.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/side.css' %}">
     <!--  extension responsive  -->
     <link rel="stylesheet" type="text/css" href="{% static 'libs/DataTables/Responsive/dataTables.min.css' %}">
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 
     
     {% block estilos %}{% endblock estilos %}
@@ -22,104 +26,174 @@
     <title>{% block titulo %}Base{% endblock titulo %}</title>
 </head>
 <body>
-    {% if  request.user.is_authenticated%}
-    <a class="btn btn-light" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">
-        <i class="fa-solid fa-bars"></i>
-      </a>
-     
-      <div class="CanvasMenu offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" data-bs-target="#staticBackdrop" aria-controls="staticBackdrop">
-        <div class="offcanvas-header">
-          <h5 class="offcanvas-title" id="offcanvasExampleLabel">{{request.user.nombres|title}}</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class=" offcanvas-body">
-          <ul class="nav nav-pills flex-column">
-            {%if request.user.administrador == False%}
-            <li class="nav-item">
-              <a class="nav-link 
-              {% if request.path == '/Administracion/Calendario/'%}active{% endif %} 
-              " aria-current="page" href="{% url 'calendario' %}">Calendario</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link 
-              {% if request.path == '/Administracion/Profesores/'%}active {% endif %} 
-              " aria-current="page" href="{%url 'profesores'%} ">Principal</a>
-            </li>
-            {%else%}
-            <li class="nav-item">
-              <a class="nav-link 
-              {% if request.path == '/'  or 'buscarRuta' in request.path%}active{% endif %} 
-              " aria-current="page" href="{% url 'index' %}">Inicio</a>
-            </li>
-            {%endif%}
+  {% if  request.user.is_authenticated%}
+    <div class="sidebar">
+      <div class="logo-details">
+        <i class='bx bxl-c-plus-plus icon'></i>
+          <div class="logo_name">La Bonanza</div>
+          <i class='bx bx-menu' id="btn" ></i>
+      </div>
+      <ul class="nav-list">
+        
+        
+       
+        {%if request.user.administrador == False%}
+        <li>
+          <a class="{% if request.path == '/Administracion/Calendario/'%}active{% endif %}" href="{% url 'calendario' %}">
+            <i class='bx bx-calendar'></i>
+            <span class="links_name">Calendario</span>
+          </a>
+          <span class="tooltip">Calendario</span>
+        </li>
+        <li>
+          <a class="{% if request.path == '/Administracion/Profesores/'%}active {% endif %}" href="{%url 'profesores'%} ">
+            <i class='bx bx-calendar'></i>
+            <span class="links_name">Principal</span>
+          </a>
+          <span class="tooltip">Principal</span>
+        </li>
+        {%else%}
+        <li>
+          <a class="
+          {% if request.path == '/'  or 'buscarRuta' in request.path%}active{% endif %} 
+          " href="{% url 'index' %}">
+            <i class='bx bx-grid-alt'></i>
+            <span class="links_name">Inicio</span>
+          </a>
+          <span class="tooltip">Inicio</span>
+        </li>
+        {% endif %}
 
-            {%if request.user.administrador%}
-            <li class="nav-item">
-              <a class="nav-link 
-              {% if request.path == '/Administracion/Estudiantes/'%}active{% endif %}
-              {% if request.path == '/Administracion/RegistarEstudiante/'%}active{% endif %}
-              {% if request.path == '/Administracion/BuscarNuevosEstudiantes/'%}active{% endif %}
-              {% if '/Administracion/ModificarEstudiante/' in request.path %}active{% endif %}
-              {% if '/Administracion/VerInfoEstudiante/' in request.path %}active{% endif %}
-              " aria-current="page" href="{%url 'estudiantes'%}">Estudiantes</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link 
+        {%if request.user.administrador%}
+          <li>
+            <a class="
+            {% if request.path == '/Administracion/Estudiantes/'%}active{% endif %}
+            {% if request.path == '/Administracion/RegistarEstudiante/'%}active{% endif %}
+            {% if request.path == '/Administracion/BuscarNuevosEstudiantes/'%}active{% endif %}
+            {% if '/Administracion/ModificarEstudiante/' in request.path %}active{% endif %}
+            {% if '/Administracion/VerInfoEstudiante/' in request.path %}active{% endif %}
+            " href="{%url 'estudiantes'%}">
+              <i class='bx bx-user' ></i>
+              <span class="links_name">Alumnos</span>
+            </a>
+          <span class="tooltip">Alumnos</span>
+          </li>
+
+          <li>
+            <a class=" 
               {% if request.path == '/Administracion/Profesores/'%}active {% endif %}
               {% if '/Administracion/VerInfoProfesor/' in request.path %}active{% endif %}
               {% if '/Administracion/VerEstudiantes/' in request.path %}active{% endif %}
-              " aria-current="page" href="{%url 'profesores'%} ">Profesores</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link 
-              {% if request.path == '/Niveles/Listar/'%}active {% endif %} 
-              " aria-current="page" href="{%url 'listarNivel'%} ">Niveles</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link 
-              {% if request.path == '/Administracion/Calendario/'%}active {% endif %}
-              {% if request.path == '/Administracion/Asistencia/'%}active {% endif %}
-              {% if request.path == '/Administracion/ControlAsistencia/'%}active {% endif %}
-              {% if '/Administracion/ClasesCanceladas/' in request.path %}active{% endif %}
-              " aria-current="page" href="{%url 'calendario'%}">Calendario</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link 
-              {% if request.path == '/Picaderos/'%}active {% endif %}
-              {% if '/Picaderos/InfoPicadero/' in request.path %}active{% endif %}
-              " aria-current="page" href="{% url 'picaderos' %}">Picaderos</a>
-            </li>
-            {%endif%}
-            {% if request.path != '/Usuarios/CambiarContrasena/'%}
-            <li class="nav-item">
-              <a class="nav-link" href="{%url 'changePass'%}" style="cursor: pointer;">Cambiar Contraseña</a>
-            </li>{% endif %}
-          </ul> 
-          <a  class="btn btn-ligth btn-close-session" href="{% url 'logout' %}"><i class="fa-solid fa-power-off"></i></a>
-        </div>
-      </div>
+              " aria-current="page" href="{%url 'profesores'%} ">
+              <i class="fa-solid fa-user-tie"></i>
+              <span class="links_name">Instructores</span>
+            </a>
+            <span class="tooltip">Instructores</span>
+          </li>
+          <li>
+            <a class="
+            {% if request.path == '/Niveles/Listar/'%}active {% endif %} 
+            " href="{%url 'listarNivel'%} ">
+              <i class='bx bx-pie-chart-alt-2' ></i>
+              <span class="links_name">Niveles</span>
+            </a>
+            <span class="tooltip">Niveles</span>
+          </li>
+          <li>
+            <a class="
+            {% if request.path == '/Administracion/Calendario/'%}active {% endif %}
+            {% if request.path == '/Administracion/Asistencia/'%}active {% endif %}
+            {% if request.path == '/Administracion/ControlAsistencia/'%}active {% endif %}
+            {% if '/Administracion/ClasesCanceladas/' in request.path %}active{% endif %}
+            " href="{%url 'calendario'%}">
+              <i class='bx bx-calendar'></i>
+              <span class="links_name">Calendario</span>
+            </a>
+            <span class="tooltip">Calendario</span>
+          </li>
+          <li>
+            <a class=" 
+            {% if request.path == '/Picaderos/'%}active {% endif %}
+            {% if '/Picaderos/InfoPicadero/' in request.path %}active{% endif %}
+            " href="{% url 'picaderos' %}">
+              <i class="fa-solid fa-warehouse"></i>
+              <span class="links_name">Picaderos</span>
+            </a>
+            <span class="tooltip">Picaderos</span>
+          </li>
+        {% endif %}
+        
+        {% if request.path != '/Usuarios/CambiarContrasena/'%}
+        <li>
+          <a href="#">
+            <i class='bx bx-key'></i>
+            <span class="links_name">Cambiar clave</span>
+          </a>
+          <span class="tooltip">Cambiar clave</span>
+        </li>
+        {% endif %}
 
-    {% endif %}
-    <div>
-        {% block contenido %}
-            
-        {% endblock contenido %}
+        <li class="profile">
+            <div class="profile-details">
+              <!--<img src="profile.jpg" alt="profileImg">-->
+              <div class="name_job">
+                <div class="name">{{request.user.nombres|title}}</div>
+                <div class="job">Administrador</div>
+              </div>
+            </div>
+            <i class='bx bx-log-out' id="log_out" ></i>
+        </li>
+
+      </ul>
     </div>
-    {% block modals %}
+  {% endif %}
+  <section class="home-section">
+    {% block contenido %}
+          
+    {% endblock contenido %}
+  </section>
+
+  {% block modals %}
             
-    {% endblock modals %}
-    <div class="modal fade" id="CambiarContrasena" role="dialog" opacity: 1 !important>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-    <script src="{% static 'libs/sweetalert/sweetalert.js' %}"></script>
-    <script src="{% static 'libs/jquery/jquery.min.js' %}"></script>
-    <script src="{% static 'libs/bootstrap/js/bootstrap.js' %}"></script>
-    <!--   Datatables-->
-    <script type="text/javascript" src="{%static 'libs/DataTables/jquery.dataTables.min.js' %}"></script>
-    <!-- extension responsive -->
-    <script src="{% static 'libs/DataTables/Responsive/dataTables.min.js' %}"></script>
-    <script src="{% static 'js/main.js' %}"></script>
-    {% block scripts %}{% endblock scripts %}
+  {% endblock modals %}
+
+  <div class="modal fade" id="CambiarContrasena" role="dialog" opacity: 1 !important>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+  <script src="{% static 'libs/sweetalert/sweetalert.js' %}"></script>
+  <script src="{% static 'libs/jquery/jquery.min.js' %}"></script>
+  <script src="{% static 'libs/bootstrap/js/bootstrap.js' %}"></script>
+  <!--   Datatables-->
+  <script type="text/javascript" src="{%static 'libs/DataTables/jquery.dataTables.min.js' %}"></script>
+  <!-- extension responsive -->
+  <script src="{% static 'libs/DataTables/Responsive/dataTables.min.js' %}"></script>
+  <script src="{% static 'js/main.js' %}"></script>
+  <script>
+    let sidebar = document.querySelector(".sidebar");
+    let closeBtn = document.querySelector("#btn");
+    let searchBtn = document.querySelector(".bx-search");
+  
+    closeBtn.addEventListener("click", ()=>{
+      sidebar.classList.toggle("open");
+      menuBtnChange();//calling the function(optional)
+    });
+  
+    searchBtn.addEventListener("click", ()=>{ // Sidebar open when you click on the search iocn
+      sidebar.classList.toggle("open");
+      menuBtnChange(); //calling the function(optional)
+    });
+  
+    // following are the code to change sidebar button(optional)
+    function menuBtnChange() {
+     if(sidebar.classList.contains("open")){
+       closeBtn.classList.replace("bx-menu", "bx-menu-alt-right");//replacing the iocns class
+     }else {
+       closeBtn.classList.replace("bx-menu-alt-right","bx-menu");//replacing the iocns class
+     }
+    }
+    </script>
+  {% block scripts %}{% endblock scripts %}
+
 </body>
 </html>
 

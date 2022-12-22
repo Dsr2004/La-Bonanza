@@ -1,0 +1,71 @@
+.encabezado{
+    background-color: white;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 10px;
+}
+.card{
+    border-radius: 15px;
+    border-bottom: 50px solid #b1bc20;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+}
+
+.addPic{
+    background-color: #14284b;
+    border-radius: 20px;
+    color: white;
+    font-weight: 500;
+    margin-top: 5px;
+    margin-left: 40px;
+}
+
+.circ_icon{
+    background-color: #b1bc20;
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    color: white;
+    padding-top: 7px;
+    padding-left: 5px;
+}
+
+#prueba{
+    margin-left: 16rem;
+    /* margin-top: -55px; */
+}
+#dropAcciones .icon_drop{
+    color: white;
+    font-size: 25px;
+    font-weight: bold;
+}
+.addcar{
+    background-color: #c0fac5;
+    border: 3px solid #7bb480;
+    border-style: dotted;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.circ_add{
+    background-color: #c0fac5;
+    border: 3px solid #7bb480;
+    border-style: dotted;
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 25px;
+}
+
+.circ_add i{
+    padding-top: 15px;
+    font-size: 40px;
+    color: #7bb480;
+}

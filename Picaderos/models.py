@@ -15,7 +15,8 @@ class Picadero(models.Model):
     max_estudiantes = models.IntegerField("maximo de estudiantes", null=False, blank=False)
     max_profesores  = models.IntegerField("maximo de profesores", null=False, blank=False)
     nivel = models.OneToOneField(Nivel, on_delete=models.SET_NULL,  null=True)
-    slug=models.SlugField("Slug", unique=True, null=True, blank=True)
+    slug = models.SlugField("Slug", unique=True, null=True, blank=True)
+    # creado = models.DateField(auto_now_add=True)
 
     class Meta:
         db_table = "picaderos"

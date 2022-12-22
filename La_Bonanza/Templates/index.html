@@ -7,15 +7,17 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css">
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 <link rel="stylesheet" href="{% static 'libs/datepicker/dist/datepicker.css' %}">
+<link rel="stylesheet" href="{% static 'css/estilosBase.css' %}">
 {%endblock estilos%}
 {% block contenido %}
-<div class="container">
-    <div class="row">
-     <div class="col-md-10">
-         <h1>Administración de Usuarios</h1>
+
+<div class="container mt-5 cont_list">
+    <div class="row encabezado">
+     <div class="col-md-6">
+         <p class="titulo_seccion">Administración de usuarios</p>
      </div>
      <div class="col-md-2">
-        <div class="btn btn-outline-success btn-lg" onclick="userAdd('{%url 'registroUsuario'%}')"> <i class="fa-solid fa-user-plus fa-xl"></i></div>
+        <div class="btn btnAdd" onclick="userAdd('{%url 'registroUsuario'%}')">Crear nuevo &nbsp; <i class='bx bx-user-plus'></i></div>
      </div>
     </div>
      <hr>
@@ -55,10 +57,10 @@
                 <th>Nombres</th>
                 <th>Apellidos</th>
                 <th>Celular</th>
-                <th>Cedula</th>
+                <th>Cédula</th>
                 <th>Fecha de nacimiento</th>
                 <th>Email</th>
-                <th>acciones</th>
+                <th>Acciones</th>
             </tr>
          </thead>
          <tbody>
@@ -123,6 +125,7 @@
     $(document).ready(function(){
         $("table").DataTable({
             responsive:true,
+            
         })
     })
     function cargar(){
