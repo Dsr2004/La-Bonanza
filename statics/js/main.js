@@ -24,14 +24,14 @@ function changePass(url){
 
 function EstudianteSinRegistro(url){
   $("#EstudianteSinRegistroModal").load(url, function (){ 
-    $(this).modal('show');
+    $(this).appendTo("body").modal('show');
   });
 }
 
 
 function abrir_registro_nivel_modal(url){
   $("#AbirModal").load(url, function (){ 
-    $(this).modal('show');
+    $(this).appendTo("body").modal('show');
   });
 }
 
