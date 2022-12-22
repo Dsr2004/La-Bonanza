@@ -45,7 +45,6 @@ class Profesor(models.Model):
     usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE)
     horarios = models.CharField("horarios del profesor", max_length=300) 
     niveles = models.ManyToManyField(Nivel)   
-    trabaja_sabado = models.BooleanField("el profesor trabaja los sabados", default=False)
 
     class Meta:
         db_table = "profesores"

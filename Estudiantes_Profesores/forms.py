@@ -4,8 +4,6 @@ from django import forms
 from .models import Estudiante, Registro, Profesor
 from django.core.exceptions import ValidationError
 from Usuarios.models import Usuario
-
-
 class CrearEstudianteForm(forms.ModelForm):
     class Meta:
         model = Estudiante
@@ -339,8 +337,7 @@ class RegistroForm(forms.ModelForm):
 class ProfesorForm(forms.ModelForm):
     class Meta(forms.ModelForm):
         model = Profesor
-        fields = ['niveles','trabaja_sabado']
+        fields = ['niveles']
         widgets = {
-            "niveles": forms.SelectMultiple(attrs={"class":"form-select selectpicker", "autocomplete":"off", "multiple":'multiple', 'data-live-search':"true"}),
-            "trabaja_sabado": forms.CheckboxInput(attrs={"class":"form-check-input", "autocomplete":"off"}),
+            "niveles": forms.SelectMultiple(attrs={"class":"form-select selectpicker", "autocomplete":"off", "multiple":'multiple', 'data-live-search':"true"})
         }

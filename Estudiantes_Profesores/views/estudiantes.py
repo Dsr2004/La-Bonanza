@@ -15,7 +15,6 @@ from ..forms import EstudianteForm,CrearEstudianteForm, RegistroForm,ProfesorFor
 from ..models import DIAS_SEMANA
 from .validacion import ValidationClass, arreglarFormatoDia, guardarRegistro
 
-
 def cambiarTipoClase(request):
     if request.POST.get('tipo') == 'edit':
         id = request.POST.get('id')

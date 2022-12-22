@@ -47,10 +47,6 @@
         <script>
             var niveles = [];
         </script>
-        {%if Profesor.profesor.trabaja_sabado%}
-        <script>
-            document.getElementById('id_trabaja_sabado').checked = true;
-        </script>{%endif%}
         {%for nivel in Profesor.profesor.niveles.all%}
         <script>
             niveles.push({'id':'{{nivel.pk}}','nombre':'{{nivel.nivel}}'})

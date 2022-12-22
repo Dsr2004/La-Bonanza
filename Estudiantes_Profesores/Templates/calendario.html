@@ -16,16 +16,16 @@
     <div class="spinner-grow " style="width: 3rem; height: 3rem;" role="status">
       <span class="visually-hidden">Cargando...</span>
     </div>
-    <h4 id="titleSpinner">Cargando Clases... <br> <sub>Espere Un Momento Por Favor</sub></h4>
+    <h4 id="titleSpinner">Cargando clases... <br> <sub>Espere un momento por favor</sub></h4>
 </div>
 <div id="box" class="ocultar" >
     <div class="container">
         <div class="row">
-            <div class="{%if cancelada > 0 %}col-10{%else%}col-12{%endif%}">
-                <a href="{% url 'asistencia' %}" class="btn btn-outline-secondary w-100">Gestionar Asistencia</a>
+            <div class="{%if cancelada > 0 %}col-9{%else%}col-12{%endif%}">
+                <a href="{% url 'asistencia' %}" class="btn btn-outline-secondary w-100">Gestionar asistencia</a>
             </div>
-            <div class="col-2">
-                <a href="{% url 'clasesCanceladas' %}" style="display: {%if cancelada > 0 %}block{%else%}none{%endif%};" class="btn btn-danger w-100">Clases Canceladas</a>
+            <div class="col-3">
+                <a href="{% url 'clasesCanceladas' %}" style="display: {%if cancelada > 0 %}block{%else%}none{%endif%};" class="btn btn-danger w-100">Clases de reprogramación</a>
             </div>
         </div>
     </div>   

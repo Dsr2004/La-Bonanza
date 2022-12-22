@@ -75,6 +75,9 @@
                         <td>{{estudiante.get_estado_matricula}}</td>
                         <td>{{estudiante.get_estudiante_nivel}}</td>
                         <td>
+                            <p style="display:none;">{% if estudiante.estudiante.estado  %}
+                                activo{% else %} inhabilitado
+                                {% endif %}</p>
                             <div style="display:inline-flex; ">
                                 <a href="{% url 'verInfoEstudiante' estudiante.estudiante.pk %}" style="margin-right:10px" class="btn btn-outline-info btn-sm"><i class="fa-solid fa-eye"></i></a>
                                 <a href="{% url 'modificarEstudiante' estudiante.estudiante.pk %}"style="margin-right:10px"  class="btn btn-outline-warning btn-sm"><i class="fa-solid fa-pencil"></i></a>

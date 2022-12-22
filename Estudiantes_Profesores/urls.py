@@ -36,4 +36,5 @@ urlpatterns=[
     path("ClasesCanceladas/", login_required(ClasesCanceladas.as_view()), name="clasesCanceladas"),
     path("ReponerClase/<int:pk>", login_required(ReponerClase.as_view()), name="reponerClase"),
     path("CambiarTipoClase/", cambiarTipoClase, name="cambiarTipoClase"),
+    path("GetClasesProfesor", login_required(getClasesProfesor), name="getClasesProfesor"),
 ]

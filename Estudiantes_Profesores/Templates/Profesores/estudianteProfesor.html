@@ -32,102 +32,47 @@
             <h3>{{registro.estudiante.nombre_completo}}</h3>
         </div>
         <div>
-            <h2>Pago: </h2><h3>{%if registro.pagado%}SI{%else%}NO{%endif%}</h3>
+            <h2>Edad: </h2>
+            <h3>{{edad}}</h3>
         </div>
     </div>
     <h2>Nivel:</h2>
     <div style="text-align: center; padding: 5px 5px; margin: 5px; border-radius: 10px; background-color: {{registro.nivel.color_fondo}};color:{{registro.nivel.color_letra}}; ">{{registro.nivel.nivel}}</div>
     <h2>Clases: </h2>
-    <div style="flex">
-        <div style="font-size: 17px;">Inicia clases el {{registro.inicioClase}} y finaliza el {{registro.finClase}}</div>
-        <div>Hora de clases a las {{horaClase}}</div>
-        <div>Días de clase {{registro.get_diaClase_display}}</div>
+    
+    <div style="display:grid; grid-template-columns: repeat(2,1fr); grid-gap:10px;">
+        {% for calendario in calendarios %}
+            <div>
+                <div style="font-size: 15px;">Inicia clases el {{calendario.inicioClase}} y finaliza el {{calendario.finClase}}</div>
+                <div>Hora de clases a la/s {{calendario.horaClase|date:'g a'}}</div>
+                <div>Días de clase: {{calendario.get_diaClase_display}}</div>
+            </div>
+        {% endfor %}
     </div>
-    <hr>
-    <div class="row" style="display: grid; grid-template-columns: 1fr 1fr;">
-        <div>
-            <h2>Celular: </h2>
-            <h3>{{registro.estudiante.celular}}</h3>
-        </div>
-        <div>
-            <h2>Teléfono: </h2>
-            <h3>{{registro.estudiante.telefono}}</h3>
-        </div>
-        <div>
-            <h2>Documento:</h2>
-            <h3>{{registro.estudiante.documento}}</h3>
-        </div>
-        <div>
-            <h2>Email: </h2>
-            <h3>{{registro.estudiante.email}}</h3>
-        </div>
-        <div>
-            <h2>Dirección:</h2><h3>{{registro.estudiante.direccion}}</h3>
-        </div>
-        <div>
-            <h2>Ciudad y barrio:</h2><h3>{{registro.estudiante.ciudad}}-{{registro.estudiante.barrio}}</h3>
-        </div>
-        <div>
-            <h2>Seguro médico:</h2><h3>{%if registro.estudiante.seguro_medico%}SI{%else%}NO{%endif%}</h3>
-        </div>
-        <div>
-            <h2>Documento de identidad:</h2><h3>{%if registro.estudiante.documento_identidad%}SI{%else%}NO{%endif%}</h3>
-        </div>
-    </div>
+    {% if  registro.estudiante.nombre_completo_madre%}
     <hr>
     <div class="row" style="display: grid; grid-template-columns: 1fr 1fr;">
         <div>
             <h2>Nombre del madre: </h2>
             <h3>{{registro.estudiante.nombre_completo_madre}}</h3>
         </div>
-        <div>
-            <h2>Celular del madre: </h2>
-            <h3>{{registro.estudiante.celular_madre}}</h3>
-        </div>
-        <div>
-            <h2>Cédula del madre:</h2><h3>{{registro.estudiante.cedula_madre}}</h3>
-        </div>
-        <div>
-            <h2>Lugar de expedición madre.</h2><h3>{{registro.estudiante.lugar_expedicion_madre}}</h3>
-        </div>
-        <div>
-            <h2>Email del acudiente madre </h2><h3>{{registro.estudiante.email_madre}}</h3>
-        </div>
     </div>
+    {% endif %}
+    {% if registro.estudiante.nombre_completo_padre %}
     <hr>
     <div class="row" style="display: grid; grid-template-columns: 1fr 1fr;">
         <div>
             <h2>Nombre del padre: </h2>
             <h3>{{registro.estudiante.nombre_completo_padre}}</h3>
         </div>
-        <div>
-            <h2>Celular del padre: </h2>
-            <h3>{{registro.estudiante.celular_padre}}</h3>
-        </div>
-        <div>
-            <h2>Cédula del padre:</h2><h3>{{registro.estudiante.cedula_padre}}</h3>
-        </div>
-        <div>
-            <h2>Lugar de expedición padre.</h2><h3>{{registro.estudiante.lugar_expedicion_padre}}</h3>
-        </div>
-        <div>
-            <h2>Email del acudiente padre </h2><h3>{{registro.estudiante.email_padre}}</h3>
-        </div>
     </div>
+    {% endif %}
     <hr>
     <div class="row" style="display: grid; grid-template-columns: 1fr 1fr;">
         <div>
             <h2>Nombre del contacto de emergencia: </h2>
             <h3>{{registro.estudiante.nombre_contactoE}}</h3>
         </div>
-        <div>
-            <h2>Teléfono del contacto de emergencia: </h2>
-            <h3>{{registro.estudiante.telefono_contactoE}}</h3>
-        </div>
-    </div>
-    <div>
-        <h2>Relación con el contacto de emergencia: </h2>
-        <h3>{{registro.estudiante.relacion_contactoE}}</h3>
     </div>
 </div>
 {%endblock contenido%}
