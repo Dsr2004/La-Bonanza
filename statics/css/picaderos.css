@@ -34,8 +34,15 @@
 }
 
 #prueba{
-    margin-left: 16rem;
+    /* margin-left: 16rem; */
     /* margin-top: -55px; */
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+#dropAcciones{
+    margin-left: 110px;
+    margin-top: 5px;
 }
 #dropAcciones .icon_drop{
     color: white;
@@ -51,6 +58,10 @@
     justify-content: center;
 }
 
+.fecha_creacion{
+    color: white;
+    font-style: italic;
+}
 .circ_add{
     background-color: #c0fac5;
     border: 3px solid #7bb480;

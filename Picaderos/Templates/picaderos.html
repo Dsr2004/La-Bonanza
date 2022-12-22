@@ -30,6 +30,7 @@
                         <div class="col-md-9" >
                             <h5 style="color: #b1bc20;">{{picadero.nombre}}</h5>
                             <span style="font-size: 15px;"><strong>Nivel: </strong> {{picadero.nivel}}</span>
+                            
                         </div>
                     </div>
                     
@@ -37,26 +38,32 @@
                     
                 </div>
                 
-                <div class="row mt-3 justify-content-end" id="prueba" style="margin-bottom: -57px;" >
-                    <div class="dropdown" id="dropAcciones">
-                        <a class="icon_drop"  role="button" id="{{picadero.pk}}" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fa-solid fa-ellipsis-vertical"></i>
-                        </a>
-                      
-                        <ul class="dropdown-menu" aria-labelledby="{{picadero.pk}}">
-                          <li><a class="dropdown-item" href="{%url 'verPicadero' picadero.slug%}"><i class="fa-solid fa-eye"></i> Ver picadero</a></li>
-                          <li><a class="dropdown-item" onclick="abrir_modal_modificar_picadero('{%url 'modificarPicadero' picadero.pk %}')"><i class="fa-solid fa-pen-to-square"></i> Editar</a></li>
-                          <li><a style="color: #cf3322;" class="dropdown-item" onclick="Borrar_picadero('{%url 'borrarPicadero' %}' , '{{picadero.pk}}')"><i class="fa-solid fa-trash"></i> Eliminar</a></li>
-                        </ul>
+                <div class="row mt-3" id="prueba" style="margin-bottom: -57px; margin-top: 20px;" >
+                    <div class="col-6">
+                        <div style="margin-top: 15px; margin-bottom: -25px;">
+                            <p class="fecha_creacion">{{picadero.creado|date:"d/m/Y"}}</p>
+                        </div>
                     </div>
-                    <!-- <div class="col-4"><a href="{%url 'verPicadero' picadero.slug%}" class="btn btn-light btn-sm w-100"><i class="fa-solid fa-plus"></i></a></div>
-                    <div class="col-4"><a onclick="abrir_modal_modificar_picadero('{%url 'modificarPicadero' picadero.pk %}')" class="btn btn-light btn-sm w-100"><i class="fa-solid fa-pen-nib"></i></a></div>
-                    <div class="col-4"><a onclick="Borrar_picadero('{%url 'borrarPicadero' %}' , '{{picadero.pk}}')" class="btn btn-light btn-sm w-100"><i class="fa-solid fa-trash"></i></a></div> -->
+                    <div class="col-6">
+                        <div class="dropdown" id="dropAcciones">
+                            <a class="icon_drop"  role="button" id="{{picadero.pk}}" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-ellipsis-vertical"></i>
+                            </a>
+                          
+                            <ul class="dropdown-menu" aria-labelledby="{{picadero.pk}}">
+                              <li><a class="dropdown-item" href="{%url 'verPicadero' picadero.slug%}"><i class="fa-solid fa-eye"></i> Ver picadero</a></li>
+                              <li><a class="dropdown-item" onclick="abrir_modal_modificar_picadero('{%url 'modificarPicadero' picadero.pk %}')"><i class="fa-solid fa-pen-to-square"></i> Editar</a></li>
+                              <li><a style="color: #cf3322;" class="dropdown-item" onclick="Borrar_picadero('{%url 'borrarPicadero' %}' , '{{picadero.pk}}')"><i class="fa-solid fa-trash"></i> Eliminar</a></li>
+                            </ul>
+                        </div>
+    
+                    </div>
+                    
                 </div>
             </div>
         </div>
         {% endfor %}
-            <div class="col-md-4" style="margin-bottom: 20px;">
+            <div class="col-md-4" style="margin-bottom: 20px;" onclick="abrir_modal_crear_picadero('{% url 'crearPicadero' %}')">
                 <div class="card addcar" style="width: 19rem; padding: 15px; height: 164px;">
                     <div class="circ_add">
                         <i class="fa-solid fa-plus"></i>
