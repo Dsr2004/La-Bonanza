@@ -58,8 +58,8 @@ body::-webkit-scrollbar-track {
     justify-content: space-between;
 }
 .error_text{
-    font-weight:600;
-    color: red;
+    font-weight:500;
+    color: rgb(220, 53, 69);
     margin-left: 10px;
 }
 #icon_danger_ESTUDIANTE, #icon_danger_ACUDIENTE, #icon_danger_EMERGENCIA, #icon_danger_FACTURACION, #icon_danger_REGISTRO, #icon_danger_DOCUMENTOS{

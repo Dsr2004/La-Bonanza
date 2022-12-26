@@ -21,7 +21,7 @@ ESTADOS_ASISTENCIA = (
     ("1","Asistió"),("2","No asistió"),("3","Cancelo con excusa"), ("4", "Cancelo por enfermedad")
 )
 ESTADOS_CLASES = (
-    ("1","Clase esporadica"),("2","Mensualidad")
+    ("1","Clase esporádica"),("2","Mensualidad")
 )
 def extension(file):
         name, extension = os.path.splitext(file)

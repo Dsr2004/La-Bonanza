@@ -44,11 +44,11 @@
     <div class="container alert alert-danger" role="alert" id="alertDocumentDownload">
         <button style="float: right;" type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         <h4 class="alert-heading">!Antes de continuar con el registro tenga en cuenta lo siguiente!</h4>
-        <p>En la pestaña "Documentos" deberá adjuntar 3 archivos entre ellos la exoneración de responsabilidades</p>
-        <p>Por favor leer, aceptar y firmar nuestro reglamento (políticas de clases), en especial nuestra política de cancelación y exoneración de responsabilidades
+        <p>En la pestaña "Documentos" deberá adjuntar 3 archivos entre ellos la exoneración de responsabilidades.</p>
+        <p>Por favor leer, aceptar y firmar nuestro reglamento (políticas de clases), en especial nuestra política de cancelación y exoneración de responsabilidades.
             </p>
         <hr>
-        <p class="mb-0">Debera diligenciar el archivo y luego subirlo, puede descargarlo  <a href="{% static 'Exoneracion de responsabilidades/2021_Exoneracion_de_Responsabilidad.pdf' %}" download="Exoneracion_de_Responsabilidad.pdf" class="alert-link">desde este link </a>. </p>
+        <p class="mb-0">Debera diligenciar el archivo y luego subirlo, puede descargarlo.  <a href="{% static 'Exoneracion de responsabilidades/2021_Exoneracion_de_Responsabilidad.pdf' %}" download="Exoneracion_de_Responsabilidad.pdf" class="alert-link">desde este link </a>. </p>
         
       </div>
       <br>
@@ -510,7 +510,7 @@ selectFacturacion.onchange = function (item){
         let cedula = document.getElementById('id_cedula_padre').value
         let email = document.getElementById('id_email_padre').value
         if (nombre == '' && cedula == '' && email == ''){
-            document.getElementById('p_Facturado').innerHTML = 'El padre no posee ningún dato'
+            document.getElementById('p_Facturado').innerHTML = 'El padre no posee ningún dato.'
             document.getElementById('p_Facturado').style.display='block'
         }
         else{
@@ -524,7 +524,7 @@ selectFacturacion.onchange = function (item){
         let cedula = document.getElementById('id_cedula_madre').value
         let email = document.getElementById('id_email_madre').value
         if (nombre == '' && cedula == '' && email == ''){
-            document.getElementById('p_Facturado').innerHTML = 'La madre no posee ningún dato'
+            document.getElementById('p_Facturado').innerHTML = 'La madre no posee ningún dato.'
             document.getElementById('p_Facturado').style.display='block'
         }
         else{

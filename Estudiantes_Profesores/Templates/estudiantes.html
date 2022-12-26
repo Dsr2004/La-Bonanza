@@ -26,7 +26,7 @@
             <h1>Administración de alumnos</h1>
         </div>
         <div class="col-md-2">
-           <a type="button" data-bs-toggle="modal" data-bs-target="#FilterEstudianteModal" class="btn btn-success " > <i class="fa-solid fa-file-excel"></i></a>
+           <a type="button" data-bs-toggle="modal" onclick="abrir_modal_filtro_estudiante()" class="btn btn-success " > <i class="fa-solid fa-file-excel"></i></a>
            <a href="{% url 'registrarEstudiante' %}" class="btn btn-outline-success " > <i class="fa-solid fa-person-circle-plus fa-xl"></i></a>
           {% if nuevosEstudiantes %}
           <a href="{% url 'buscarNuevosEstudiantes' %}" class="btn btn-outline-warning " >  <i class="fa-solid fa-clock fa-xl"></i></a>
@@ -141,6 +141,9 @@
 <script src="{% static 'libs/daterangepicker/moment.min.js' %}"></script>
 <script src="{% static 'libs/daterangepicker/daterangepicker.js' %}"></script>
 <script>
+    function abrir_modal_filtro_estudiante(){
+      $("#FilterEstudianteModal").appendTo("body").modal("show") 
+    }
     const $select = document.querySelector("#ExportEstudiantes");
    
 

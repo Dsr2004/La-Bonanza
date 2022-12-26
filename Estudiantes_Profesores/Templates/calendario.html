@@ -49,7 +49,6 @@
 <script src="{% static 'libs/daterangepicker/daterangepicker.js' %}"></script>
 
 <script>
-    
 
 
     function removeLoader(){
@@ -73,6 +72,9 @@
         console.log("{{fecha|date:'Y-m-d'}}")
         var CalenadrUI = document.getElementById("calendar")
         var calendar = new FullCalendar.Calendar(CalenadrUI,{
+            // dateClick: function(info) {
+            //     console.log(info.dateStr)
+            // },
             initialDate:   "{{fecha|date:'Y-m-d'}}",
             eventTimeFormat: { 
                 hour: '2-digit',
@@ -80,9 +82,9 @@
                 hour12: true
             },
             headerToolbar: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+                start: 'title', // will normally be on the left. if RTL, will be on the right
+                center: '',
+                end: 'today prev,next' // will normally be on the right. if RTL, will be on the left
             },
             events: [
             {%for clase in clases %}
