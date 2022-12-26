@@ -72,9 +72,11 @@
         console.log("{{fecha|date:'Y-m-d'}}")
         var CalenadrUI = document.getElementById("calendar")
         var calendar = new FullCalendar.Calendar(CalenadrUI,{
-            // dateClick: function(info) {
-            //     console.log(info.dateStr)
-            // },
+            dateClick: function(info) {
+                let url = '{%url "horario" 7%}'
+                url =  url.substr(0, url.length - 1)
+                window.location.href = url+info.dateStr
+            },
             initialDate:   "{{fecha|date:'Y-m-d'}}",
             eventTimeFormat: { 
                 hour: '2-digit',

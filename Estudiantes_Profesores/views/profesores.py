@@ -213,19 +213,19 @@ def datosProfesores(request):
         profesor = json.loads(request.POST.get('datos'))
         user = request.POST.get('usuario')
         user=Usuario.objects.get(id = user)
-        formObject = {'niveles':profesor['niveles'],'trabaja_sabado':profesor['trabaja_sabado']}
+        formObject = {'niveles':profesor['niveles']}
         form = ProfesorForm(formObject or None)
         if form.is_valid():
             try:
                 horarios = profesor.get('horarios')
                 horarios = json.dumps(json.loads(horarios))
-                saba = form.cleaned_data['trabaja_sabado']
-                profesorModel = Profesor.objects.create(pk=user.pk,usuario = user,horarios=horarios, trabaja_sabado=saba)
+                profesorModel = Profesor.objects.create(pk=user.pk,usuario = user,horarios=horarios)
                 niveles = form.cleaned_data['niveles']
                 for nivel in niveles:
                     profesorModel.niveles.add(nivel)
                 return JsonResponse({"profesor":profesor,'usuario':user.usuario})
             except Exception as e:
+                print(e)
                 user.delete()
                 data = json.dumps({'error': 'Datos del profesor ingresados incorrectos', 'forms':form.errors})
                 return HttpResponse(data, content_type="application/json", status=400)
