@@ -141,7 +141,6 @@ class editProfesor(IsAdminMixin, TemplateView):
             profesor.niveles.clear()
             for nivel in niveles:
                 profesor.niveles.add(nivel)
-            profesor.trabaja_sabado = datos['trabaja_sabado']
             profesor.save()
             return JsonResponse({"datos":'Se modifico correctamente'})
         except Exception as e:
