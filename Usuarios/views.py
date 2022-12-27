@@ -22,7 +22,6 @@ class Login(LoginView):
         context={}
         form = LoginForm(request,data=request.POST) #con esto se le pasan los datos al formulario, inserción
         context["form"]=form
-        print(request.session)
         if form.is_valid():
             nombre = form.cleaned_data.get("username")
             contrasena = form.cleaned_data.get("password")
@@ -82,7 +81,6 @@ class RegistroUsuario(TemplateView):
         if request.user.administrador!=1:
             return redirect("calendario")
         tipo = request.GET.get('type')
-        print(tipo)
         data={'formUsuario':UsuarioForm, 'formProfesor':ProfesorForm,'title':'profesor'}
         filter = {"value":"","cont":''}
         filter['value']=request.GET.get('type')
@@ -97,7 +95,7 @@ class RegistroUsuario(TemplateView):
         return render(request, 'Usuarios/crearUsuario.html', {'forms':data})
     
     def post(self, request, *args, **kwargs):
-        if request.user.administrador!=1:
+        if request.user.administrador!=True:
             return redirect("calendario")
         if request.POST.get('function') == 'filtrar':
             tipo = request.POST.get('type')
@@ -105,7 +103,6 @@ class RegistroUsuario(TemplateView):
             cont = ''
             filter['value']=tipo
             if tipo == 'All' or tipo=='P':
-                print(tipo)
                 cont = 'Profesores'
                 data={'title':'profesor'}
             else:
@@ -113,7 +110,6 @@ class RegistroUsuario(TemplateView):
                 cont = 'Administradores'
             filter['cont']=cont
             data['filter']=filter
-            print(data)
             return JsonResponse({"datos":data})
         if request.POST.get('function') == 'User' or request.POST.get('function') == 'Teacher':
             usuario=json.loads(request.POST.get('datos'))
@@ -140,9 +136,7 @@ class RegistroUsuario(TemplateView):
                         return HttpResponse(data, content_type="application/json", status=400)
                         
                 usuario.set_password(form.cleaned_data['cedula'])
-                print(request.POST.get('function'))
                 if request.POST.get('function') == 'User':
-                    print(request.POST.get('function'))
                     usuario.administrador = 1
                 else:
                     usuario.administrador = 0

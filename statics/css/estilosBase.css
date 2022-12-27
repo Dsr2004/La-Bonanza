@@ -2,6 +2,9 @@
     display: flex;
     justify-content: space-between;
 }
+body{
+    background-color: #E4E9F7;
+}
 .cont_list{
     background-color: white;
     border-radius: 10px;

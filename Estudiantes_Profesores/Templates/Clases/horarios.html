@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block titulo %}Horario{% endblock titulo %}
+
+{% block estilos %}
+<link rel="stylesheet" href="{%static 'css/horario.css'%}">
+{% endblock estilos %}
+{% block contenido %} 
+    <div class="container">
+        <div class="instructions">
+            <div><i class="fa fa-check" style="color:rgb(106, 212, 0);"></i>: Asistió</div>
+            <div><i class="fa fa-close" style="color:black;"></i>: No asistió</div>
+            <div><i class="fa fa-close" style="color: rgb(255, 0, 0);"></i>: Cancelo con excusa</div>
+            <div><i class="fa fa-close" style="color:rgb(0, 0, 255);"></i>: Cancelo por enfermedad</div>
+            <div><i class="fa fa-question" style="color:black;"></i>: No se ha tomado asistencia</div>
+            <div><i class="fa fa-eye" style="color:black;"></i>: Redirige a la asistencia</div>
+            <div><strong style="color:red;">Letras rojas</strong>: No se puede reprogramar</div>
+        </div>
+        <div class="row">
+            <div class="horario">
+                <div class="headerClass">
+                    <div class="Dia">{{ date|date:'l d' }} de {{ date|date:'F' }}</div>
+                    <div class="niveles">
+                        {% for nivel in niveles %}
+                            <div style=" color: {{nivel.color_letra}}; background:{{nivel.color_fondo}};">{{nivel}}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <div class="contenidoClass">
+                    <div class="estudiantes">
+                        {% for hora in  horas%}
+                            <div class="horas">{{hora}}</div>
+                            <div class="clases">
+                                {% for clase in  clases%}
+                                    {% if  hora == clase.clase.calendario.horaClase|date:'g a'%}
+                                    <div class="clase" id="clase{{forloop.counter}}" style=" background-color: {{clase.clase.calendario.registro.nivel.color_fondo}}; color: {{clase.clase.calendario.registro.nivel.color_letra}};">    
+                                        <div class="hoverClass" id="hoverClass{{forloop.counter}}"><strong>Profesor: </strong>{{clase.clase.profesor}}</div>
+                                            <script>
+                                                let clase = document.getElementById('clase{{forloop.counter}}')
+                                                clase.addEventListener('mouseover', (event) => {
+                                                    showdiv(event, "hoverClass{{forloop.counter}}")
+                                                });
+                                                clase.addEventListener('mouseout', (event) => {
+                                                    document.getElementById('hoverClass{{forloop.counter}}').style.display = "none";
+                                                });
+                                            </script>
+                                            <div id="contClassID{{forloop.counter}}" style=" {%if clase.reprogramacion == False%}color:red!important;{%endif%}display: flex; flex-wrap: wrap; display:table-cell;">
+                                                <div style="border: none;">{{clase.clase.calendario.registro.estudiante}}</div>
+                                                <div style="border: none; text-align: center;" id="edad{{forloop.counter}}"></div>
+                                                <script>document.getElementById('edad{{forloop.counter}}').innerHTML = "{{clase.clase.calendario.registro.estudiante.get_edad}}"</script>
+                                            </div>
+                                            <div class="AccionesHorario">
+                                                <div>
+                                                    {% if  clase.asistencia.estado == 1%}
+                                                        <!-- Chulo verde -->
+                                                        <i class="fa fa-check" style="color:rgb(106, 212, 0);"></i>
+                                                        {% elif clase.asistencia.estado == 2%}
+                                                            <!-- X negra -->
+                                                            <i class="fa fa-close"></i>
+                                                        {% elif clase.asistencia.estado == 3%}
+                                                            <!-- X roja -->
+                                                            <i class="fa fa-close" style="color: rgb(255, 0, 0);"></i>
+                                                        {% elif clase.asistencia.estado == 4%}
+                                                            <!-- x azul-->
+                                                            <i class="fa fa-close" style="color:rgb(0, 0, 255);"></i>
+                                                        {% else %}
+                                                            <!-- No tiene asistencia -->
+                                                            <i class="fa fa-question"></i>
+                                                    {% endif %}
+                                                    <i class="fa fa-eye" style="margin-top: 10px; cursor: pointer;"><a href=""></a></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+                        
+                            
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock contenido %}
+
+
+{% block scripts %}
+<script>
+function showdiv(event, id){
+	//determina un margen de pixels del div al raton
+	margin=0;
+
+	//La variable IE determina si estamos utilizando IE
+	var IE = document.all?true:false;
+
+	var tempX = 0;
+	var tempY = 0;
+
+	//document.body.clientHeight = devuelve la altura del body
+	if(IE)
+	{ //para IE
+		//event.y|event.clientY = devuelve la posicion en relacion a la parte superior visible del navegador
+		//event.screenY = devuelve la posicion del cursor en relaciona la parte superior de la pantalla
+		//event.offsetY = devuelve la posicion del mouse en relacion a la posicion superior de la caja donde se ha pulsado
+		tempX = event.x
+		tempY = event.y
+		if(window.pageYOffset){
+			tempY=(tempY+window.pageYOffset);
+			tempX=(tempX+window.pageXOffset);
+		}else{
+			tempY=(tempY+Math.max(document.body.scrollTop,document.documentElement.scrollTop));
+			tempX=(tempX+Math.max(document.body.scrollLeft,document.documentElement.scrollLeft));
+		}
+	}else{ //para netscape
+		//window.pageYOffset = devuelve el tamaño en pixels de la parte superior no visible (scroll) de la pagina
+		document.captureEvents(Event.MOUSEMOVE);
+		tempX = event.pageX;
+		tempY = event.pageY;
+	}
+
+	if (tempX < 0){tempX = 0;}
+	if (tempY < 0){tempY = 0;}
+
+	//window.alert(event.pageYOffset+" - "+document.body.pageYOffset+" - "+screen.pageYOffset+" - "+this.pageYOffset+" - "+window.pageYOffset);
+	document.getElementById(id).style.top = (tempY+margin)+"px";
+	document.getElementById(id).style.left = (tempX-150)+"px";
+	document.getElementById(id).style.display='block';
+}
+</script>
+{% endblock scripts %}
+    

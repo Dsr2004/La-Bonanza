@@ -18,10 +18,10 @@ DIAS_SEMANA = (
 )
 
 ESTADOS_ASISTENCIA = (
-    ("1","Asistió"),("2","No asistió"),("3","Cancelo con excusa"), ("4", "Cancelo por enfermedad")
+    ("1","Asistió"),("2","No asistió"),("3","Cancelo con excusa"), ("4", "Cancelo por enfermedad"),("0", "Por validar")
 )
 ESTADOS_CLASES = (
-    ("1","Clase esporadica"),("2","Mensualidad")
+    ("1","Clase esporádica"),("2","Mensualidad")
 )
 def extension(file):
         name, extension = os.path.splitext(file)
@@ -51,7 +51,7 @@ class Profesor(models.Model):
         verbose_name_plural = "profesores"
 
     def __str__(self):
-        return self.usuario.nombres
+        return self.usuario.get_nombre
     
     @property
     def get_days(self):
@@ -159,11 +159,15 @@ class Estudiante(models.Model):
         db_table = "estudiantes"
 
     def __str__(self):
-        return self.nombre_completo
+        return self.get_estudiante
 
     @property
     def get_estudiante(self):
-        estudiante = self.nombre_completo.capitalize()
+        if self.segundo_nombre:
+            segundo = self.segundo_nombre.lower()
+        else:
+            segundo = ""
+        estudiante = f"{self.primer_nombre.capitalize()} {segundo} {self.primer_apellido.lower()} {self.segundo_apellido.lower()}"
         return estudiante
     @property
     def get_edad(self):
@@ -244,7 +248,7 @@ class Calendario(models.Model):
         return f"C-{self.registro.estudiante.get_estudiante} el dia {self.get_diaClase_display()} a las {self.horaClase.strftime('%I:%M %p')}"
 class Asistencia(models.Model):
     registro = models.ForeignKey(Registro, on_delete=models.CASCADE, db_column="estudiante_id", verbose_name="estudiante")
-    estado = models.CharField(max_length=15,choices=ESTADOS_ASISTENCIA)
+    estado = models.CharField(max_length=15,choices=ESTADOS_ASISTENCIA, default=0)
     dia = models.DateField()
     hora = models.TimeField()
     picadero = models.ForeignKey(Picadero, on_delete=models.SET_NULL, null=True)
