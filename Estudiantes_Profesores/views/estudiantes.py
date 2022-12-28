@@ -53,7 +53,6 @@ class RegistrarEstudiante(CreateView):
     success_url = reverse_lazy("estudiantes")
     
     def post(self, request, *args, **kwargs):
-        print(request.POST)
         return super().post(request, *args, **kwargs)
     
     def form_valid(self, form):
@@ -76,7 +75,6 @@ class RegistrarEstudiante(CreateView):
         return super().form_valid(form) 
 
     def form_invalid(self, form):
-        print(form.errors)
         return super().form_invalid(form)
 class BuscarNuevosEstudiantes(IsAdminMixin, View):
      def get(self, request, *args, **kwargs):
@@ -172,7 +170,6 @@ class CrearNuevosEstudiantes(IsAdminMixin, CreateView):
                     picaderoNivel =  Picadero.objects.get(nivel=nivel)
                 except:
                     return JsonResponse({"errores":{"nivel":"No se puede agregar este estudiante porque no hay un picadero con el nivel seleccionado"}}, status=400)
-                print("dia ", dias[i], "hora ", horas[i])
                 error = validacion.ValidacionPicadero(profesor=profesor, dia=dias[i], hora=hora[i], clasepk=picaderoNivel.pk, estado="CREADO")
                 if error["tipo"] != "NO":
                     if error["tipo"] == "estudiante":
@@ -238,8 +235,6 @@ class ModificarEstudiante(IsAdminMixin, UpdateView):
     
     
     def form_invalid(self, form):
-        print(form.errors)
-        print("soy invalido care pija ")
         return super().form_invalid(form)
     
     def get_success_url(self):
@@ -256,7 +251,6 @@ class ModificarDocsEstudiante(IsAdminMixin, UpdateView):
 
     def post(self, request, *args, **kwargs):
         estudiante = Estudiante.objects.get(pk=self.kwargs["pk"])
-        print(request.FILES)
         if request.FILES:
             if "documento_A" in request.FILES:
                 estudiante.documento_A = request.FILES["documento_A"]
@@ -381,7 +375,6 @@ class ModificarRegistroEstudiante(IsAdminMixin, UpdateView):
                     except:
                         return JsonResponse({"errores":{"nivel":"No se puede agregar este estudiante porque no hay un picadero con el nivel seleccionado"}}, status=400)
                     
-                    print("ccc", diaOriginal[i])
                     calendario = CalendarioModel.objects.filter(registro=registro).filter(inicioClase=diaOriginal[i]).filter(horaClase=hora[i])
                     
                     if not calendario:
@@ -407,7 +400,6 @@ class ModificarRegistroEstudiante(IsAdminMixin, UpdateView):
                         return JsonResponse({"mensaje":"estudiante modificado con exito"}, status=200)      
                 return JsonResponse({'mensaje':'Se modifico correctamente'},status=200)
             except Exception as error:
-                print(error)
                 if type(error).__name__ == "FormValidationEstudianteError":
                     return JsonResponse({"errores": {"estudiante":[str(error)]}}, status=400)
                 elif type(error).__name__ == "FormValidationProfesorError":
@@ -444,6 +436,7 @@ class horario(View):
                     clase.reprogramacion = False
             else:
                 clase.reprogramacion = True
+            print(clase.reprogramacion)
             if clase.clase.calendario.registro.estudiante.estado:
                 Clases.append(clase)
                 
@@ -452,6 +445,7 @@ class horario(View):
         context = {'niveles': Nivel.objects.all(), "horas": ['1 a.m.', '2 a.m.', '3 a.m.', '4 a.m.', '5 a.m.', '6 a.m.', '7 a.m.', '8 a.m.', '9 a.m.', '10 a.m.', '11 a.m.', '12 p.m.', '1 p.m.', '2 p.m.', '3 p.m.', '4 p.m.', '5 p.m.', '6 p.m.', '7 p.m.', '8 p.m.', '9 p.m.', '10 p.m.', '11 p.m.', '12 a.m.']}
         context['clases'] = self.newClass(EstadoClase.objects.filter(dia = datetime.strptime(kwargs['date'], '%Y-%m-%d')))
         context['date']=datetime.strptime(kwargs['date'], '%Y-%m-%d')
+        
         if request.GET.get('download'):
             return render(request, 'Clases/horarioPDF.html', context)
             # kwarg = kwargs['date']
