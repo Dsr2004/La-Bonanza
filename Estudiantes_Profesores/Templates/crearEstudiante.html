@@ -47,10 +47,7 @@
         <h4 class="alert-heading">!Antes de continuar con el registro tenga en cuenta lo siguiente!</h4>
         
         <p>Por favor leer, aceptar y firmar nuestro reglamento (políticas de clases), en especial nuestra política de cancelación y exoneración de responsabilidades.
-            </p>
-        <hr>
-       
-        
+        </p>
       </div>
       <br>
     <form action="{% url 'registrarEstudiante' %}" method="post" enctype="multipart/form-data" id="CrearEstudianteForm">
@@ -374,17 +371,18 @@
                         <input type="hidden" name="firma" id="firma">
                     </div>
                     <br>
-                     
-                </div>
-                <br>
-                <div id="firm" style="visibility: hidden;">
-                    <label for="" style="font-weight: 500;">Firma: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label><br>
-                    <sub>Al firmar aceptas todo la información presentada anteriormente.</sub>
                     <br>
-                    <canvas id="signature-canvas" style="border: 1px dashed rgb(79, 74, 74); background-color: #fff; width: 50%; height: 200px;"></canvas>
-                    <button type="button" id="send" class="btn btn-success w-100" style="float: right">Enviar</button>   
-
+                    <div id="firm" style="visibility: hidden;">
+                        <label for="" style="font-weight: 500;">Firma: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label><br>
+                        <sub>Al firmar aceptas todo la información presentada anteriormente.</sub>
+                        <br>
+                        <canvas id="signature-canvas" style="border: 1px dashed rgb(79, 74, 74); background-color: #fff; width: 50%; height: 200px;"></canvas>
+                        <button id="limpiarCanvas" class="btn btn-outline-secondary btn-sm" type="button">Limpiar</button>
+                        <button type="button" id="send" class="btn btn-success w-100" style="float: right">Enviar</button>   
+    
+                    </div>
                 </div>
+                
                 </div>
                    <br>
               </div>
@@ -440,6 +438,10 @@
 
             signaturePad = new SignaturePad(canvas, {syncField: '#signature64', syncFormat: 'PNG'});
     });
+
+    $("#limpiarCanvas").on("click", function(){
+        signaturePad.clear();
+    })
 
     $("#send").on("click", function(){
         if(signaturePad.isEmpty()){
