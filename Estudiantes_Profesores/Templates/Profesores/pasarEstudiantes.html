@@ -1,0 +1,44 @@
+<div class="modal-dialog modal-lg ">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Pasar estudiantes de {{profesor|lower}}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="height: 100%; overflow: auto;">
+        <style>
+            .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn){
+                width: 100%;
+            }
+        </style>
+            <select name="Profesor" id="SelectProfesor" class="selectpicker" style="width: 100%;">
+                {%for profesor in profesores%}
+                <option value="{{profesor.pk}}">{{profesor}}</option>
+                {%endfor%}
+            </select>
+            {%csrf_token%}
+            <br><br>
+            <button class="btn btn-success" style="float: right;" onclick="relacionarProfesor()">Pasar</button>
+            <script>
+                cargar()
+                function relacionarProfesor(){
+                    let Profesor = $('#SelectProfesor').val();
+                    $.ajax({
+                        url:"{%url 'pasarEstudiantes' profesor.pk%}",
+                        data:{
+                            'csrfmiddlewaretoken':csrftoken,
+                            'Profesor':JSON.stringify(Profesor),
+                        },
+                        type:'POST',
+                        success: function(data) {
+                            window.location.reload();
+                        },
+                        error: function(error){
+                            Error = error['responseJSON'];
+                            alert(Error['error'])
+                        }
+                    })
+                }
+            </script>
+      </div>
+    </div>
+  </div>

@@ -27,6 +27,7 @@ urlpatterns=[
     path('VerEstudiantes/<str:pk>', login_required(estudiantesProfesor.as_view()), name="verEstudiantes"),
     path('VerEstudiante/<str:pk>', login_required(estudianteProfesor.as_view()), name="verEstudiante"),
     path('agregarEstudiante/<str:pk>', login_required(agregarEstudiantesProfesor.as_view()), name="agregarEstudiante"),
+    path('pasarEstudiantes/<str:pk>', login_required(pasarEstudiantes.as_view()), name="pasarEstudiantes"),
     path("VerInfoEstudianteCalendario/<int:pk>", login_required(VerInfoEstudianteCalendario.as_view()), name="verInfoEstudianteCalendario"),
     path("Asistencia/", login_required(GestionDeAsistencia.as_view()), name="asistencia"),
     path("ControlAsistencia/", login_required(ControlAsistencia.as_view()), name="controlAsistencia"),

@@ -186,6 +186,25 @@ class agregarEstudiantesProfesor(ListView):
         context["profesor"] = profesor
         context["registros"] = registros
         return render(request, self.template_name, context)
+
+class pasarEstudiantes(ListView):
+    template_name = "Profesores/pasarEstudiantes.html"
+    def get(self,request, *args, **kwargs):
+        profesor = Profesor.objects.get(pk = kwargs['pk'])
+        profesores = Profesor.objects.exclude(pk = profesor.pk)
+        context = {}
+        context["profesor"] = profesor
+        context["profesores"] = profesores
+        return render(request, self.template_name, context)
+    def post(self, request, *args, **kwargs):
+        profesor = Profesor.objects.get(pk = kwargs['pk'])
+        pk = json.loads(request.POST.get('Profesor'))
+        newProfesor = Profesor.objects.get(pk = pk)
+        estudiantes = Registro.objects.filter(profesor=profesor)
+        for estudiante in estudiantes:
+            estudiante.profesor = newProfesor
+            estudiante.save()
+        return JsonResponse(request.POST)
     
 class estudianteProfesor(ListView):
     template_name = "Profesores/estudianteProfesor.html"

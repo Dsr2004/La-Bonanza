@@ -263,8 +263,7 @@ class ClasesCanceladas(View):
 class ReponerClase(View):
     def get(self, request, *args, **kwargs):
         clase = EstadoClase.objects.get(pk=self.kwargs["pk"])
-        profesores = [profesor.pk for profesor in Profesor.objects.all() if clase.InfoPicadero.picadero.nivel in profesor.niveles.all() and profesor.usuario.estado == True]
-        profesores = [profesor for profesor in Profesor.objects.all() if clase.InfoPicadero.picadero.nivel in profesor.niveles.all() and profesor.usuario.estado == True]
+        profesores = [profesor for profesor in Profesor.objects.all() if profesor.usuario.estado == True]
         profeActual = clase.clase.profesor
         return render(request, "Clases/editarClaseCancelada.html",{"clase":clase, "profesores":profesores, "profeActual":profeActual})
     

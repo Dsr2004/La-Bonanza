@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horario</title>
+</head>
+<body>
+    <div class="container">
+        <div class="instructions">
+            <div><strong style="color:rgb(106, 212, 0);">Chulo verde</strong>: Asistio.</div>
+            <div><strong style="color:black;">X negra</strong>: No asistio.</div>
+            <div><strong style="color:red;">X roja</strong>: Cancelo con excusa.</div>
+            <div><strong style="color:rgb(0, 183, 255)">X azul</strong>: Cancelo por enfermedad.</div>
+            <div>?: No se ha tomado asistencia.</div>
+            <div><strong style="color:red;">Letras rojas</strong>: No se puede reprogramar.</div>
+        </div>
+        <div>
+            <div class="horario">
+                <div class="headerClass">
+                    <div class="Dia">{{ date|date:'l d' }} de {{ date|date:'F' }}<a href="{%url 'horario' date|date:'Y-m-d'%}?download=True" class="btn btn-outline-light" style="float: right; position: relative; cursor: pointer;top:1px;right: 1px;"><i class="fa fa-file-pdf" style="font-size: 20px; color: rgb(175, 14, 14); "></i></a></div>
+                    <div class="niveles">
+                        {% for nivel in niveles %}
+                            <div style=" color: {{nivel.color_letra}}; background:{{nivel.color_fondo}};">{{nivel}}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <br>
+                <div class="contenidoClass">
+                    <div class="estudiantes">
+                        {% for hora in  horas%}
+                        <hr>
+                            <div class="horarios" style="height: 100%;margin: 0;">
+                                <div style="text-align: center; width: 50px!important; display: table-cell;height: 100%;">{{hora}}</div>
+                                <div class="clases">
+                                {% for clase in  clases%}
+                                    {% if  hora == clase.clase.calendario.horaClase|date:'g a'%}
+                                    <div style="color:{{clase.clase.calendario.registro.nivel.color_letra}}; background:{{clase.clase.calendario.registro.nivel.color_fondo}};">
+                                        <div style="border: none;">{{clase.clase.calendario.registro.estudiante}}</div>
+                                        <div style="border: none; text-align: center;">{{clase.clase.calendario.registro.estudiante.get_edad}}</div>
+                                    </div>
+                                    <div style="color:{{clase.clase.calendario.registro.nivel.color_letra}}; background:{{clase.clase.calendario.registro.nivel.color_fondo}};">
+                                        <div style="border: none;">{{clase.clase.calendario.registro.estudiante}}</div>
+                                        <div style="border: none; text-align: center;">{{clase.clase.calendario.registro.estudiante.get_edad}}</div>
+                                    </div>
+                                    <div style="color:{{clase.clase.calendario.registro.nivel.color_letra}}; background:{{clase.clase.calendario.registro.nivel.color_fondo}};">
+                                        <div style="border: none;">{{clase.clase.calendario.registro.estudiante}}</div>
+                                        <div style="border: none; text-align: center;">{{clase.clase.calendario.registro.estudiante.get_edad}}</div>
+                                    </div>
+                                    <div style="color:{{clase.clase.calendario.registro.nivel.color_letra}}; background:{{clase.clase.calendario.registro.nivel.color_fondo}};">
+                                        <div style="border: none;">{{clase.clase.calendario.registro.estudiante}}</div>
+                                        <div style="border: none; text-align: center;">{{clase.clase.calendario.registro.estudiante.get_edad}}</div>
+                                    </div>
+                                    <div style="color:{{clase.clase.calendario.registro.nivel.color_letra}}; background:{{clase.clase.calendario.registro.nivel.color_fondo}};">
+                                        <div style="border: none;">{{clase.clase.calendario.registro.estudiante}}</div>
+                                        <div style="border: none; text-align: center;">{{clase.clase.calendario.registro.estudiante.get_edad}}</div>
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                                </div>
+                            </div>
+                            <br>
+                        {% endfor %}    
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<style type="text/css">
+    body{
+        margin: 50px;
+    }
+    .instructions{
+        width: 103%;
+        height: 100%;
+        overflow: auto;
+        margin-left: -2.5%;
+        position: relative;
+        top: -20px!important;
+        margin-bottom: -15px;
+        background-color: aliceblue;
+        border-radius: 5px;
+        padding: 5px 10px;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+    .instructions div{
+        display: table;
+        white-space: nowrap;
+        overflow: hidden;  
+        padding: 5px;
+    }
+    .headerClass{
+        display: block;
+    }
+    .horario{
+        width: 100%;
+    }
+    .horario .Dia{
+        border-radius: 5px  5px 0 0;
+        width: 100%;
+        height: 40px;
+        text-align: center;
+        font-size: 24px;
+        background-color: #11101d;
+        color: #b1bc20;
+        print-color-adjust:exact;
+        -webkit-print-color-adjust:exact;
+    }
+    /* Niveles */
+    .horario .niveles{
+        height: 100%;
+        display: flex; 
+        justify-content:space-between;
+        flex-wrap: wrap;
+    }
+    .horario .niveles div{
+        height: 100%;
+        border: 1px solid black;
+        display: table;
+        white-space: nowrap;
+        padding: 5px;
+        print-color-adjust:exact;
+        -webkit-print-color-adjust:exact;
+    }
+    .horarios{
+        display: table;
+    }
+    .clases{
+        height: 100%;
+        margin: 0;
+        display: flex; 
+        justify-content:space-between;
+        flex-wrap: wrap;
+    }
+    .clases div{
+        border: 1px solid black;
+        height: 100%;
+        text-align: center;
+        font-size: 17px;
+        display: table;
+        padding: 5px;
+        print-color-adjust:exact;
+        -webkit-print-color-adjust:exact;
+    }
+</style>
+<script>
+   window.print()
+   window.onafterprint = (event) => {
+        window.location.href = window.location.href.split('?')[0]
+  };
+  window.addEventListener('beforeunload', (event) => {
+    // El código que escribas aquí se ejecutará cuando el usuario intente salir de la página
+    window.location.href = window.location.href.split('?')[0]
+  });
+  window.addEventListener('unload', (event) => {
+    // El código que escribas aquí se ejecutará cuando el usuario intente salir de la página
+    window.location.href = window.location.href.split('?')[0]
+  });
+  var cont = 0
+  setInterval(function () {
+    if (window.print) {
+        if (cont == 0){
+            window.location.href = window.location.href.split('?')[0]
+        }
+        else{
+            window.onafterprint = (event) => {
+                window.location.href = window.location.href.split('?')[0]
+          };
+          cont = cont + 1
+        window.print()
+        }
+      } else {
+        window.location.href = window.location.href.split('?')[0]
+      }
+      
+  }, 1000); 
+    
+</script>
+</body>
+</html>
