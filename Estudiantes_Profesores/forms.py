@@ -182,13 +182,6 @@ class CrearEstudianteForm(forms.ModelForm):
             return self.celular_padre
         else:
             raise forms.ValidationError('Asegúrese de que este valor sea menor o igual a 15.')
-    def clean_telefono_contactoE(self):
-        telefono = self.cleaned_data["telefono_contactoE"]
-        if telefono == self.celular_madre:
-            raise forms.ValidationError('El celular no puede ser igual al de la madre')
-        if telefono == self.celular_padre:
-            raise forms.ValidationError('El celular no puede ser igual al del padre')
-        return telefono
     def clean_nombre_completo_padre(self):
         self.nombre_completo_padre = self.cleaned_data["nombre_completo_padre"]
         if self.nombre_completo_padre != None:
@@ -208,6 +201,10 @@ class CrearEstudianteForm(forms.ModelForm):
         return nombre_facturar
     def clean_telefono_contactoE(self):
         telefono_contactoE = self.cleaned_data["telefono_contactoE"]
+        if telefono_contactoE == self.celular_madre:
+            raise forms.ValidationError('El celular no puede ser igual al de la madre')
+        if telefono_contactoE == self.celular_padre:
+            raise forms.ValidationError('El celular no puede ser igual al del padre')
         if len(str(telefono_contactoE))<=15:
             return telefono_contactoE
         else:
@@ -392,13 +389,6 @@ class EstudianteForm(forms.ModelForm):
             return self.celular_padre
         else:
             raise forms.ValidationError('Asegúrese de que este valor sea menor o igual a 15.')
-    def clean_telefono_contactoE(self):
-        telefono = self.cleaned_data["telefono_contactoE"]
-        if telefono == self.celular_madre:
-            raise forms.ValidationError('El celular no puede ser igual al de la madre')
-        if telefono == self.celular_padre:
-            raise forms.ValidationError('El celular no puede ser igual al del padre')
-        return telefono
     def clean_nombre_completo_padre(self):
         self.nombre_completo_padre = self.cleaned_data["nombre_completo_padre"]
         if self.nombre_completo_padre != None:
@@ -416,8 +406,13 @@ class EstudianteForm(forms.ModelForm):
         if nombre_facturar == self.nombre_completo_padre or nombre_facturar == self.nombre_completo_madre:
             raise forms.ValidationError('El nombre no puede ser igual al de los padres')
         return nombre_facturar
+   
     def clean_telefono_contactoE(self):
         telefono_contactoE = self.cleaned_data["telefono_contactoE"]
+        if telefono_contactoE == self.celular_madre:
+            raise forms.ValidationError('El celular no puede ser igual al de la madre')
+        if telefono_contactoE == self.celular_padre:
+            raise forms.ValidationError('El celular no puede ser igual al del padre')
         if len(str(telefono_contactoE))<=15:
             return telefono_contactoE
         else:

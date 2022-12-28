@@ -52,19 +52,19 @@
                                         </div>
                                         <div class="AccionesHorario">
                                             <div>
-                                                {% if  clase.asistencia.estado == 1%}
+                                                {% if  clase.asistencia.estado == '1'%}
                                                     <!-- Chulo verde -->
                                                     <i class="fa fa-check" style="color:rgb(106, 212, 0);"></i>
-                                                    {% elif clase.asistencia.estado == 2%}
+                                                    {% elif clase.asistencia.estado == '2'%}
                                                         <!-- X negra -->
                                                         <i class="fa fa-close"></i>
-                                                    {% elif clase.asistencia.estado == 3%}
+                                                    {% elif clase.asistencia.estado == '3'%}
                                                         <!-- X roja -->
                                                         <i class="fa fa-close" style="color: rgb(255, 0, 0);"></i>
-                                                    {% elif clase.asistencia.estado == 4%}
+                                                    {% elif clase.asistencia.estado == '4'%}
                                                         <!-- x azul-->
                                                         <i class="fa fa-close" style="color:rgb(0, 0, 255);"></i>
-                                                    {% else %}
+                                                    {% elif clase.asistencia.estado == '0' %}
                                                         <!-- No tiene asistencia -->
                                                         <i class="fa fa-question"></i>
                                                 {% endif %}
