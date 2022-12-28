@@ -57,12 +57,12 @@ class UsuarioForm(forms.ModelForm):
         model = Usuario
         fields = ['usuario','nombres','apellidos','cedula','fecha_nacimiento','email','celular']
         widgets = {
-            "usuario": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
-            "nombres": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
-            "apellidos": forms.DateInput(attrs={"class":"form-control", "autocomplete":"off"}),
-            "cedula": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
+            "usuario": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off", "placeholder":"Ingrese el nombre de usuario"}),
+            "nombres": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off", "placeholder":"Ingrese el nombre completo"}),
+            "apellidos": forms.DateInput(attrs={"class":"form-control", "autocomplete":"off","placeholder":"Ingrese los apellidos"}),
+            "cedula": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off","placeholder":"Ingrese la cédula de la persona"}),
             "fecha_nacimiento": forms.DateInput(attrs={"type":"date", "class":"form-control", "autocomplete":"off"},format=('%Y-%m-%d'),),
-            "email": forms.EmailInput(attrs={"class":"form-control", "autocomplete":"off"}),
-            "celular": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
+            "email": forms.EmailInput(attrs={"class":"form-control", "autocomplete":"off", "placeholder":"Ingrese el correo electrónico"}),
+            "celular": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off", "placeholder":"Ingrese el número de celular"}),
             
         }   

@@ -2,32 +2,106 @@
 {% block titulo %}Niveles{% endblock titulo %}
 
 {% block contenido %}
+<style>
+    .encabezado{
+    background-color: white;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+.addNiv{
+    background-color: #14284b;
+    border-radius: 20px;
+    color: white;
+    font-weight: 500;
+    margin-top: 5px;
+    margin-left: 100px;
+}
+
+    .niv{
+    /* background-color: rgb(91, 91, 201); */
+    background-image: linear-gradient(to right, rgb(72, 72, 175) , rgb(112, 112, 172));
+    width: 100%;
+    height: 80px;
+    border-radius: 50px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    font-family: 'Poppins', sans-serif;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+}
+
+.tit{
+    
+    color: white;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    padding: 3px;
+    padding-left: 5px;
+    padding-right: 5px;
+    margin-left: 15px;
+    border-radius: 50px;
+    font-weight: bold;
+}
+
+.tit p{
+    padding-top: 15px;
+}
+.circ{
+    width: 60px;
+    height: 60px;
+    background-color: white;
+    border-radius: 50%;
+    margin-right: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.circ i{
+    font-size: 30px;
+    
+}
+</style>
 <div class="container">
-    <div class="row">
+    <div class="row justify-content-between mb-5 encabezado">
+        <div class="col-md-8">
+            <h2>Gestión de niveles</h2>
+            <small>Sección que permite administrar la información de los niveles</small>
+        </div>
+        <div class="col-md-3">
+            <button class="btn addNiv" onclick="abrir_registro_nivel_modal('{%url 'craerNivel'%}')">Crear nuevo &nbsp; <i class="fa-solid fa-plus"></i></button>
+        </div>
+    </div>
+
+    <!-- <div class="row">
      <div class="col-md-10">
-         <h1>Administración de Niveles</h1>
+         <p>Administración de Niveles</p>
      </div>
      <div class="col-md-2">
-        <a onclick="abrir_registro_nivel_modal('{%url 'craerNivel'%}')" class="btn btn-outline-success btn-lg" > <i class="fa-solid fa-circle-plus fa-lg"></i></a>
+        <a onclick="abrir_registro_nivel_modal('{%url 'craerNivel'%}')" class="btn " >Crear nivel &nbsp; <i class="fa-solid fa-plus fa-lg"></i></a>
      </div>
-    </div>
-     <hr>
-     <div class="row">
+    </div> -->
+     <!-- <hr> -->
+     <div class="row" style="margin-bottom: 10px;">
         {% for nivel in niveles  %}
-          <div class="col-md-3" style="cursor: pointer;" onclick="GetNivel('{%url 'modifcarNivel' nivel.pk %}')">
-            <div class="card" style="margin: 15px 5px;">
-                <div class="card-body" style="padding: 0 !important;">
-                    <div class="row containerPrincipal">
-                        <div class="col-3">
-                            <div class="nivelStyle" style="background: linear-gradient(90deg, {{nivel.color_fondo}} 0%, rgba(255,255,255,1) 99%);;"></div>
-                        </div>
-                        <div class="col-7 NivelText">
-                            <p >{{nivel.nivel}}</p>
-                        </div>
+            <div class="col-3 mb-4" onclick="GetNivel('{%url 'modifcarNivel' nivel.pk %}')">
+                <div class="niv" style="background: {{nivel.color_fondo}};">
+                    <div class="tit" style="background-color: {{nivel.color_fondo}};">
+                        <p style="text-shadow: 1px 1px 2px black;">{{nivel.nivel}}</p>
                     </div>
-                </div>  
+                    <div class="circ">
+                        <i class="fa-solid fa-star" style="color: {{nivel.color_fondo}};"></i>
+                    </div>
+                </div>
             </div>
-          </div>
         {% endfor %}
      </div>
 

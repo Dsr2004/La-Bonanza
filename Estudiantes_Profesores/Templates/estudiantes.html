@@ -4,6 +4,7 @@
 
 {% block estilos %}
     <link rel="stylesheet" href="{% static 'libs/daterangepicker/daterangepicker.css' %}">
+    <link rel="stylesheet" href="{% static 'css/estilosBase.css' %}">
 {% endblock estilos %}
     
 
@@ -21,82 +22,86 @@
     </div> 
     {% endfor %}
 {% endif %}
-       <div class="row">
-        <div class="col-md-9">
-            <h1>Administración de alumnos</h1>
-        </div>
-        <div class="col-md-2">
-           <a type="button" data-bs-toggle="modal" onclick="abrir_modal_filtro_estudiante()" class="btn btn-success " > <i class="fa-solid fa-file-excel"></i></a>
-           <a href="{% url 'registrarEstudiante' %}" class="btn btn-outline-success " > <i class="fa-solid fa-person-circle-plus fa-xl"></i></a>
-          {% if nuevosEstudiantes %}
-          <a href="{% url 'buscarNuevosEstudiantes' %}" class="btn btn-outline-warning " >  <i class="fa-solid fa-clock fa-xl"></i></a>
-          {% endif %}
-            
-        </div>
-       </div>
-        <hr>
-        <table id="EstudiantesTable" class="table">
-            <thead>
-                <tr>
-                    <th colspan="7">Datos</th>
-                    <th colspan="1">Acciones</th>
-                </tr>
-               <tr>
-                    <th>#</th>
-                    <th>Nombre</th>
-                    <th>Documento</th>
-                    <th>Celular</th>
-                    <th>Correo</th>
-                    <th>Matricula</th>
-                    <th>Nivel</th>
-                    <th></th>
-               </tr>
-            </thead>
-            <tbody>
-                {% for estudiante in estudiantes %}
+    <div class="container mt-5 cont_list">
+        <div class="row d-flex justify-content-between">
+            <div class="col-md-9">
+                <p class="titulo_seccion">Administración de alumnos</p>
+            </div>
+            <div class="col-md-3">
+               <a type="button" data-bs-toggle="modal" onclick="abrir_modal_filtro_estudiante()" class="btn" style="background-color: #107c41; color: white;"><i class="fa-solid fa-file-excel"></i></a>
+               {% if nuevosEstudiantes %}
+               <a href="{% url 'buscarNuevosEstudiantes' %}" class="btn Hor"> <i class="fa-solid fa-clock"></i></a>
+                {% endif %}
+               <a href="{% url 'registrarEstudiante' %}" class="btn btnAdd">Crear nuevo &nbsp; <i class='bx bx-user-plus'></i></a>
+              
+                
+            </div>
+           </div>
+            <hr>
+            <table id="EstudiantesTable" class="table">
+                <thead>
                     <tr>
-                        <td>{{forloop.counter}}</td>
-                        <td>{{estudiante.get_estudiante}}</td>
-                        <td>{{estudiante.get_estudiante_documento}}</td>
-                        <td>
-                            {% if estudiante.get_estudiante_celular %}
-                            {{estudiante.get_estudiante_celular}}
-                            {% else %}
-                            No aplica
-                            {% endif %}
-                              </td>
-                            <td>
-                              {% if estudiante.email %}
-                            {{estudiante.email}}
-                            {% else %}
-                            No aplica
-                            {% endif %}
-                            </td>
-                        <td>{{estudiante.get_estado_matricula}}</td>
-                        <td>{{estudiante.get_estudiante_nivel}}</td>
-                        <td>
-                            <p style="display:none;">{% if estudiante.estudiante.estado  %}
-                                activo{% else %} inhabilitado
-                                {% endif %}</p>
-                            <div style="display:inline-flex; ">
-                                <a href="{% url 'verInfoEstudiante' estudiante.estudiante.pk %}" style="margin-right:10px" class="btn btn-outline-info btn-sm"><i class="fa-solid fa-eye"></i></a>
-                                <a href="{% url 'modificarEstudiante' estudiante.estudiante.pk %}"style="margin-right:10px"  class="btn btn-outline-warning btn-sm"><i class="fa-solid fa-pencil"></i></a>
-                                <div style="margin-right:10px" class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" role="switch" {% if estudiante.estudiante.estado  %}
-                                    checked
-                                    {% endif %} onclick="cambiar_estado_estudiante('{%url 'cambiarEstadoEstudiante'%}', '{{estudiante.estudiante.pk}}')">
-                                </div>
-                            </div>
-                           
-
-                            <!-- <a  class="btn btn-outline-danger btn-sm"><i class="fa-solid fa-trash"></i></a> -->
-                        </td>
+                        <th colspan="7">Datos</th>
+                        <th colspan="1">Acciones</th>
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        {% csrf_token %}
+                   <tr>
+                        <th>#</th>
+                        <th>Nombre</th>
+                        <th>Documento</th>
+                        <th>Celular</th>
+                        <th>Correo</th>
+                        <th>Matricula</th>
+                        <th>Nivel</th>
+                        <th></th>
+                   </tr>
+                </thead>
+                <tbody>
+                    {% for estudiante in estudiantes %}
+                        <tr>
+                            <td>{{forloop.counter}}</td>
+                            <td>{{estudiante.get_estudiante}}</td>
+                            <td>{{estudiante.get_estudiante_documento}}</td>
+                            <td>
+                                {% if estudiante.get_estudiante_celular %}
+                                {{estudiante.get_estudiante_celular}}
+                                {% else %}
+                                No aplica
+                                {% endif %}
+                                  </td>
+                                <td>
+                                  {% if estudiante.email %}
+                                {{estudiante.email}}
+                                {% else %}
+                                No aplica
+                                {% endif %}
+                                </td>
+                            <td>{{estudiante.get_estado_matricula}}</td>
+                            <td>{{estudiante.get_estudiante_nivel}}</td>
+                            <td>
+                                <p style="display:none;">{% if estudiante.estudiante.estado  %}
+                                    activo{% else %} inhabilitado
+                                    {% endif %}</p>
+                                <div style="display:inline-flex; ">
+                                    <a href="{% url 'verInfoEstudiante' estudiante.estudiante.pk %}" style="margin-right:10px" class="btn btn-outline-info btn-sm"><i class="fa-solid fa-eye"></i></a>
+                                    <a href="{% url 'modificarEstudiante' estudiante.estudiante.pk %}"style="margin-right:10px"  class="btn btn-outline-warning btn-sm"><i class="fa-solid fa-pencil"></i></a>
+                                    <div style="margin-right:10px" class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" role="switch" {% if estudiante.estudiante.estado  %}
+                                        checked
+                                        {% endif %} onclick="cambiar_estado_estudiante('{%url 'cambiarEstadoEstudiante'%}', '{{estudiante.estudiante.pk}}')">
+                                    </div>
+                                </div>
+                               
+    
+                                <!-- <a  class="btn btn-outline-danger btn-sm"><i class="fa-solid fa-trash"></i></a> -->
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% csrf_token %}
+        </div>
     </div>
+       
     <!-- Modal -->
     <div class="modal fade" id="FilterEstudianteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">

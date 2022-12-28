@@ -53,7 +53,7 @@ class Profesor(models.Model):
         verbose_name_plural = "profesores"
 
     def __str__(self):
-        return self.usuario.nombres
+        return self.usuario.get_nombre
     
     @property
     def get_days(self):
@@ -165,11 +165,15 @@ class Estudiante(models.Model):
         db_table = "estudiantes"
 
     def __str__(self):
-        return self.nombre_completo
+        return self.get_estudiante
 
     @property
     def get_estudiante(self):
-        estudiante = self.nombre_completo.capitalize()
+        if self.segundo_nombre:
+            segundo = self.segundo_nombre.lower()
+        else:
+            segundo = ""
+        estudiante = f"{self.primer_nombre.capitalize()} {segundo} {self.primer_apellido.lower()} {self.segundo_apellido.lower()}"
         return estudiante
     @property
     def get_edad(self):

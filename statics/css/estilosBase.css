@@ -24,6 +24,10 @@ body{
     font-weight: 500;
 }
 
+.btn.Hor{
+    background-color: #ffe373;
+    color: white;
+}
 #UsuariosTable_filter input{
     border-radius: 10px;
     margin-left: 5px;
