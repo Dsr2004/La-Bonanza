@@ -1,16 +1,19 @@
 {%extends 'base.html' %}
+{% load static %}
 {% block titulo %}Instructores{% endblock titulo %}
 {%block estilos%}
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
 <!-- CSS only -->
+<link rel="stylesheet" href="{% static 'css/estilosBase.css' %}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css">
 {%endblock estilos%}
+
 {% block contenido %}
 {%if Profesores%}
-<div class="container">
+<div class="container mt-5 cont_list">
     <div class="row">
      <div class="col-md-10">
-         <h1>Administración de instructores</h1>
+         <p class="titulo_seccion">Administración de instructores</p>
      </div>
      <div class="col-md-2">
         <!-- <div class="btn btn-outline-success btn-lg" onclick=""> <i class="fa-solid fa-node-js"></i></div> -->

@@ -30,25 +30,29 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body" style="height: 80vh; overflow: auto;">
-        <div>
-            <select name="filterType" id="filterTypeSelect modal" class="form-select" onchange="filterModal(this.value)"style="width:auto;">
-                <option value="{{forms.filter.value}}" selected="selected" id="SelectedType">{{forms.filter.cont}}</option>{{forms.filter.cont}}</option>
-                {%if forms.filter.value == 'P'%}
-                <option value="A">Administradores</option>
-                <option value="P" style="display: none;">Profesores</option>
-                {%endif%}
-                {%if forms.filter.value == 'All'%}
-                <option value="A">Administradores</option>
-                <option value="P" style="display: none;">Profesores</option>
-                {%endif%}
-                {%if forms.filter.value == 'A'%}
-                <option value="P">Profesores</option>
-                <option value="A" style="display: none;">Administradores</option>
-                {{forms.filter.value}}
-                {%endif%}
-            </select>
-            <br>
-            <form action='{%url "registroUsuario"%}' method="post" id="filterTypeFormModal">{%csrf_token%}<input type="hidden" name="function" value="filtrar"></form>
+        <div class="row">
+            <div class="col-12">
+                <label for="">Tipo de usuario</label>
+                <select name="filterType" id="filterTypeSelect modal" class="form-select" onchange="filterModal(this.value)"style="width:100%;">
+                    <option value="{{forms.filter.value}}" selected="selected" id="SelectedType">{{forms.filter.cont}}</option>{{forms.filter.cont}}</option>
+                    {%if forms.filter.value == 'P'%}
+                    <option value="A">Administradores</option>
+                    <option value="P" style="display: none;">Profesores</option>
+                    {%endif%}
+                    {%if forms.filter.value == 'All'%}
+                    <option value="A">Administradores</option>
+                    <option value="P" style="display: none;">Profesores</option>
+                    {%endif%}
+                    {%if forms.filter.value == 'A'%}
+                    <option value="P">Profesores</option>
+                    <option value="A" style="display: none;">Administradores</option>
+                    {{forms.filter.value}}
+                    {%endif%}
+                </select>
+                <br>
+                <form action='{%url "registroUsuario"%}' method="post" id="filterTypeFormModal">{%csrf_token%}<input type="hidden" name="function" value="filtrar"></form>
+            </div>
+            
         </div>
         <form action='{%url "registroUsuario"%}' method="post" id="RegistrarUsuarioForm">
             {%csrf_token%}
@@ -94,7 +98,7 @@
                     }
                 </script>
             </div>
-            <button class="btn btn-success" style="float: right;"type="button"onclick="registerUsuario()">Registrar</button>
+            <button class="btn btn-success" style="float: right;"type="button"onclick="registerUsuario()"><i class="fa-regular fa-floppy-disk"></i> Guardar</button>
             <br>
             <br>
             </form>
