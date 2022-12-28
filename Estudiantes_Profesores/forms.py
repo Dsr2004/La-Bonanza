@@ -98,29 +98,37 @@ class CrearEstudianteForm(forms.ModelForm):
         self.fields['aceptaContrato'].required = False
         self.fields['facturacion_electronica'].required = False
     def clean_primer_nombre(self):    
-        self.nombre = self.cleaned_data['primer_nombre'].capitalize()
+        self.nombre = self.cleaned_data['primer_nombre']
+        if self.nombre != None:
+            self.nombre = self.nombre.capitalize()
         if self.nombre != None:
             if any(map(str.isdigit, self.nombre)):
                 raise forms.ValidationError('El nombre no puede contener digitos')
         return self.nombre
     def clean_segundo_nombre(self):    
-        self.Lnombre = self.cleaned_data['segundo_nombre'].capitalize()
+        self.Lnombre = self.cleaned_data['segundo_nombre']
+        if self.Lnombre != None:
+            self.Lnombre = self.Lnombre.capitalize()
         if self.Lnombre != None:
             if any(map(str.isdigit, self.Lnombre)):
                 raise forms.ValidationError('El nombre no puede contener digitos')
-        return self.Lnombre.capitalize()
+        return self.Lnombre
     def clean_primer_apellido(self):    
-        self.apellido = self.cleaned_data['primer_apellido'].capitalize()
+        self.apellido = self.cleaned_data['primer_apellido']
+        if self.apellido != None:
+            self.apellido = self.apellido.capitalize()
         if self.apellido != None:
             if any(map(str.isdigit, self.apellido)):
                 raise forms.ValidationError('El apellido no puede contener digitos')
-        return self.apellido.capitalize()
+        return self.apellido
     def clean_segundo_apellido(self):    
-        self.Lapellido = self.cleaned_data['segundo_apellido'].capitalize()
+        self.Lapellido = self.cleaned_data['segundo_apellido']
+        if self.Lapellido != None:
+            self.Lapellido = self.Lapellido.capitalize()
         if self.Lapellido != None:
             if any(map(str.isdigit, self.Lapellido)):
                 raise forms.ValidationError('El apellido no puede contener digitos')
-        return self.Lapellido.capitalize()
+        return self.Lapellido
     def clean_nombre_completo(self):
         try:
             nombre = self.nombre
@@ -300,29 +308,37 @@ class EstudianteForm(forms.ModelForm):
         self.fields['aceptaContrato'].required = False
         self.fields['facturacion_electronica'].required = False
     def clean_primer_nombre(self):    
-        self.nombre = self.cleaned_data['primer_nombre'].capitalize()
+        self.nombre = self.cleaned_data['primer_nombre']
+        if self.nombre != None:
+            self.nombre = self.nombre.capitalize()
         if self.nombre != None:
             if any(map(str.isdigit, self.nombre)):
                 raise forms.ValidationError('El nombre no puede contener digitos')
         return self.nombre
     def clean_segundo_nombre(self):    
-        self.Lnombre = self.cleaned_data['segundo_nombre'].capitalize()
+        self.Lnombre = self.cleaned_data['segundo_nombre']
+        if self.Lnombre != None:
+            self.Lnombre = self.Lnombre.capitalize()
         if self.Lnombre != None:
             if any(map(str.isdigit, self.Lnombre)):
                 raise forms.ValidationError('El nombre no puede contener digitos')
-        return self.Lnombre.capitalize()
+        return self.Lnombre
     def clean_primer_apellido(self):    
-        self.apellido = self.cleaned_data['primer_apellido'].capitalize()
+        self.apellido = self.cleaned_data['primer_apellido']
+        if self.apellido != None:
+            self.apellido = self.apellido.capitalize()
         if self.apellido != None:
             if any(map(str.isdigit, self.apellido)):
                 raise forms.ValidationError('El apellido no puede contener digitos')
-        return self.apellido.capitalize()
+        return self.apellido
     def clean_segundo_apellido(self):    
-        self.Lapellido = self.cleaned_data['segundo_apellido'].capitalize()
+        self.Lapellido = self.cleaned_data['segundo_apellido']
+        if self.Lapellido != None:
+            self.Lapellido = self.Lapellido.capitalize()
         if self.Lapellido != None:
             if any(map(str.isdigit, self.Lapellido)):
                 raise forms.ValidationError('El apellido no puede contener digitos')
-        return self.Lapellido.capitalize()
+        return self.Lapellido
     def clean_nombre_completo(self):
         try:
             nombre = self.nombre
@@ -384,13 +400,19 @@ class EstudianteForm(forms.ModelForm):
             raise forms.ValidationError('El celular no puede ser igual al del padre')
         return telefono
     def clean_nombre_completo_padre(self):
-        self.nombre_completo_padre = self.cleaned_data["nombre_completo_padre"].capitalize()
+        self.nombre_completo_padre = self.cleaned_data["nombre_completo_padre"]
+        if self.nombre_completo_padre != None:
+            self.nombre_completo_padre = self.nombre_completo_padre.capitalize()
         return self.nombre_completo_padre
     def clean_nombre_completo_madre(self):
-        self.nombre_completo_madre = self.cleaned_data["nombre_completo_madre"].capitalize()
+        self.nombre_completo_madre = self.cleaned_data["nombre_completo_madre"]
+        if self.nombre_completo_madre != None:
+            self.nombre_completo_madre = self.nombre_completo_madre.capitalize()
         return self.nombre_completo_madre
     def clean_nombre_contactoE(self):
-        nombre_facturar = self.cleaned_data["nombre_contactoE"].capitalize()
+        nombre_facturar = self.cleaned_data["nombre_contactoE"]
+        if nombre_facturar!= None:
+           nombre_facturar = nombre_facturar.capitalize()
         if nombre_facturar == self.nombre_completo_padre or nombre_facturar == self.nombre_completo_madre:
             raise forms.ValidationError('El nombre no puede ser igual al de los padres')
         return nombre_facturar
@@ -400,6 +422,7 @@ class EstudianteForm(forms.ModelForm):
             return telefono_contactoE
         else:
             raise forms.ValidationError('Asegúrese de que este valor sea menor o igual a 15.')
+
 
 
 class RegistroForm(forms.ModelForm):
