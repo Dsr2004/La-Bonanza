@@ -182,13 +182,19 @@ class CrearEstudianteForm(forms.ModelForm):
             raise forms.ValidationError('El celular no puede ser igual al del padre')
         return telefono
     def clean_nombre_completo_padre(self):
-        self.nombre_completo_padre = self.cleaned_data["nombre_completo_padre"].capitalize()
+        self.nombre_completo_padre = self.cleaned_data["nombre_completo_padre"]
+        if self.nombre_completo_padre != None:
+            self.nombre_completo_padre = self.nombre_completo_padre.capitalize()
         return self.nombre_completo_padre
     def clean_nombre_completo_madre(self):
-        self.nombre_completo_madre = self.cleaned_data["nombre_completo_madre"].capitalize()
+        self.nombre_completo_madre = self.cleaned_data["nombre_completo_madre"]
+        if self.nombre_completo_madre != None:
+            self.nombre_completo_madre = self.nombre_completo_madre.capitalize()
         return self.nombre_completo_madre
     def clean_nombre_contactoE(self):
-        nombre_facturar = self.cleaned_data["nombre_contactoE"].capitalize()
+        nombre_facturar = self.cleaned_data["nombre_contactoE"]
+        if nombre_facturar!= None:
+           nombre_facturar = nombre_facturar.capitalize()
         if nombre_facturar == self.nombre_completo_padre or nombre_facturar == self.nombre_completo_madre:
             raise forms.ValidationError('El nombre no puede ser igual al de los padres')
         return nombre_facturar
