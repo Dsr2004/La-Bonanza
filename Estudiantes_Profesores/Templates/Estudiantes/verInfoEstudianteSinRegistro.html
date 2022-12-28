@@ -1,14 +1,9 @@
 {% extends 'base.html' %}
-{% load static %}
 {% block titulo %}Información de alumnos{% endblock titulo %}
-
-{% block estilos %}
-<link rel="stylesheet" href="{% static 'css/estilosBase.css' %}">
-{% endblock estilos %}
-
+{% load jsignature_filters %}
 {% block contenido %}
-    <div class="container mt-4 cont_list">
-        <p style="font-size: 30px; font-weight: 800;">Ver información de {{object.get_estudiante}}</p>
+    <div class="container">
+        <h1>Ver información de {{object.get_estudiante}}</h1>
         <hr>
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
@@ -21,17 +16,20 @@
               <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">Información del Contacto de emergencia</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="docs-tab" data-bs-toggle="tab" data-bs-target="#docs-tab-pane" type="button" role="tab" aria-controls="docs-tab-pane" aria-selected="false">Documentos</button>
+                <button class="nav-link" id="docs-tab" data-bs-toggle="tab" data-bs-target="#fac-tab-pane" type="button" role="tab" aria-controls="docs-tab-pane" aria-selected="false">Facturación</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="docs-tab" data-bs-toggle="tab" data-bs-target="#docs-tab-pane" type="button" role="tab" aria-controls="docs-tab-pane" aria-selected="false">Reglamento y exoneración</button>
             </li>
           </ul>
           <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
                 <br>
-                <p style="font-size: 28px; font-weight: 500;">Información del alumno</p>
+                <h3>Información del alumno</h3>
                 <br>
                 <div class="row">
                     <div class="col-md-6">
-                        <h5><strong>Nombre Completo: </strong></h5>
+                        <h5><strong>Nombre completo: </strong></h5>
                         {{object.get_estudiante}}
                     </div>
                     <div class="col-md-6">
@@ -43,11 +41,11 @@
                 <br>
                 <div class="row">
                     <div class="col-md-6">
-                        <h5><strong>Numero de documento:</strong></h5>
+                        <h5><strong>Número de documento:</strong></h5>
                         {{object.documento}}
                     </div>
                     <div class="col-md-6">
-                        <h5><strong>Numero de celular:</strong></h5>
+                        <h5><strong>Número de celular:</strong></h5>
                         {{object.celular}}
                     </div>
                 </div>
@@ -58,14 +56,14 @@
                         {{object.get_edad}}
                     </div>
                     <div class="col-md-6">
-                        <h5><strong>Correo electronico:</strong></h5>
+                        <h5><strong>Correo electrónico:</strong></h5>
                         {{object.email}}
                     </div>
                 </div>
                 <br>
                 <div class="row">
                     <div class="col-md-6">
-                        <h5><strong>Direccion de residencia:</strong></h5>
+                        <h5><strong>Dirección de residencia:</strong></h5>
                         {{object.direccion}}
                     </div>
                     <div class="col-md-6">
@@ -79,7 +77,6 @@
                         <h5><strong>Ciudad de residencia:</strong></h5>
                         {{object.ciudad}}
                     </div>
-                    
                     <div class="col-md-6">
                     <h5><strong>¿El alumno desea facturación electrónica?:</strong></h5>
                     <p>
@@ -89,7 +86,7 @@
                         NO
                         {% endif %}
                     </p>
-                    </div> 
+                    </div>
                 </div>
                 <br>
                 <div class="row">
@@ -101,60 +98,63 @@
                         <h5><strong>Poliza:</strong></h5>
                         {{object.poliza}}
                     </div>
-                    
                 </div>
                 <br>
                 <div class="row">
                     <div class="col-md-6">
-                        <h5><strong>Tiene comprobante de seguro medico:</strong></h5>
-                        {% if object.comprobante_seguro_medico %}
-                        SI
-                        {% else %}
-                        NO
-                        {% endif %}
+                        <div class="row">
+                            <div class="col-8">
+                                <h5><strong>Documento de identidad:</strong></h5>
+                            </div>
+                            <div class="col-4">
+                                <a href="/media/{{object.documento_A}}" download="output.png" class="btn btn-primary btn-sm"><i class="fa-solid fa-download"></i></a>
+                            </div>
+                        </div>
+                        <img src="/media/{{object.documento_A}}" alt="" class="img-fluid">
+                       <input type="hidden" id="documento" value="{{object.documento_A}}">
                     </div>
                     <div class="col-md-6">
-                        <h5><strong>Tiene comprobante de documento de identidad:</strong></h5>
-                        {% if object.comprobante_documento_identidad %}
-                        SI
-                        {% else %}
-                        NO
-                        {% endif %}
+                        <div class="row">
+                            <div class="col-8">
+                                <h5><strong>Seguro:</strong></h5>
+                            </div>
+                            <div class="col-1">
+                                <a href="/media/{{object.seguro_A}}" download="output.png" class="btn btn-primary btn-sm"><i class="fa-solid fa-download"></i></a>
+                            </div>
+                        </div>
+                        <img src="/media/{{object.seguro_A}}" alt="" class="img-fluid">
                     </div>
                 </div>
                 <br>
-                
                 <div class="row">
                     <div class="col-md-6">
                         <h5><strong>Tipo servicio:</strong></h5>
                         <p>
                             {{object.tipo_servicio}}
                         </p>
-                                   
-                    </div>   
+                    </div>
                     <div class="col-md-6">
                         <h5><strong>Tipo de Clase:</strong></h5>
                         {{object.get_tipo_clase_display}}
-                    </div>     
+                    </div>
                 </div>
                 <br>
-               
             </div>
             <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
                 <br>
-                <p style="font-size: 28px; font-weight: 500;">Información de los padres</p>
-                <!-- <h5><center>Información de la Madre</center></h5> -->
+                <h3>Información de los padres</h3>
+                <h5><center>Información de la madre</center></h5>
                 <br>
                 <div class="row">
                     {% if object.nombre_completo_madre %}
                         <div class="col-md-6">
-                            <h5><strong>Nombre completo de la Madre:</strong></h5>
+                            <h5><strong>Nombre completo de la madre:</strong></h5>
                             {{object.nombre_completo_madre}}
                         </div>
                     {% endif %}
                     {% if object.cedula_madre %}
                         <div class="col-md-6">
-                            <h5><strong>Numero de cedula de la Madre:</strong></h5>
+                            <h5><strong>Número de cedula de la madre:</strong></h5>
                             {{object.cedula_madre}}
                         </div>
                     {% endif %}
@@ -163,41 +163,39 @@
                 <div class="row">
                     {% if object.celular_madre %}
                         <div class="col-md-6">
-                            <h5><strong>Numero de celular de la Madre :</strong></h5>
+                            <h5><strong>Número de celular de la madre :</strong></h5>
                             {{object.celular_madre}}
                         </div>
                     {% endif %}
                     {% if object.email_madre %}
                         <div class="col-md-6">
-                            <h5><strong> Correo electronico de la Madre:</strong></h5>
+                            <h5><strong> Correo electrónico de la madre:</strong></h5>
                             {{object.email_madre}}
                         </div>
                     {% endif %}
-                    
                 </div>
                 <br>
                 <div class="row">
-                   
                    {% if object.lugar_expedicion_madre %}
                    <div class="col-md-6">
-                    <h5><strong>Lugar de expedicion de la cedula de la Madre:</strong></h5>
+                    <h5><strong>Lugar de expedición de la cédula de la madre:</strong></h5>
                     {{object.lugar_expedicion_madre}}
                 </div>
                    {% endif %}
                 </div>
                 <hr>
-                <h5><center>Información del Padre</center></h5>
+                <h5><center>Información del padre</center></h5>
                 <br>
                 <div class="row">
                     {% if object.nombre_completo_padre %}
                         <div class="col-md-6">
-                            <h5><strong>Nombre completo del Padre:</strong></h5>
+                            <h5><strong>Nombre completo del padre:</strong></h5>
                             {{object.nombre_completo_padre}}
                         </div>
                     {% endif %}
                     {% if object.cedula_padre %}
                         <div class="col-md-6">
-                            <h5><strong>Numero de cedula Del Padre:</strong></h5>
+                            <h5><strong>Número de cedula del padre:</strong></h5>
                             {{object.cedula_padre}}
                         </div>
                     {% endif %}
@@ -206,13 +204,13 @@
                 <div class="row">
                     {% if object.celular_padre %}
                         <div class="col-md-6">
-                            <h5><strong>Numero de celular Del Padre :</strong></h5>
+                            <h5><strong>Número de celular del padre :</strong></h5>
                             {{object.celular_padre}}
                         </div>
                     {% endif %}
                     {% if object.email_padre %}
                         <div class="col-md-6">
-                            <h5><strong> Correo electronico Del Padre:</strong></h5>
+                            <h5><strong> Correo electronico del padre:</strong></h5>
                             {{object.email_padre}}
                         </div>
                     {% endif %} 
@@ -221,7 +219,7 @@
                 <div class="row">
                    {% if object.lugar_expedicion_padre %}
                    <div class="col-md-6">
-                    <h5><strong>Lugar de expedicion de la cedula Del Padre:</strong></h5>
+                    <h5><strong>Lugar de expedición de la cédula del padre:</strong></h5>
                     {{object.lugar_expedicion_padre}}
                 </div>
                    {% endif %}
@@ -231,7 +229,7 @@
                 <h5><center>Información de ubicación del acudiente</center></h5>
                 <div class="row">
                     <div class="col-md-6">
-                        <h5><strong>Direccion: </strong></h5>
+                        <h5><strong>Dirección: </strong></h5>
                         {{object.direccion_A}}
                     </div>
                     <div class="col-md-6">
@@ -250,8 +248,7 @@
             </div>
             <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
                 <br>
-                <!-- <h3>Información del contacto de emergencia </h3> -->
-                <p style="font-size: 28px; font-weight: 500;">Información del contacto de emergencia</p>
+                <h3>Información del contacto de emergencia </h3>
                 <br>
                 <div class="row">
                     <div class="col-md-6">
@@ -259,54 +256,56 @@
                         {{object.nombre_contactoE}}
                     </div>
                     <div class="col-md-6">
-                        <h5><strong> Telefono del contacto de emergencia:</strong></h5>
+                        <h5><strong> Teléfono del contacto de emergencia:</strong></h5>
                         {{object.telefono_contactoE}}
                     </div>
                 </div>
                 <br>
                 <div class="row">
                     <div class="col-md-6">
-                        <h5><strong> Relacion con el alumno:</strong></h5>
+                        <h5><strong> Relación con el alumno:</strong></h5>
                         {{object.relacion_contactoE}}
+                    </div>
+                </div>
+                <br>
+            </div>
+            <div class="row">
+                    <div class="col-md-6">
+                        <h5 for="" style="font-weight: 500;">Nombre completo del facturado:</h5>
+                        {{object.nombre_facturar}}
+                    </div>
+                    <div class="col-md-6">
+                        <h5 for="" style="font-weight: 500;">Identificación del facturado:</h5>
+                        {{object.identificacion_facturar}}
+                    </div>
+            </div>
+            <div class="row">
+                    <div class="col-md-6">
+                        <h5 for="" style="font-weight: 500;">Dirreción del facturado:</h5>
+                        {{object.direccion_facturar}}
+                    </div>
+                    <div class="col-md-6">
+                        <h5 for="" style="font-weight: 500;">Correo electónico del facturado:</h5>
+                        {{object.email_facturar}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h5 for="" style="font-weight: 500;">Telédono del facturado:</h5>
+                        {{object.telefono_facturar}}
                     </div>
                 </div>
                 <br>
             </div>
             <div class="tab-pane fade" id="docs-tab-pane" role="tabpanel" aria-labelledby="docs-tab" tabindex="0">
                 <br>
-                <h3>Documentos </h3>
+                <h3>Reglamento Y exoneración </h3>
                 <br>
                 <div class="row">
                     <div class="col-md-6">
                         <div class="row">
                             <div class="col-8">
-                                <p><strong>Documento de identidad:</strong></p>
-                            </div>
-                            <div class="col-4">
-                                <a href="/media/{{object.documento_A}}" download="output.png" class="btn btn-primary btn-sm"><i class="fa-solid fa-download"></i></a>
-                            </div>
-                        </div>
-                        <img src="/media/{{object.documento_A}}" alt="" class="img-fluid">
-                       <input type="hidden" id="documento" value="{{object.documento_A}}">
-                    </div>
-                    <div class="col-md-6">
-                        <div class="row">
-                            <div class="col-8">
-                                <p><strong>Seguro:</strong></p>
-                            </div>
-                            <div class="col-1">
-                                <a href="/media/{{object.seguro_A}}" download="output.png" class="btn btn-primary btn-sm"><i class="fa-solid fa-download"></i></a>
-                            </div>
-                        </div>
-                        <img src="/media/{{object.seguro_A}}" alt="" class="img-fluid">
-                    </div>
-                </div>
-                <br>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="row">
-                            <div class="col-8">
-                                <p><strong>Consentimiento para asumir riesgo y exoneración de responsabilidad:</strong></p>
+                                <h5><strong>Consentimiento para asumir riesgo y Exoneración de responsabilidad:</strong></h5>
                             </div>
                             <div class="col-1">
                                 <a href="/media/{{object.exoneracion}}" download="output.png" class="btn btn-primary btn-sm"><i class="fa-solid fa-download"></i></a>
@@ -314,16 +313,19 @@
                         </div>
                         <img src="/media/{{object.exoneracion}}" alt="" class="img-fluid">
                     </div>
+                    {% if object.nombrefirma %}
+                    <div class="col-md-6">
+                        <h5><strong>Firma de {{object.nombrefirma}}:</strong></h5>
+                        <img src="/media/{{object.firma}}" alt="{{ object }}" />
+                    </div>
+                    {% endif %}
                 </div>
                 <br>
             </div>
-           
           </div>
             </div>
     </div>
 {% endblock contenido %}
-
-
 {% block scripts %}
     <script>
         cargarHoras(horaClase,diaClase)
@@ -345,9 +347,5 @@
                 document.getElementById('horarios').appendChild(divHorario);
             }
         }
-        
     </script>
 {% endblock scripts %}
-    
-
-    

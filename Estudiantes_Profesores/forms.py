@@ -11,7 +11,7 @@ class CrearEstudianteForm(forms.ModelForm):
         "barrio","ciudad","seguro","poliza","comprobante_seguro_medico",
         "comprobante_documento_identidad","nombre_completo_madre","cedula_madre","celular_madre",
         "email_madre","nombre_completo_padre","cedula_padre", "celular_padre", "email_padre","nombre_contactoE","telefono_contactoE","relacion_contactoE","exoneracion",
-        "documento_A","seguro_A","tipo_clase","aceptaContrato","facturacion_electronica",'tipo_servicio',"nombre_facturar", "identificacion_facturar","direccion_facturar","email_facturar",'nota','autorizaClub')
+        "documento_A","seguro_A","tipo_clase","aceptaContrato","facturacion_electronica",'tipo_servicio',"nombre_facturar", "identificacion_facturar","direccion_facturar","email_facturar",'telefono_facturar',"nota")
 
         widgets = {
         "nombre_completo": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
@@ -31,27 +31,28 @@ class CrearEstudianteForm(forms.ModelForm):
         "comprobante_seguro_medico": forms.CheckboxInput(attrs={"class":"form-check-input", "autocomplete":"off"}),
         "aceptaContrato": forms.CheckboxInput(attrs={"class":"form-check-input", "autocomplete":"off"}),
         "comprobante_documento_identidad": forms.CheckboxInput(attrs={"class":"form-check-input", "autocomplete":"off"}),
-        "nombre_completo_madre": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off", "placeholder":"Ingrese el nombre completo de la madre "}),
-        "cedula_madre": forms.NumberInput(attrs={"class":"form-control", "autocomplete":"off", "placeholder":"Ingrese el número de cédula de la madre"}),
-        "celular_madre": forms.NumberInput(attrs={"class":"form-control", "autocomplete":"off", "placeholder":"Ingrese el número de celular de la madre "}),
-        "email_madre": forms.EmailInput(attrs={"class":"form-control", "autocomplete":"off", "placeholder":"Ingrese el correo electrónico de la madre"}),
-        "nombre_completo_padre": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off", "placeholder":"Ingrese el nombre completo del padre "}),
-        "cedula_padre": forms.NumberInput(attrs={"class":"form-control", "autocomplete":"off", "placeholder":"Ingrese el número de cédula del padre"}),
-        "celular_padre": forms.NumberInput(attrs={"class":"form-control", "autocomplete":"off", "placeholder":"Ingrese el número de celular del padre"}),
-        "email_padre": forms.EmailInput(attrs={"class":"form-control", "autocomplete":"off", "placeholder":"Ingrese el correo electrónico del padre"}),
-        "nombre_contactoE": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off", "placeholder":"Ingrese un nombre de contacto"}),
-        "telefono_contactoE": forms.NumberInput(attrs={"class":"form-control", "autocomplete":"off", "placeholder":"Ingrese un número de contacto"}),
-        "relacion_contactoE": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off", "placeholder":"Ingrese la relación de contacto"}),
-        "nombre_facturar": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off", "placeholder":"Ingrese el número de factura"}),
-        "identificacion_facturar": forms.NumberInput(attrs={"class":"form-control", "autocomplete":"off", "placeholder":"Ingrese identificación a facturar"}),
-        "direccion_facturar": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off", "placeholder":"Ingrese dirección a facturar"}),
+        "nombre_completo_madre": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
+        "cedula_madre": forms.NumberInput(attrs={"class":"form-control", "autocomplete":"off"}),
+        "celular_madre": forms.NumberInput(attrs={"class":"form-control", "autocomplete":"off"}),
+        "email_madre": forms.EmailInput(attrs={"class":"form-control", "autocomplete":"off"}),
+        "nombre_completo_padre": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
+        "cedula_padre": forms.NumberInput(attrs={"class":"form-control", "autocomplete":"off"}),
+        "celular_padre": forms.NumberInput(attrs={"class":"form-control", "autocomplete":"off"}),
+        "email_padre": forms.EmailInput(attrs={"class":"form-control", "autocomplete":"off"}),
+        "nombre_contactoE": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
+        "telefono_contactoE": forms.NumberInput(attrs={"class":"form-control", "autocomplete":"off"}),
+        "relacion_contactoE": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
+        "nombre_facturar": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
+        "nota": forms.Textarea(attrs={"class":"form-control", "autocomplete":"off"}),
+        "identificacion_facturar": forms.NumberInput(attrs={"class":"form-control", "autocomplete":"off"}),
+        "telefono_facturar": forms.NumberInput(attrs={"class":"form-control", "autocomplete":"off"}),
+        "direccion_facturar": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
         "exoneracion": forms.FileInput(attrs={"class":"form-control"}),
         "email_facturar": forms.EmailInput(attrs={"class":"form-control", "autocomplete":"off", "placeholder":"Ingrese el correo electrónico a facturar"}),
         "documento_A": forms.FileInput(attrs={"class":"form-control"}),
         "seguro_A": forms.FileInput(attrs={"class":"form-control"}),
         "tipo_clase": forms.Select(attrs={"class":"form-select"}),
         "tipo_servicio": forms.Select(attrs={"class":"form-select"}),
-        "nota": forms.Textarea(attrs={"class":"form-control", "autocomplete":"off"}),
         "facturacion_electronica": forms.CheckboxInput(attrs={"class":"form-check-input", "autocomplete":"off"}),
         }
     def __init__(self, *args, **kwargs):
@@ -88,6 +89,7 @@ class CrearEstudianteForm(forms.ModelForm):
         self.fields['identificacion_facturar'].required = True
         self.fields['direccion_facturar'].required = True
         self.fields['email_facturar'].required = True
+        self.fields['telefono_facturar'].required = True
         self.fields['exoneracion'].required = True
         self.fields['documento_A'].required = True
         self.fields['seguro_A'].required = True
@@ -98,11 +100,15 @@ class CrearEstudianteForm(forms.ModelForm):
     def clean_primer_nombre(self):    
         self.nombre = self.cleaned_data['primer_nombre']
         if self.nombre != None:
+            self.nombre = self.nombre.capitalize()
+        if self.nombre != None:
             if any(map(str.isdigit, self.nombre)):
                 raise forms.ValidationError('El nombre no puede contener digitos')
         return self.nombre
     def clean_segundo_nombre(self):    
         self.Lnombre = self.cleaned_data['segundo_nombre']
+        if self.Lnombre != None:
+            self.Lnombre = self.Lnombre.capitalize()
         if self.Lnombre != None:
             if any(map(str.isdigit, self.Lnombre)):
                 raise forms.ValidationError('El nombre no puede contener digitos')
@@ -110,11 +116,15 @@ class CrearEstudianteForm(forms.ModelForm):
     def clean_primer_apellido(self):    
         self.apellido = self.cleaned_data['primer_apellido']
         if self.apellido != None:
+            self.apellido = self.apellido.capitalize()
+        if self.apellido != None:
             if any(map(str.isdigit, self.apellido)):
                 raise forms.ValidationError('El apellido no puede contener digitos')
         return self.apellido
     def clean_segundo_apellido(self):    
         self.Lapellido = self.cleaned_data['segundo_apellido']
+        if self.Lapellido != None:
+            self.Lapellido = self.Lapellido.capitalize()
         if self.Lapellido != None:
             if any(map(str.isdigit, self.Lapellido)):
                 raise forms.ValidationError('El apellido no puede contener digitos')
@@ -148,30 +158,54 @@ class CrearEstudianteForm(forms.ModelForm):
         else:
             raise forms.ValidationError('Asegúrese de que este valor sea menor o igual a 15.')
     def clean_cedula_madre(self):
-        cedula_madre = self.cleaned_data["cedula_madre"]
-        if len(str(cedula_madre))<=15:
-            return cedula_madre
+        self.cedula_madre = self.cleaned_data["cedula_madre"]
+        if len(str(self.cedula_madre))<=15:
+            return self.cedula_madre
         else:
             raise forms.ValidationError('Asegúrese de que este valor sea menor o igual a 15.')
     def clean_celular_madre(self):
-        celular_madre = self.cleaned_data["celular_madre"]
-        if len(str(celular_madre))<=15:
-            return celular_madre
+        self.celular_madre = self.cleaned_data["celular_madre"]
+        if len(str(self.celular_madre))<=15:
+            return self.celular_madre
         else:
             raise forms.ValidationError('Asegúrese de que este valor sea menor o igual a 15.')
         
     def clean_cedula_padre(self):
-        cedula_padre = self.cleaned_data["cedula_padre"]
-        if len(str(cedula_padre))<=15:
-            return cedula_padre
+        self.cedula_padre = self.cleaned_data["cedula_padre"]
+        if len(str(self.cedula_padre))<=15:
+            return self.cedula_padre
         else:
             raise forms.ValidationError('Asegúrese de que este valor sea menor o igual a 15.')
     def clean_celular_padre(self):
-        celular_padre = self.cleaned_data["celular_padre"]
-        if len(str(celular_padre))<=15:
-            return celular_padre
+        self.celular_padre = self.cleaned_data["celular_padre"]
+        if len(str(self.celular_padre))<=15:
+            return self.celular_padre
         else:
             raise forms.ValidationError('Asegúrese de que este valor sea menor o igual a 15.')
+    def clean_telefono_contactoE(self):
+        telefono = self.cleaned_data["telefono_contactoE"]
+        if telefono == self.celular_madre:
+            raise forms.ValidationError('El celular no puede ser igual al de la madre')
+        if telefono == self.celular_padre:
+            raise forms.ValidationError('El celular no puede ser igual al del padre')
+        return telefono
+    def clean_nombre_completo_padre(self):
+        self.nombre_completo_padre = self.cleaned_data["nombre_completo_padre"]
+        if self.nombre_completo_padre != None:
+            self.nombre_completo_padre = self.nombre_completo_padre.capitalize()
+        return self.nombre_completo_padre
+    def clean_nombre_completo_madre(self):
+        self.nombre_completo_madre = self.cleaned_data["nombre_completo_madre"]
+        if self.nombre_completo_madre != None:
+            self.nombre_completo_madre = self.nombre_completo_madre.capitalize()
+        return self.nombre_completo_madre
+    def clean_nombre_contactoE(self):
+        nombre_facturar = self.cleaned_data["nombre_contactoE"]
+        if nombre_facturar!= None:
+           nombre_facturar = nombre_facturar.capitalize()
+        if nombre_facturar == self.nombre_completo_padre or nombre_facturar == self.nombre_completo_madre:
+            raise forms.ValidationError('El nombre no puede ser igual al de los padres')
+        return nombre_facturar
     def clean_telefono_contactoE(self):
         telefono_contactoE = self.cleaned_data["telefono_contactoE"]
         if len(str(telefono_contactoE))<=15:
@@ -187,7 +221,7 @@ class EstudianteForm(forms.ModelForm):
         "barrio","ciudad","seguro","poliza","comprobante_seguro_medico",
         "comprobante_documento_identidad","nombre_completo_madre","cedula_madre","celular_madre",
         "email_madre","nombre_completo_padre","cedula_padre", "celular_padre", "email_padre","nombre_contactoE","telefono_contactoE","relacion_contactoE","exoneracion",
-        "documento_A","seguro_A","tipo_clase","aceptaContrato","facturacion_electronica",'tipo_servicio',"nombre_facturar", "identificacion_facturar","direccion_facturar","email_facturar","nota")
+        "documento_A","seguro_A","tipo_clase","aceptaContrato","facturacion_electronica",'tipo_servicio',"nombre_facturar", "identificacion_facturar","direccion_facturar","email_facturar",'telefono_facturar',"nota")
 
         widgets = {
         "nombre_completo": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
@@ -221,6 +255,7 @@ class EstudianteForm(forms.ModelForm):
         "nombre_facturar": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
         "nota": forms.Textarea(attrs={"class":"form-control", "autocomplete":"off"}),
         "identificacion_facturar": forms.NumberInput(attrs={"class":"form-control", "autocomplete":"off"}),
+        "telefono_facturar": forms.NumberInput(attrs={"class":"form-control", "autocomplete":"off"}),
         "direccion_facturar": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
         "exoneracion": forms.FileInput(attrs={"class":"form-control"}),
         "email_facturar": forms.EmailInput(attrs={"class":"form-control", "autocomplete":"off"}),
@@ -264,6 +299,7 @@ class EstudianteForm(forms.ModelForm):
         self.fields['identificacion_facturar'].required = True
         self.fields['direccion_facturar'].required = True
         self.fields['email_facturar'].required = True
+        self.fields['telefono_facturar'].required = True
         self.fields['exoneracion'].required = True
         self.fields['documento_A'].required = True
         self.fields['seguro_A'].required = True
@@ -271,6 +307,54 @@ class EstudianteForm(forms.ModelForm):
         self.fields['tipo_servicio'].required = True
         self.fields['aceptaContrato'].required = False
         self.fields['facturacion_electronica'].required = False
+    def clean_primer_nombre(self):    
+        self.nombre = self.cleaned_data['primer_nombre']
+        if self.nombre != None:
+            self.nombre = self.nombre.capitalize()
+        if self.nombre != None:
+            if any(map(str.isdigit, self.nombre)):
+                raise forms.ValidationError('El nombre no puede contener digitos')
+        return self.nombre
+    def clean_segundo_nombre(self):    
+        self.Lnombre = self.cleaned_data['segundo_nombre']
+        if self.Lnombre != None:
+            self.Lnombre = self.Lnombre.capitalize()
+        if self.Lnombre != None:
+            if any(map(str.isdigit, self.Lnombre)):
+                raise forms.ValidationError('El nombre no puede contener digitos')
+        return self.Lnombre
+    def clean_primer_apellido(self):    
+        self.apellido = self.cleaned_data['primer_apellido']
+        if self.apellido != None:
+            self.apellido = self.apellido.capitalize()
+        if self.apellido != None:
+            if any(map(str.isdigit, self.apellido)):
+                raise forms.ValidationError('El apellido no puede contener digitos')
+        return self.apellido
+    def clean_segundo_apellido(self):    
+        self.Lapellido = self.cleaned_data['segundo_apellido']
+        if self.Lapellido != None:
+            self.Lapellido = self.Lapellido.capitalize()
+        if self.Lapellido != None:
+            if any(map(str.isdigit, self.Lapellido)):
+                raise forms.ValidationError('El apellido no puede contener digitos')
+        return self.Lapellido
+    def clean_nombre_completo(self):
+        try:
+            nombre = self.nombre
+            if self.Lnombre != None:
+                nombre = nombre + f' {self.Lnombre}'
+            nombre = nombre + f' {self.apellido} {self.Lapellido}'
+            return nombre
+        except:
+            return None
+    def clean_aceptaContrato(self):
+        contrato = self.cleaned_data["aceptaContrato"]
+        if contrato:
+            return contrato
+        else:
+            raise forms.ValidationError('Si no acepta el reglamento no podrá realizar el registro')
+        
     def clean_documento(self):
         documento = self.cleaned_data["documento"]
         if len(str(documento))<=15:
@@ -284,36 +368,61 @@ class EstudianteForm(forms.ModelForm):
         else:
             raise forms.ValidationError('Asegúrese de que este valor sea menor o igual a 15.')
     def clean_cedula_madre(self):
-        cedula_madre = self.cleaned_data["cedula_madre"]
-        if len(str(cedula_madre))<=15:
-            return cedula_madre
+        self.cedula_madre = self.cleaned_data["cedula_madre"]
+        if len(str(self.cedula_madre))<=15:
+            return self.cedula_madre
         else:
             raise forms.ValidationError('Asegúrese de que este valor sea menor o igual a 15.')
     def clean_celular_madre(self):
-        celular_madre = self.cleaned_data["celular_madre"]
-        if len(str(celular_madre))<=15:
-            return celular_madre
+        self.celular_madre = self.cleaned_data["celular_madre"]
+        if len(str(self.celular_madre))<=15:
+            return self.celular_madre
         else:
             raise forms.ValidationError('Asegúrese de que este valor sea menor o igual a 15.')
         
     def clean_cedula_padre(self):
-        cedula_padre = self.cleaned_data["cedula_padre"]
-        if len(str(cedula_padre))<=15:
-            return cedula_padre
+        self.cedula_padre = self.cleaned_data["cedula_padre"]
+        if len(str(self.cedula_padre))<=15:
+            return self.cedula_padre
         else:
             raise forms.ValidationError('Asegúrese de que este valor sea menor o igual a 15.')
     def clean_celular_padre(self):
-        celular_padre = self.cleaned_data["celular_padre"]
-        if len(str(celular_padre))<=15:
-            return celular_padre
+        self.celular_padre = self.cleaned_data["celular_padre"]
+        if len(str(self.celular_padre))<=15:
+            return self.celular_padre
         else:
             raise forms.ValidationError('Asegúrese de que este valor sea menor o igual a 15.')
+    def clean_telefono_contactoE(self):
+        telefono = self.cleaned_data["telefono_contactoE"]
+        if telefono == self.celular_madre:
+            raise forms.ValidationError('El celular no puede ser igual al de la madre')
+        if telefono == self.celular_padre:
+            raise forms.ValidationError('El celular no puede ser igual al del padre')
+        return telefono
+    def clean_nombre_completo_padre(self):
+        self.nombre_completo_padre = self.cleaned_data["nombre_completo_padre"]
+        if self.nombre_completo_padre != None:
+            self.nombre_completo_padre = self.nombre_completo_padre.capitalize()
+        return self.nombre_completo_padre
+    def clean_nombre_completo_madre(self):
+        self.nombre_completo_madre = self.cleaned_data["nombre_completo_madre"]
+        if self.nombre_completo_madre != None:
+            self.nombre_completo_madre = self.nombre_completo_madre.capitalize()
+        return self.nombre_completo_madre
+    def clean_nombre_contactoE(self):
+        nombre_facturar = self.cleaned_data["nombre_contactoE"]
+        if nombre_facturar!= None:
+           nombre_facturar = nombre_facturar.capitalize()
+        if nombre_facturar == self.nombre_completo_padre or nombre_facturar == self.nombre_completo_madre:
+            raise forms.ValidationError('El nombre no puede ser igual al de los padres')
+        return nombre_facturar
     def clean_telefono_contactoE(self):
         telefono_contactoE = self.cleaned_data["telefono_contactoE"]
         if len(str(telefono_contactoE))<=15:
             return telefono_contactoE
         else:
             raise forms.ValidationError('Asegúrese de que este valor sea menor o igual a 15.')
+
 
 
 class RegistroForm(forms.ModelForm):
@@ -329,11 +438,6 @@ class RegistroForm(forms.ModelForm):
             "nivel": forms.Select(attrs={"class":"form-select"}),
             "profesor": forms.Select(attrs={"class":"form-select"}),
         }
-
-
-    
-        
-    
 class ProfesorForm(forms.ModelForm):
     class Meta(forms.ModelForm):
         model = Profesor

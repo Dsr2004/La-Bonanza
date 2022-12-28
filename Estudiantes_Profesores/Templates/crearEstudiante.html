@@ -26,7 +26,7 @@
         border-radius: 4px;
     }
 </style>
-<div id="fondoContrato"style="display:none; width:100%; position:fixed; top:0; height:100vh; background-color:rgba(0,0,0,0.5);"><div id="DivContrato" style="width:90%;height: 90vh;background-color: #fff; position:absolute; top:2.5%;left: 5%; border: 1px solid rgba(0,0,0,1); z-index: 100; border-radius: 5px;overflow: auto;"><div id="header" style="width: 88%; margin: 0 1%; height:60px; border-bottom: 1px solid rgba(0,0,0,0.3); display:grid;grid-template-columns: 96% 4%; padding: 0 10px; position: fixed; background-color: #fff;"><h1 id="titleContrato"></h1><i class="fa fa-close" style="position:relative; right: -5px!important; top: 17px; font-size: 24px; cursor: pointer;" onclick="hideContrato()"></i></div><div id="contentContrato" style="margin-top: 70px; display: grid;grid-template-columns: 1fr; grid-gap:5px; padding: 15px;"></div><div><label for="AceptacionContrato" style="padding: 0 20px;"><strong>Aceptación del contrato: </strong>Por medio de la suscripción de este documento declaro en forma clara y expresa que he leído y comprendido el presente reglamento, razón por lo acepto en su integridad y me comprometo a cumplirlo en su integridad, así como velar por su cumplimiento por parte de mi hijo y/o representado.La dirección de este club pide el consentimiento a los padres o tutores legales para publicar las imágenes, en las cuales aparezcan individualmente o en grupo los niños(a), en las diferentes secuencias y actividades realizadas en el club y fuera del mismo.<sup class="required"  class="required"  class="required"  class="required"  style="color: red;">*</sup></label><div class="form-check form-switch" >
+<div id="fondoContrato"style="display:none; width:100%; position:fixed; top:0; height:100vh; background-color:rgba(0,0,0,0.5);"><div id="DivContrato" style="width:90%;height: 90vh;background-color: #fff; position:absolute; top:2.5%;left: 5%; border: 1px solid rgba(0,0,0,1); z-index: 100; border-radius: 5px;overflow: auto;"><div id="header" style="width: 88%; margin: 0 1%; height:60px; border-bottom: 1px solid rgba(0,0,0,0.3); display:grid;grid-template-columns: 96% 4%; padding: 0 10px; position: fixed; background-color: #fff;"><h1 id="titleContrato"></h1><i class="fa fa-close" style="position:relative; right: -5px!important; top: 17px; font-size: 24px; cursor: pointer;" onclick="hideContrato()"></i></div><div id="contentContrato" style="margin-top: 70px; display: grid;grid-template-columns: 1fr; grid-gap:5px; padding: 15px;"></div><div><label for="AceptacionContrato" style="padding: 0 20px;"><strong>Aceptación del reglamento: </strong>Por medio de la suscripción de este documento declaro en forma clara y expresa que he leído y comprendido el presente reglamento, razón por lo acepto en su integridad y me comprometo a cumplirlo en su integridad, así como velar por su cumplimiento por parte de mi hijo y/o representado.La dirección de este club pide el consentimiento a los padres o tutores legales para publicar las imágenes, en las cuales aparezcan individualmente o en grupo los niños(a), en las diferentes secuencias y actividades realizadas en el club y fuera del mismo.<sup class="required"  class="required"  class="required"  class="required"  style="color: red;">*</sup></label><div class="form-check form-switch" >
 <div style="margin-left: 0;" class="checkboxSiNo">
     <input type="checkbox" name="AceptacionContrato" class="form-check-input" autocomplete="off" id="AceptacionContrato">
     <label for="AceptacionContrato"></label>
@@ -73,7 +73,7 @@
                     <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-facturacion" type="button" role="tab" aria-controls="pills-contact" aria-selected="false"><i id="icon_danger_FACTURACION" class="fa-solid fa-circle-exclamation"></i>  Facturación</button>
                 </li>
                 <li class="nav-item" role="presentation">
-                  <button class="nav-link" id="pills-disabled-tab" data-bs-toggle="pill" data-bs-target="#pills-disabled" type="button" role="tab" aria-controls="pills-disabled" aria-selected="false"><i id="icon_danger_DOCUMENTOS" class="fa-solid fa-circle-exclamation"></i>   Reglamento y exoneración</button>
+                  <button onclick="document.getElementById('firm').style.visibility='visible'" class="nav-link" id="pills-disabled-tab" data-bs-toggle="pill" data-bs-target="#pills-disabled" type="button" role="tab" aria-controls="pills-disabled" aria-selected="false"><i id="icon_danger_DOCUMENTOS" class="fa-solid fa-circle-exclamation"></i>   Reglamento y exoneración</button>
                 </li>
               </ul>
               <div class="tab-content" id="pills-tabContent">
@@ -205,7 +205,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-                            <label for="" style="font-weight: 500;">{{form.nota.label}}: (<b>Opcional:</b> informar acerca de cualquier discapacidad o enfermedad que presente el alumno)</label>
+                            <label for="" style="font-weight: 500;">{{form.nota.label}}: (<b>Opcional:</b> informar acerca de cualquier discapacidad, enfermedad o alergia que presente el alumno)</label>
                             
                             {{form.nota}}
                             <p id="nota" class="error_text"></p>
@@ -329,15 +329,23 @@
                         </div>
                    </div>
                    <div class="row">
-                    <div class="col-md-6">
-                        <label for="" style="font-weight: 500;">{{form.direccion_facturar.label}}:<sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
-                        {{form.direccion_facturar}}
-                        <p id="direccion_facturar" class="error_text"></p>
+                        <div class="col-md-6">
+                            <label for="" style="font-weight: 500;">{{form.direccion_facturar.label}}:<sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
+                            {{form.direccion_facturar}}
+                            <p id="direccion_facturar" class="error_text"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="" style="font-weight: 500;">{{form.email_facturar.label}}:<sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
+                            {{form.email_facturar}}
+                            <p id="email_facturar" class="error_text"></p>
+                        </div>
                     </div>
-                    <div class="col-md-6">
-                        <label for="" style="font-weight: 500;">{{form.email_facturar.label}}:<sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
-                        {{form.email_facturar}}
-                        <p id="email_facturar" class="error_text"></p>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label for="" style="font-weight: 500;">{{form.telefono_facturar.label}}:<sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
+                            {{form.telefono_facturar}}
+                            <p id="telefono_facturar" class="error_text"></p>
+                        </div>
                     </div>
                </div>
                     <button type="button" class="btn btn-primary" style="float: left" onclick="moveTab('icon_danger_EMERGENCIA')"><i class="fa-solid fa-arrow-left"></i> Anterior</button>
@@ -360,9 +368,22 @@
                     </div>
                         <p id="aceptaContrato" class="error_text"></p>
                     </div>
-                    <button type="button" class="btn btn-primary" style="float: left" onclick="moveTab('icon_danger_DOCUMENTOS')"><i class="fa-solid fa-arrow-left"></i> Anterior</button>
-                    <button type="submit" class="btn btn-success" style="float: right"><i class="fa-regular fa-floppy-disk"></i> Guardar</button>
+                    <div class="row">
+                        <label for="" style="font-weight: 500;">Nombre del firmante: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label><br>
+                        <input type="text" name="nombrefirma">
+                        <input type="hidden" name="firma" id="firma">
+                    </div>
                     <br>
+                     
+                </div>
+                <br>
+                <div id="firm" style="visibility: hidden;">
+                    <label for="" style="font-weight: 500;">Firma: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label><br>
+                    <sub>Al firmar aceptas todo la información presentada anteriormente.</sub>
+                    <br>
+                    <canvas id="signature-canvas" style="border: 1px dashed rgb(79, 74, 74); background-color: #fff; width: 50%; height: 200px;"></canvas>
+                    <button type="button" id="send" class="btn btn-success w-100" style="float: right">Enviar</button>   
+
                 </div>
                 </div>
                    <br>
@@ -409,8 +430,25 @@
 
 
 {% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
 <script src="{% static 'js/reglamento.js' %}"></script>
 <script>
+    window.addEventListener('load', async () => {
+            const canvas = document.querySelector("canvas");
+            canvas.height = canvas.offsetHeight;
+            canvas.width = canvas.offsetWidth;
+
+            signaturePad = new SignaturePad(canvas, {syncField: '#signature64', syncFormat: 'PNG'});
+    });
+
+    $("#send").on("click", function(){
+        if(signaturePad.isEmpty()){
+            alert("La firma esta vacia")
+        }else{
+            $("#firma").val(signaturePad.toDataURL())
+            $("#CrearEstudianteForm").submit()
+        }
+    })
     $(document).ready(function(){
             let inputRequired = document.getElementsByTagName('input')
             let selectRequired = document.getElementsByTagName('select')

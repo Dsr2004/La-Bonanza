@@ -17,6 +17,7 @@
         </div>
         <div class="col-md-2">
            <button class="btn btn-outline-success btn-lg" onclick="agregarEstudiantes()"> <i class="fa-solid fa-person-circle-plus fa-xl"></i></button>
+           <button class="btn btn-outline-dark btn-lg" onclick="pasarEstudiantes()"> <i class="fa fa-people-group"></i></button>
             
         </div>
        </div>
@@ -58,6 +59,7 @@
 {%endblock contenido%}
 {% block modals %}
 <div class="modal fade" id="agregarEstudiantesP" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" id="pasarEstudiantes" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true"></div>
 </div>
 {% endblock modals %}
 {% block scripts %}
@@ -71,6 +73,12 @@
     function agregarEstudiantes(){
         url = '{%url "agregarEstudiante" Profesor.pk%}'
         $("#agregarEstudiantesP").load(url, function (){ 
+            $(this).appendTo("body").modal('show');
+        });
+    }
+    function pasarEstudiantes(){
+        url = '{%url "pasarEstudiantes" Profesor.pk%}'
+        $("#pasarEstudiantes").load(url, function (){ 
             $(this).appendTo("body").modal('show');
         });
     }

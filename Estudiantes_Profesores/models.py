@@ -34,6 +34,8 @@ def guardar_documento(instance, filename):
     return  f"Archivos_Estudiantes/{instance.nombre_completo}_{instance.documento}/documento{extension(filename)}"
 def guardar_seguro(instance, filename):
     return  f"Archivos_Estudiantes/{instance.nombre_completo}_{instance.documento}/seguro{extension(filename)}"
+def guardar_firma(instance, filename):
+    return  f"Archivos_Estudiantes/{instance.nombre_completo}_{instance.documento}/firma{extension(filename)}"
 
 def validar_extencion_archivo(value):
     ext = os.path.splitext(value.name)[1] 
@@ -127,10 +129,14 @@ class Estudiante(models.Model):
     identificacion_facturar = models.IntegerField("número de cédula o nit a facturar", unique=True, null=True, blank=True)
     direccion_facturar = models.CharField("dirección", max_length=500, null=True, blank=True)
     email_facturar = models.EmailField("Correo electrónico a facturar", unique=True, null=True, blank=True)
+    telefono_facturar = models.IntegerField('teléfono a facturar', unique=True, null=True, blank=True)
     #archivos
     exoneracion =models.FileField(upload_to=guardar_exoneracion, validators = [validar_extencion_archivo],null=False, blank=False)
     documento_A =models.FileField(upload_to=guardar_documento, validators = [validar_extencion_archivo],null=False, blank=False)
     seguro_A =models.FileField(upload_to=guardar_seguro, validators = [validar_extencion_archivo],null=False, blank=False) 
+    # firma poner en NULL FALSE, NO LO PUSE PARA NO TENER QUE BORRAR LOS REGISTROS
+    nombrefirma = models.CharField("nombre de la persona que está firmando", max_length=100,null=True, blank=True)
+    firma = models.FileField(upload_to=guardar_firma,validators = [validar_extencion_archivo], null=True, blank=True)
     #datos para el sistema
     facturacion_electronica = models.BooleanField("¿Desea facturación electrónica?", default=False)
     tipo_clase = models.CharField(max_length=15, choices=ESTADOS_CLASES, null=False, blank=False)

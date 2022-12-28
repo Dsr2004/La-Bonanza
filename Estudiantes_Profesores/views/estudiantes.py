@@ -14,6 +14,11 @@ from ..models import Estudiante, Registro, Profesor, Calendario as CalendarioMod
 from ..forms import EstudianteForm,CrearEstudianteForm, RegistroForm,ProfesorForm
 from ..models import DIAS_SEMANA
 from .validacion import ValidationClass, arreglarFormatoDia, guardarRegistro
+from django.core.files.base import ContentFile
+import base64
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+from io import BytesIO
 
 def cambiarTipoClase(request):
     if request.POST.get('tipo') == 'edit':
@@ -54,7 +59,15 @@ class RegistrarEstudiante(CreateView):
     def form_valid(self, form):
         if self.request.user.is_authenticated:
             if self.request.user.administrador:
-                form.save()
+                estudiante = form.save()
+                image_data = self.request.POST.get("firma")
+                format, imgstr = image_data.split(';base64,')
+                ext = format.split('/')[-1]
+
+                data = ContentFile(base64.b64decode(imgstr))  
+                file_name = "firma-"+self.request.POST.get("nombrefirma")+"."+ ext
+                
+                estudiante.firma.save(file_name, data, save=True)
                 return redirect("estudiantes")
         else:
             nombre = str(form.cleaned_data['nombre_completo']).capitalize()
@@ -405,10 +418,17 @@ class ModificarRegistroEstudiante(IsAdminMixin, UpdateView):
         else:
             return JsonResponse({"errores": form.errors}, status=400)
         return JsonResponse({"mensaje":"estudiante modificado con exito"}, status=400)
-
-
 class horario(View):
     template_name = "Clases/horarios.html"
+    def generar_pdf_desde_plantilla(self, context_dict: None):
+        template_src = "Clases/horarioPDF.html"
+        template = get_template(template_src)
+        html  = template.render(context_dict)
+        result = BytesIO()
+        pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)
+        if not pdf.err:
+            return HttpResponse(result.getvalue(), content_type='application/pdf')
+        return None
     def newClass(self, clases):
         hoy = datetime.now().date()
         Clases=[]
@@ -432,4 +452,12 @@ class horario(View):
         context = {'niveles': Nivel.objects.all(), "horas": ['1 a.m.', '2 a.m.', '3 a.m.', '4 a.m.', '5 a.m.', '6 a.m.', '7 a.m.', '8 a.m.', '9 a.m.', '10 a.m.', '11 a.m.', '12 p.m.', '1 p.m.', '2 p.m.', '3 p.m.', '4 p.m.', '5 p.m.', '6 p.m.', '7 p.m.', '8 p.m.', '9 p.m.', '10 p.m.', '11 p.m.', '12 a.m.']}
         context['clases'] = self.newClass(EstadoClase.objects.filter(dia = datetime.strptime(kwargs['date'], '%Y-%m-%d')))
         context['date']=datetime.strptime(kwargs['date'], '%Y-%m-%d')
-        return render(request, self.template_name, context)
+        if request.GET.get('download'):
+            return render(request, 'Clases/horarioPDF.html', context)
+            # kwarg = kwargs['date']
+            # response = self.generar_pdf_desde_plantilla(context_dict=context)
+            # # response['Content-Disposition'] = f'attachment; filename="horario {kwarg}.pdf"'
+            # return response
+        else:
+            return render(request, self.template_name, context)
+    
