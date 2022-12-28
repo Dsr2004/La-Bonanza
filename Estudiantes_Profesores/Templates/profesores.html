@@ -43,9 +43,9 @@
                     <td>{{Profesor.profesor.usuario.apellidos}}</td>
                     <td>
                         <div style="display:inline-flex; ">
-                            <a href="{%url 'verInfoProfesor' Profesor.profesor.usuario.pk%}" style="margin-right:10px" class="btn btn-outline-info btn-sm"><i class="fa-solid fa-eye"></i></a>
-                            <a href="{%url 'verEstudiantes' Profesor.profesor.usuario.pk%}" style="margin-right:10px" class="btn btn-outline-secondary btn-sm"><i class="fa-solid fa-school"></i></a>
-                            <button style="margin-right:10px"  class="btn btn-outline-warning btn-sm" onclick="editarProfesor('{%url 'editarProfesor' Profesor.profesor.usuario.pk%}')"><i class="fa-solid fa-pencil"></i></button>
+                            <a href="{%url 'verInfoProfesor' Profesor.profesor.usuario.pk%}" style="margin-right:10px; background-color: rgb(88, 181, 224); color: white;" class="btn btn-outline-info btn-sm"><i class="fa-solid fa-eye"></i></a>
+                            <a href="{%url 'verEstudiantes' Profesor.profesor.usuario.pk%}" style="margin-right:10px; background-color: #b1b0ac; color: white;" class="btn btn-sm"><i class="fa-solid fa-school"></i></a>
+                            <button style="margin-right:10px; background-color: #F0CC42; color: white;"  class="btn btn-sm" onclick="editarProfesor('{%url 'editarProfesor' Profesor.profesor.usuario.pk%}')"><i class="fa-solid fa-pencil"></i></button>
                             <div style="margin-right:10px" class="form-check form-switch">
                                 <form id="EstadoUsuarioForm" method="post" action="{% url 'editarEstadoUsuario' %}">
                                     {%csrf_token%}

@@ -141,6 +141,19 @@
   background: #FFF;
   color: rgb(124, 155, 77);
 }
+
+.sidebar li a.active{
+  background: #FFF;
+  color: rgb(124, 155, 77);
+}
+
+.sidebar li a.active i{
+  color: #11101D;
+}
+.sidebar li a.active span{
+  color: #11101D;
+}
+
 .sidebar li a .links_name{
   color: #fff;
   font-size: 15px;

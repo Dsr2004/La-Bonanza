@@ -1,10 +1,14 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block titulo %}Información de alumnos{% endblock titulo %}
 
+{% block estilos %}
+<link rel="stylesheet" href="{% static 'css/estilosBase.css' %}">
+{% endblock estilos %}
 
 {% block contenido %}
-    <div class="container">
-        <h1>Ver información de {{object.get_estudiante}}</h1>
+    <div class="container mt-4 cont_list">
+        <p style="font-size: 30px; font-weight: 800;">Ver información de {{object.get_estudiante}}</p>
         <hr>
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
@@ -23,7 +27,7 @@
           <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
                 <br>
-                <h3>Información del alumno</h3>
+                <p style="font-size: 28px; font-weight: 500;">Información del alumno</p>
                 <br>
                 <div class="row">
                     <div class="col-md-6">
@@ -138,8 +142,8 @@
             </div>
             <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
                 <br>
-                <h3>Información de los padres</h3>
-                <h5><center>Información de la Madre</center></h5>
+                <p style="font-size: 28px; font-weight: 500;">Información de los padres</p>
+                <!-- <h5><center>Información de la Madre</center></h5> -->
                 <br>
                 <div class="row">
                     {% if object.nombre_completo_madre %}
@@ -246,7 +250,8 @@
             </div>
             <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
                 <br>
-                <h3>Información del contacto de emergencia </h3>
+                <!-- <h3>Información del contacto de emergencia </h3> -->
+                <p style="font-size: 28px; font-weight: 500;">Información del contacto de emergencia</p>
                 <br>
                 <div class="row">
                     <div class="col-md-6">
@@ -275,7 +280,7 @@
                     <div class="col-md-6">
                         <div class="row">
                             <div class="col-8">
-                                <h5><strong>Documento de identidad:</strong></h5>
+                                <p><strong>Documento de identidad:</strong></p>
                             </div>
                             <div class="col-4">
                                 <a href="/media/{{object.documento_A}}" download="output.png" class="btn btn-primary btn-sm"><i class="fa-solid fa-download"></i></a>
@@ -287,7 +292,7 @@
                     <div class="col-md-6">
                         <div class="row">
                             <div class="col-8">
-                                <h5><strong>Seguro:</strong></h5>
+                                <p><strong>Seguro:</strong></p>
                             </div>
                             <div class="col-1">
                                 <a href="/media/{{object.seguro_A}}" download="output.png" class="btn btn-primary btn-sm"><i class="fa-solid fa-download"></i></a>
@@ -301,7 +306,7 @@
                     <div class="col-md-6">
                         <div class="row">
                             <div class="col-8">
-                                <h5><strong>Consentimiento para asumir riesgo y Exoneración de responsabilidad::</strong></h5>
+                                <p><strong>Consentimiento para asumir riesgo y exoneración de responsabilidad:</strong></p>
                             </div>
                             <div class="col-1">
                                 <a href="/media/{{object.exoneracion}}" download="output.png" class="btn btn-primary btn-sm"><i class="fa-solid fa-download"></i></a>

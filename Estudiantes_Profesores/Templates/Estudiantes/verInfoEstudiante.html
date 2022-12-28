@@ -1,10 +1,13 @@
 {% extends 'base.html' %}
 {% block titulo %}Información de alumnos{% endblock titulo %}
 
+{% block estilos %}
+<link rel="stylesheet" href="{% static 'css/estilosBase.css' %}">
+{% endblock estilos %}
 
 {% block contenido %}
-    <div class="container">
-        <h1>Ver información de {{object.get_estudiante}}</h1>
+    <div class="container mt-5 cont_list">
+        <h1>Ver informaión de {{object.get_estudiante}}</h1>
         <hr>
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
