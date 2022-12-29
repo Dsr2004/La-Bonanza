@@ -304,7 +304,7 @@ class ReporteCalendario(ListView):
                     Dia.append(datetime.strftime(asistencia.dia, '%Y/%m/%d'))
                     Hora.append(asistencia.clase.calendario.horaClase.strftime('%I:%M %p'))
                     Tipo_Clase.append(asistencia.clase.calendario.registro.estudiante.get_tipo_clase_display())
-                    Tipo_Servicio.append(asistencia.clase.calendario.registro.estudiante.get_tipo_servicio_display())
+                    Tipo_Servicio.append(asistencia.clase.calendario.registro.estudiante.tipo_servicio.nombre)
             else:
                 if asistencia.clase.profesor == request.user.pk:
                     if asistencia.dia <= fechas[1] and asistencia.dia >= fechas[0]:
@@ -315,7 +315,7 @@ class ReporteCalendario(ListView):
                         Dia.append(datetime.strftime(asistencia.dia, '%Y/%m/%d'))
                         Hora.append(asistencia.clase.calendario.horaClase.strftime('%I:%M %p'))
                         Tipo_Clase.append(asistencia.clase.calendario.registro.estudiante.get_tipo_clase_display())
-                        Tipo_Servicio.append(asistencia.clase.calendario.registro.estudiante.get_tipo_servicio_display())
+                        Tipo_Servicio.append(asistencia.clase.calendario.registro.estudiante.tipo_servicio.nombre)
                        
                        
         excel = pd.DataFrame()
