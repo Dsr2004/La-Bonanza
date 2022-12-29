@@ -30,7 +30,7 @@
             <div class="col-md-3">
                <a type="button" data-bs-toggle="modal" onclick="abrir_modal_filtro_estudiante()" class="btn" style="background-color: #107c41; color: white;"><i class="fa-solid fa-file-excel"></i></a>
                {% if nuevosEstudiantes %}
-               <a href="{% url 'buscarNuevosEstudiantes' %}" class="btn Hor"> <i class="fa-solid fa-clock"></i></a>
+               <a href="{% url 'buscarNuevosEstudiantes' %}" class="btn btn-outline-warning Hor"> <i class="fa-solid fa-clock"></i></a>
                 {% endif %}
                <a href="{% url 'registrarEstudiante' %}" class="btn btnAdd">Crear nuevo &nbsp; <i class='bx bx-user-plus'></i></a>
               

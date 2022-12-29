@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block titulo %}
+    Perfil
+{% endblock titulo %}
+
+{% block estilos %}
+<link rel="stylesheet" href="{% static 'css/estilosBase.css' %}">
+{% endblock estilos %}
+
+
+{% block contenido %} 
+
+    <style>
+        .card{
+            border: 1px solid transparent;
+            box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+        }
+        .card-header{
+            background-color: #11101D;
+            border: 1px solid transparent;
+            height: 125px;
+        }
+        .circulo{
+            /* background-color: red; */
+            border: 5px solid white;
+            margin-top: -70px;
+            border-radius: 50%;
+            width: 140px;
+            height: 140px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .circulo img{
+            width: 100px;
+        }
+        #car{
+            display: flex;
+            flex-direction: row;
+        }
+        #car .nomb_usua{
+            font-weight: 600;
+            font-size: 20px;
+            margin-left: 10px;
+        }
+
+        .nombs{
+            display: flex;
+            flex-direction: column;
+        }
+        .nomb{
+            margin-left: 10px;
+            margin-top: -20px;
+            font-size: 15px;
+        }
+        .info_persona{
+            margin: 10px;
+            padding: 25px;
+            background-color: rgb(231, 231, 231);
+            border-radius: 10px;
+        }
+        .separador{
+            
+        }
+        .auth{
+            margin-left: 18px;
+        }
+
+        #CambiarContrasenaButton{
+            margin-top: 10px;
+            background-color: #78bb50;
+            color: white;
+            border-radius: 20px;
+        }
+    </style>
+
+<div class="container mt-4 cont_list">
+    <div class="card">
+        <div class="card-header">
+
+        </div>
+        <div class="card-body" id="car">
+            <div class="circulo">
+                <img src="/media/{{request.user.imagen}}" style="border-radius: 50%; width: 100%; height: 100%;" alt="">
+            </div>
+            <div class="nombs">
+                <p class="nomb_usua">{{request.user.usuario}}</p>
+                <p class="nomb">{{request.user.nombres}}</p>
+            </div>
+        </div>
+        <div class="info_persona mb-5">
+            <form action="{% url 'perfil' %}" method="post" id="registroUsuarioForm">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-6">
+                        <label><strong>Nombres</strong> <sup class="campo_requerido">*</sup></label>
+                        {{form.nombres}}
+                        <p id="nombres" class="error_text"></p>
+                    </div>
+                    <div class="col-6">
+                        <label><strong>Apellidos</strong> <sup class="campo_requerido">*</sup></label>
+                        {{form.apellidos}}
+                        <p id="apellidos" class="error_text"></p>
+                    </div>
+                </div>
+                
+                <label><strong>Nombre de usuario</strong> <sup class="campo_requerido">*</sup></label>
+                <input type="text" class="form-control" value="{{form.usuario.value}}" readonly>
+                <input type="hidden" name="usuario" value="{{form.usuario.value}}">
+                
+                <p id="usuario" class="error_text"></p>
+
+                <label><strong>Cédula</strong> <sup class="campo_requerido">*</sup></label>
+                {{form.cedula}}
+                <p id="cedula" class="error_text"></p>
+
+                <label><strong>Fecha de nacimiento</strong> <sup class="campo_requerido">*</sup></label>
+                {{form.fecha_nacimiento}}
+                <p id="cedula" class="error_text"></p>
+
+                <label><strong>Correo electrónico</strong> <sup class="campo_requerido">*</sup></label>
+                {{form.email}}
+                <p id="email" class="error_text"></p>
+                
+                <label><strong>Perfil</strong> <sup class="campo_requerido">*</sup></label>
+                {% if object.administrador %}
+                    <p>Administrador</p>
+                    {% else %}
+                    <p>Profesor</p>
+                {% endif %}
+                
+                <p id="rol" class="error_text"></p>
+
+                <button class="btn btn-primary"><i class="fa-solid fa-arrows-rotate"></i> Modificar</button>
+            </form>  
+        </div>
+        <div class="separador">
+            <center><hr style="width: 95%;"></center>
+        </div>
+        
+        <div class="row mb-4">
+            <h5 class="auth">Contraseña y autenticación</h5>
+            <div class="row" style="margin-left: 12px;">
+                <div class="col-4">
+                    <p>Esta secciónte permite modificar tu contraseña, simplemente ingresando tu contraseña antigua e ingresando la nueva y una confirmación de la misma</p>
+                </div>
+            </div>
+            <div class="row" style="margin-left: 12px;">
+                <div class="col-4">
+                    <!-- Button trigger modal -->
+                    <a type="button" href="{% url 'changePass' %}" class="btn btn-dark">
+                        Cambiar contraseña
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    
+{% endblock contenido %} 
+
+
+{% block scripts %}
+
+{% endblock scripts %}

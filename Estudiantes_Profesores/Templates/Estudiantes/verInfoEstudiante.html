@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block titulo %}Información de alumnos{% endblock titulo %}
 {% load jsignature_filters %}
 
@@ -8,7 +9,7 @@
 
 {% block contenido %}
     <div class="container mt-5 cont_list">
-        <h1>Ver informaión de {{object.get_estudiante}}</h1>
+        <h1>Ver información de {{object.get_estudiante}}</h1>
         <hr>
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">

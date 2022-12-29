@@ -6,25 +6,45 @@
 <!-- CSS only -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<link rel="stylesheet" href="{% static 'css/estilosBase.css' %}">
+
 {% endblock estilos %}
 {% block contenido %}
-<div class="container">
+
+<div class="container mt-4 cont_list">
+    <p style="font-size: 30px; font-weight: 700;">Cambia la contraseña</p>
+    <p class="mb-4" style="margin-top: -15px;">Una contraseña segura contribuye a evitar al acceso no autorizado a la cuenta</p>
     <form action="{% url 'changePass' %}" method="post" id="cambiarPass">
         {% csrf_token %}
-        <Label><strong>Contraseña Antigua: <sup class="requerido">(*)</sup></strong></Label>
+        <Label><strong>Contraseña antigua: <sup class="requerido">*</sup></strong></Label>
         {{form.passwordA}}
         <p id="passwordA" class="bg-light text-danger" style="color: #dc3545;"></p>
-        <br>
-        <Label><strong>Contraseña Nueva: <sup class="requerido">(*)</sup></strong></Label>
-        {{form.password}}
-        <p id="password" class="bg-light text-danger" style="color: #dc3545;"></p>
-        <br>
-        <Label><strong>Confirmar Contraseña: <sup class="requerido">(*)</sup></strong></Label>
-        {{form.password2}}
-        <p id="passwordC" class="bg-light text-danger" style="color: #dc3545;"></p>
+        
+        <div class="row">
+            <div class="col-6">
+                <Label><strong>Contraseña nueva: <sup class="requerido">*</sup></strong></Label>
+                {{form.password}}
+                <p id="password" class="bg-light text-danger" style="color: #dc3545;"></p>
+            </div>
+            <div class="col-6">
+                <Label><strong>Confirmar contraseña: <sup class="requerido">*</sup></strong></Label>
+                {{form.password2}}
+                <p id="passwordC" class="bg-light text-danger" style="color: #dc3545;"></p>
+            </div>
+        </div>
+    
     </form>
     <hr>
-    <button id="CambiarContrasenaButton" class="btn btn-success w-100">Cambiar Contraseña</button>
+    <div class="row">
+        <div class="col-md-6">
+            <a href="{% url 'perfil' %}" class="btn w-100" style="background-color: rgb(204, 204, 204); font-weight: bold;"><i class="fa-solid fa-xmark"></i> &nbsp; Cancelar</a>
+        </div>
+        <div class="col-md-6">
+            <button id="CambiarContrasenaButton" class="btn btn-success w-100" style="font-weight: bold;"><i class="fa-regular fa-floppy-disk"></i> &nbsp; Cambiar Contraseña</button>
+        </div>
+    </div>
+    
 </div>
 {% endblock contenido %}
 {% block scripts %}

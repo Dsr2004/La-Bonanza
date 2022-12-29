@@ -12,6 +12,11 @@
         font-size: 35px;
         font-weight: 700;
     }
+    .fc-reporte-button.fc-button.fc-button-primary{
+        background-color: #2d572c;
+        border: 1px solid transparent;
+        color: white;
+    }
 </style>
 {% endblock estilos %}
 
@@ -35,11 +40,21 @@
                 </div>
                 <div class="col-5" style="float: left; text-align: end;">
                     <div class="row">
-                        <div class="{%if cancelada > 0 %}col-6{%else%}col-12{%endif%} mb-2">
+                        <div class="col-12 mb-2">
                             <a href="{% url 'asistencia' %}" class="btn btn-outline-secondary w-100">Gestionar asistencia &nbsp; <i class="fa-solid fa-users"></i></a>
                         </div>
                         <div class="col-12">
                             <a href="{% url 'clasesCanceladas' %}" style="display: {%if cancelada > 0 %}block{%else%}none{%endif%};" class="btn btn-danger w-100">Clases de reprogramación &nbsp; <i class="fa-solid fa-clock"></i></a>
+                        </div>
+                        <div class="col-12" id="ReporteCalendarioBox" style="display: none;"> 
+                            <br>
+                           <form action="{% url 'reporteCalendario' %}" method="post" id="reporteCalendarioForm">
+                            {% csrf_token %}
+                            <div class="input-group mb-3">
+                                <input type="text" id="fechaCalendarioFiltro" name="fecha" class="form-control">
+                                <button class="btn btn-outline-success" onclick="GenerarReporteCalendario()" id="button-addon2">Generar</button>
+                            </div>
+                           </form>
                         </div>
                     </div>
                 </div>
@@ -50,11 +65,10 @@
     <div id="reloadPage"></div>
    
     
-    <div class="modal fade" id="ModalInfoEstudianteCalendario" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>x
+    <div class="modal fade" id="ModalInfoEstudianteCalendario" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>
     
 </div>
     
-
 {% endblock contenido %}
 
 
@@ -66,8 +80,54 @@
 <script src="{% static 'libs/daterangepicker/daterangepicker.js' %}"></script>
 
 <script>
+    var BoxReporteCalendarioClases = false;
+function GenerarReporteCalendario(){
+    let form = $("#reporteCalendarioForm")
+    form.submit()
+    $("#ReporteCalendarioBox").css("display","none")
+}
 
-
+$(document).ready(function() {
+            $('#fechaCalendarioFiltro').daterangepicker({
+                "showDropdowns": true,
+                "locale": {
+                    "format": "MM/DD/YYYY",
+                    "separator": " - ",
+                    "applyLabel": "Guardar",
+                    "cancelLabel": "Cancelar",
+                    "fromLabel": "Desde",
+                    "toLabel": "Hasta",
+                    "customRangeLabel": "Custom",
+                    "weekLabel": "W",
+                    "daysOfWeek": [
+                        "Do",
+                        "Lu",
+                        "Ma",
+                        "Mi",
+                        "Ju",
+                        "Vi",
+                        "Sa"
+                    ],
+                    "monthNames": [
+                        "Enero",
+                        "Febrero",
+                        "Marzo",
+                        "Abril",
+                        "Mayo",
+                        "Junio",
+                        "Julio",
+                        "Agosto",
+                        "Septiembre",
+                        "Octubre",
+                        "Noviembre",
+                        "Diciembre"
+                    ],
+                    "firstDay": 1
+                },
+            }, function(start, end, label) {
+            console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+            });
+        })
     function removeLoader(){
         let spinner = $("#spinnerLoad")
         let box = $("#box")
@@ -89,6 +149,19 @@
         console.log("{{fecha|date:'Y-m-d'}}")
         var CalenadrUI = document.getElementById("calendar")
         var calendar = new FullCalendar.Calendar(CalenadrUI,{
+            customButtons: {
+                reporte: {
+                click: function() {
+                    if (BoxReporteCalendarioClases == false){
+                        $("#ReporteCalendarioBox").css("display","block")
+                        BoxReporteCalendarioClases = true
+                    }else{
+                        $("#ReporteCalendarioBox").css("display","none")
+                        BoxReporteCalendarioClases = false
+                    }
+                }
+                }
+            },
             dateClick: function(info) {
                 let url = '{%url "horario" 7%}'
                 url =  url.substr(0, url.length - 1)
@@ -103,7 +176,7 @@
             headerToolbar: {
                 start: 'title', // will normally be on the left. if RTL, will be on the right
                 center: '',
-                end: 'today prev,next' // will normally be on the right. if RTL, will be on the left
+                end: 'reporte today prev,next' // will normally be on the right. if RTL, will be on the left
             },
             events: [
             {%for clase in clases %}
@@ -128,6 +201,7 @@
        
         calendar.render();
         calendar.setOption('locale','es')
+        $(".fc-reporte-button").html('<i class="fa-solid fa-file-excel"></i>')
       
         var box = document.getElementById("reloadPage")
         $('.fc-prev-button').click(function(){

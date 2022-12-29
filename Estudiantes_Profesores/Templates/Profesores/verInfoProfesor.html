@@ -1,19 +1,26 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block titulo %}{%for Profesor in Profesor%}Información del instructor {{Profesor.profesor.usuario.usuario}}{%endfor%}{% endblock titulo %}
 
+{% block estilos %}
+    <link rel="stylesheet" href="{% static 'css/estilosBase.css' %}">
+{% endblock estilos %}
 
 {% block contenido %}
-{%for Profesor in Profesor%}
-    <div class="container">
-        <a href="{%url 'profesores'%}">Volver</a>
-        <h1>{{Profesor.profesor.usuario.nombres}} {{Profesor.profesor.usuario.apellidos}}</h1>
-        <hr>
+<div class="container cont_list">
+    <a class="mb-3" href="{%url 'profesores'%}">Volver</a>
+    {%for Profesor in Profesor%}
+    <div class="card">
+        
+        <h3>{{Profesor.profesor.usuario.nombres}} {{Profesor.profesor.usuario.apellidos}}</h3>
+        <center><hr style="width: 95%;"></center> 
         <div>
             <h2>Niveles: </h2>
-            <br>
             <div style="display:flex;">
                 {%for nivel in Profesor.profesor.niveles.all%}
-                <div style="text-align: center; padding: 5px 10px; margin: 5px; border-radius: 10px; background-color: {{nivel.color_fondo}};color:{{nivel.color_letra}}; ">{{nivel.nivel}}</div>
+                <div style="text-align: center; padding: 5px 10px; margin: 5px; border-radius: 20px; background-color: {{nivel.color_fondo}};color:{{nivel.color_letra}}; ">
+                    {{nivel.nivel}}
+                </div>
                 {%endfor%}
             </div>
         </div>
@@ -28,6 +35,8 @@
         </div>
     </div>
 {%endfor%}
+</div>
+
 {% endblock contenido %}
 
     

@@ -36,6 +36,8 @@ def guardar_seguro(instance, filename):
     return  f"Archivos_Estudiantes/{instance.nombre_completo}_{instance.documento}/seguro{extension(filename)}"
 def guardar_firma(instance, filename):
     return  f"Archivos_Estudiantes/{instance.nombre_completo}_{instance.documento}/firma{extension(filename)}"
+def guardar_imagen(instance, filename):
+    return  f"Archivos_Estudiantes/{instance.nombre_completo}_{instance.documento}/imagen{extension(filename)}"
 
 def validar_extencion_archivo(value):
     ext = os.path.splitext(value.name)[1] 
@@ -137,6 +139,7 @@ class Estudiante(models.Model):
     # firma poner en NULL FALSE, NO LO PUSE PARA NO TENER QUE BORRAR LOS REGISTROS
     nombrefirma = models.CharField("nombre de la persona que está firmando", max_length=100,null=True, blank=True)
     firma = models.FileField(upload_to=guardar_firma,validators = [validar_extencion_archivo], null=True, blank=True)
+    imagen = models.ImageField("Imagen del estudiante", upload_to=guardar_imagen,blank=True, null=True)
     #datos para el sistema
     facturacion_electronica = models.BooleanField("¿Desea facturación electrónica?", default=False)
     tipo_clase = models.CharField(max_length=15, choices=ESTADOS_CLASES, null=False, blank=False)
@@ -158,6 +161,9 @@ class Estudiante(models.Model):
                 
             if this.seguro_A != self.seguro_A:
                 this.seguro_A.delete()
+                
+            if this.imagen != self.imagen:
+                this.imagen.delete()
         except: pass
         super(Estudiante, self).save(*args, **kwargs)
 
@@ -263,3 +269,4 @@ class Asistencia(models.Model):
         return self.registro.estudiante.nombre_completo
 
 
+ 

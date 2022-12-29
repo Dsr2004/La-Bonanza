@@ -6,7 +6,7 @@ from django.http import JsonResponse, HttpResponse
 from django.contrib import messages
 from django.shortcuts import  redirect
 from La_Bonanza. mixins import IsAdminMixin
-from Picaderos.models import Picadero as PicaderoModel, InfoPicadero as infoPicaderoModel
+from Picaderos.models import Picadero as PicaderoModel, InfoPicadero as infoPicaderoModel, EstadoClase
 from ..models import Asistencia, Estudiante, Registro
 from Niveles.models import Nivel
 
@@ -281,6 +281,59 @@ class ReportePicadero(IsAdminMixin, View):
             excel.to_excel(writer, sheet_name='Estudiantes')
             writer.save()
             filename = "ReportePicadero"
+            content_type = 'application/vnd.ms-excel'
+            response = HttpResponse(b.getvalue(), content_type=content_type)
+            response['Content-Disposition'] = 'attachment; filename="' + filename + '.xlsx"'
+            return response
+         
+        
+class ReporteCalendario(ListView):
+    def post(self, request, *args, **kwargs):
+        name = ""
+        fechas = request.POST.get('fecha').split(' - ')
+        fechas=[datetime.strptime(fechas[0], '%m/%d/%Y').date(), datetime.strptime(fechas[1], '%m/%d/%Y').date()]
+        Estudiante,Documento,Nivele,Profesor,Dia,Hora,Tipo_Clase,Tipo_Servicio=[[],[],[],[],[],[],[],[]]
+        name = "reporte-clases-desde:{fecha1}-hasta:{fecha2}".format(fecha1 = fechas[0], fecha2 = fechas[1])
+        for asistencia in EstadoClase.objects.all().order_by("dia"):
+            if request.user.administrador:
+                if asistencia.dia <= fechas[1] and asistencia.dia >= fechas[0]:
+                    Estudiante.append(asistencia.clase.calendario.registro.estudiante)
+                    Documento.append(asistencia.clase.calendario.registro.estudiante.documento)
+                    Nivele.append(asistencia.clase.calendario.registro.nivel.nivel)
+                    Profesor.append(asistencia.clase.profesor)
+                    Dia.append(datetime.strftime(asistencia.dia, '%Y/%m/%d'))
+                    Hora.append(asistencia.clase.calendario.horaClase.strftime('%I:%M %p'))
+                    Tipo_Clase.append(asistencia.clase.calendario.registro.estudiante.get_tipo_clase_display())
+                    Tipo_Servicio.append(asistencia.clase.calendario.registro.estudiante.tipo_servicio.nombre)
+            else:
+                if asistencia.clase.profesor == request.user.pk:
+                    if asistencia.dia <= fechas[1] and asistencia.dia >= fechas[0]:
+                        Estudiante.append(asistencia.clase.calendario.registro.estudiante)
+                        Documento.append(asistencia.clase.calendario.registro.estudiante.documento)
+                        Nivele.append(asistencia.clase.calendario.registro.nivel.nivel)
+                        Profesor.append(asistencia.clase.profesor)
+                        Dia.append(datetime.strftime(asistencia.dia, '%Y/%m/%d'))
+                        Hora.append(asistencia.clase.calendario.horaClase.strftime('%I:%M %p'))
+                        Tipo_Clase.append(asistencia.clase.calendario.registro.estudiante.get_tipo_clase_display())
+                        Tipo_Servicio.append(asistencia.clase.calendario.registro.estudiante.tipo_servicio.nombre)
+                       
+                       
+        excel = pd.DataFrame()
+        excel['Estudiante'] = Estudiante
+        excel['Documento'] = Documento
+        excel['Nivel'] = Nivele
+        excel['Profesor'] = Profesor
+        excel['Dia'] = Dia
+        excel['Hora'] = Hora
+        excel['Tipo de Clase'] = Tipo_Clase
+        excel['Tipo de Servicio'] = Tipo_Servicio
+        
+        with BytesIO() as b:
+            # Use the StringIO object as the filehandle.
+            writer = pd.ExcelWriter(b, engine='xlsxwriter')
+            excel.to_excel(writer, sheet_name='Asistencia')
+            writer.save()
+            filename = name
             content_type = 'application/vnd.ms-excel'
             response = HttpResponse(b.getvalue(), content_type=content_type)
             response['Content-Disposition'] = 'attachment; filename="' + filename + '.xlsx"'

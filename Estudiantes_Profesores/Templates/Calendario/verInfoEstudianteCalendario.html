@@ -7,10 +7,17 @@
       </div>
       <div class="modal-body">
         <h3>Información del alumno</h3>
-        <h4>Nombre: </h4>
-        <h6>{{object.clase.calendario.registro.estudiante.get_estudiante}}</h6>
-        <h4>Nivel: </h4>
-        <h6>{{object.clase.calendario.registro.nivel}}</h6>
+        <div class="row">
+          <div class="col-5">
+            <img src="/media/{{object.clase.calendario.registro.estudiante.imagen}}" class="rounded float-left" alt="{{object.clase.calendario.registro.estudiante.get_estudiante}}">
+          </div>
+          <div class="col-7"> <h4>Nombre: </h4>
+            <h6>{{object.clase.calendario.registro.estudiante.get_estudiante}}</h6>
+            <h4>Edad: </h4>
+            <h6>{{object.clase.calendario.registro.estudiante.get_edad}}</h6>
+            <h4>Nivel: </h4>
+            <h6>{{object.clase.calendario.registro.nivel}}</h6></div>
+        </div>
         <hr>
         <h3>Información de la clase</h3>
         <h4>Dia: </h4>

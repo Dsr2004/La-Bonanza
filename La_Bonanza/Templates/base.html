@@ -30,14 +30,13 @@
   {% if  request.user.is_authenticated%}
     <div class="sidebar">
       <div class="logo-details">
-        <i class='bx bxl-c-plus-plus icon'></i>
+        <!-- <i class='bx bxl-c-plus-plus icon'></i> -->
+          <img class="icon" src="{% static 'img/logoBon.png' %}"  width="30px" style="margin-right: 7px;" alt="">
           <div class="logo_name">La Bonanza</div>
           <i class='bx bx-menu' id="btn" ></i>
       </div>
       <ul class="nav-list">
         
-        
-       
         {%if request.user.administrador == False%}
         <li>
           <a class="{% if request.path == '/Administracion/Profesores/'%}active {% endif %}" href="{%url 'profesores'%} ">
@@ -124,21 +123,13 @@
           </li>
         {% endif %}
         
-        {% if request.path != '/Usuarios/CambiarContrasena/'%}
-        <li class="estas">
-          <a href="{%url 'changePass'%}">
-            <i class='bx bx-key'></i>
-            <span class="links_name">Cambiar contraseña</span>
-          </a>
-          <span class="tooltip">Cambiar contraseña</span>
-        </li>
-        {% endif %}
+        
 
         <li class="profile">
-            <!-- <a href="{% url 'picaderos' %}"></a> -->
-            <div class="profile-details">
-              <img src="profile.jpg" alt="">
-              <div class="name_job" >
+            <!-- <a href="{% url 'perfil' %}"></a> -->
+            <div class="profile-details" onclick="IrPerf()">
+              <img src="/media/{{request.user.imagen}}">
+              <div class="name_job">
                 <div class="name">{{request.user.nombres|title}}</div>
                 
                 {% if request.user.administrador == True %}
@@ -146,10 +137,9 @@
                 {% else %}
                   <div class="job">Profesor</div>
                 {% endif %}
-                  
-               
               </div>
             </div>
+
             <a href="{% url 'logout' %}">
               <i class='bx bx-log-out' id="log_out" ></i>
             </a>
@@ -163,7 +153,7 @@
     {% block contenido %}
           
     {% endblock contenido %}
-    <small class="derechos"><i class="fa-regular fa-copyright"></i> Lambda Analytics <img width="30px" src="{% static 'img/logoLambda.png'%}" alt=""> 2022 </small>
+    <small style="margin-top: 100px;" class="derechos"><i class="fa-regular fa-copyright"></i> Lambda Analytics <img width="30px" src="{% static 'img/logoLambda.png'%}" alt=""> 2022 </small>
   </section>
 
   {% block modals %}
@@ -182,6 +172,10 @@
   <script src="{% static 'libs/DataTables/Responsive/dataTables.min.js' %}"></script>
   <script src="{% static 'js/main.js' %}"></script>
   <script>
+    function IrPerf(){
+      location.href = "/Usuarios/Perfil/"
+    }
+
     let sidebar = document.querySelector(".sidebar");
     let closeBtn = document.querySelector("#btn");
     let searchBtn = document.querySelector(".bx-search");

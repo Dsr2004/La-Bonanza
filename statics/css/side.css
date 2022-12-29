@@ -17,6 +17,9 @@
   z-index: 99;
   transition: all 0.5s ease;
 }
+.sidebar.open img{
+  display: flex;
+}
 .sidebar.open{
   width: 250px;
 }
@@ -264,9 +267,10 @@
 }
 
 .derechos{
-  position: absolute;
+  /* position: absolute; */
   color: #9b9b9b;
   bottom: 0;
+  top: 5px;
   right: 0;
   padding-right: 10px;
   float: right;

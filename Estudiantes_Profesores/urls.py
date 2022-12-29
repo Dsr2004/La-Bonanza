@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from .views.views import *
 from .views.estudiantes import *
 from .views.profesores import *
-from .views.reportes import reporteEstudiantes, reporteAsistencia
+from .views.reportes import reporteEstudiantes, reporteAsistencia, ReporteCalendario
 
 
 
@@ -33,6 +33,7 @@ urlpatterns=[
     path("ControlAsistencia/", login_required(ControlAsistencia.as_view()), name="controlAsistencia"),
     path("ReporteEstudiantes/", login_required(reporteEstudiantes.as_view()), name="reporteEstudiantes"),
     path("ReporteAsistencias/", login_required(reporteAsistencia.as_view()), name="reporteAsistencia"),
+    path("ReporteCalendario/", login_required(ReporteCalendario.as_view()), name="reporteCalendario"),
     path("ConteoClasesFecha/<int:pk>", login_required(ConteoClasesFecha.as_view()), name="conteoClasesFecha"),
     path("ClasesCanceladas/", login_required(ClasesCanceladas.as_view()), name="clasesCanceladas"),
     path("ReponerClase/<int:pk>", login_required(ReponerClase.as_view()), name="reponerClase"),
