@@ -17,6 +17,9 @@
   z-index: 99;
   transition: all 0.5s ease;
 }
+.sidebar.open img{
+  display: flex;
+}
 .sidebar.open{
   width: 250px;
 }
@@ -141,6 +144,19 @@
   background: #FFF;
   color: rgb(124, 155, 77);
 }
+
+.sidebar li a.active{
+  background: #FFF;
+  color: rgb(124, 155, 77);
+}
+
+.sidebar li a.active i{
+  color: #11101D;
+}
+.sidebar li a.active span{
+  color: #11101D;
+}
+
 .sidebar li a .links_name{
   color: #fff;
   font-size: 15px;
@@ -248,4 +264,14 @@
   .sidebar li .tooltip{
     display: none;
   }
+}
+
+.derechos{
+  /* position: absolute; */
+  color: #9b9b9b;
+  bottom: 0;
+  top: 5px;
+  right: 0;
+  padding-right: 10px;
+  float: right;
 }

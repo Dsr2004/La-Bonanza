@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 {% block titulo %}Información de alumnos{% endblock titulo %}
 {% load jsignature_filters %}
-
 {% block contenido %}
     <div class="container">
         <h1>Ver información de {{object.get_estudiante}}</h1>
@@ -78,7 +77,6 @@
                         <h5><strong>Ciudad de residencia:</strong></h5>
                         {{object.ciudad}}
                     </div>
-                    
                     <div class="col-md-6">
                     <h5><strong>¿El alumno desea facturación electrónica?:</strong></h5>
                     <p>
@@ -88,7 +86,7 @@
                         NO
                         {% endif %}
                     </p>
-                    </div> 
+                    </div>
                 </div>
                 <br>
                 <div class="row">
@@ -100,7 +98,6 @@
                         <h5><strong>Poliza:</strong></h5>
                         {{object.poliza}}
                     </div>
-                    
                 </div>
                 <br>
                 <div class="row">
@@ -135,15 +132,13 @@
                         <p>
                             {{object.tipo_servicio}}
                         </p>
-                                   
-                    </div>   
+                    </div>
                     <div class="col-md-6">
                         <h5><strong>Tipo de Clase:</strong></h5>
                         {{object.get_tipo_clase_display}}
-                    </div>     
+                    </div>
                 </div>
                 <br>
-               
             </div>
             <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
                 <br>
@@ -178,11 +173,9 @@
                             {{object.email_madre}}
                         </div>
                     {% endif %}
-                    
                 </div>
                 <br>
                 <div class="row">
-                   
                    {% if object.lugar_expedicion_madre %}
                    <div class="col-md-6">
                     <h5><strong>Lugar de expedición de la cédula de la madre:</strong></h5>
@@ -276,7 +269,6 @@
                 </div>
                 <br>
             </div>
-            
             <div class="row">
                     <div class="col-md-6">
                         <h5 for="" style="font-weight: 500;">Nombre completo del facturado:</h5>
@@ -308,7 +300,6 @@
             <div class="tab-pane fade" id="docs-tab-pane" role="tabpanel" aria-labelledby="docs-tab" tabindex="0">
                 <br>
                 <h3>Reglamento Y exoneración </h3>
-
                 <br>
                 <div class="row">
                     <div class="col-md-6">
@@ -323,23 +314,18 @@
                         <img src="/media/{{object.exoneracion}}" alt="" class="img-fluid">
                     </div>
                     {% if object.nombrefirma %}
-                        
                     <div class="col-md-6">
                         <h5><strong>Firma de {{object.nombrefirma}}:</strong></h5>
                         <img src="/media/{{object.firma}}" alt="{{ object }}" />
                     </div>
-                        
                     {% endif %}
                 </div>
                 <br>
             </div>
-           
           </div>
             </div>
     </div>
 {% endblock contenido %}
-
-
 {% block scripts %}
     <script>
         cargarHoras(horaClase,diaClase)
@@ -361,9 +347,5 @@
                 document.getElementById('horarios').appendChild(divHorario);
             }
         }
-        
     </script>
 {% endblock scripts %}
-    
-
-    

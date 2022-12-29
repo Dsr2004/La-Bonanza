@@ -1,0 +1,48 @@
+
+.prelo{
+    /* background-color: aqua; */
+    height: 110px;
+    width: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.caballo{
+    height: 67px;
+    width: 79.75px;
+    
+    margin: 0 auto;
+    background-position: -159.5px 0;
+    animation: correr 0.9s steps(4) infinite;
+}
+
+@keyframes correr {
+    0%{
+        background-position: 0px;
+    }
+    100%{
+        background-position: -319px;
+    }
+}
+
+#carg{
+    position: relative;
+    /* background-color: red; */
+    /* height: 25px; */
+    animation: bounc 0.8s infinite;
+}
+
+@keyframes bounc {
+    
+    10%{
+        /* height: 25px; */
+        transform: translateY(1px);
+        color: rgb(129, 128, 128);
+    }
+    50%{
+        /* height: 15px; */
+        transform: translateY(3px);
+    }
+    
+    
+}

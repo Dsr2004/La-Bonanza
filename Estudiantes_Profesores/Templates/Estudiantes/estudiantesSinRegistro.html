@@ -35,7 +35,7 @@
                 <th>Documento</th>
                 <th>Celular</th>
                 <th>Correo</th>
-                <th>Asignar Horario | Ver alumno</th>
+                <th class="text-center">Asignar Horario | Ver alumno</th>
            </tr>
         </thead>
         <tbody>
@@ -58,9 +58,10 @@
                     No aplica
                     {% endif %}
                     </td>
-                    <td>
-                      <a style="margin-right: 20px;" onclick="EstudianteSinRegistro('{% url 'crearNuevosEstudiantes' estudiante.pk %}')" class="btn btn-outline-info "><i class="fa-solid fa-circle-plus fa-lg"></i></a>
-                      <a href="{% url 'verInfoEstudianteSinRegistro' estudiante.pk %}" class="btn btn-outline-warning "><i class="fa-solid fa-eye fa-lg"></i></a>
+                    <td class="text-center">
+                      <a style="margin-right: 20px; background-color: rgb(88, 181, 224); color: white;" onclick="EstudianteSinRegistro('{% url 'crearNuevosEstudiantes' estudiante.pk %}'); " class="btn"><i class="fa-solid fa-circle-plus fa-lg"></i></a>
+                      <a style="margin-right: 20px;">|</a>
+                      <a style="background-color: #F0CC42; color: white;" href="{% url 'verInfoEstudianteSinRegistro' estudiante.pk %}" class="btn btn-outline "><i class="fa-solid fa-eye fa-lg"></i></a>
                     </td>
                 </tr>
             {% endfor %}

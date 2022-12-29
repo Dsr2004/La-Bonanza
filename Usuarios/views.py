@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.views.generic import ListView, CreateView, UpdateView, DetailView, TemplateView
+from django.views.generic import View,ListView, CreateView, UpdateView, DetailView, TemplateView
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import login, logout, authenticate
 from .forms import LoginForm, CambiarContrasena, UsuarioForm
@@ -196,3 +196,8 @@ def EstadoUsuario(request):
     else:
         return JsonResponse({"method not allowed":"el metodo no está permitido"})
 
+class Perfil(View):
+    def get(self, request, *args, **kwargs):
+        form = UsuarioForm(instance=request.user)
+        context = {'form': form}
+        return render(request, 'Usuarios/Perfil.html', context)

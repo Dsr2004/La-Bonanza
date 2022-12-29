@@ -1,24 +1,27 @@
 {%extends 'base.html' %}
+{% load static %}
 {% block titulo %}Alumnos de {{Profesor}}{% endblock titulo %}
 {%block estilos%}
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
 <!-- CSS only -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<link rel="stylesheet" href="{% static 'css/estilosBase.css' %}">
 {%endblock estilos%}
+
+
 {% block contenido %}
-<div class="container">
-    <div class="row">
-        <a href="{%url 'profesores'%}">Volver</a>
+<div class="container mt-4 cont_list">
+    <div class="row mb-4">
+        <a style="text-decoration: none;" href="{%url 'profesores'%}"><i class="fa-solid fa-arrow-left"></i> &nbsp; Volver</a>
     </div>
     <div class="row">
         <div class="col-md-10">
-            <h1>Alumnos de {{Profesor}}</h1>
+            <p class="titulo_seccion">Alumnos de {{Profesor}}</p>
         </div>
         <div class="col-md-2">
            <button class="btn btn-outline-success btn-lg" onclick="agregarEstudiantes()"> <i class="fa-solid fa-person-circle-plus fa-xl"></i></button>
-           <button class="btn btn-outline-dark btn-lg" onclick="pasarEstudiantes()"> <i class="fa fa-people-group"></i></button>
-            
+           <button class="btn btn-outline-dark btn-lg" onclick="pasarEstudiantes()"> <i class="fa fa-people-group"></i></button>    
         </div>
        </div>
     <br><br>
@@ -26,7 +29,7 @@
         <thead>
            <tr>
             <th>Alumno</th>
-            <th>Nivel</th>
+            <th class="text-center">Nivel</th>
             <th>Madre</th>
             <th>Número de madre</th>
             <th>Padre</th>
@@ -39,15 +42,17 @@
                 {% for registro in Registros %}
                     <tr style="height: 40px;">
                         <td>{{registro.estudiante.nombre_completo}}</td>
-                        <td><div style="text-align: center; padding: 5px 5px; margin: 5px; border-radius: 10px; background-color: {{registro.nivel.color_fondo}};color:{{registro.nivel.color_letra}}; ">{{registro.nivel.nivel}}</div></td>
+                        <td>
+                            <div style="text-align: center; padding: 5px 5px; border-radius: 10px; background-color: {{registro.nivel.color_fondo}};color:{{registro.nivel.color_letra}}; ">{{registro.nivel.nivel}}</div>
+                        </td>
                         <td>{{registro.estudiante.nombre_completo_madre}}</td>
                         <td>{{registro.estudiante.celular_madre}}</td>
                         <td>{{registro.estudiante.nombre_completo_padre}}</td>
                         <td>{{registro.estudiante.celular_padre}}</td>
                         <td>
                             <div style="display:inline-flex; ">
-                                <a href="{%url 'verEstudiante' Profesor.pk%}?id_registro={{registro.pk}}" style="margin-right:10px" class="btn btn-outline-info btn-sm"><i class="fa-solid fa-eye"></i></a>
-                                <button style="margin-right:10px"  class="btn btn-outline-danger btn-sm" onclick="removerEstudiante('{{registro.pk}}','{{registro.estudiante}}')"><i class="fa-solid fa-minus-circle"></i></button>
+                                <a href="{%url 'verEstudiante' Profesor.pk%}?id_registro={{registro.pk}}" style="margin-right:10px; background-color: rgb(88, 181, 224); color: white;" class="btn btn-sm"><i class="fa-solid fa-eye"></i></a>
+                                <button style="margin-right:10px"  class="btn btn-danger btn-sm" onclick="removerEstudiante('{{registro.pk}}','{{registro.estudiante}}')"><i class="fa-solid fa-minus-circle"></i></button>
                             </div>
                         </td>
                     </tr>

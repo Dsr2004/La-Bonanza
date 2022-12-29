@@ -1,10 +1,14 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block titulo %}Información de alumnos{% endblock titulo %}
 {% load jsignature_filters %}
 
+{% block estilos %}
+<link rel="stylesheet" href="{% static 'css/estilosBase.css' %}">
+{% endblock estilos %}
 
 {% block contenido %}
-    <div class="container">
+    <div class="container mt-5 cont_list">
         <h1>Ver información de {{object.get_estudiante}}</h1>
         <hr>
         <ul class="nav nav-tabs" id="myTab" role="tablist">
