@@ -49,8 +49,9 @@ class Usuario(AbstractBaseUser):
     cedula = models.CharField("Cédula", blank=False, null=False, max_length=25, unique=True)
     fecha_nacimiento = models.DateField("Fecha de nacimiento",auto_now=False, auto_now_add=False)
     email = models.EmailField('Correo Electrónico', unique=True)
+    imagen = models.ImageField("Imagen de usuario", upload_to="Usuarios/", blank=True, null=True)
     estado = models.BooleanField("Estado del usuario", default=True)
-    administrador = models.BooleanField(default=False)
+    administrador = models.BooleanField(default=False)  
     objects = UsuarioManager()
 
 

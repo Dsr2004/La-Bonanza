@@ -46,7 +46,7 @@
             <ul class="list-group">
                 <li class="list-group-item active" aria-current="true">
                     {{clase.grouper|date:'h:00 A'}}
-                    <button class="btn btn-outline-info btn-sm" style="float: right;" form="{{clase.grouper|date:'H'}}Form">Guardar</button>
+                    <button class="btn btn-light btn-sm" style="float: right;" form="{{clase.grouper|date:'H'}}Form">Guardar</button>
                 </li>
                <form action="" method="post" id="{{clase.grouper|date:'H'}}Form">
                 {% csrf_token %}
