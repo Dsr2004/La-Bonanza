@@ -262,3 +262,12 @@
     display: none;
   }
 }
+
+.derechos{
+  position: absolute;
+  color: #9b9b9b;
+  bottom: 0;
+  right: 0;
+  padding-right: 10px;
+  float: right;
+}

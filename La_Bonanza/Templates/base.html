@@ -135,11 +135,19 @@
         {% endif %}
 
         <li class="profile">
+            <!-- <a href="{% url 'picaderos' %}"></a> -->
             <div class="profile-details">
-              <!--<img src="profile.jpg" alt="profileImg">-->
-              <div class="name_job">
+              <img src="profile.jpg" alt="">
+              <div class="name_job" >
                 <div class="name">{{request.user.nombres|title}}</div>
-                <div class="job">Administrador</div>
+                
+                {% if request.user.administrador == True %}
+                  <div class="job">Administrador</div>
+                {% else %}
+                  <div class="job">Profesor</div>
+                {% endif %}
+                  
+               
               </div>
             </div>
             <a href="{% url 'logout' %}">
@@ -155,6 +163,7 @@
     {% block contenido %}
           
     {% endblock contenido %}
+    <small class="derechos"><i class="fa-regular fa-copyright"></i> Lambda Analytics <img width="30px" src="{% static 'img/logoLambda.png'%}" alt=""> 2022 </small>
   </section>
 
   {% block modals %}

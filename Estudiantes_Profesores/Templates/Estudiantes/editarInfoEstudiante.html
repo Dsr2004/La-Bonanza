@@ -4,13 +4,15 @@
 
 {% block estilos %}
 <link rel="stylesheet" href="{% static 'libs/datepicker/dist/datepicker.css' %}">
+<link rel="stylesheet" href="{%static 'css/preloader.css'%}">
 <link rel="stylesheet" href="{%static 'css/horarioPuntual.css'%}">
+<link rel="stylesheet" href="{% static 'css/estilosBase.css' %}">
 {% endblock estilos %}
     
 
 
 {% block contenido %}
-    <div class="container">
+    <div class="container mt-4 cont_list">
         
         {% if messages %}
             {% for mensaje in messages %}
@@ -221,12 +223,16 @@
                     <br>
                     <h3>Documentos </h3>
                     <br>
-                    <div class="text-center ocultar"  id="spinnerLoad">
-                        <div class="spinner-grow " style="width: 3rem; height: 3rem;" role="status">
-                          <span class="visually-hidden">Cargando...</span>
-                        </div>
-                        <h4 id="titleSpinner">Subiendo Archivos<br> <sub>Espere Un Momento Por Favor</sub></h4>
+
+                    <div class="text-center ocultar" id="spinnerLoad">
+                        <center>
+                            <div class="prelo">
+                                <div class="caballo" style="background: url('{% static 'img/ej.png'%}');" ></div>
+                                <p id="carg">Subiendo archivos..</p>
+                            </div>
+                        </center>
                     </div>
+
                     <form action="{%url 'modificarDocsEstudiante' object.pk%}" method="post" enctype="multipart/form-data" id="modificarDocsEstudiante">
                         {% csrf_token %}
                         <div class="row">

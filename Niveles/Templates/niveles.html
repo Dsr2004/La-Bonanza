@@ -38,7 +38,7 @@
 
 .tit{
     
-    color: white;
+    /* color: white; */
     height: 30px;
     display: flex;
     align-items: center;
@@ -95,10 +95,10 @@
             <div class="col-3 mb-4" onclick="GetNivel('{%url 'modifcarNivel' nivel.pk %}')">
                 <div class="niv" style="background: {{nivel.color_fondo}};">
                     <div class="tit" style="background-color: {{nivel.color_fondo}};">
-                        <p style="text-shadow: 1px 1px 2px black;">{{nivel.nivel}}</p>
+                        <p style="text-shadow: 1px 1px 2px black; color: {{nivel.color_letra}};">{{nivel.nivel}}</p>
                     </div>
                     <div class="circ">
-                        <i class="fa-solid fa-star" style="color: {{nivel.color_fondo}};"></i>
+                        <i class="fa-solid fa-star" style="color: {{nivel.color_fondo}};text-shadow: 1px 1px 5px {{nivel.color_letra}};"></i>
                     </div>
                 </div>
             </div>
