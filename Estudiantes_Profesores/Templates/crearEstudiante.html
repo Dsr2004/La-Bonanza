@@ -427,12 +427,13 @@
                         <label for="" style="font-weight: 500;">Reglamento: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label><br>
                         <div style="display: flex;">
                             <button id="verContratob" type="button" class="btn btn-xs" style="color: rgb(40, 40, 252);" onclick="verContrato()">Ver el reglamento</button>
-                        </div>
-                    </div>
-
+                            
                     <div>
                         <p id="aceptaContrato" class="error_text"></p>
                     </div>
+                        </div>
+                    </div>
+
 
                     <div class="row">
                         <label for="" style="font-weight: 500;">Nombre del firmante: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label><br>
@@ -458,21 +459,21 @@
                 selects.forEach(function(select) {
                     select.setAttribute("class", "form-control");
                 });
-                campos.forEach(function(campo) {
-                    campo.setAttribute("class", "form-control");
-                    if (campo.getAttribute('type')=="checkbox") {
-                        campo.classList.remove("form-control")
+                for (let i = 0; i < campos.length; i++){
+                    campos[i].setAttribute("class", "form-control");
+                    if (campos[i].getAttribute('type')=="checkbox") {
+                        campos[i].classList.remove("form-control")
                         try{
-                            campo.previousSibling.remove();
-                            campo.parentNode.childNodes[1].style.marginTop = "5px"
+                            campos[i].previousSibling.remove();
+                            campos[i].parentNode.children[1].style.marginTop = "5px"
                         }
-                        catch{
-                            console.log("hay errores")
+                        catch (e){
+                            console.log("hay errores",e)
                         }
-                        campo.parentNode.classList.add("checkbox");
-                        campo.style.height = "32px";
+                        campos[i].parentNode.classList.add("checkbox");
+                        campos[i].style.height = "32px";
                     }
-                }); 
+                }
             </script>
             </div>
         </div>
