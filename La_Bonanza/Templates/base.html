@@ -26,142 +26,141 @@
     <title>{% block titulo %}Base{% endblock titulo %}</title>
 </head>
 <body>
- 
+
   {% if  request.user.is_authenticated%}
-    <div class="sidebar">
-      <div class="logo-details">
-        <!-- <i class='bx bxl-c-plus-plus icon'></i> -->
-          <img class="icon" src="{% static 'img/logoBon.png' %}"  width="30px" style="margin-right: 7px;" alt="">
-          <div class="logo_name">La Bonanza</div>
-          <i class='bx bx-menu' id="btn" ></i>
-      </div>
-      <ul class="nav-list">
-        
-        {%if request.user.administrador == False%}
-        <li>
-          <a class="{% if request.path == '/Administracion/Profesores/'%}active {% endif %}" href="{%url 'profesores'%} ">
-            <i class='bx bx-home'></i>
-            <span class="links_name">Principal</span>
+
+  <nav class="sidebar cerrado">
+    <div class="header">
+        <div class="cont_logo">
+            <img src="{% static 'img/logoBon.png' %}" alt="">
+        </div>
+        <span class="titulo_app">La Bonanza</span>
+        <i onclick="cerrarMenu()" class="fa-solid fa-xmark ico_cerrar"></i>
+    </div>
+    <hr>
+    <ul class="menu">
+      {%if request.user.administrador == False%}
+        <li class="{% if request.path == '/Administracion/Profesores/'%}active {% endif %}">
+          <a href="{%url 'profesores'%} ">
+            <i class='bx bx-home icono'></i>
+            <span class="item">Principal</span>
           </a>
-          <span class="tooltip">Principal</span>
+         
         </li>
-        <li>
-          <a class="{% if request.path == '/Administracion/Calendario/'%}active{% endif %}" href="{% url 'calendario' %}">
-            <i class='bx bx-calendar'></i>
-            <span class="links_name">Calendario</span>
+        <li class="{% if request.path == '/Administracion/Calendario/'%}active{% endif %}">
+          <a  href="{% url 'calendario' %}">
+            <i class='bx bx-calendar icono'></i>
+            <span class="item">Calendario</span>
           </a>
-          <span class="tooltip">Calendario</span>
+       
         </li>
         {%else%}
-        <li>
-          <a class=" 
-          {% if request.path == '/'  or 'buscarRuta' in request.path%}active{% endif %}
-          " href="{% url 'index' %}">
-            <i class='bx bx-grid-alt'></i>
-            <span class="links_name">Inicio</span>
+        <li class=" 
+        {% if request.path == '/'  or 'buscarRuta' in request.path%}active{% endif %}
+        ">
+          <a  href="{% url 'index' %}">
+            <i class='bx bx-grid-alt icono'></i>
+            <span class="item">Inicio</span>
           </a>
-          <span class="tooltip">Inicio</span>
+     
         </li>
         {% endif %}
 
         {%if request.user.administrador%}
-          <li>
-            <a class="
-            {% if request.path == '/Administracion/Estudiantes/'%}active{% endif %}
-            {% if request.path == '/Administracion/RegistarEstudiante/'%}active{% endif %}
-            {% if request.path == '/Administracion/BuscarNuevosEstudiantes/'%}active{% endif %}
-            {% if '/Administracion/ModificarEstudiante/' in request.path %}active{% endif %}
-            {% if '/Administracion/VerInfoEstudiante/' in request.path %}active{% endif %}
-            " href="{%url 'estudiantes'%}">
-              <i class='bx bx-user' ></i>
-              <span class="links_name">Alumnos</span>
+          <li class="
+          {% if request.path == '/Administracion/Estudiantes/'%}active{% endif %}
+          {% if request.path == '/Administracion/RegistarEstudiante/'%}active{% endif %}
+          {% if request.path == '/Administracion/BuscarNuevosEstudiantes/'%}active{% endif %}
+          {% if '/Administracion/ModificarEstudiante/' in request.path %}active{% endif %}
+          {% if '/Administracion/VerInfoEstudiante/' in request.path %}active{% endif %}
+          ">
+            <a href="{%url 'estudiantes'%}">
+              <i class='bx bx-user icono' ></i>
+              <span class="item">Alumnos</span>
             </a>
-          <span class="tooltip">Alumnos</span>
+         
           </li>
 
-          <li>
-            <a class=" 
-              {% if request.path == '/Administracion/Profesores/'%}active {% endif %}
-              {% if '/Administracion/VerInfoProfesor/' in request.path %}active{% endif %}
-              {% if '/Administracion/VerEstudiantes/' in request.path %}active{% endif %}
-              " aria-current="page" href="{%url 'profesores'%} ">
-              <i class="fa-solid fa-user-tie"></i>
-              <span class="links_name">Instructores</span>
+          <li class=" 
+          {% if request.path == '/Administracion/Profesores/'%}active {% endif %}
+          {% if '/Administracion/VerInfoProfesor/' in request.path %}active{% endif %}
+          {% if '/Administracion/VerEstudiantes/' in request.path %}active{% endif %}
+          ">
+            <a  aria-current="page" href="{%url 'profesores'%} ">
+              <i class="fa-solid fa-user-tie icono"></i>
+              <span class="item">Instructores</span>
             </a>
-            <span class="tooltip">Instructores</span>
           </li>
-          <li>
-            <a class="
-            {% if request.path == '/Niveles/Listar/'%}active {% endif %} 
-            " href="{%url 'listarNivel'%} ">
-              <i class='bx bx-pie-chart-alt-2' ></i>
-              <span class="links_name">Niveles</span>
+          <li class="
+          {% if request.path == '/Niveles/Listar/'%}active {% endif %} 
+          " >
+            <a href="{%url 'listarNivel'%} ">
+              <i class='bx bx-pie-chart-alt-2 icono' ></i>
+              <span class="item">Niveles</span>
             </a>
-            <span class="tooltip">Niveles</span>
+           
           </li>
-          <li>
-            <a class="
-            {% if request.path == '/Administracion/Calendario/'%}active {% endif %}
-            {% if request.path == '/Administracion/Asistencia/'%}active {% endif %}
-            {% if request.path == '/Administracion/ControlAsistencia/'%}active {% endif %}
-            {% if '/Administracion/ClasesCanceladas/' in request.path %}active{% endif %}
-            " href="{%url 'calendario'%}">
-              <i class='bx bx-calendar'></i>
-              <span class="links_name">Calendario</span>
+          <li class="
+          {% if request.path == '/Administracion/Calendario/'%}active {% endif %}
+          {% if request.path == '/Administracion/Asistencia/'%}active {% endif %}
+          {% if request.path == '/Administracion/ControlAsistencia/'%}active {% endif %}
+          {% if '/Administracion/ClasesCanceladas/' in request.path %}active{% endif %}
+          ">
+            <a  href="{%url 'calendario'%}">
+              <i class='bx bx-calendar icono'></i>
+              <span class="item">Calendario</span>
             </a>
-            <span class="tooltip">Calendario</span>
+
           </li>
-          <li>
-            <a class=" 
-            {% if request.path == '/Picaderos/'%}active {% endif %}
-            {% if '/Picaderos/InfoPicadero/' in request.path %}active{% endif %}
-            " href="{% url 'picaderos' %}">
-              <i class="fa-solid fa-warehouse"></i>
-              <span class="links_name">Picaderos</span>
+          <li class=" 
+          {% if request.path == '/Picaderos/'%}active {% endif %}
+          {% if '/Picaderos/InfoPicadero/' in request.path %}active{% endif %}
+          ">
+            <a  href="{% url 'picaderos' %}">
+              <i class="fa-solid fa-warehouse icono"></i>
+              <span class="item">Picaderos</span>
             </a>
-            <span class="tooltip">Picaderos</span>
           </li>
         {% endif %}
-        
-        
-
-        <li class="profile">
-            <!-- <a href="{% url 'perfil' %}"></a> -->
-            <div class="profile-details" onclick="IrPerf()">
-              <img src="/media/{{request.user.imagen}}">
-              <div class="name_job">
-                <div class="name">{{request.user.nombres|title}}</div>
-                
-                {% if request.user.administrador == True %}
-                  <div class="job">Administrador</div>
-                {% else %}
-                  <div class="job">Profesor</div>
-                {% endif %}
-              </div>
-            </div>
-
-            <a href="{% url 'logout' %}">
-              <i class='bx bx-log-out' id="log_out" ></i>
-            </a>
-            
-        </li>
-
-      </ul>
+    </ul>
+</nav>
+<nav class="navbar abierto">
+    <i onclick="mostrarSide()" class="fa-solid fa-bars icono_menu"></i>
+    <div class="perfil">
+        <img src="/media/{{request.user.imagen}}" style="border-radius: 50%; width: 100%; height: 100%;" onclick="MostrarDrop()">
+        <div class="dropd close">
+          <ul>
+              <li><a href="{% url 'perfil' %}"><i class='bx bx-user'></i> Perfil</a></li>
+              <li><a href="{% url 'logout' %}" style="color: #cf3322;"><i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar sesión</a></li>
+          </ul>
+        </div>
     </div>
-  {% endif %}
-  <section class="home-section">
-    {% block contenido %}
+</nav>
+<section class="home-section">
+    <!-- <div class="ccontenedor mt-5 cont_list"> -->
+      {% block contenido %}
           
-    {% endblock contenido %}
+      {% endblock contenido %}
+      
+    <!-- </div> -->
     <small style="margin-top: 100px;" class="derechos"><i class="fa-regular fa-copyright"></i> Lambda Analytics <img width="30px" src="{% static 'img/logoLambda.png'%}" alt=""> 2022 </small>
-  </section>
+</section>
 
-  {% block modals %}
+
+{% block modals %}
             
-  {% endblock modals %}
+{% endblock modals %}
 
-  <div class="modal fade" id="CambiarContrasena" role="dialog" opacity: 1 !important>
-  </div>
+<div class="modal fade" id="CambiarContrasena" role="dialog" opacity: 1 !important>
+</div>
+
+
+
+  {% endif %}
+
+ 
+
+  
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
   <script src="{% static 'libs/sweetalert/sweetalert.js' %}"></script>
   <script src="{% static 'libs/jquery/jquery.min.js' %}"></script>
@@ -172,35 +171,67 @@
   <script src="{% static 'libs/DataTables/Responsive/dataTables.min.js' %}"></script>
   <script src="{% static 'js/main.js' %}"></script>
   <script>
+
+    $(document).ready(function(){
+      // $(".cont_list").css("width", "1080px")
+      // $(".cont_list").css("margin-left", "200px")
+    })
+
     function IrPerf(){
       location.href = "/Usuarios/Perfil/"
     }
 
-    let sidebar = document.querySelector(".sidebar");
-    let closeBtn = document.querySelector("#btn");
-    let searchBtn = document.querySelector(".bx-search");
-  
-    closeBtn.addEventListener("click", ()=>{
-      sidebar.classList.toggle("open");
-      menuBtnChange();//calling the function(optional)
-    });
-  
-    searchBtn.addEventListener("click", ()=>{ // Sidebar open when you click on the search iocn
-      sidebar.classList.toggle("open");
-      menuBtnChange(); //calling the function(optional)
-    });
-  
-    // following are the code to change sidebar button(optional)
-    function menuBtnChange() {
-     if(sidebar.classList.contains("open")){
-       closeBtn.classList.replace("bx-menu", "bx-menu-alt-right");//replacing the iocns class
-     }else {
-       closeBtn.classList.replace("bx-menu-alt-right","bx-menu");//replacing the iocns class
-     }
-    }
+    function mostrarSide(){
+            let barra = $(".sidebar")
+
+
+            if(barra.hasClass("cerrado") == true){
+                barra.removeClass("cerrado")
+                $(".navbar").removeClass("abierto")
+                // $(".cont_list").css("width", "1080px")
+                // $(".cont_list").css("margin-left", "200px")
+            }
+            else{
+                barra.addClass("cerrado")
+                $(".navbar").addClass("abierto")
+                // $(".cont_list").css("width", "1180px")
+                // $(".cont_list").css("margin-left", "50px")
+            }
+            
+        }
+
+        function cerrarMenu(){
+            let barra = $(".sidebar")
+
+            if(barra.hasClass("cerrado") == true){
+                barra.removeClass("cerrado")
+                $(".navbar").removeClass("abierto")
+                
+            }
+            else{
+                barra.addClass("cerrado")
+                $(".navbar").addClass("abierto")
+            }
+        }
 
    
     
+
+
+
+    function MostrarDrop(){
+
+      let barra = $(".dropd")
+
+      if(barra.hasClass("close") == true){
+          barra.removeClass("close")   
+      }
+      else{
+          barra.addClass("close")
+
+      }
+      
+    }
     
     </script>
   {% block scripts %}{% endblock scripts %}
