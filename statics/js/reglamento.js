@@ -66,7 +66,7 @@ function guardarContrato(){
             button.classList.add('btn-success')
         }
         button.style.color = "#fff"
-        button.nextSibling.style.display = "none"
+        button.nextElementSibling.style.display = "none"
         if (autoriza.checked){
             auth.name = "autorizaClub"
             if(document.getElementById("autorizaClubInput")==null){
@@ -87,7 +87,7 @@ function guardarContrato(){
                 button.classList.add('btn-success')
             }
             button.style.color = "#fff"
-            button.nextSibling.style.display = "none"
+            button.nextElementSibling.style.display = "none"
         }
         else{
             if(document.getElementById("autorizaClubInput")==null){
@@ -108,10 +108,10 @@ function guardarContrato(){
                 button.classList.add('btn-danger')
             }
             button.style.color = "#fff"
-            button.nextSibling.innerHTML = "<sub>No podrá realizar el registro</sub>"
-            button.nextSibling.style.display = "block"
-            button.nextSibling.style.color = "red"
-            button.nextSibling.style.marginLeft = "10px"
+            button.nextElementSibling.innerHTML = "<sub>No podrá realizar el registro</sub>"
+            button.nextElementSibling.style.display = "block"
+            button.nextElementSibling.style.color = "red"
+            button.nextElementSibling.style.marginLeft = "10px"
         }
     }
     else{
@@ -133,10 +133,10 @@ function guardarContrato(){
             button.classList.add('btn-danger')
         }
         button.style.color = "#fff"
-        button.nextSibling.innerHTML = "<sub>No podrá realizar el registro</sub>"
-        button.nextSibling.style.display = "block"
-        button.nextSibling.style.color = "red"
-        button.nextSibling.style.marginLeft = "10px"
+        button.nextElementSibling.innerHTML = "<sub>No podrá realizar el registro</sub>"
+        button.nextElementSibling.style.display = "block"
+        button.nextElementSibling.style.color = "red"
+        button.nextElementSibling.style.marginLeft = "10px"
         if (autoriza.checked){
             auth.name = "autorizaClub"
             if(document.getElementById("autorizaClubInput")==null){
@@ -165,10 +165,10 @@ function guardarContrato(){
                 button.classList.add('btn-danger')
             }
             button.style.color = "#fff"
-            button.nextSibling.innerHTML = "<sub>No podrá realizar el registro</sub>"
-            button.nextSibling.style.display = "block"
-            button.nextSibling.style.color = "red"
-            button.nextSibling.style.marginLeft = "10px"
+            button.nextElementSibling.innerHTML = "<sub>No podrá realizar el registro</sub>"
+            button.nextElementSibling.style.display = "block"
+            button.nextElementSibling.style.color = "red"
+            button.nextElementSibling.style.marginLeft = "10px"
         }
     }
     document.getElementById("CrearEstudianteForm").style.display = "block"
