@@ -104,7 +104,7 @@ class Estudiante(models.Model):
     documento = models.BigIntegerField("número de documento", null=False, blank=False, unique=True)
     celular = models.IntegerField("número de celular", null=True, blank=True)
     email = models.EmailField("correo electrónico", unique=True, null=True, blank=True)
-    direccion = models.CharField("dirección de residencia", max_length = 500,null=False, blank=False,)
+    direccion = models.CharField("dirección de residencia", max_length = 500,null=False, blank=False)
     barrio = models.CharField("barrio de resdencia", max_length = 500, null=False, blank=False)
     ciudad = models.CharField("ciudad de residencia",max_length = 150, null=False, blank=False)
     seguro = models.CharField("seguro medico", max_length = 500)
@@ -133,7 +133,7 @@ class Estudiante(models.Model):
     email_facturar = models.EmailField("Correo electrónico a facturar", unique=True, null=True, blank=True)
     telefono_facturar = models.IntegerField('teléfono a facturar', unique=True, null=True, blank=True)
     #archivos
-    exoneracion =models.FileField(upload_to=guardar_exoneracion, validators = [validar_extencion_archivo],null=False, blank=False)
+    exoneracion =models.BooleanField(default=False)
     documento_A =models.FileField(upload_to=guardar_documento, validators = [validar_extencion_archivo],null=False, blank=False)
     seguro_A =models.FileField(upload_to=guardar_seguro, validators = [validar_extencion_archivo],null=False, blank=False) 
     # firma poner en NULL FALSE, NO LO PUSE PARA NO TENER QUE BORRAR LOS REGISTROS

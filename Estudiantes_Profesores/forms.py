@@ -47,7 +47,7 @@ class CrearEstudianteForm(forms.ModelForm):
         "identificacion_facturar": forms.NumberInput(attrs={"class":"form-control", "autocomplete":"off"}),
         "telefono_facturar": forms.NumberInput(attrs={"class":"form-control", "autocomplete":"off"}),
         "direccion_facturar": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
-        "exoneracion": forms.FileInput(attrs={"class":"form-control"}),
+        "exoneracion": forms.CheckboxInput(attrs={"class":"form-control"}),
         "email_facturar": forms.EmailInput(attrs={"class":"form-control", "autocomplete":"off", "placeholder":"Ingrese el correo electrónico a facturar"}),
         "documento_A": forms.FileInput(attrs={"class":"form-control"}),
         "seguro_A": forms.FileInput(attrs={"class":"form-control"}),
@@ -91,6 +91,7 @@ class CrearEstudianteForm(forms.ModelForm):
         self.fields['email_facturar'].required = True
         self.fields['telefono_facturar'].required = True
         self.fields['exoneracion'].required = True
+        self.fields['exoneracion'].error_messages = {'required': 'Es necesario que leas y aceptes el consentimiento para continuar el proceso.'}
         self.fields['documento_A'].required = True
         self.fields['seguro_A'].required = True
         self.fields['tipo_clase'].required = True
@@ -254,7 +255,7 @@ class EstudianteForm(forms.ModelForm):
         "identificacion_facturar": forms.NumberInput(attrs={"class":"form-control", "autocomplete":"off"}),
         "telefono_facturar": forms.NumberInput(attrs={"class":"form-control", "autocomplete":"off"}),
         "direccion_facturar": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
-        "exoneracion": forms.FileInput(attrs={"class":"form-control"}),
+        "exoneracion": forms.CheckboxInput(attrs={"class":"form-control"}),
         "email_facturar": forms.EmailInput(attrs={"class":"form-control", "autocomplete":"off"}),
         "documento_A": forms.FileInput(attrs={"class":"form-control"}),
         "seguro_A": forms.FileInput(attrs={"class":"form-control"}),

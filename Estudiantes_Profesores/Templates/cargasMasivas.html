@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block titulo %}Cargas Masivas{% endblock titulo %}
+
+{% block estilos %}
+    <link rel="stylesheet" href="{%static 'css/estilosBase.css'%}">
+    <link rel="stylesheet" href="{%static 'css/preloader.css'%}">
+    <style>
+        input[type="file"]{
+            display: none;
+        }
+    </style>
+{% endblock estilos %}
+
+{% block contenido %}
+    <div class="container mt-5 cont_list">
+        <h1>Cargas Masivas</h1>
+        <hr>
+        <div style="padding: 30px;">
+            <form enctype="multipart/form-data" action="{%url 'cargasMasivas'%}" method="post" class="row" style="display: flex; flex-wrap: wrap;" tipo="niveles">
+                {% csrf_token %}
+                <h3 class="col-md-2">Niveles</h3>
+                <label for="excelNivel" class="btn btn-success col-md-4 offset-md-1">Cargar excel de niveles</label>
+                <input type="file" name="niveles" id="excelNivel">
+                <a href="{%url 'descargarFormato' 'niveles'%}" class="col-md-2 offset-md-1 btn btn-primary" type="button">Descargar plantilla</a>
+                <button class="col-md-1 offset-md-1  btn btn-dark" type="button" onclick="CargaMasiva(this.parentNode)">Cargar</button>
+                <div class="text-center ocultar" id="spinnerLoad" style="margin-top: 10px;">
+                    <center>
+                        <div class="prelo">
+                            <div class="caballo" style="background: url('{% static 'img/ej.png'%}');" ></div>
+                            <p id="carg">Cargando niveles..</p>
+                        </div>
+                    </center>
+                </div>
+            </form>
+            <br>
+            <div class="row alert alert-info" id="AvisoNiveles"style="display: none;"></div>
+            <br>
+            <form enctype="multipart/form-data" action="{%url 'cargasMasivas'%}" method="post"  class="row" style="display: flex; flex-wrap: wrap;" tipo="instructores">
+                {% csrf_token %}
+                <h3 class="col-md-2">Instructores</h3>
+                <label for="excelInstructores" class="btn btn-success col-md-4 offset-md-1">Cargar excel de niveles</label>
+                <input type="file" name="instructores" id="excelInstructores">
+                <a href="{%url 'descargarFormato' 'instructores'%}" class="col-md-2 offset-md-1 btn btn-primary" type="button">Descargar plantilla</a>
+                <button class="col-md-1 offset-md-1  btn btn-dark" type="button" onclick="CargaMasiva(this.parentNode)">Cargar</button>
+                <div class="text-center ocultar" id="spinnerLoad" style="margin-top: 10px;">
+                    <center>
+                        <div class="prelo">
+                            <div class="caballo" style="background: url('{% static 'img/ej.png'%}');" ></div>
+                            <p id="carg">Cargando instructores..</p>
+                        </div>
+                    </center>
+                </div>
+            </form>
+            <br>
+            <div class="row alert alert-info" id="AvisoInstructores"style="display: none;"></div>
+            <br>
+            <form enctype="multipart/form-data" action="{%url 'cargasMasivas'%}" method="post" class="row" style="display: flex; flex-wrap: wrap;" tipo="alumnos">
+                {% csrf_token %}
+                <h3 class="col-md-2">Alumnos</h3>
+                <label for="excelAlumnos" class="btn btn-success col-md-4 offset-md-1">Cargar excel de alumnos</label>
+                <input type="file" name="alumnos" id="excelAlumnos">
+                <a href="{%url 'descargarFormato' 'alumnos'%}" class="col-md-2 offset-md-1 btn btn-primary" type="button">Descargar plantilla</a>
+                <button class="col-md-1 offset-md-1  btn btn-dark" type="button" onclick="CargaMasiva(this.parentNode)">Cargar</button>
+                <div class="text-center ocultar" id="spinnerLoad" style="margin-top: 10px;">
+                    <center>
+                        <div class="prelo">
+                            <div class="caballo" style="background: url('{% static 'img/ej.png'%}');" ></div>
+                            <p id="carg">Cargando alumnos..</p>
+                        </div>
+                    </center>
+                </div>
+            </form>
+            <br>
+            <div class="row alert alert-info" id="AvisoAlumnos" style="display: none;"></div>
+        </div>
+    </div>
+{% endblock contenido %}
+
+
+{% block scripts %}
+
+{% if errors %}
+    {% if errors.niveles %}
+        <script>
+            let aviso = document.getElementById('AvisoNiveles')
+            aviso.innerHTML = '{{errors.niveles}}'
+            aviso.style.display =  'block'
+        </script>
+    {% endif %}
+    {% if errors.instructores %}
+        <script>
+            let aviso = document.getElementById('AvisoInstructores')
+            aviso.innerHTML = '{{errors.instructores}}'
+            aviso.style.display =  'block'
+        </script>
+    {% endif %}
+    {% if errors.alumnos %}
+        <script>
+            let aviso = document.getElementById('AvisoAlumnos')
+            aviso.innerHTML = '{{errors.alumnos}}'
+            aviso.style.display =  'block'
+        </script>
+    {% endif %}
+{% endif %}
+    
+    <script>
+        var carga = true
+        let inputs = document.querySelectorAll('input');
+        inputs.forEach(input=>{
+            input.onchange = function(){
+                input.previousElementSibling.innerHTML = "<b>Excel a cargar: </b>"+input.value;
+            }
+        })
+        function CargaMasiva(form){
+            if (carga){
+                form.submit();
+                carga = false
+                form.lastElementChild.classList.remove("ocultar")
+            }
+            else{
+                let alert = form.nextElementSibling.nextElementSibling
+                function object(){
+                    let spinners = document.querySelectorAll('#spinnerLoad')
+                    let result = ''
+                    for(let i=0; i<spinners.length; i++){
+                        if(spinners[i].classList.contains("ocultar") == false){
+                            return spinners[i].parentElement.getAttribute('tipo')
+                        }
+                    }
+                }
+                alert.innerHTML = 'Ya se está haciendo una carga de los '+object()+', por lo que no podras realizar otra hasta que termine la primera.'
+                alert.style.display = 'block'
+            }
+        }
+        
+    </script>
+{% endblock scripts %}
+    
