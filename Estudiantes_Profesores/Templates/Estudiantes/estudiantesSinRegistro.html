@@ -13,7 +13,7 @@
 <div class="container mt-5 cont_list">
   <div class="row">
     <div class="col-10">
-        <p class="titulo_seccion">Administración de alumnos sin registro</p>
+        <p class="titulo_seccion">Administración de estudiantes sin asignación de clases</p>
     </div>
     <div class="col-2">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0"> 
@@ -23,18 +23,18 @@
         </ul>    
     </div>
   </div>
-    <table id="EstudiantesSinRegistroTable" class="table">
+    <table id="EstudiantesSinRegistroTable" class="table" style="width: 100%;">
         <thead>
             <tr>
-                <th colspan="5">Datos</th>
+                <th colspan="4">Datos</th>
                 <th colspan="1">Acciones</th>
             </tr>
            <tr>
                 <th>#</th>
                 <th>Nombre</th>
-                <th>Documento</th>
-                <th>Celular</th>
-                <th>Correo</th>
+                <th>Edad</th>
+                <th>Tipo de servicio</th>
+                <!-- <th>Correo</th> -->
                 <th class="text-center">Asignar Horario | Ver alumno</th>
            </tr>
         </thead>
@@ -43,21 +43,8 @@
                 <tr>
                     <td>{{forloop.counter}}</td>
                     <td>{{estudiante.get_estudiante}}</td>
-                    <td>{{estudiante.documento}}</td>
-                    <td>
-                    {% if estudiante.celular %}
-                    {{estudiante.celular}}
-                    {% else %}
-                    No aplica
-                    {% endif %}
-                      </td>
-                    <td>
-                      {% if estudiante.email %}
-                    {{estudiante.email}}
-                    {% else %}
-                    No aplica
-                    {% endif %}
-                    </td>
+                    <td>{{estudiante.get_edad}}</td>
+                    <td>{{estudiante.tipo_servicio}}</td>
                     <td class="text-center">
                       <a style="margin-right: 20px; background-color: rgb(88, 181, 224); color: white;" onclick="EstudianteSinRegistro('{% url 'crearNuevosEstudiantes' estudiante.pk %}'); " class="btn"><i class="fa-solid fa-circle-plus fa-lg"></i></a>
                       <a style="margin-right: 20px;">|</a>

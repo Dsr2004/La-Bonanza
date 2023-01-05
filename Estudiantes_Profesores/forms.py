@@ -11,7 +11,7 @@ class CrearEstudianteForm(forms.ModelForm):
         "barrio","ciudad","seguro","poliza","comprobante_seguro_medico",
         "comprobante_documento_identidad","nombre_completo_madre","cedula_madre","celular_madre",
         "email_madre","nombre_completo_padre","cedula_padre", "celular_padre", "email_padre","nombre_contactoE","telefono_contactoE","relacion_contactoE","exoneracion",
-        "documento_A","seguro_A","tipo_clase","aceptaContrato","facturacion_electronica",'tipo_servicio',"nombre_facturar", "identificacion_facturar","direccion_facturar","email_facturar",'telefono_facturar',"nota")
+        "documento_A","seguro_A","tipo_clase","aceptaContrato","facturacion_electronica",'tipo_servicio',"nombre_facturar", "identificacion_facturar","direccion_facturar","email_facturar",'telefono_facturar',"nota",'autorizaClub', 'nombrefirma')
 
         widgets = {
         "nombre_completo": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
@@ -219,7 +219,7 @@ class EstudianteForm(forms.ModelForm):
         "barrio","ciudad","seguro","poliza","comprobante_seguro_medico",
         "comprobante_documento_identidad","nombre_completo_madre","cedula_madre","celular_madre",
         "email_madre","nombre_completo_padre","cedula_padre", "celular_padre", "email_padre","nombre_contactoE","telefono_contactoE","relacion_contactoE","exoneracion",
-        "documento_A","seguro_A","tipo_clase","aceptaContrato","facturacion_electronica",'tipo_servicio',"nombre_facturar", "identificacion_facturar","direccion_facturar","email_facturar",'telefono_facturar',"nota")
+        "documento_A","seguro_A","tipo_clase","aceptaContrato","facturacion_electronica",'tipo_servicio',"nombre_facturar", "identificacion_facturar","direccion_facturar","email_facturar",'telefono_facturar',"nota",'autorizaClub')
 
         widgets = {
         "nombre_completo": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off"}),
