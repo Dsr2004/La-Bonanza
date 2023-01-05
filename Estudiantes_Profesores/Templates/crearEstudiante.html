@@ -27,8 +27,8 @@
     }
 </style>
 <div id="fondoContrato"style="display:none; width:100%; position:fixed; top:0; height:100vh; background-color:rgba(0,0,0,0.5);">
-    <div id="DivContrato" style="width:90%;height: 90vh;background-color: #fff; position:absolute; top:2.5%;left: 5%; border: 1px solid rgba(0,0,0,1); z-index: 100; border-radius: 5px;overflow: auto;">
-        <div id="header" style="width: 88%; margin: 0 1%; height:60px; border-bottom: 1px solid rgba(0,0,0,0.3); display:grid;grid-template-columns: 96% 4%; padding: 0 10px; position: fixed; background-color: #fff;">
+    <div id="DivContrato" style="width:90%;height: 90vh;background-color: #fff; position:absolute; top:2.5%;left: 2%; border: 1px solid rgba(0,0,0,1); z-index: 100; border-radius: 5px;overflow: auto;">
+        <div id="header" style="width: 88%; margin: 0 0.5%; height:60px; border-bottom: 1px solid rgba(0,0,0,0.3); display:grid;grid-template-columns: 96% 4%; padding: 0 10px; position: fixed; background-color: #fff;">
             <h1 id="titleContrato"></h1><i class="fa fa-close" style="position:relative; right: -5px!important; top: 17px; font-size: 24px; cursor: pointer;" onclick="hideContrato()"></i>
         </div>
         <div id="contentContrato" style="margin-top: 70px; display: grid;grid-template-columns: 1fr; grid-gap:5px; padding: 15px;">
@@ -59,7 +59,29 @@
         </div>
     </div>
 </div>
-
+<div id="fondoConsentimiento"style="display:none; width:100%; position:fixed; top:0; height:100vh; background-color:rgba(0,0,0,0.5);">
+    <div id="DivConsentimiento" style="width:90%;height: 90vh;background-color: #fff; position:absolute; top:2.5%;left: 2%; border: 1px solid rgba(0,0,0,1); z-index: 100; border-radius: 5px;overflow: auto;">
+        <div id="header" style="width: 88%; margin: 0 0.5%; height:60px; border-bottom: 1px solid rgba(0,0,0,0.3); display:grid;grid-template-columns: 96% 4%; padding: 0 10px; position: fixed; background-color: #fff;">
+            <h3 id="titleConsentimiento"></h3><i class="fa fa-close" style="position:relative; right: -5px!important; top: 17px; font-size: 24px; cursor: pointer;" onclick="hideConsentimiento()"></i>
+        </div>
+        <div id="contentConsentimiento" style="margin-top: 70px; display: grid;grid-template-columns: 1fr; grid-gap:5px; padding: 15px;">
+        </div>
+        <div>
+            <div class="form-check form-switch">
+                <div style="margin-left: 0;" class="checkboxSiNo">
+                    <input type="checkbox" name="aceptaConsentimiento" class="form-check-input" autocomplete="off" id="aceptaConsentimiento">
+                    <label for="aceptaConsentimiento"></label>
+                </div>
+            </div>
+            <br>
+            <div style="float: right; margin-right: 40px ;">
+                <button type="button" class="btn btn-default" style="background-color: #ccc; margin-right: 10px;"onclick="hideConsentimiento()">Cancelar</button>
+                <button type="button" class="btn btn-info"onclick="guardarConsentimiento()">Aceptar</button>
+                <br><br>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <div class="container mt-5 mb-5 cont_list">
@@ -91,7 +113,7 @@
                     <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-facturacion" type="button" role="tab" aria-controls="pills-contact" aria-selected="false"><i id="icon_danger_FACTURACION" class="fa-solid fa-circle-exclamation"></i>  Facturación</button>
                 </li>
                 <li class="nav-item" role="presentation">
-                  <button onclick="document.getElementById('firm').style.visibility='visible'" class="nav-link" id="pills-disabled-tab" data-bs-toggle="pill" data-bs-target="#pills-disabled" type="button" role="tab" aria-controls="pills-disabled" aria-selected="false"><i id="icon_danger_DOCUMENTOS" class="fa-solid fa-circle-exclamation"></i>   Reglamento y exoneración</button>
+                  <button onclick="document.getElementById('firm').style.visibility='visible'; cargarCanvas()" class="nav-link" id="pills-disabled-tab" data-bs-toggle="pill" data-bs-target="#pills-disabled" type="button" role="tab" aria-controls="pills-disabled" aria-selected="false"><i id="icon_danger_DOCUMENTOS" class="fa-solid fa-circle-exclamation"></i>   Reglamento y exoneración</button>
                 </li>
             </ul>
                 
@@ -382,12 +404,42 @@
                 </div>
 
                 <div class="tab-pane fade" id="pills-disabled" role="tabpanel" aria-labelledby="pills-disabled-tab" tabindex="0">
+                    <h5 class="mt-4">Reglamento y exoneración</h5>
+                    <div class="row">
+                        <div>
+                            <label for="" style="font-weight: 500;">Consentimiento para asumir riesgo y Exoneración de responsabilidad <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
+                            <br>
+                            <button id="verConsentimientob" type="button" class="btn btn-warning"onclick="verConsentimiento()">Ver consentimiento</button>
+                        </div>
+                    </div>
+                    <p id="exoneracion" class="error_text"></p>
+                    <div class="row">
+                        <label for="" style="font-weight: 500;">Reglamento: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label><br>
+                        <div style="display: flex;">
+                            <button id="verContratob" type="button" class="btn btn-xs" style="color: rgb(40, 40, 252);" onclick="verContrato()">Ver el reglamento</button>
+                            
+                    <div>
+                        <p id="aceptaContrato" class="error_text"></p>
+                    </div>
+                        </div>
+                    </div>
 
-                <h5 class="mt-4">Documentos del alumno</h5>
-                <div class="row">
-                <div style="display: flex;">
-                        <a style="margin-right: 10px; margin-bottom: 10px;" href="{% static 'Exoneracion de responsabilidades/2021_Exoneracion_de_Responsabilidad.pdf' %}" download="Exoneracion_de_Responsabilidad.pdf" class="btn btn-warning btn-sm"><i class="fa-solid fa-download"></i></a>
-                    <label for="" style="font-weight: 500;">Consentimiento para asumir riesgo y Exoneración de responsabilidad: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label></div>
+
+                    <div class="row">
+                        <label for="" style="font-weight: 500;">Nombre del firmante: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label><br>
+                        <input type="text" name="nombrefirma">
+                        <input type="hidden" name="firma" id="firma">
+                    </div>
+                    <div id="firm" style="visibility: hidden;">
+                        <label for="" style="font-weight: 500;">Firma: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label><br>
+                        <sub>Al firmar aceptas todo la información presentada en el consentimiento y en el reglamento.</sub>
+                        <br>
+                        <canvas id="signature-canvas" style="border: 1px dashed rgb(79, 74, 74); background-color: #fff; width: 50%; height: 200px;"></canvas>
+                        <button id="limpiarCanvas" class="btn btn-outline-secondary btn-sm" type="button">Limpiar</button>
+                        <button type="button" id="send" class="btn btn-success w-100" style="float: right">Enviar</button>   
+                    </div>
+                    <br><br>
+
                 </div>
                 <br>{{form.exoneracion}}
                 <p id="exoneracion" class="error_text"></p>
@@ -452,14 +504,16 @@
 {% block scripts %}
 <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
 <script src="{% static 'js/reglamento.js' %}"></script>
+<script src="{% static 'js/consentimiento.js' %}"></script>
 <script>
-    window.addEventListener('load', async () => {
+    function cargarCanvas(){
+
             const canvas = document.querySelector("canvas");
             canvas.height = canvas.offsetHeight;
             canvas.width = canvas.offsetWidth;
 
             signaturePad = new SignaturePad(canvas, {syncField: '#signature64', syncFormat: 'PNG'});
-    });
+    };
 
     $("#limpiarCanvas").on("click", function(){
         signaturePad.clear();

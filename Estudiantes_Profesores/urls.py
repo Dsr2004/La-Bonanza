@@ -40,4 +40,6 @@ urlpatterns=[
     path("CambiarTipoClase/", cambiarTipoClase, name="cambiarTipoClase"),
     path("GetClasesProfesor", login_required(getClasesProfesor), name="getClasesProfesor"),
     path('Horario/<str:date>', login_required(horario.as_view()), name="horario"),
+    path('CargasMasivas/', login_required(CargasMasivas.as_view()), name="cargasMasivas"),
+    path('DescargarFormato/<str:tipo>', login_required(downloadFormatos.as_view()), name="descargarFormato"),
 ]

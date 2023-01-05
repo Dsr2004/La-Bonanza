@@ -1,16 +1,23 @@
 import json
+from io import BytesIO
 from datetime import datetime, timedelta, date
 from dateutil.relativedelta import relativedelta
 import time
 from django.shortcuts import render, redirect
 from django.views.generic import View,  DetailView
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.contrib import messages
 from django.db.models import Q
+from Usuarios.models import Usuario
 from Picaderos.models import EstadoClase, InfoPicadero, Picadero, EstadoClase
 from Niveles.models import Nivel
 from ..models import DIAS_SEMANA, Estudiante, Registro, Profesor, Asistencia, Calendario as CalendarioModel
 from .validacion import ValidationClass
+import time
+import pandas as pd
+import inspect
+from La_Bonanza.settings import BASE_DIR
+import os
 
 def arreglarFormatoDia(dia):
     if type(dia)  != list:
@@ -317,3 +324,76 @@ class ReponerClase(View):
             clase.save()
         return redirect('clasesCanceladas')
             
+class CargasMasivas(View):
+    template_name = 'cargasMasivas.html'
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)     
+    def create_niveles(self):
+        return ''
+    def post(self, request, *args, **kwargs):
+        context = {}
+        if 'niveles' in request.FILES:
+            try:
+                io = request.FILES['niveles'].read()
+                excel = pd.read_excel(io)
+                attributes = inspect.getmembers(Nivel, lambda a:not(inspect.isroutine(a)))
+                attributes = [a for a in attributes if a[0] == '__doc__'][0][1].replace('Nivel', '').replace('(','').replace(')', '').split(', ')
+                campos = list(filter(lambda attr: attr != 'id', attributes))
+                if len([c for c in campos if c in excel.columns]) == len(campos):
+                    pass
+                else:
+                    context = {'errors':{'niveles':'Los campos necesarios para realizar la carga no se encuentran en el excel cargado. Se recomienda seguir el formato de la plantilla.'}}
+            except Exception as e:
+                print(e)
+                context = {'errors':{'niveles':'Extensión '+(str(request.FILES['niveles']).split('.')[-1]).upper()+' no permitida solo se admiten Excels.'}}
+        elif 'instructores' in request.FILES:
+            try:
+                io = request.FILES['instructores'].read()
+                excel = pd.read_excel(io)
+                campos = ['usuario','nombres','celular','apellidos','cedula','fecha_nacimiento','email','horarios']
+                if len([c for c in campos if c in excel.columns]) == len(campos):
+                        pass
+                else:
+                    context = {'errors':{'instructores':'Los campos necesarios para realizar la carga no se encuentran en el excel cargado. Se recomienda seguir el formato de la plantilla.'}}
+            except Exception as e:
+                print(e)
+                context = {'errors':{'instructores':'Extensión '+(str(request.FILES['niveles']).split('.')[-1]).upper()+' no permitida solo se admiten Excels.'}}
+        elif 'alumnos' in request.FILES:
+            io = request.FILES['alumnos'].read()
+            excel = pd.read_excel(io)
+            attributes = inspect.getmembers(Estudiante, lambda a:not(inspect.isroutine(a)))
+            attributes = [a for a in attributes if a[0] == '__doc__'][0][1].replace('Estudiante', '').replace('(','').replace(')', '').split(', ')
+            campos = list(filter(lambda attr: attr != 'id' and attr != 'firma' and attr != 'nombrefirma' and attr != 'estado' and attr != 'aceptaContrato' and attr != 'autorizaClub' and attr != 'exoneracion' and attr != 'documento_A' and attr != 'seguro_A' and attr != 'imagen' and attr != 'nombre_completo' and attr != 'comprobante_documento_identidad' and attr != 'comprobante_seguro_medico', attributes))
+            print(campos)
+            if len([c for c in campos if c in excel.columns]) == len(campos):
+                pass
+            else:
+                context = {'errors':{'niveles':'Los campos necesarios para realizar la carga no se encuentran en el excel cargado. Se recomienda seguir el formato de la plantilla.'}}
+        else:
+            if len(request.POST)>1:
+                context = {'errors':{[key for key in list(request.POST.keys()) if key != 'csrfmiddlewaretoken'][0]:'No se cargo ningún excel, es obligatorio subir el archivo a cargar.'}}
+        return render(request, self.template_name, context) 
+    
+class downloadFormatos(View):
+    def getFormato(self, excel, filename):
+        with BytesIO() as b:
+            # Use the StringIO object as the filehandle.
+            writer = pd.ExcelWriter(b, engine='xlsxwriter')
+            excel.to_excel(writer, sheet_name=filename.split(' ')[1])
+            writer.save()
+            content_type = 'application/vnd.ms-excel'
+            response = HttpResponse(b.getvalue(), content_type=content_type)
+            response['Content-Disposition'] = 'attachment; filename="' + filename + '.xlsx"'
+            return response
+    def get(self, request, *args, **kwargs):
+        if kwargs['tipo'] == 'niveles':
+            excel = pd.read_excel(os.path.join(BASE_DIR, r'Formatos\Niveles.xlsx'))
+            return self.getFormato(excel, 'Formato niveles')
+        elif kwargs['tipo'] == 'instructores':
+            excel = pd.read_excel(os.path.join(BASE_DIR, r'Formatos\Instructores.xlsx'))
+            return self.getFormato(excel, 'Formato instructores')
+        elif kwargs['tipo'] == 'alumnos':
+            excel = pd.read_excel(os.path.join(BASE_DIR, r'Formatos\Alumnos.xlsx'))
+            return self.getFormato(excel, 'Formato alumnos')
+        else:
+            return redirect('cargasMasivas')
