@@ -12,7 +12,7 @@
 
 
 {% block contenido %}
-    <div class="container mt-4 cont_list">
+    <div class="container mt-5 mb-5 cont_list">
         
         {% if messages %}
             {% for mensaje in messages %}
@@ -43,10 +43,11 @@
                 <a class="nav-link" id="docs-tab" data-bs-toggle="tab" data-bs-target="#docs-tab-pane" type="button" role="tab" aria-controls="docs-tab-pane" aria-selected="false"><i id="icon_danger_DOCUMENTOS" class="fa-solid fa-triangle-exclamation"></i> Documentos</a>
             </li>
             <li class="nav-item" role="presentation">
-              <a class="nav-link" id="disabled-tab" data-bs-toggle="tab" data-bs-target="#disabled-tab-pane" type="button" role="tab" aria-controls="disabled-tab-pane" aria-selected="false" ><i id="icon_danger_REGISTRO" class="fa-solid fa-triangle-exclamation"></i> Información del Registro</a>
+              <a class="nav-link" id="disabled-tab" data-bs-toggle="tab" data-bs-target="#disabled-tab-pane" type="button" role="tab" aria-controls="disabled-tab-pane" aria-selected="false" ><i id="icon_danger_REGISTRO" class="fa-solid fa-triangle-exclamation"></i> Información de clases</a>
             </li>
           </ul>
             <div class="tab-content" id="myTabContent">
+
                 <div class="formEstudianteUpdate tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
                     <br>
                     <h3>Información del alumno</h3>
@@ -133,7 +134,10 @@
                         {{form.facturacion_electronica}}
                         <p id="facturacion_electronica" class="error_text"></p>
                     </div>
+                    <input type="hidden" name="estudiante" value="{{object.pk}}">
+                    <button type="button"  class="btn btn-success w-100"onclick="ModificarRegistroEstudiante()">Modificar información del alumno</button>
                 </div>
+
                 <div class="formEstudianteUpdate tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
                     <br>
                     <h3>Información de los padres</h3>
@@ -217,6 +221,8 @@
                         {{form.ciudad_A}}
                         <p id="ciudad" class="error_text"></p>
                     </div>
+                    <input type="hidden" name="estudiante" value="{{object.pk}}">
+                    <button type="button"  class="btn btn-success w-100"onclick="ModificarRegistroEstudiante()">Modificar información de los padres</button>
                     <br>
                 </div>
                 <div class="tab-pane fade" id="docs-tab-pane" role="tabpanel" aria-labelledby="docs-tab" tabindex="0">
@@ -283,7 +289,7 @@
                         <input type="hidden" name="estado" value="{{object.estado}}">
                     </div>
                     <br>
-                    <button class="btn btn-success w-100" onclick="ModificarEstudiante('{%url 'modificarEstudiante' object.pk%}')">Modificar alumno</button>
+                    <button class="btn btn-success w-100" onclick="ModificarEstudiante('{%url 'modificarEstudiante' object.pk%}')">Modificar información de contacto de emergencia</button>
                     <br>
                 </div>
                 <script>
@@ -322,7 +328,7 @@
                     
                 <div class="tab-pane fade" id="disabled-tab-pane" role="tabpanel" aria-labelledby="disabled-tab" tabindex="0">
                     <br>
-                    <h3>Información del Registro </h3>
+                    <h3>Información de clases </h3>
                     <br>
                     <div class="col-md-12">
                         <label for="" style="font-weight: 500;">Tipo clase: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
@@ -351,6 +357,7 @@
                                 
                         </select>
                         <p id="tipo_servicio" class="error_text"></p>
+                        
                     </div>
 
                     {%if object.tipo_clase == '1' %}
@@ -419,7 +426,7 @@
                         </div>
                         <input type="hidden" name="estudiante" value="{{object.pk}}">
                         <p id="estudiante" class="bg-light text-danger" style="color: #dc3545;"></p>
-                        <button type="button" class="btn btn-success w-100" onclick="ModificarRegistroEstudiantej()">Modificar Registro del alumno </button>
+                        <button type="button" class="btn btn-success w-100" onclick="ModificarRegistroEstudiantej()">Modificar información de las clases </button>
                     </form>
 
                     {% elif object.tipo_clase == '2'%}
@@ -501,7 +508,7 @@
             </div>
             <br> 
     </div>
-
+<br>
 {% endblock contenido %}
 
 {%block scripts%}
