@@ -11,6 +11,10 @@ from django.db.models import Q
 from Usuarios.models import Usuario
 from Picaderos.models import EstadoClase, InfoPicadero, Picadero, EstadoClase
 from Niveles.models import Nivel
+from Niveles.forms import NivelForm
+from Usuarios.forms import UsuarioForm
+from Estudiantes_Profesores.forms import EstudianteForm, ProfesorForm
+
 from ..models import DIAS_SEMANA, Estudiante, Registro, Profesor, Asistencia, Calendario as CalendarioModel
 from .validacion import ValidationClass
 import time
@@ -328,8 +332,67 @@ class CargasMasivas(View):
     template_name = 'cargasMasivas.html'
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name)     
-    def create_niveles(self):
-        return ''
+    def create_niveles(self, excel):
+        message = []
+        datos = [{d:[c for c in excel[d]]} for d in excel.columns if 'Unnamed' not in d]
+        serializers = []
+        registrados = int()
+        for dato in datos:
+            key = list(dato.keys())[0]
+            for i, d in enumerate(dato[key]):
+                if str(d) == 'nan':
+                    d = ''
+                try:
+                    serializers[i][key] = d
+                except:
+                    serializers.insert(i, {key:d})
+        for i, serialize in enumerate(serializers):
+            form = NivelForm(serialize)
+            if form.is_valid():
+                form.save()
+                registrados = registrados + 1
+            else:
+                mensaje = json.loads(form.errors.as_json())[list(form.errors.as_data().keys())[0]][0]['message']
+                message.append(f'En la fila {i+2} "{list(form.errors.as_data().keys())[0]}" {mensaje}')
+        
+        if registrados:
+            message.append(f'Se registraron {registrados} niveles en esta carga.')
+        return message
+    def create_instructores(self, excel):
+        message = []
+        try:
+            datos = [{d:[c for c in excel[d]]} for d in excel.columns if 'Unnamed' not in d]
+            serializers = []
+            registrados = int()
+            for dato in datos:
+                key = list(dato.keys())[0]
+                for i, d in enumerate(dato[key]):
+                    if str(d) == 'nan':
+                        d = ''
+                    try:
+                        serializers[i][key] = d
+                    except:
+                        serializers.insert(i, {key:d})
+            for i, serialize in enumerate(serializers):
+                form = UsuarioForm(serialize)
+                formP = ProfesorForm(serialize)
+                if form.is_valid():
+                    if formP.is_valid():
+                        registrados = registrados + 1
+                        print('si')
+                    else:
+                        mensaje = json.loads(formP.errors.as_json())[list(formP.errors.as_data().keys())[0]][0]['message']
+                        message.append(f'En la fila {i+2} "{list(formP.errors.as_data().keys())[0]}" {mensaje}')
+                else:
+                    mensaje = json.loads(form.errors.as_json())[list(form.errors.as_data().keys())[0]][0]['message']
+                    message.append(f'En la fila {i+2} "{list(form.errors.as_data().keys())[0]}" {mensaje}')
+            
+            if registrados:
+                message.append(f'Se registraron {registrados} instructores en esta carga.')
+        except Exception as e:
+            print('exc', e)
+        return message
+    
     def post(self, request, *args, **kwargs):
         context = {}
         if 'niveles' in request.FILES:
@@ -340,24 +403,25 @@ class CargasMasivas(View):
                 attributes = [a for a in attributes if a[0] == '__doc__'][0][1].replace('Nivel', '').replace('(','').replace(')', '').split(', ')
                 campos = list(filter(lambda attr: attr != 'id', attributes))
                 if len([c for c in campos if c in excel.columns]) == len(campos):
-                    pass
+                    context = {'errors':{'niveles':self.create_niveles(excel)}}
                 else:
-                    context = {'errors':{'niveles':'Los campos necesarios para realizar la carga no se encuentran en el excel cargado. Se recomienda seguir el formato de la plantilla.'}}
+                    context = {'errors':{'niveles':['Los campos necesarios para realizar la carga no se encuentran en el excel cargado. Se recomienda seguir el formato de la plantilla.']}}
+                    
             except Exception as e:
-                print(e)
-                context = {'errors':{'niveles':'Extensión '+(str(request.FILES['niveles']).split('.')[-1]).upper()+' no permitida solo se admiten Excels.'}}
+                print('Exception:',e)
+                context = {'errors':{'niveles':['Extensión '+(str(request.FILES['niveles']).split('.')[-1]).upper()+' no permitida solo se admiten Excels.']}}
         elif 'instructores' in request.FILES:
             try:
                 io = request.FILES['instructores'].read()
                 excel = pd.read_excel(io)
                 campos = ['usuario','nombres','celular','apellidos','cedula','fecha_nacimiento','email','horarios']
                 if len([c for c in campos if c in excel.columns]) == len(campos):
-                        pass
+                    context = {'errors':{'instructores':self.create_instructores(excel)}}
                 else:
-                    context = {'errors':{'instructores':'Los campos necesarios para realizar la carga no se encuentran en el excel cargado. Se recomienda seguir el formato de la plantilla.'}}
+                    context = {'errors':{'instructores':['Los campos necesarios para realizar la carga no se encuentran en el excel cargado. Se recomienda seguir el formato de la plantilla.']}}
             except Exception as e:
                 print(e)
-                context = {'errors':{'instructores':'Extensión '+(str(request.FILES['niveles']).split('.')[-1]).upper()+' no permitida solo se admiten Excels.'}}
+                context = {'errors':{'instructores':['Extensión '+(str(request.FILES['instructores']).split('.')[-1]).upper()+' no permitida solo se admiten Excels.']}}
         elif 'alumnos' in request.FILES:
             io = request.FILES['alumnos'].read()
             excel = pd.read_excel(io)
@@ -371,7 +435,7 @@ class CargasMasivas(View):
                 context = {'errors':{'niveles':'Los campos necesarios para realizar la carga no se encuentran en el excel cargado. Se recomienda seguir el formato de la plantilla.'}}
         else:
             if len(request.POST)>1:
-                context = {'errors':{[key for key in list(request.POST.keys()) if key != 'csrfmiddlewaretoken'][0]:'No se cargo ningún excel, es obligatorio subir el archivo a cargar.'}}
+                context = {'errors':{[key for key in list(request.POST.keys()) if key != 'csrfmiddlewaretoken'][0]:['No se cargo ningún excel, es obligatorio subir el archivo a cargar.']}}
         return render(request, self.template_name, context) 
     
 class downloadFormatos(View):

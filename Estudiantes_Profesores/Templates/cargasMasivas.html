@@ -34,7 +34,11 @@
                 </div>
             </form>
             <br>
-            <div class="row alert alert-info" id="AvisoNiveles"style="display: none;"></div>
+            <div class="row alert alert-info" id="AvisoNiveles"style="display: none;">
+                <ul>
+
+                </ul>
+            </div>
             <br>
             <form enctype="multipart/form-data" action="{%url 'cargasMasivas'%}" method="post"  class="row" style="display: flex; flex-wrap: wrap;" tipo="instructores">
                 {% csrf_token %}
@@ -81,26 +85,32 @@
 {% block scripts %}
 
 {% if errors %}
-    {% if errors.niveles %}
-        <script>
-            let aviso = document.getElementById('AvisoNiveles')
-            aviso.innerHTML = '{{errors.niveles}}'
-            aviso.style.display =  'block'
-        </script>
+    {% if errors.niveles %}}
+        {% for error in errors.niveles %}
+            <script>
+                aviso = document.getElementById('AvisoNiveles')
+                aviso.firstElementChild.innerHTML += '<li>{{error}}</li>'
+                aviso.style.display =  'block'
+            </script> 
+        {% endfor %}
     {% endif %}
     {% if errors.instructores %}
-        <script>
-            let aviso = document.getElementById('AvisoInstructores')
-            aviso.innerHTML = '{{errors.instructores}}'
-            aviso.style.display =  'block'
-        </script>
+    {% for error in errors.instructores %}
+    <script>
+        aviso = document.getElementById('AvisoNiveles')
+        aviso.firstElementChild.innerHTML += '<li>{{error}}</li>'
+        aviso.style.display =  'block'
+    </script> 
+{% endfor %}
     {% endif %}
     {% if errors.alumnos %}
+    {% for error in errors.alumnos %}
         <script>
-            let aviso = document.getElementById('AvisoAlumnos')
-            aviso.innerHTML = '{{errors.alumnos}}'
+            aviso = document.getElementById('AvisoNiveles')
+            aviso.firstElementChild.innerHTML += '<li>{{error}}</li>'
             aviso.style.display =  'block'
-        </script>
+        </script> 
+    {% endfor %}
     {% endif %}
 {% endif %}
     

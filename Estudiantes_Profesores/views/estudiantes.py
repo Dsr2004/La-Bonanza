@@ -12,13 +12,14 @@ from Niveles.models import Nivel
 from Picaderos.models import EstadoClase, Picadero, InfoPicadero, Clase
 from ..models import Estudiante, Registro, Profesor, Calendario as CalendarioModel, Servicio, Asistencia
 from ..forms import EstudianteForm,CrearEstudianteForm, RegistroForm,ProfesorForm
-from ..models import DIAS_SEMANA
+from ..models import DIAS_SEMANA, ESTADOS_ASISTENCIA
 from .validacion import ValidationClass, arreglarFormatoDia, guardarRegistro
 from django.core.files.base import ContentFile
 import base64
 from django.template.loader import get_template
 from xhtml2pdf import pisa
 from io import BytesIO
+import pandas as pd
 
 def cambiarTipoClase(request):
     if request.POST.get('tipo') == 'edit':
@@ -448,10 +449,29 @@ class horario(View):
         
         if request.GET.get('download'):
             return render(request, 'Clases/horarioPDF.html', context)
-            # kwarg = kwargs['date']
-            # response = self.generar_pdf_desde_plantilla(context_dict=context)
-            # # response['Content-Disposition'] = f'attachment; filename="horario {kwarg}.pdf"'
-            # return response
+        elif request.GET.get('resumen'):
+            if request.GET.get('time'):
+                hora = (datetime.strptime(request.GET.get('time'), '%H:%M').replace(minute=0, second=0)).time()
+                clases = [clas for clas in self.newClass(EstadoClase.objects.filter(dia = datetime.strptime(kwargs['date'], '%Y-%m-%d'), estado = True))if clas.asistencia.estado == '1' and clas.clase.calendario.horaClase == hora]
+                filename = 'Resumen clases del '+kwargs['date']+' '+hora.strftime('%I %p')
+            else:
+                clases = [clas for clas in self.newClass(EstadoClase.objects.filter(dia = datetime.strptime(kwargs['date'], '%Y-%m-%d'), estado = True)) if clas.asistencia.estado == '1']
+                filename = 'Resumen clases del '+kwargs['date']
+            excel = pd.DataFrame()
+            excel['Estudiante'] = [clase.clase.calendario.registro.estudiante.nombre_completo for clase in clases]
+            excel['Edad'] =  [clase.clase.calendario.registro.estudiante.get_edad for clase in clases]
+            excel['Profesor'] = [clase.clase.profesor for clase in clases]
+            excel['Nivel'] = [clase.clase.calendario.registro.nivel.nivel for clase in clases]
+            excel['Estado'] = [[estado[1] for estado in ESTADOS_ASISTENCIA if clase.asistencia.estado == estado[0]][0] for clase in clases]
+            with BytesIO() as b:
+                # Use the StringIO object as the filehandle.
+                writer = pd.ExcelWriter(b, engine='xlsxwriter')
+                excel.to_excel(writer, sheet_name=filename.split(' ')[1])
+                writer.save()
+                content_type = 'application/vnd.ms-excel'
+                response = HttpResponse(b.getvalue(), content_type=content_type)
+                response['Content-Disposition'] = 'attachment; filename="' + filename + '.xlsx"'
+                return response
         else:
             return render(request, self.template_name, context)
     
