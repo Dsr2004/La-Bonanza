@@ -102,7 +102,7 @@ class Estudiante(models.Model):
     nombre_completo = models.CharField("nombre completo", max_length=150, null=False, blank=False)
     fecha_nacimiento = models.DateField("Fecha de nacimiento")
     documento = models.BigIntegerField("número de documento", null=False, blank=False, unique=True)
-    celular = models.IntegerField("número de celular", null=True, blank=True)
+    celular = models.BigIntegerField("número de celular", null=True, blank=True)
     email = models.EmailField("correo electrónico", unique=True, null=True, blank=True)
     direccion = models.CharField("dirección de residencia", max_length = 500,null=False, blank=False)
     barrio = models.CharField("barrio de resdencia", max_length = 500, null=False, blank=False)
@@ -114,24 +114,24 @@ class Estudiante(models.Model):
     #informacion de los padres
     # MADRE 
     nombre_completo_madre = models.CharField("nombre completo de la madre", max_length=150, null=True, blank=True)
-    cedula_madre = models.IntegerField("número de cédula de la madre", unique=True, null=True, blank=True)
-    celular_madre = models.IntegerField("número de celular de la madre", null=True, blank=True)
+    cedula_madre = models.BigIntegerField("número de cédula de la madre", unique=True, null=True, blank=True)
+    celular_madre = models.BigIntegerField("número de celular de la madre", null=True, blank=True)
     email_madre = models.EmailField("correo electrónico de la madre", unique=True, null=True, blank=True)
     # PADRE 
     nombre_completo_padre = models.CharField("nombre completo del padre", max_length=150, null=True, blank=True)
-    cedula_padre = models.IntegerField("número de cédula del padre", unique=True, null=True, blank=True)
-    celular_padre = models.IntegerField("número de celular del padre ",  null=True, blank=True)
+    cedula_padre = models.BigIntegerField("número de cédula del padre", unique=True, null=True, blank=True)
+    celular_padre = models.BigIntegerField("número de celular del padre ",  null=True, blank=True)
     email_padre = models.EmailField("correo electrónico del padre", unique=True, null=True, blank=True)
     #informacion contacto de emergencia
     nombre_contactoE = models.CharField("nombre del contacto de emergencia", max_length = 100)
-    telefono_contactoE = models.IntegerField("telefono del contacto de emergencia",null=False, blank=False)
+    telefono_contactoE = models.BigIntegerField("telefono del contacto de emergencia",null=False, blank=False)
     relacion_contactoE = models.CharField("relacion con el alumno",null=False, blank=False,  max_length = 100)
     # informacion facturacion
     nombre_facturar = models.CharField("nombre completo a facturar", max_length=150, null=True, blank=True)
-    identificacion_facturar = models.IntegerField("número de cédula o nit a facturar", unique=True, null=True, blank=True)
+    identificacion_facturar = models.BigIntegerField("número de cédula o nit a facturar", unique=True, null=True, blank=True)
     direccion_facturar = models.CharField("dirección", max_length=500, null=True, blank=True)
     email_facturar = models.EmailField("Correo electrónico a facturar", unique=True, null=True, blank=True)
-    telefono_facturar = models.IntegerField('teléfono a facturar', unique=True, null=True, blank=True)
+    telefono_facturar = models.BigIntegerField('teléfono a facturar', unique=True, null=True, blank=True)
     #archivos
     exoneracion =models.BooleanField(default=False)
     documento_A =models.FileField(upload_to=guardar_documento, validators = [validar_extencion_archivo],null=False, blank=False)

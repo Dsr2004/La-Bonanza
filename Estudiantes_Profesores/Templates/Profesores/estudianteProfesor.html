@@ -1,44 +1,50 @@
 {%extends 'base.html' %}
+{% load static %}
 {% block titulo %}Alumno de {{profesor}}{% endblock titulo %}
 {%block estilos%}
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
 <!-- CSS only -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<link rel="stylesheet" href="{% static 'css/estilosBase.css' %}">
 <style>
     h3{
         font-weight: 350;
     }
+    a{
+        text-decoration: none;
+    }
 </style>
 {%endblock estilos%}
 {% block contenido %}
-<div class="container">
-    <div class="row">
+
+<div class="container mt-5 mb-5 cont_list">
+    <div class="row mt-4">
         {%if user.administrador%}
         <a href="{%url 'verEstudiantes' profesor.pk%}">Volver</a>
         {%else%}
         <a href="{%url 'profesores'%}">Volver</a>
         {%endif%}
     </div>
-    <div class="row">
+    <div class="row mt-4">
         <div class="col-md-10">
-            <h1>Alumno de {{profesor}}</h1>
+            <p style="font-size: 35px; font-weight: 700;">Alumno de:  {{profesor}}</p>
         </div>
     </div>
     <hr>
     <div class="row" style="display: grid; grid-template-columns: 1fr 1fr;">
         <div>
-            <h2>Nombre: </h2>
-            <h3>{{registro.estudiante.nombre_completo}}</h3>
+            <p style="font-size: 25px; font-weight: bold;">Nombre del alumno: </p>
+            <p style="font-size: 20px; font-weight: 400;">{{registro.estudiante.nombre_completo}}</p>
         </div>
         <div>
-            <h2>Edad: </h2>
-            <h3>{{edad}}</h3>
+            <p style="font-size: 25px; font-weight: bold;">Edad: </p>
+            <p style="font-size: 20px; font-weight: 400;">{{edad}}</p>
         </div>
     </div>
-    <h2>Nivel:</h2>
-    <div style="text-align: center; padding: 5px 5px; margin: 5px; border-radius: 10px; background-color: {{registro.nivel.color_fondo}};color:{{registro.nivel.color_letra}}; ">{{registro.nivel.nivel}}</div>
-    <h2>Clases: </h2>
+    <p class="mt-4" style="font-size: 25px; font-weight: bold;">Nivel:</p>
+    <div class="mt-3 mb-3" style="text-align: center; padding: 5px 5px; margin: 5px; border-radius: 10px; background-color: {{registro.nivel.color_fondo}};color:{{registro.nivel.color_letra}}; "><strong>{{registro.nivel.nivel}}</strong> </div>
+    <p style="font-size: 25px; font-weight: bold;">Clases: </p>
     
     <div style="display:grid; grid-template-columns: repeat(2,1fr); grid-gap:10px;">
         {% for calendario in calendarios %}
@@ -53,8 +59,8 @@
     <hr>
     <div class="row" style="display: grid; grid-template-columns: 1fr 1fr;">
         <div>
-            <h2>Nombre del madre: </h2>
-            <h3>{{registro.estudiante.nombre_completo_madre}}</h3>
+            <p style="font-size: 25px; font-weight: bold; margin-bottom: -3px;">Nombre del madre: </p>
+            <p style="font-size: 20px; font-weight: 400;">{{registro.estudiante.nombre_completo_madre}}</p>
         </div>
     </div>
     {% endif %}
@@ -62,19 +68,20 @@
     <hr>
     <div class="row" style="display: grid; grid-template-columns: 1fr 1fr;">
         <div>
-            <h2>Nombre del padre: </h2>
-            <h3>{{registro.estudiante.nombre_completo_padre}}</h3>
+            <p style="font-size: 25px; font-weight: bold; margin-bottom: -3px;">Nombre del padre: </p>
+            <p style="font-size: 20px; font-weight: 400;">{{registro.estudiante.nombre_completo_padre}}</p>
         </div>
     </div>
     {% endif %}
     <hr>
     <div class="row" style="display: grid; grid-template-columns: 1fr 1fr;">
         <div>
-            <h2>Nombre del contacto de emergencia: </h2>
-            <h3>{{registro.estudiante.nombre_contactoE}}</h3>
+            <p style="font-size: 25px; font-weight: bold; margin-bottom: -3px;">Nombre del contacto de emergencia: </p>
+            <p style="font-size: 20px; font-weight: 400;">{{registro.estudiante.nombre_contactoE}}</p>
         </div>
     </div>
 </div>
+<br>
 {%endblock contenido%}
 {% block modals %}
 {% endblock modals %}

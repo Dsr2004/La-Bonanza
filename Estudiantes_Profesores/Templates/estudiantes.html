@@ -49,8 +49,8 @@
                         <th>Nombre</th>
                         <th>Documento</th>
                         <th>Celular</th>
-                        <th>Correo</th>
-                        <th>Matricula</th>
+                
+                        <th>Pagos</th>
                         <th>Nivel</th>
                         <th></th>
                    </tr>
@@ -68,13 +68,6 @@
                                 No aplica
                                 {% endif %}
                                   </td>
-                                <td>
-                                  {% if estudiante.email %}
-                                {{estudiante.email}}
-                                {% else %}
-                                No aplica
-                                {% endif %}
-                                </td>
                             <td>{{estudiante.get_estado_matricula}}</td>
                             <td>{{estudiante.get_estudiante_nivel}}</td>
                             <td>

@@ -123,13 +123,19 @@
       {{form.profesor}}
       <p id="profesor" class="bg-light text-danger" style="color: #dc3545;"></p>
       <br>
-      <Label><strong>Nivel: <sup style="color: #dc3545;">(*)</sup></strong></Label>
+      <Label><strong>Nivele: <sup style="color: #dc3545;">(*)</sup></strong></Label>
       {{form.nivel}}
       <p id="nivel" class="bg-light text-danger" style="color: #dc3545;"></p>
       <br>
+
       <div class="form-check">
-        <Label class="form-check-label"><strong>Matrícula pagada: <sup style="color: #dc3545;">(*)</sup></strong></Label>
-        {{form.pagado}}
+        {% if form.tipo_clase == '1' %}
+          <Label class="form-check-label"><strong>Matrícular pagada: <sup style="color: #dc3545;">(*)</sup></strong></Label>
+          {{form.pagado}}
+        {% else %}
+          <p>Vaca</p>
+        {% endif %}
+        
       </div>
         <p id="pagado" class="bg-light text-danger" style="color: #dc3545;"></p>
         <br>

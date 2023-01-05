@@ -67,6 +67,7 @@ class RegistrarEstudiante(CreateView):
                 data = ContentFile(base64.b64decode(imgstr))  
                 file_name = "firma-"+self.request.POST.get("nombrefirma")+"."+ ext
                 
+
                 estudiante.firma.save(file_name, data, save=True)
                 return redirect("estudiantes")
         else:
