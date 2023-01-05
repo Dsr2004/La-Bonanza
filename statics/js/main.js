@@ -590,32 +590,51 @@ function cambiar_estado_estudiante(url, id){
     reverseButtons: true
   }).then((result) => {
     if (result.isConfirmed) {
-      $(document).ready(function() {
-        $.ajax({
-            data: { "csrfmiddlewaretoken": token, "id": ids },
-            url: url,
-            type: 'POST',
-            success: function(datas) {
-                swal.fire("¡OK! Se ha modificado el alumno", {
-                    icon: "success",
-                }).then(function() {
-                    location.reload()
-                });
-            },
-            error: function(error) {
-              Error = error['responseJSON']
-              Swal.fire({
-                  icon: 'info',
-                  title: 'Atención.',
-                  text: Error['error'] + '.',
-              })
-            }
-        });
-    })
-    } else if (
-      /* Read more about handling dismissals below */
-      result.dismiss === Swal.DismissReason.cancel
-    ) {
+      Swal.fire({
+        title: '¿Porque está cambiando el estado de este alumno?',
+        input: 'text',
+        inputAttributes: {
+          autocapitalize: 'off',
+          id: "mensajeSwet"
+        },
+        showCancelButton: false,
+        cconfirmButtonText: '¡Enviar!',
+        showLoaderOnConfirm: true,
+        allowOutsideClick: () => !Swal.isLoading(),
+        preConfirm: () => {
+          if (document.getElementById('mensajeSwet').value) {
+           pass
+          } else {
+            Swal.showValidationMessage('Complete la información')   
+          }
+        }
+      }).then((result)=>{
+        if (result.isConfirmed) {
+          $(document).ready(function() {
+            $.ajax({
+                data: { "csrfmiddlewaretoken": token, "id": ids, "razon":$("#mensajeSwet").val()},
+                url: url,
+                type: 'POST',
+                success: function(datas) {
+                    swal.fire("¡OK! Se ha modificado el alumno", {
+                        icon: "success",
+                    }).then(function() {
+                        location.reload()
+                    });
+                },
+                error: function(error) {
+                  Error = error['responseJSON']
+                  Swal.fire({
+                      icon: 'info',
+                      title: 'Atención.',
+                      text: Error['error'] + '.',
+                  })
+                }
+            });
+        })
+        }
+      })
+    } else if (result.dismiss === Swal.DismissReason.cancel) {
       swalWithBootstrapButtons.fire(
         'Cancelado',
         'No se han aplicado cambios',

@@ -149,6 +149,9 @@ class Estudiante(models.Model):
     autorizaClub = models.BooleanField(blank=False, null=False)
     fecha_inscripcion = models.DateField(auto_now_add=True)
     nota = models.CharField("Notas", null=True, blank=True, max_length=1000)
+    #motivo cancelacion
+    fecha_cancelacion = models.DateField(auto_now_add=True)
+    razon = models.TextField(blank=True, null=True)
     
     def save(self, *args, **kwargs):
         try:
