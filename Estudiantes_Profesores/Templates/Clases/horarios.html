@@ -19,7 +19,7 @@
         <div class="row">
             <div class="horario">
                 <div class="headerClass">
-                    <div class="Dia">{{ date|date:'l d' }} de {{ date|date:'F' }}<a href="{%url 'horario' date|date:'Y-m-d'%}?download=True" class="btn btn-outline-light" style="float: right; position: relative; cursor: pointer;top:1px;right: 1px;"><i class="fa fa-file-pdf" style="color: rgb(168, 0, 0); "></i></a></div>
+                    <div class="Dia">{{ date|date:'l d' }} de {{ date|date:'F' }}<a href="{%url 'horario' date|date:'Y-m-d'%}?download=True" class="btn btn-outline-light" style="float: right; position: relative; cursor: pointer;top:1px;right: 1px;"><i class="fa fa-file-pdf" style="color:rgb(168, 0, 0);"></i></a><button class="btn btn-outline-light" style="float: right; position: relative; cursor: pointer;top:1px;right: 1px;" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ResumenClases"><i class="fa fa-file-excel" style="color: rgb(33, 115, 70); "></i></button></div>
                     <div class="niveles">
                         {% for nivel in niveles %}
                             <div style=" color: {{nivel.color_letra}}; background:{{nivel.color_fondo}};">{{nivel}}</div>
@@ -85,7 +85,27 @@
         </div>
     </div>
 {% endblock contenido %}
-
+{% block modals %}
+<div class="modal fade" id="ResumenClases" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel"></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <label for="">Poner Hora: <sub>(opcional)</sub></label>
+            <input class="form-control" type="time" onchange="let p = document.getElementById('generarResumen'); p.setAttribute('href', p.getAttribute('href')+'&time='+this.value)">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <a href="{%url 'horario' date|date:'Y-m-d'%}?resumen=True" id="generarResumen" type="button" class="btn btn-primary">Generar</a>
+        </div>
+      </div>
+    </div>
+  </div>
+            
+{% endblock modals %}
 
 {% block scripts %}
 <script>
