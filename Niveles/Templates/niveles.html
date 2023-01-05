@@ -70,7 +70,7 @@
     
 }
 </style>
-<div class="container">
+<div class="container mt-5">
     <div class="row justify-content-between mb-5 encabezado">
         <div class="col-md-8">
             <h2>Gestión de niveles</h2>
@@ -95,7 +95,7 @@
             <div class="col-3 mb-4" onclick="GetNivel('{%url 'modifcarNivel' nivel.pk %}')">
                 <div class="niv" style="background: {{nivel.color_fondo}};">
                     <div class="tit" style="background-color: {{nivel.color_fondo}};">
-                        <p style="text-shadow: 1px 1px 2px black; color: {{nivel.color_letra}};">{{nivel.nivel}}</p>
+                        <p style=" color: {{nivel.color_letra}};">{{nivel.nivel}}</p>
                     </div>
                     <div class="circ">
                         <i class="fa-solid fa-star" style="color: {{nivel.color_fondo}};text-shadow: 1px 1px 5px {{nivel.color_letra}};"></i>

@@ -7,55 +7,75 @@
     <title>Horario</title>
 </head>
 <body>
-    <div class="container">
-        <div class="instructions">
-            <div><strong style="color:rgb(106, 212, 0);">Chulo verde</strong>: Asistio.</div>
-            <div><strong style="color:black;">X negra</strong>: No asistio.</div>
-            <div><strong style="color:red;">X roja</strong>: Cancelo con excusa.</div>
-            <div><strong style="color:rgb(0, 183, 255)">X azul</strong>: Cancelo por enfermedad.</div>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+    </style>
+    <div class="container" style="font-family: 'Poppins', sans-serif !important;">
+        <div class="instructions" style="font-size: 12px; text-align: left;">
+            <p><strong><svg style="width: 14px; height: 14px; fill: rgb(106, 212, 0) !important;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M470.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L192 338.7 425.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg></strong>: Asistio. </p>
+            <div><strong><svg style="width: 14px; height: 14px; fill: black;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z"/></svg></strong>: No asistio.</div>
+            <div><strong><svg style="width: 14px; height: 14px; fill: red;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z"/></svg></strong>: Cancelo con excusa.</div>
+        </div>
+        <div class="instructions" style="font-size: 12px; text-align: left;">
+            <div><strong><svg style="width: 14px; height: 14px; fill: rgb(0, 183, 255);" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z"/></svg></strong>: Cancelo por enfermedad.</div>
             <div>?: No se ha tomado asistencia.</div>
             <div><strong style="color:red;">Letras rojas</strong>: No se puede reprogramar.</div>
         </div>
         <div>
-            <div class="horario">
+            <div class="horario" style="font-size: 12px;">
                 <div class="headerClass">
                     <div class="Dia">{{ date|date:'l d' }} de {{ date|date:'F' }}<a href="{%url 'horario' date|date:'Y-m-d'%}?download=True" class="btn btn-outline-light" style="float: right; position: relative; cursor: pointer;top:1px;right: 1px;"><i class="fa fa-file-pdf" style="font-size: 20px; color: rgb(175, 14, 14); "></i></a></div>
-                    <div class="niveles">
+                    <div class="niveles" style="font-size: 12px;">
                         {% for nivel in niveles %}
-                            <div style=" color: {{nivel.color_letra}}; background:{{nivel.color_fondo}};">{{nivel}}</div>
+                            <div style=" color: {{nivel.color_letra}}; background:{{nivel.color_fondo}}; font-size: 9px !important;">{{nivel}}</div>
                         {% endfor %}
                     </div>
                 </div>
+
                 <br>
                 <div class="contenidoClass">
                     <div class="estudiantes">
                         {% for hora in  horas%}
                         <hr>
-                            <div class="horarios" style="height: 100%;margin: 0;">
+                            <div class="horarios" style="height: 100%;margin: 0; font-size: 12px;">
                                 <div style="text-align: center; width: 50px!important; display: table-cell;height: 100%;">{{hora}}</div>
-                                <div class="clases">
+                                <div class="clases" style="font-size: 12px !important;">
                                 {% for clase in  clases%}
                                     {% if  hora == clase.clase.calendario.horaClase|date:'g a'%}
                                     <div style="color:{{clase.clase.calendario.registro.nivel.color_letra}}; background:{{clase.clase.calendario.registro.nivel.color_fondo}};">
-                                        <div style="border: none;">{{clase.clase.calendario.registro.estudiante}}</div>
-                                        <div style="border: none; text-align: center;">{{clase.clase.calendario.registro.estudiante.get_edad}}</div>
+                                        <div class="info_est">
+                                            <p style="margin-top: -1px; margin-bottom: -5px;">{{clase.clase.calendario.registro.estudiante}}</p>
+                                            <p style="font-size: 11px !important; margin-top: 4px; margin-bottom: -1px;"><strong>Edad: </strong> {{clase.clase.calendario.registro.estudiante.get_edad}}</p>
+                                        </div>
+                                        
+                                        <div class="info_pro">
+                                            <p>{{clase.clase.profesor}}</p>
+
+                                            {% if  clase.asistencia.estado == '1'%}
+                                                <!-- Chulo verde -->
+                                                <svg style="width: 14px; height: 14px; fill: rgb(106, 212, 0) !important;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M470.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L192 338.7 425.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg>
+    
+                                            {% elif clase.asistencia.estado == '2'%}
+                                                <!-- X negra -->
+                                                <svg style="width: 14px; height: 14px; fill: black;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z"/></svg>
+    
+                                            {% elif clase.asistencia.estado == '3'%}
+    
+                                                <!-- X roja -->
+                                                <svg style="width: 14px; height: 14px; fill: red;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z"/></svg>
+    
+                                            {% elif clase.asistencia.estado == '4'%}
+                                                <!-- x azul-->
+                                                <svg style="width: 14px; height: 14px; fill: rgb(0, 183, 255);" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z"/></svg>
+    
+                                            {% elif clase.asistencia.estado == '0' %}
+                                                <!-- No tiene asistencia -->
+                                                <svg style="width: 14px; height: 14px; fill: rgb(0, 0, 0);" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M96 96c-17.7 0-32 14.3-32 32s-14.3 32-32 32s-32-14.3-32-32C0 75 43 32 96 32h97c70.1 0 127 56.9 127 127c0 52.4-32.2 99.4-81 118.4l-63 24.5 0 18.1c0 17.7-14.3 32-32 32s-32-14.3-32-32V301.9c0-26.4 16.2-50.1 40.8-59.6l63-24.5C240 208.3 256 185 256 159c0-34.8-28.2-63-63-63H96zm48 384c-22.1 0-40-17.9-40-40s17.9-40 40-40s40 17.9 40 40s-17.9 40-40 40z"/></svg>
+                                            {% endif %}
+                                        </div>
+                                        
                                     </div>
-                                    <div style="color:{{clase.clase.calendario.registro.nivel.color_letra}}; background:{{clase.clase.calendario.registro.nivel.color_fondo}};">
-                                        <div style="border: none;">{{clase.clase.calendario.registro.estudiante}}</div>
-                                        <div style="border: none; text-align: center;">{{clase.clase.calendario.registro.estudiante.get_edad}}</div>
-                                    </div>
-                                    <div style="color:{{clase.clase.calendario.registro.nivel.color_letra}}; background:{{clase.clase.calendario.registro.nivel.color_fondo}};">
-                                        <div style="border: none;">{{clase.clase.calendario.registro.estudiante}}</div>
-                                        <div style="border: none; text-align: center;">{{clase.clase.calendario.registro.estudiante.get_edad}}</div>
-                                    </div>
-                                    <div style="color:{{clase.clase.calendario.registro.nivel.color_letra}}; background:{{clase.clase.calendario.registro.nivel.color_fondo}};">
-                                        <div style="border: none;">{{clase.clase.calendario.registro.estudiante}}</div>
-                                        <div style="border: none; text-align: center;">{{clase.clase.calendario.registro.estudiante.get_edad}}</div>
-                                    </div>
-                                    <div style="color:{{clase.clase.calendario.registro.nivel.color_letra}}; background:{{clase.clase.calendario.registro.nivel.color_fondo}};">
-                                        <div style="border: none;">{{clase.clase.calendario.registro.estudiante}}</div>
-                                        <div style="border: none; text-align: center;">{{clase.clase.calendario.registro.estudiante.get_edad}}</div>
-                                    </div>
+                                   
                                     {% endif %}
                                 {% endfor %}
                                 </div>
@@ -94,7 +114,9 @@
         padding: 5px;
     }
     .headerClass{
-        display: block;
+        display: flex;
+        flex-direction: column;
+        
     }
     .horario{
         width: 100%;
@@ -114,7 +136,9 @@
     .horario .niveles{
         height: 100%;
         display: flex; 
-        justify-content:space-between;
+        flex-direction: row;
+        justify-content: center;
+        /* justify-content:space-between; */
         flex-wrap: wrap;
     }
     .horario .niveles div{
@@ -133,18 +157,35 @@
         height: 100%;
         margin: 0;
         display: flex; 
-        justify-content:space-between;
+        /* justify-content:space-between; */
         flex-wrap: wrap;
     }
     .clases div{
         border: 1px solid black;
         height: 100%;
-        text-align: center;
-        font-size: 17px;
+        /* text-align: center; */
+        font-size: 12px;
         display: table;
-        padding: 5px;
+        padding: 2px;
         print-color-adjust:exact;
         -webkit-print-color-adjust:exact;
+    }
+    .info_est{
+        display: flex;
+        flex-direction: row;
+        border: 1px solid transparent !important;
+        margin-left: 3px;
+        width: 90%;
+        background-color: rgba(0,0,0,0.1);
+        border-radius: 5px;
+        text-align: left;
+    }
+    .info_pro{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+        border: 1px solid transparent !important;
     }
 </style>
 <script>

@@ -12,6 +12,9 @@
     .formulario{display: grid;grid-template-columns:repeat(2, 1fr);grid-gap:30px;}
     .checkbox{display: grid;grid-template-columns: 80% 20%;}
     @media (max-width: 700px) {.formulario{display: grid;grid-template-columns:repeat(1, 1fr);grid-gap:30px;}}
+</style>{% endblock estilos %}
+{% block contenido %}
+<style>
     #DivContrato::-webkit-scrollbar {
         width: 8px;     /* Tamaño del scroll en vertical */
         height: 8px;    /* Tamaño del scroll en horizontal */
@@ -23,11 +26,6 @@
         border-radius: 4px;
     }
 </style>
-{% endblock estilos %}
-
-
-{% block contenido %}
-
 <div id="fondoContrato"style="display:none; width:100%; position:fixed; top:0; height:100vh; background-color:rgba(0,0,0,0.5);">
     <div id="DivContrato" style="width:90%;height: 90vh;background-color: #fff; position:absolute; top:2.5%;left: 2%; border: 1px solid rgba(0,0,0,1); z-index: 100; border-radius: 5px;overflow: auto;">
         <div id="header" style="width: 88%; margin: 0 0.5%; height:60px; border-bottom: 1px solid rgba(0,0,0,0.3); display:grid;grid-template-columns: 96% 4%; padding: 0 10px; position: fixed; background-color: #fff;">
@@ -86,19 +84,19 @@
 </div>
 
 
-<div class="container cont_list">
+<div class="container mt-5 cont_list">
     <div class="container alert alert-danger" role="alert" id="alertDocumentDownload">
         <button style="float: right;" type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         <h4 class="alert-heading">!Antes de continuar con el registro tenga en cuenta lo siguiente!</h4>
         
         <p>Por favor leer, aceptar y firmar nuestro reglamento (políticas de clases), en especial nuestra política de cancelación y exoneración de responsabilidades.
         </p>
-    </div>
-
+      </div>
+      <br>
     <form action="{% url 'registrarEstudiante' %}" method="post" enctype="multipart/form-data" id="CrearEstudianteForm">
         {% csrf_token %}
     
-        <p><center style="font-size: 30px; font-weight: 600; margin-top: -5px;">Registro alumno</center></p>
+        <p><center style="font-size: 30px; font-weight: 600; margin-top: -15px;">Registro alumno</center></p>
         <br>
         <div class="container">
             <ul class="nav nav-tabs" id="pills-tab" role="tablist">
@@ -118,10 +116,10 @@
                   <button onclick="document.getElementById('firm').style.visibility='visible'; cargarCanvas()" class="nav-link" id="pills-disabled-tab" data-bs-toggle="pill" data-bs-target="#pills-disabled" type="button" role="tab" aria-controls="pills-disabled" aria-selected="false"><i id="icon_danger_DOCUMENTOS" class="fa-solid fa-circle-exclamation"></i>   Reglamento y exoneración</button>
                 </li>
             </ul>
-            
+                
             <div class="tab-content" id="pills-tabContent">
 
-                <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
+                <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0" style="margin-bottom: -30px;">
                     <h5 class="mt-4">Información del alumno</h5>
                     <hr>
                     <div class="row">
@@ -187,8 +185,8 @@
                             <p id="direccion" class="error_text"></p>
                         </div>
                     </div>
-                   <br>
-                   <div class="row">
+                    <br>
+                    <div class="row">
                         <div class="col-md-6">
                             <label for="" style="font-weight: 500;">{{form.documento_A.label}}: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
                             {{form.documento_A}}
@@ -199,9 +197,9 @@
                             {{form.seguro_A}}
                             <p id="seguro_A" class="error_text"></p>
                         </div>
-                   </div>
-                   <br>
-                   <div class="row">
+                    </div>
+                    <br>
+                    <div class="row">
                         <div class="col-md-6">
                             <label for="" style="font-weight: 500;">{{form.barrio.label}}: <sup class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
                             {{form.barrio}}
@@ -212,7 +210,7 @@
                             {{form.ciudad}}
                             <p id="ciudad" class="error_text"></p>
                         </div>
-                   </div>
+                    </div>
 
                     <div class="row">
                         <div class="col-md-6">
@@ -227,7 +225,7 @@
                         </div>
                     </div>
                     <br>
-                   
+                    
                     <div class="col-md-12">
                         <label for="" style="font-weight: 500;">{{form.tipo_clase.label}}: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
                         {{form.tipo_clase}}
@@ -241,7 +239,7 @@
                         <p id="tipo_servicio" class="error_text"></p>
                     </div>
 
-                     <div class="col-md-12" style="display: grid; grid-template-columns: repeat(2,1fr);">
+                        <div class="col-md-12" style="display: grid; grid-template-columns: repeat(2,1fr);">
                         <label for="" style="font-weight: 500;">{{form.facturacion_electronica.label}}: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
                         <div class="checkboxSiNo">
                             {{form.facturacion_electronica}}
@@ -261,10 +259,9 @@
 
                     
                     <button type="button" class="btn btn-primary" style="float: right" onclick="moveTab('icon_danger_ACUDIENTE')">Siguiente <i class="fa-solid fa-arrow-right"></i></button>
-                    <br><br>
+                        
+                    
                 </div>
-          
-           
 
                 <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
                     <h5 class="mt-4">Información de los padres</h5>
@@ -287,7 +284,6 @@
                             <p id="celular_madre" class="error_text"></p>
                         </div>
                     </div>
-
                     <div class="row">
                         <div class="col-md-12">
                             <label for="" style="font-weight: 500;">{{form.email_madre.label}}:</label>
@@ -295,14 +291,12 @@
                             <p id="email_madre" class="error_text"></p>
                         </div>
                     </div>
-
                     <h5><center>Información del Padre</center></h5>
                     <div>
                         <label for="" style="font-weight: 500;">{{form.nombre_completo_padre.label}}:</label>
                         {{form.nombre_completo_padre}}
                         <p id="nombre_completo_padre" class="error_text"></p>
                     </div>
-
                     <div class="row">
                         <div class="col-md-6">
                             <label for="" style="font-weight: 500;">{{form.cedula_padre.label}}:</label>
@@ -315,63 +309,49 @@
                             <p id="celular_padre" class="error_text"></p>
                         </div>
                     </div>
-
                     <div class="row">
                         <div class="col-md-12">
                             <label for="" style="font-weight: 500;">{{form.email_padre.label}}:</label>
                             {{form.email_padre}}
                             <p id="email_padre" class="error_text"></p>
                         </div>
-                </div>
-
-                <br>
-                <button type="button" class="btn btn-primary" style="float: left" onclick="moveTab('icon_danger_ESTUDIANTE')"><i class="fa-solid fa-arrow-left"></i> Anterior</button>
-                <button type="button" class="btn btn-primary" style="float: right" onclick="moveTab('icon_danger_EMERGENCIA')">Siguiente <i class="fa-solid fa-arrow-right"></i></button>
-                <br>
-                <br>
+                    </div>
+                    <br>
+                    <button type="button" class="btn btn-primary" style="float: left" onclick="moveTab('icon_danger_ESTUDIANTE')"><i class="fa-solid fa-arrow-left"></i> Anterior</button>
+                    <button type="button" class="btn btn-primary" style="float: right" onclick="moveTab('icon_danger_EMERGENCIA')">Siguiente <i class="fa-solid fa-arrow-right"></i></button>
+                    <br>
                 </div>
 
                 <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab" tabindex="0">
                     <div class="alert alert-warning d-flex align-items-center mt-4" role="alert">
                         <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
                             <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
-                            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                                <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
                             </symbol>
-                        </svg>
-
+                            </svg>
                         <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:"><use xlink:href="#exclamation-triangle-fill"/></svg>
                         <div>
-                        El contacto de emergencia no puede ser el padre ni la madre.
+                            El contacto de emergencia no puede ser el padre ni la madre.
                         </div>
-                    </div>
-
+                        </div>
                     <div>
                         <label for="" style="font-weight: 500;">{{form.nombre_contactoE.label}}: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
                         {{form.nombre_contactoE}}
                         <p id="nombre_contactoE" class="error_text"></p>
                     </div>
-
                     <div>
                         <label for="" style="font-weight: 500;">{{form.telefono_contactoE.label}}: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
                         {{form.telefono_contactoE}}
                         <p id="telefono_contactoE" class="error_text"></p>
                     </div>
-
                     <div>
                         <label for="" style="font-weight: 500;">{{form.relacion_contactoE.label}}: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
                         {{form.relacion_contactoE}}
                         <p id="relacion_contactoE" class="error_text"></p>
                     </div>
-
-                    <div class="row justify-content-between" style="margin-bottom: 30px;">
-                        <div class="col-4">
-                            <button type="button" class="btn btn-primary" style="float: left" onclick="moveTab('icon_danger_ACUDIENTE')"><i class="fa-solid fa-arrow-left"></i> Anterior</button>
-                        </div>
-                        <div class="col-4">
-                            <button type="button" class="btn btn-primary" style="float: right" onclick="moveTab('icon_danger_FACTURACION')">Siguiente <i class="fa-solid fa-arrow-right"></i></button>
-                        </div>
-                    </div>  
-                    
+                    <button type="button" class="btn btn-primary" style="float: left" onclick="moveTab('icon_danger_ACUDIENTE')"><i class="fa-solid fa-arrow-left"></i> Anterior</button>
+                    <button type="button" class="btn btn-primary" style="float: right" onclick="moveTab('icon_danger_FACTURACION')">Siguiente <i class="fa-solid fa-arrow-right"></i></button>
+                    <br>
                 </div>
 
                 <div class="tab-pane fade" id="pills-facturacion" role="tabpanel" aria-labelledby="pills-contact-tab" tabindex="0">
@@ -386,7 +366,6 @@
                             <p id="p_Facturado" class="error_text" style="display: none;"></p>
                         </div>
                     </div>
-
                     <hr>
                     <div class="row">
                         <div class="col-md-6">
@@ -400,7 +379,6 @@
                             <p id="identificacion_facturar" class="error_text"></p>
                         </div>
                     </div>
-
                     <div class="row">
                         <div class="col-md-6">
                             <label for="" style="font-weight: 500;">{{form.direccion_facturar.label}}:<sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
@@ -413,25 +391,16 @@
                             <p id="email_facturar" class="error_text"></p>
                         </div>
                     </div>
-
-                    <div class="row" style="margin-bottom: 30px;">
+                    <div class="row">
                         <div class="col-md-12">
                             <label for="" style="font-weight: 500;">{{form.telefono_facturar.label}}:<sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
                             {{form.telefono_facturar}}
                             <p id="telefono_facturar" class="error_text"></p>
                         </div>
                     </div>
-
-                    <div class="row justify-content-between" style="margin-bottom: 30px;">
-                        <div class="col-4">
-                            <button type="button" class="btn btn-primary" style="float: left" onclick="moveTab('icon_danger_EMERGENCIA')"><i class="fa-solid fa-arrow-left"></i> Anterior</button>
-                        </div>
-                        <div class="col-4">
-                            <button type="button" class="btn btn-primary" style="float: right" onclick="moveTab('icon_danger_DOCUMENTOS')">Siguiente <i class="fa-solid fa-arrow-right"></i></button>
-                        </div>
-                    </div>
-                    
-
+                    <button type="button" class="btn btn-primary" style="float: left" onclick="moveTab('icon_danger_EMERGENCIA')"><i class="fa-solid fa-arrow-left"></i> Anterior</button>
+                    <button type="button" class="btn btn-primary" style="float: right" onclick="moveTab('icon_danger_DOCUMENTOS')">Siguiente <i class="fa-solid fa-arrow-right"></i></button>
+                    <br>
                 </div>
 
                 <div class="tab-pane fade" id="pills-disabled" role="tabpanel" aria-labelledby="pills-disabled-tab" tabindex="0">
@@ -470,34 +439,63 @@
                         <button type="button" id="send" class="btn btn-success w-100" style="float: right">Enviar</button>   
                     </div>
                     <br><br>
-                </div>
 
-            <script>
-                let campos = document.querySelectorAll("input");
-                let selects = document.querySelectorAll("select");
-                selects.forEach(function(select) {
-                    select.setAttribute("class", "form-control");
-                });
-                for (let i = 0; i < campos.length; i++){
-                    campos[i].setAttribute("class", "form-control");
-                    if (campos[i].getAttribute('type')=="checkbox") {
-                        campos[i].classList.remove("form-control")
-                        try{
-                            campos[i].previousSibling.remove();
-                            campos[i].parentNode.children[1].style.marginTop = "5px"
-                        }
-                        catch (e){
-                            console.log("hay errores",e)
-                        }
-                        campos[i].parentNode.classList.add("checkbox");
-                        campos[i].style.height = "32px";
+                </div>
+                <br>{{form.exoneracion}}
+                <p id="exoneracion" class="error_text"></p>
+                <div class="row">
+                <label for="" style="font-weight: 500;">Reglamento: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label><br>
+                <div style="display: flex;">
+                    <button id="verContratob" type="button" class="btn btn-xs" style="color: rgb(40, 40, 252);" onclick="verContrato()">Ver el reglamento</button><div></div>
+                </div>
+                    <p id="aceptaContrato" class="error_text"></p>
+                </div>
+                <div class="row">
+                    <label for="" style="font-weight: 500;">Nombre del firmante: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label><br>
+                    <input type="text" name="nombrefirma">
+                    <input type="hidden" name="firma" id="firma">
+                </div>
+                <br>
+                <br>
+                <div id="firm" style="visibility: hidden;">
+                    <label for="" style="font-weight: 500;">Firma: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label><br>
+                    <sub>Al firmar aceptas todo la información presentada anteriormente.</sub>
+                    <br>
+                    <canvas id="signature-canvas" style="border: 1px dashed rgb(79, 74, 74); background-color: #fff; width: 50%; height: 200px;"></canvas>
+                    <button id="limpiarCanvas" class="btn btn-outline-secondary btn-sm" type="button">Limpiar</button>
+                    <button type="button" id="send" class="btn btn-success w-100" style="float: right">Enviar</button>   
+                </div>
+            
+        </div>       
+           
+        <script>
+            let campos = document.querySelectorAll("input");
+            let selects = document.querySelectorAll("select");
+            selects.forEach(function(select) {
+                select.setAttribute("class", "form-control");
+            });
+            campos.forEach(function(campo) {
+                campo.setAttribute("class", "form-control");
+                if (campo.getAttribute('type')=="checkbox") {
+                    campo.classList.remove("form-control")
+                    try{
+                        campo.previousSibling.remove();
+                        campo.parentNode.childNodes[1].style.marginTop = "5px"
                     }
+                    catch{
+                        console.log("hay errores")
+                    }
+                    campo.parentNode.classList.add("checkbox");
+                    campo.style.height = "32px";
                 }
-            </script>
+            }); 
+        </script>
+      
+
             </div>
         </div>
+        
     </form>
-
 </div>
 {% endblock contenido %}
 
@@ -713,9 +711,6 @@ tipoClase.onchange = function(tipo){
     })
 }
 </script>
-
-
-
 <script src="{% static 'libs/datepicker/dist/datepicker.js' %}"></script>
 <script src="{% static 'libs/datepicker/i18n/datepicker.es-ES.js' %}"></script>
 
