@@ -62,7 +62,7 @@
 
 
 
-<div class="container mt-5 cont_list">
+<div class="container mt-5 mb-5 cont_list">
     <div class="container alert alert-danger" role="alert" id="alertDocumentDownload">
         <button style="float: right;" type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         <h4 class="alert-heading">!Antes de continuar con el registro tenga en cuenta lo siguiente!</h4>
@@ -226,7 +226,7 @@
                         <p id="facturacion_electronica" class="error_text"></p>
                     </div>
 
-                    <div class="row">
+                    <div class="row mb-5">
                         <div class="col-md-12">
                             <label for="" style="font-weight: 500;">{{form.nota.label}}: (<b>Opcional:</b> informar acerca de cualquier discapacidad, enfermedad o alergia que presente el alumno)</label>
                             
@@ -234,9 +234,9 @@
                             <p id="nota" class="error_text"></p>
                         </div>
                     </div>
-
+                    <br>
                     
-                    <button type="button" class="btn btn-primary" style="float: right" onclick="moveTab('icon_danger_ACUDIENTE')">Siguiente <i class="fa-solid fa-arrow-right"></i></button>
+                    <button type="button" class="btn btn-primary" style="float: right; margin-top: -65px;" onclick="moveTab('icon_danger_ACUDIENTE')">Siguiente <i class="fa-solid fa-arrow-right"></i></button>
                         
                     
                 </div>
@@ -445,6 +445,7 @@
         
     </form>
 </div>
+<br>
 {% endblock contenido %}
 
 
