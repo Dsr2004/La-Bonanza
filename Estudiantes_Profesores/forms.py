@@ -92,8 +92,8 @@ class CrearEstudianteForm(forms.ModelForm):
         self.fields['telefono_facturar'].required = True
         self.fields['exoneracion'].required = True
         self.fields['exoneracion'].error_messages = {'required': 'Es necesario que leas y aceptes el consentimiento para continuar el proceso.'}
-        self.fields['documento_A'].required = True
-        self.fields['seguro_A'].required = True
+        self.fields['documento_A'].required = False
+        self.fields['seguro_A'].required = False
         self.fields['tipo_clase'].required = True
         self.fields['tipo_servicio'].required = True
         self.fields['aceptaContrato'].required = False

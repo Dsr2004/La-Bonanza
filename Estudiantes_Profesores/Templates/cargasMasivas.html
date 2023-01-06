@@ -43,7 +43,7 @@
             <form enctype="multipart/form-data" action="{%url 'cargasMasivas'%}" method="post"  class="row" style="display: flex; flex-wrap: wrap;" tipo="instructores">
                 {% csrf_token %}
                 <h3 class="col-md-2">Instructores</h3>
-                <label for="excelInstructores" class="btn btn-success col-md-4 offset-md-1">Cargar excel de niveles</label>
+                <label for="excelInstructores" class="btn btn-success col-md-4 offset-md-1">Cargar excel de instructores</label>
                 <input type="file" name="instructores" id="excelInstructores">
                 <a href="{%url 'descargarFormato' 'instructores'%}" class="col-md-2 offset-md-1 btn btn-primary" type="button">Descargar plantilla</a>
                 <button class="col-md-1 offset-md-1  btn btn-dark" type="button" onclick="CargaMasiva(this.parentNode)">Cargar</button>
@@ -57,7 +57,9 @@
                 </div>
             </form>
             <br>
-            <div class="row alert alert-info" id="AvisoInstructores"style="display: none;"></div>
+            <div class="row alert alert-info" id="AvisoInstructores"style="display: none;"><ul>
+
+            </ul></div>
             <br>
             <form enctype="multipart/form-data" action="{%url 'cargasMasivas'%}" method="post" class="row" style="display: flex; flex-wrap: wrap;" tipo="alumnos">
                 {% csrf_token %}
@@ -76,7 +78,9 @@
                 </div>
             </form>
             <br>
-            <div class="row alert alert-info" id="AvisoAlumnos" style="display: none;"></div>
+            <div class="row alert alert-info" id="AvisoAlumnos" style="display: none;"><ul>
+
+            </ul></div>
         </div>
     </div>
 {% endblock contenido %}
@@ -97,7 +101,7 @@
     {% if errors.instructores %}
     {% for error in errors.instructores %}
     <script>
-        aviso = document.getElementById('AvisoNiveles')
+        aviso = document.getElementById('AvisoInstructores');
         aviso.firstElementChild.innerHTML += '<li>{{error}}</li>'
         aviso.style.display =  'block'
     </script> 
@@ -106,7 +110,7 @@
     {% if errors.alumnos %}
     {% for error in errors.alumnos %}
         <script>
-            aviso = document.getElementById('AvisoNiveles')
+            aviso = document.getElementById('AvisoAlumnos')
             aviso.firstElementChild.innerHTML += '<li>{{error}}</li>'
             aviso.style.display =  'block'
         </script> 

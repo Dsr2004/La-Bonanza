@@ -8,6 +8,7 @@ from Usuarios.models import Usuario
 from Niveles.models import Nivel
 import json
 from datetime import datetime, date, timedelta
+
 def DIA_INGLES(dia):
     dias = {"Monday":"Lunes","Tuesday":"Martes","Wednesday":"Miércoles","Thursday":"Jueves","Friday":"Viernes","Saturday":"Sábado","Sunday":"Domingo"}
     dia = dias.get(str(dia))
@@ -102,7 +103,7 @@ class Estudiante(models.Model):
     nombre_completo = models.CharField("nombre completo", max_length=150, null=False, blank=False)
     fecha_nacimiento = models.DateField("Fecha de nacimiento")
     documento = models.BigIntegerField("número de documento", null=False, blank=False, unique=True)
-    celular = models.IntegerField("número de celular", null=True, blank=True)
+    celular = models.BigIntegerField("número de celular", null=True, blank=True)
     email = models.EmailField("correo electrónico", unique=True, null=True, blank=True)
     direccion = models.CharField("dirección de residencia", max_length = 500,null=False, blank=False)
     barrio = models.CharField("barrio de resdencia", max_length = 500, null=False, blank=False)
@@ -134,8 +135,8 @@ class Estudiante(models.Model):
     telefono_facturar = models.IntegerField('teléfono a facturar', unique=True, null=True, blank=True)
     #archivos
     exoneracion =models.BooleanField(default=False)
-    documento_A =models.FileField(upload_to=guardar_documento, validators = [validar_extencion_archivo],null=False, blank=False)
-    seguro_A =models.FileField(upload_to=guardar_seguro, validators = [validar_extencion_archivo],null=False, blank=False) 
+    documento_A =models.FileField(upload_to=guardar_documento, validators = [validar_extencion_archivo],null=True, blank=True)
+    seguro_A =models.FileField(upload_to=guardar_seguro, validators = [validar_extencion_archivo],null=True, blank=True) 
     # firma poner en NULL FALSE, NO LO PUSE PARA NO TENER QUE BORRAR LOS REGISTROS
     nombrefirma = models.CharField("nombre de la persona que está firmando", max_length=100,null=True, blank=True)
     firma = models.FileField(upload_to=guardar_firma,validators = [validar_extencion_archivo], null=True, blank=True)
