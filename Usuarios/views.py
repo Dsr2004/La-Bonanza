@@ -201,3 +201,9 @@ class Perfil(View):
         form = UsuarioForm(instance=request.user)
         context = {'form': form}
         return render(request, 'Usuarios/Perfil.html', context)
+
+
+class RestablecerClave(View):
+    def get(self, request, *args, **kwargs):
+        
+        return render(request, 'Usuarios/RestablecerContrasena.html')
