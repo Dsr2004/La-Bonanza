@@ -603,7 +603,6 @@ function cambiar_estado_estudiante(url, id){
         allowOutsideClick: () => !Swal.isLoading(),
         preConfirm: () => {
           if (document.getElementById('mensajeSwet').value) {
-           pass
           } else {
             Swal.showValidationMessage('Complete la información')   
           }

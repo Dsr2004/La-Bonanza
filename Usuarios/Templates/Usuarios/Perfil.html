@@ -78,21 +78,40 @@
     </style>
 
 <div class="container mt-5 cont_list">
+    {% if messages %}
+    {% for message in messages %}
+        {% if message.tags == "info" %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert" style="margin: 15px;">
+                <strong>¡Advertencia!</strong> {{message}}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+          {% elif message.tags == "success" %}
+          <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin: 15px;">
+              <strong>¡Correcto!</strong> {{message}}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {%endif%}
+    {% endfor %}
+        
+{% endif %}
     <div class="card">
         <div class="card-header">
 
         </div>
         <div class="card-body" id="car">
-            <div class="circulo">
-                <img src="/media/{{request.user.imagen}}" style="border-radius: 50%; width: 100%; height: 100%;" alt="">
-            </div>
+           <label style="cursor: pointer;" for="imagenId">
+                <div class="circulo">
+                    <img src="/media/{{request.user.imagen}}" style="border-radius: 50%; width: 100%; height: 100%;" alt="" id="PerfilImg">
+                </div>
+           </label>
             <div class="nombs">
                 <p class="nomb_usua">{{request.user.usuario}}</p>
-                <p class="nomb">{{request.user.nombres}}</p>
+                <p class="nomb">{{request.user}}</p>
             </div>
         </div>
         <div class="info_persona mb-5">
-            <form action="{% url 'perfil' %}" method="post" id="registroUsuarioForm">
+            <form action="{% url 'perfil' %}" method="post" id="registroUsuarioForm" enctype="multipart/form-data">
+                <input type="file" name="imagen" id="imagenId" style="display: none;">
                 {% csrf_token %}
                 <div class="row">
                     <div class="col-6">
@@ -163,5 +182,19 @@
 
 
 {% block scripts %}
-
+<script>
+    $("#imagenId").change(function(){
+        leerImg(this, document.getElementById("PerfilImg"));
+        });
+        function leerImg(input, img_destino)
+        {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+            img_destino.setAttribute("src", e.target.result);
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+        }
+</script>
 {% endblock scripts %}

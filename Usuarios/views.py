@@ -8,6 +8,7 @@ from Estudiantes_Profesores.models import Profesor
 from .models import Usuario
 import json
 from django.http import HttpResponse, JsonResponse
+from django.contrib import messages
 
 class Login(LoginView):
     template_name = "login.html"
@@ -201,3 +202,22 @@ class Perfil(View):
         form = UsuarioForm(instance=request.user)
         context = {'form': form}
         return render(request, 'Usuarios/Perfil.html', context)
+    
+    def post(self, request, *args, **kwargs):
+        correo = request.POST.get("email")
+        imagen = request.FILES.get("imagen")
+        usuario = Usuario.objects.get(pk=request.user.pk)
+        if imagen != None:
+            usuario.imagen = imagen
+            usuario.save()
+            messages.success(request, "Se modificó la imagen de perfil.")
+        if correo == request.user.email:
+            messages.info(request, "No se pudo actualizar el perfil porque el correo es el mismo.")
+            return redirect("perfil")
+        else:
+            usuario.email = correo
+            usuario.save()
+            messages.success(request, "Se modificó el correo correctamente.")
+            return redirect("perfil")
+        
+       

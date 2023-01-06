@@ -5,6 +5,7 @@
 <link rel="stylesheet" href="{% static 'libs/datepicker/dist/datepicker.css' %}">
 <link rel="stylesheet" href="{% static 'css/style.css' %}">
 <link rel="stylesheet" href="{% static 'css/estilosBase.css' %}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.6.15/dist/sweetalert2.css">
 <style>
     input{border: 1px solid #dadce0;border-radius: 4px;box-shadow: 0 0 0 transparent;font-size: 16px;line-height: 17px;outline: transparent;padding: 11px 16px;transition: border .3s, box-shadow .3s;width: 100%;}
     select{border: 1px solid #dadce0;border-radius: 4px;box-shadow: 0 0 0 transparent;font-size: 17px;line-height: 24px;outline: transparent;padding: 11px 16px;transition: border .3s, box-shadow .3s;width: 100%;}
@@ -24,8 +25,8 @@
 </style>
 {% endblock estilos %}
 {% block contenido %}
-<div id="fondoContrato"style="display:none; width:100%; position:fixed; top:0; height:100vh; background-color:rgba(0,0,0,0.5);">
-    <div id="DivContrato" style="width:90%;height: 90vh;background-color: #fff; position:absolute; top:2.5%;left: 2%; border: 1px solid rgba(0,0,0,1); z-index: 100; border-radius: 5px;overflow: auto;">
+<div id="fondoContrato"  style="display:none; width:100%; position:fixed; top:0; height:100vh; background-color:rgba(0,0,0,0.5);">
+    <div id="DivContrato"  style="width:90%;height: 85vh;background-color: #fff; position:absolute; top:12.5vh; left: 2%; border: 1px solid rgba(0,0,0,1); z-index: 100; border-radius: 5px;overflow: auto;">
         <div id="header" style="width: 88%; margin: 0 0.5%; height:60px; border-bottom: 1px solid rgba(0,0,0,0.3); display:grid;grid-template-columns: 96% 4%; padding: 0 10px; position: fixed; background-color: #fff;">
             <h1 id="titleContrato"></h1><i class="fa fa-close" style="position:relative; right: -5px!important; top: 17px; font-size: 24px; cursor: pointer;" onclick="hideContrato()"></i>
         </div>
@@ -57,7 +58,7 @@
     </div>
 </div>
 <div id="fondoConsentimiento"style="display:none; width:100%; position:fixed; top:0; height:100vh; background-color:rgba(0,0,0,0.5);">
-    <div id="DivConsentimiento" style="width:90%;height: 90vh;background-color: #fff; position:absolute; top:2.5%;left: 2%; border: 1px solid rgba(0,0,0,1); z-index: 100; border-radius: 5px;overflow: auto;">
+    <div id="DivConsentimiento" style="width:90%;height: 85vh;background-color: #fff; position:absolute; top:12.5%;left: 2%; border: 1px solid rgba(0,0,0,1); z-index: 100; border-radius: 5px;overflow: auto;">
         <div id="header" style="width: 88%; margin: 0 0.5%; height:60px; border-bottom: 1px solid rgba(0,0,0,0.3); display:grid;grid-template-columns: 96% 4%; padding: 0 10px; position: fixed; background-color: #fff;">
             <h3 id="titleConsentimiento"></h3><i class="fa fa-close" style="position:relative; right: -5px!important; top: 17px; font-size: 24px; cursor: pointer;" onclick="hideConsentimiento()"></i>
         </div>
@@ -413,7 +414,6 @@
                     <div class="row mb-3">
                         <label for="" style="font-weight: 500;">Nombre del firmante: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label><br>
                         <input type="text" name="nombrefirma">
-                        <input type="hidden" name="firma" id="firma">
                     </div>
                     <div id="firm" style="visibility: hidden;">
                         <label for="" style="font-weight: 500;">Firma: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label><br>
@@ -462,6 +462,7 @@
 {% endblock contenido %}
 {% block scripts %}
 <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
 <script src="{% static 'js/reglamento.js' %}"></script>
 <script src="{% static 'js/consentimiento.js' %}"></script>
 <script>
@@ -476,10 +477,82 @@
     })
     $("#send").on("click", function(){
         if(signaturePad.isEmpty()){
-            alert("La firma esta vacia")
+            Swal.fire(
+                'Error',
+                'La firma está vacía, este campo es obligatorio.',
+                'error'
+                )
         }else{
-            $("#firma").val(signaturePad.toDataURL())
-            $("#CrearEstudianteForm").submit()
+             $("#firma").val(signaturePad.toDataURL())
+             let form =  $("#CrearEstudianteForm")
+             let formData = new FormData(document.getElementById("CrearEstudianteForm"))
+             formData.append("firma",signaturePad.toDataURL())
+            $.ajax({
+                type: form.attr("method"),
+                url: form.attr("action"),
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    location.href = response["path"]
+                },
+                error: function(errors){
+                    errores = errors.responseJSON["errores"]
+                    $("#icon_danger_ESTUDIANTE").css("display","none")
+                    $("#icon_danger_ACUDIENTE").css("display","none")
+                    $("#icon_danger_EMERGENCIA").css("display","none")
+                    $("#icon_danger_FACTURACION").css("display","none")
+                    $("#icon_danger_DOCUMENTOS").css("display","none")
+                    form.find('.error_text').text('');
+                    form.find('.is-invalid').removeClass('is-invalid');
+
+                    pestañas = {
+                    "info_estudiante":["primer_nombre","segundo_nombre","primer_apellido","segundo_apellido","nombre_completo","fecha_nacimiento","documento","celular","email","direccion","barrio","seguro","poliza","comprobante_seguro_medico","comprobante_documento_identidad","ciudad","documento_A","seguro_A","tipo_clase"],
+                    "info_acudiente":["nombre_completo_madre","cedula_madre","celular_madre","email_madre","nombre_completo_padre","cedula_padre","celular_padre","email_padre"],
+                    "info_emergencia":["nombre_contactoE","telefono_contactoE","relacion_contactoE"],
+                    "info_documentos":["exoneracion","aceptaContrato",'autorizaClub'],
+                    "info_facturacion":["nombre_facturar","identificacion_facturar","direccion_facturar","email_facturar","telefono_facturar"]
+                    }
+                        for(campo in pestañas["info_estudiante"]){
+                        if (pestañas["info_estudiante"][campo] in errores){
+                            $("#icon_danger_ESTUDIANTE").css("display","inline-block")
+                            break
+                        }
+                        }
+                    for(campo in pestañas["info_acudiente"]){
+                    if (pestañas["info_acudiente"][campo] in errores){
+                        $("#icon_danger_ACUDIENTE").css("display","inline-block")
+                        break
+                    }
+                    }
+                    for(campo in pestañas["info_emergencia"]){
+                    if (pestañas["info_emergencia"][campo] in errores){
+                        $("#icon_danger_EMERGENCIA").css("display","inline-block")
+                        break
+                    }
+                    }
+                    for(campo in pestañas["info_facturacion"]){
+                        if (pestañas["info_facturacion"][campo] in errores){
+                        $("#icon_danger_FACTURACION").css("display","inline-block")
+                        break
+                        }
+                    }
+                    for(campo in pestañas["info_documentos"]){
+                    if (pestañas["info_documentos"][campo] in errores){
+                        $("#icon_danger_DOCUMENTOS").css("display","inline-block")
+                        break
+                    }
+                    }
+                    for (let i in errores){
+                        let x=form.find('input[name='+i+']')
+                        let y=form.find('select[name='+i+']')
+                        x.addClass("is-invalid")
+                        y.addClass("is-invalid")
+                        $("#"+i).text(errores[i])
+                        console.log(i, errores[i])
+                    }
+                }
+            });
         }
     })
     $(document).ready(function(){
@@ -497,81 +570,10 @@
         form.find('.error_text').text('');
         form.find('.is-invalid').removeClass('is-invalid');
 </script>
-{% if form.errors %}
-    {% for field in form %}
-    {% for error in field.errors %} 
-    <script>
-        name = "{{field.name}}"
-        value = "{{ error|escape }}"
-        x=form.find('input[name='+name+']')
-        y=form.find('select[name='+name+']')
-        x.addClass("is-invalid")
-        y.addClass("is-invalid")
-        $("#"+name).text(value)
-        errores.push(name)
-    </script>
-    {% endfor %}
-    {% endfor %}
-    <script>
-        console.log(errores)
-        $("#icon_danger_ESTUDIANTE").css("display","none")
-        $("#icon_danger_ACUDIENTE").css("display","none")
-        $("#icon_danger_EMERGENCIA").css("display","none")
-        $("#icon_danger_FACTURACION").css("display","none")
-        $("#icon_danger_DOCUMENTOS").css("display","none")
-        pestañas = {
-          "info_estudiante":["primer_nombre","segundo_nombre","primer_apellido","segundo_apellido","nombre_completo","fecha_nacimiento","documento","celular","email","direccion","barrio","seguro","poliza","comprobante_seguro_medico","comprobante_documento_identidad","ciudad","documento_A","seguro_A","tipo_clase"],
-          "info_acudiente":["nombre_completo_madre","cedula_madre","celular_madre","email_madre","nombre_completo_padre","cedula_padre","celular_padre","email_padre"],
-          "info_emergencia":["nombre_contactoE","telefono_contactoE","relacion_contactoE"],
-          "info_documentos":["exoneracion","aceptaContrato",'autorizaClub'],
-          "info_facturacion":[]
-        }
-        for(campo in pestañas["info_estudiante"]){
-          if (pestañas["info_estudiante"][campo] in errores){
-            $("#icon_danger_ESTUDIANTE").css("display","inline-block")
-            break
-          }
-        }
-        for(campo in pestañas["info_acudiente"]){
-          if (pestañas["info_acudiente"][campo] in errores){
-            $("#icon_danger_ACUDIENTE").css("display","inline-block")
-            break
-          }
-        }
-        for(campo in pestañas["info_emergencia"]){
-          if (pestañas["info_emergencia"][campo] in errores){
-            $("#icon_danger_EMERGENCIA").css("display","inline-block")
-            break
-          }
-        }
-        for(campo in pestañas["info_facturacion"]){
-            if (pestañas["info_facturacion"][campo] in errores){
-              $("#icon_danger_FACTURACION").css("display","inline-block")
-              break
-            }
-          }
-        for(campo in pestañas["info_documentos"]){
-          if (pestañas["info_documentos"][campo] in errores){
-            $("#icon_danger_DOCUMENTOS").css("display","inline-block")
-            break
-          }
-        }
-        for (let i in errores){
-            let x=form.find('input[name='+i+']')
-            let y=form.find('select[name='+i+']')
-            x.addClass("is-invalid")
-            y.addClass("is-invalid")
-            $("#"+i).text(errores[i])
-            console.log(i, errores[i])
-        }
-    </script>
-{% endif %}
+
 <script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
 <script>
-    $("#CrearEstudianteForm").submit(function(event){
-    event.preventDefault()
-    this.submit()
-})
+    
 // Cargar informacion facturado
 let selectFacturacion = document.getElementById('Facturado')
 selectFacturacion.onchange = function (item){

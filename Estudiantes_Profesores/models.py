@@ -1,17 +1,20 @@
 import os
 from django.core.exceptions import ValidationError
 from django.db import models
-from django.db.models.signals import pre_save,post_save
-from django.core.validators import MaxValueValidator
+from django.conf import settings
 from Picaderos.models import Clase, InfoPicadero, Picadero
 from Usuarios.models import Usuario
 from Niveles.models import Nivel
 import json
 from datetime import datetime, date, timedelta
+
 def DIA_INGLES(dia):
     dias = {"Monday":"Lunes","Tuesday":"Martes","Wednesday":"Miércoles","Thursday":"Jueves","Friday":"Viernes","Saturday":"Sábado","Sunday":"Domingo"}
     dia = dias.get(str(dia))
     return dia
+
+
+DAFAULT_IMG_USER = "Default/usuario_estudiante.jpg"
 
 DIAS_SEMANA = (
     ("1","Lunes"),("2","Martes"),("3","Miércoles"),("4","Jueves"),("5","Viernes"),("6","Sábado"),("0","Domingo")
@@ -139,7 +142,7 @@ class Estudiante(models.Model):
     # firma poner en NULL FALSE, NO LO PUSE PARA NO TENER QUE BORRAR LOS REGISTROS
     nombrefirma = models.CharField("nombre de la persona que está firmando", max_length=100,null=True, blank=True)
     firma = models.FileField(upload_to=guardar_firma,validators = [validar_extencion_archivo], null=True, blank=True)
-    imagen = models.ImageField("Imagen del estudiante", upload_to=guardar_imagen,blank=True, null=True)
+    imagen = models.ImageField("Imagen del estudiante", upload_to=guardar_imagen,blank=True, null=True, default=DAFAULT_IMG_USER)
     #datos para el sistema
     facturacion_electronica = models.BooleanField("¿Desea facturación electrónica?", default=False)
     tipo_clase = models.CharField(max_length=15, choices=ESTADOS_CLASES, null=False, blank=False)
@@ -190,6 +193,7 @@ class Estudiante(models.Model):
         nacimiento = self.fecha_nacimiento
         if hoy.year == nacimiento.year:
             edad = hoy.month - nacimiento.month -  ((hoy.month, hoy.day) < (nacimiento.month, nacimiento.day))
+            print(edad)
             if edad == 1:
                 edad = f"{edad} Mes"
             else:

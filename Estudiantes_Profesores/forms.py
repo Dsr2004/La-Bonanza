@@ -158,6 +158,13 @@ class CrearEstudianteForm(forms.ModelForm):
             return celular
         else:
             raise forms.ValidationError('Asegúrese de que este valor sea menor o igual a 15.')
+        
+    def clean_fecha_nacimiento(self):
+        fecha_nacimiento = self.cleaned_data["fecha_nacimiento"]
+        if fecha_nacimiento >= datetime.now().date():
+            raise forms.ValidationError('La fecha de nacimiento no puede ser mayor o igual a la fecha actual.')
+        return fecha_nacimiento
+        
     def clean_cedula_madre(self):
         self.cedula_madre = self.cleaned_data["cedula_madre"]
         if len(str(self.cedula_madre))<=15:
@@ -359,6 +366,14 @@ class EstudianteForm(forms.ModelForm):
             return documento
         else:
             raise forms.ValidationError('Asegúrese de que este valor sea menor o igual a 15.')
+        
+    def clean_fecha_nacimiento(self):
+        fecha_nacimiento = self.cleaned_data["fecha_nacimiento"]
+        if fecha_nacimiento >= datetime.now().date():
+            raise forms.ValidationError('La fecha de nacimiento no puede ser mayor o igual a la fecha actual.')
+        return fecha_nacimiento
+        
+        
     def clean_celular(self):
         celular = self.cleaned_data["celular"]
         if len(str(celular))<=15:

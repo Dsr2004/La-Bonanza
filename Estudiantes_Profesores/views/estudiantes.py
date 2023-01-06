@@ -4,7 +4,7 @@ from time import strptime
 from dateutil.relativedelta import relativedelta
 from django.shortcuts import render, redirect
 from django.views.generic import View, CreateView, ListView, UpdateView, DetailView, TemplateView
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.http import JsonResponse, HttpResponse
 from django.contrib import messages
 from La_Bonanza. mixins import IsAdminMixin
@@ -69,15 +69,19 @@ class RegistrarEstudiante(CreateView):
                 
 
                 estudiante.firma.save(file_name, data, save=True)
-                return redirect("estudiantes")
+                return JsonResponse({"mensaje":"creado correctamente", "path":reverse("estudiantes")}, status=200)
         else:
             nombre = str(form.cleaned_data['nombre_completo']).capitalize()
             form.save()
-            return render(self.request, "gracias.html",{"nombre":nombre})
-        return super().form_valid(form) 
+            return JsonResponse({"mensaje":"creado correctamente", "path":reverse("gracias", kwargs={'pk': form.pk})}, status=200)
 
     def form_invalid(self, form):
-        return super().form_invalid(form)
+        return JsonResponse({"errores":form.errors}, status=400)
+    
+class Gracias(View):
+    def get(self, requuest, *args, **kwargs):
+        estudiante = Estudiante.objects.get(pk=kwargs["pk"])
+        return render(self.request, "gracias.html",{"nombre":estudiante.get_estudiante})
 class BuscarNuevosEstudiantes(IsAdminMixin, View):
      def get(self, request, *args, **kwargs):
         if request.user.administrador!=1:
@@ -274,8 +278,10 @@ class CambiarEstadoEstudiante(IsAdminMixin, View):
         estudiante = Estudiante.objects.get(pk=request.POST["id"])
         if estudiante.estado == True:
             estudiante.estado = False
+            estudiante.razon = request.POST.get("razon")
         else:
             estudiante.estado = True
+            estudiante.razon = request.POST.get("razon")
         estudiante.save()
 
         return JsonResponse({"mensaje":"estudiante modificado con exito"}, status=200)
