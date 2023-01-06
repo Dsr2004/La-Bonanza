@@ -21,6 +21,34 @@
     .fc-view-harness .fc-view-harness-active{
         width: 100%;
     }
+    @media(max-width: 900px) {
+        .titulo_calendar{
+            font-size: 18px;
+        }
+        #encabezado_calendar{
+            display: flex !important;
+            flex-direction: column !important;
+        }
+        #titulo_secc{
+            width: 100%;
+            text-align: center;
+        }
+        #botons{
+            width: 100% !important;
+        }
+
+        .fc-toolbar-chunk #fc-dom-1{
+            font-size: 12px;
+        }
+
+        .fc-toolbar-chunk {
+            display: flex;
+        }
+
+        .fc-toolbar-chunk {
+            width: 165%;
+        }
+    }
 </style>
 {% endblock estilos %}
 
@@ -38,11 +66,11 @@
 <div class="container mt-4 mb-5 cont_list">
     <div id="box" class="ocultar" >
         <div class="container mb-3">
-            <div class="row justify-content-between">
-                <div class="col-7">
+            <div class="row justify-content-between"  id="encabezado_calendar">
+                <div class="col-7" id="titulo_secc">
                     <p class="titulo_calendar">Calendario de clases</p>
                 </div>
-                <div class="col-5" style="float: left; text-align: end;">
+                <div class="col-5" style="float: left; text-align: end;" id="botons">
                     <div class="row">
                         <div class="col-12 mb-2">
                             <a href="{% url 'asistencia' %}" class="btn btn-outline-secondary w-100">Gestionar asistencia &nbsp; <i class="fa-solid fa-users"></i></a>

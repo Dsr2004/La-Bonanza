@@ -202,7 +202,7 @@ class Perfil(View):
         form = UsuarioForm(instance=request.user)
         context = {'form': form}
         return render(request, 'Usuarios/Perfil.html', context)
-    
+
     def post(self, request, *args, **kwargs):
         correo = request.POST.get("email")
         imagen = request.FILES.get("imagen")
@@ -219,5 +219,8 @@ class Perfil(View):
             usuario.save()
             messages.success(request, "Se modificó el correo correctamente.")
             return redirect("perfil")
+
+class RestablecerClave(View):
+    def get(self, request, *args, **kwargs):
         
-       
+        return render(request, 'Usuarios/RestablecerContrasena.html')
