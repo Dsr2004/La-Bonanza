@@ -137,8 +137,8 @@ class Estudiante(models.Model):
     telefono_facturar = models.BigIntegerField('teléfono a facturar', unique=True, null=True, blank=True)
     #archivos
     exoneracion =models.BooleanField(default=False)
-    documento_A =models.FileField(upload_to=guardar_documento, validators = [validar_extencion_archivo],null=False, blank=False)
-    seguro_A =models.FileField(upload_to=guardar_seguro, validators = [validar_extencion_archivo],null=False, blank=False) 
+    documento_A =models.FileField(upload_to=guardar_documento, validators = [validar_extencion_archivo],null=True, blank=True)
+    seguro_A =models.FileField(upload_to=guardar_seguro, validators = [validar_extencion_archivo],null=True, blank=True) 
     # firma poner en NULL FALSE, NO LO PUSE PARA NO TENER QUE BORRAR LOS REGISTROS
     nombrefirma = models.CharField("nombre de la persona que está firmando", max_length=100,null=True, blank=True)
     firma = models.FileField(upload_to=guardar_firma,validators = [validar_extencion_archivo], null=True, blank=True)

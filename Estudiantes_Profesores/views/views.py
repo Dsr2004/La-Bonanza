@@ -13,8 +13,9 @@ from Picaderos.models import EstadoClase, InfoPicadero, Picadero, EstadoClase
 from Niveles.models import Nivel
 from Niveles.forms import NivelForm
 from Usuarios.forms import UsuarioForm
-from Estudiantes_Profesores.forms import EstudianteForm, ProfesorForm
-
+from Estudiantes_Profesores.forms import CrearEstudianteForm, ProfesorForm
+from Estudiantes_Profesores.models import Servicio
+from unicodedata import normalize
 from ..models import DIAS_SEMANA, Estudiante, Registro, Profesor, Asistencia, Calendario as CalendarioModel
 from .validacion import ValidationClass
 import time
@@ -22,6 +23,7 @@ import pandas as pd
 import inspect
 from La_Bonanza.settings import BASE_DIR
 import os
+from django.db import transaction
 
 def arreglarFormatoDia(dia):
     if type(dia)  != list:
@@ -356,41 +358,131 @@ class CargasMasivas(View):
                 message.append(f'En la fila {i+2} "{list(form.errors.as_data().keys())[0]}" {mensaje}')
         
         if registrados:
-            message.append(f'Se registraron {registrados} niveles en esta carga.')
+            message.append(f'Se registraron {registrados} nivel/es en esta carga.')
         return message
     def create_instructores(self, excel):
         message = []
         try:
             datos = [{d:[c for c in excel[d]]} for d in excel.columns if 'Unnamed' not in d]
-            serializers = []
+            serializers = [{}]
             registrados = int()
             for dato in datos:
                 key = list(dato.keys())[0]
                 for i, d in enumerate(dato[key]):
                     if str(d) == 'nan':
                         d = ''
-                    try:
-                        serializers[i][key] = d
-                    except:
-                        serializers.insert(i, {key:d})
-            for i, serialize in enumerate(serializers):
-                form = UsuarioForm(serialize)
-                formP = ProfesorForm(serialize)
-                if form.is_valid():
-                    if formP.is_valid():
-                        registrados = registrados + 1
-                        print('si')
+                    if key == 'fecha_nacimiento':
+                        serializers[i][key] = (d.to_pydatetime()).date()
+                    elif key == 'horarios':
+                        horarios = d.split(', ')
+                        horary = []
+                        for horario in horarios:
+                            dia, horaInicio, horaFin = horario.split(' ')
+                            if dia != '' and horaInicio != '' and horaFin != '':
+                                try:
+                                    datetime.strptime(horaInicio, '%H:%M')
+                                    try:
+                                        datetime.strptime(horaFin, '%H:%M')
+                                        if dia.lower() == 'lunes' or dia.lower() == 'martes' or dia.lower() == 'miercoles' or dia.lower() == 'jueves' or dia.lower() == 'viernes' or dia.lower() == 'sabado' or dia.lower() == 'domingo':
+                                            horary.append({'day':dia.capitalize(), 'from': horaInicio, 'through': horaFin})
+                                        else:
+                                            message.append(f'En la fila {i+2} el dia {dia} no corresponde al formato deseao. Es importante poner el dia en español y sin tildes.')
+                                    except:
+                                        message.append(f'En la fila {i+2} la hora {horaFin} no sigue el formato "H:M" de 24horas.')
+                                except:
+                                    message.append(f'En la fila {i+2} la hora {horaInicio} no sigue el formato "H:M" de 24horas.')
+                            else:
+                                message.append(f'En la fila {i+2} el formato del horario no es correcto. El formato obligatorio es este "Lunes 7:00 18:00, Miercoles 9:00 17:00".')
+                        serializers[i][key]  = horary
                     else:
-                        mensaje = json.loads(formP.errors.as_json())[list(formP.errors.as_data().keys())[0]][0]['message']
-                        message.append(f'En la fila {i+2} "{list(formP.errors.as_data().keys())[0]}" {mensaje}')
+                        serializers[i][key] = d
+            for i, serialize in enumerate(serializers):
+                form = UsuarioForm(serialize or None)
+                formP = ProfesorForm(serialize or None)
+                if form.is_valid():
+                    nombres = form.cleaned_data['nombres'].split(' ')
+                    nombres = [nombre[0:1] for nombre in nombres]
+                    apellidos = form.cleaned_data['apellidos'].split(' ')
+                    apellidos = [nombre[0:1] for nombre in apellidos]
+                    id = "".join(nombres).upper()+"".join(apellidos).upper()
+                    try:
+                        usuario = Usuario.objects.create(id=id,usuario=form.cleaned_data['usuario'], nombres=form.cleaned_data['nombres'], celular=form.cleaned_data['celular'], apellidos = form.cleaned_data['apellidos'], cedula=form.cleaned_data['cedula'],fecha_nacimiento = form.cleaned_data['fecha_nacimiento'],email = form.cleaned_data['email'])
+                        registrados = registrados + 1
+                    except:
+                        try:
+                            userR = Usuario.objects.get(id = id)
+                            if userR.cedula[0:4] != form.cleaned_data['cedula'][0:4]:
+                                id = id + form.cleaned_data['cedula'][0:4]
+                                usuario = Usuario.objects.create(id=id,usuario=form.cleaned_data['usuario'], nombres=form.cleaned_data['nombres'], celular=form.cleaned_data['celular'], apellidos = form.cleaned_data['apellidos'], cedula=form.cleaned_data['cedula'],fecha_nacimiento = form.cleaned_data['fecha_nacimiento'],email = form.cleaned_data['email'])
+                                registrados = registrados + 1
+                            else:
+                                id = id + form.cleaned_data['cedula']
+                                usuario = Usuario.objects.create(id=id,usuario=form.cleaned_data['usuario'], nombres=form.cleaned_data['nombres'], celular=form.cleaned_data['celular'], apellidos = form.cleaned_data['apellidos'], cedula=form.cleaned_data['cedula'],fecha_nacimiento = form.cleaned_data['fecha_nacimiento'],email = form.cleaned_data['email'])
+                                registrados = registrados + 1
+                        except:
+                            message.append(f'En la fila {i+2} el usuario {usuario} que intenta registrar ya existe')
                 else:
                     mensaje = json.loads(form.errors.as_json())[list(form.errors.as_data().keys())[0]][0]['message']
-                    message.append(f'En la fila {i+2} "{list(form.errors.as_data().keys())[0]}" {mensaje}')
-            
+                    usuario = serialize['usuario']
+                    message.append(f'En la fila {i+2} el usuario {usuario} {mensaje}')           
             if registrados:
-                message.append(f'Se registraron {registrados} instructores en esta carga.')
+                message.append(f'Se registraron {registrados} instructor/es en esta carga.')
         except Exception as e:
             print('exc', e)
+        return message
+    def create_alumnos(self, excel):
+        message = []
+        datos = [{d:[c for c in excel[d]]} for d in excel.columns if 'Unnamed' not in d]
+        serializers = [{}]   
+        registrados = int()
+        for e, dato in enumerate(datos):
+            key = list(dato.keys())[0]
+            i = 0
+            d = dato[key][0]
+            if str(d) == 'nan':
+                d = ''
+            if key == 'fecha_nacimiento':
+                serializers[i][key] = (d.to_pydatetime()).date()
+            elif key == 'fecha_inscripcion':
+                try:
+                    serializers[i][key] = (d.to_pydatetime()).date()
+                except:
+                    serializers[i][key] = ''
+            elif key == 'facturacion_electronica':
+                if d.lower() == 'si':
+                    serializers[i][key] = True
+                else:
+                    serializers[i][key] = False
+            elif key == 'tipo_clase':
+                if d == 'Mensualidad':
+                    serializers[i][key] = '2'
+                    tipoServicio = [s for s in Servicio.objects.all() if s.tipo_clase == '2' and datos[e+1]['tipo_servicio'][0] in normalize("NFKD", s.nombre).encode("ascii","ignore").decode("ascii")][0]
+                    serializers[i]['tipo_servicio'] = tipoServicio.pk
+                else:
+                    serializers[i][key] = '1'
+                    tipoServicio = [s for s in Servicio.objects.all() if s.tipo_clase == '2' and datos[e+1]['tipo_servicio'][0] in normalize("NFKD", s.nombre).encode("ascii","ignore").decode("ascii")][0]
+                    serializers[i]['tipo_servicio'] = tipoServicio.pk
+            elif key == 'tipo_servicio':
+                pass
+            else:
+                serializers[i][key] = d
+      
+        serializers[0]['nombre_completo'] = f"{serializers[0]['primer_nombre'].capitalize()} {serializers[0]['segundo_nombre']} {serializers[0]['primer_apellido']} {serializers[0]['segundo_apellido'] } "
+        serializers[0]['comprobante_seguro_medico']  = True
+        serializers[0]['comprobante_documento_identidad'] = True
+        serializers[0]['exoneracion'] = True
+        serializers[0]['aceptaContrato'] = True
+        for i, serialize in enumerate(serializers):
+            form = CrearEstudianteForm(serialize)
+            if form.is_valid():
+                form.save()
+                registrados = registrados + 1
+            else:
+                mensaje = json.loads(form.errors.as_json())[list(form.errors.as_data().keys())[0]][0]['message']
+                message.append(f'En la fila {i+2} "{list(form.errors.as_data().keys())[0]}" {mensaje}')
+        
+        if registrados:
+            message.append(f'Se registraron {registrados} nivel/es en esta carga.')
         return message
     
     def post(self, request, *args, **kwargs):
@@ -428,11 +520,10 @@ class CargasMasivas(View):
             attributes = inspect.getmembers(Estudiante, lambda a:not(inspect.isroutine(a)))
             attributes = [a for a in attributes if a[0] == '__doc__'][0][1].replace('Estudiante', '').replace('(','').replace(')', '').split(', ')
             campos = list(filter(lambda attr: attr != 'id' and attr != 'firma' and attr != 'nombrefirma' and attr != 'estado' and attr != 'aceptaContrato' and attr != 'autorizaClub' and attr != 'exoneracion' and attr != 'documento_A' and attr != 'seguro_A' and attr != 'imagen' and attr != 'nombre_completo' and attr != 'comprobante_documento_identidad' and attr != 'comprobante_seguro_medico', attributes))
-            print(campos)
             if len([c for c in campos if c in excel.columns]) == len(campos):
-                pass
+                context = {'errors':{'alumnos':self.create_alumnos(excel)}}
             else:
-                context = {'errors':{'niveles':'Los campos necesarios para realizar la carga no se encuentran en el excel cargado. Se recomienda seguir el formato de la plantilla.'}}
+                context = {'errors':{'alumnos':'Los campos necesarios para realizar la carga no se encuentran en el excel cargado. Se recomienda seguir el formato de la plantilla.'}}
         else:
             if len(request.POST)>1:
                 context = {'errors':{[key for key in list(request.POST.keys()) if key != 'csrfmiddlewaretoken'][0]:['No se cargo ningún excel, es obligatorio subir el archivo a cargar.']}}
@@ -449,6 +540,7 @@ class downloadFormatos(View):
             response = HttpResponse(b.getvalue(), content_type=content_type)
             response['Content-Disposition'] = 'attachment; filename="' + filename + '.xlsx"'
             return response
+        
     def get(self, request, *args, **kwargs):
         if kwargs['tipo'] == 'niveles':
             excel = pd.read_excel(os.path.join(BASE_DIR, r'Formatos\Niveles.xlsx'))
