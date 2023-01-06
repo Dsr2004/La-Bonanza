@@ -53,9 +53,16 @@ class RegistrarEstudiante(CreateView):
     template_name = "crearEstudiante.html"
     success_url = reverse_lazy("estudiantes")
     
-    def post(self, request, *args, **kwargs):
-        return super().post(request, *args, **kwargs)
+    def get(self, request, *args, **kwargs):
+        if(request.user.is_authenticated):
+            template_name = self.template_name
+            print("si entro")
+        else:
+            print("no entro")
+            template_name = "crearEstudiantesPublico.html"
+        return render(request, template_name,{'form': self.form_class})
     
+
     def form_valid(self, form):
         if self.request.user.is_authenticated:
             if self.request.user.administrador:
@@ -67,6 +74,7 @@ class RegistrarEstudiante(CreateView):
                 data = ContentFile(base64.b64decode(imgstr))  
                 file_name = "firma-"+self.request.POST.get("nombrefirma")+"."+ ext
                 
+
                 estudiante.firma.save(file_name, data, save=True)
                 return redirect("estudiantes")
         else:
@@ -77,6 +85,7 @@ class RegistrarEstudiante(CreateView):
 
     def form_invalid(self, form):
         return super().form_invalid(form)
+
 class BuscarNuevosEstudiantes(IsAdminMixin, View):
      def get(self, request, *args, **kwargs):
         if request.user.administrador!=1:
@@ -102,6 +111,7 @@ class CrearNuevosEstudiantes(IsAdminMixin, CreateView):
         estudiante = Estudiante.objects.get(pk=self.kwargs["pk"])
         ctx["estudiante"] = estudiante
         return ctx
+
     
     def post(self, request, *args, **kwargs):
         copia = request.POST.copy()

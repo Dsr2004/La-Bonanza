@@ -1,8 +1,15 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block titulo %}Información de alumnos{% endblock titulo %}
 {% load jsignature_filters %}
+
+{% block estilos %}
+    <link rel="stylesheet" href="{% static 'css/estilosBase.css' %}">
+{% endblock estilos %}
+
+
 {% block contenido %}
-    <div class="container">
+    <div class="container mt-5 mb-5 cont_list">
         <h1>Ver información de {{object.get_estudiante}}</h1>
         <hr>
         <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -299,20 +306,10 @@
             </div>
             <div class="tab-pane fade" id="docs-tab-pane" role="tabpanel" aria-labelledby="docs-tab" tabindex="0">
                 <br>
-                <h3>Reglamento Y exoneración </h3>
+                <h3>Firma </h3>
                 <br>
                 <div class="row">
-                    <div class="col-md-6">
-                        <div class="row">
-                            <div class="col-8">
-                                <h5><strong>Consentimiento para asumir riesgo y Exoneración de responsabilidad:</strong></h5>
-                            </div>
-                            <div class="col-1">
-                                <a href="/media/{{object.exoneracion}}" download="output.png" class="btn btn-primary btn-sm"><i class="fa-solid fa-download"></i></a>
-                            </div>
-                        </div>
-                        <img src="/media/{{object.exoneracion}}" alt="" class="img-fluid">
-                    </div>
+                    
                     {% if object.nombrefirma %}
                     <div class="col-md-6">
                         <h5><strong>Firma de {{object.nombrefirma}}:</strong></h5>
@@ -325,6 +322,7 @@
           </div>
             </div>
     </div>
+    <br>
 {% endblock contenido %}
 {% block scripts %}
     <script>

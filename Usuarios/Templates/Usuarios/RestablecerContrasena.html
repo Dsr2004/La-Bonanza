@@ -23,7 +23,7 @@
        
     </div>
     <div class="col-md-6" id="Col_log">
-        <P class="texto-seccion">INICIO DE SESIÓN</P>
+        <P class="texto-seccion">RESTABLECER CONTRASEÑA</P>
           {%if error%}
           <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16" role="img" aria-label="Warning:">
@@ -39,28 +39,19 @@
           <form action="" method="post">
               {% csrf_token %}
                 <div class="row" id="row_form">
-                    <div class="col-12 mb-2">
-                        <div class="form-input">
-                            <span class="icon"><i class="fa-solid fa-user"></i></span>
-                            {{form.username}}
-                            <!-- <input type="text" placeholder="Ingrese su nombre de usuario"> -->
-                        </div>
-                    </div>
+                    
                     <div class="col-12 mb-1">
                         <div class="form-input">
-                            <span class="icon"><i class="fa-solid fa-lock"></i></span>
-                            {{form.password}}
-                            <!-- <input type="password" placeholder="Ingrese su contraseña"> -->
+                            <span class="icon"><i class="fa-solid fa-envelope"></i></span>
+                            <input type="email" name="correo" placeholder="Ingrese su correo electrónico" required>
                         </div>
                     </div>
                     <div class="col-12 mb-4">
-                        <span class="mas"><a class="recuperar" style="padding-left: 42px;" href="{% url 'restablacer' %}">¿Olvidaste tu contraseña?</a></span>
+                        <span class="mas" style="padding-left: 80px;">Volver al <a class="recuperar" style="font-weight: bold;" href="{% url 'login' %}">inicio de sesión</a></span>
                     </div>
                     <div class="col-12 text-center mb-3 mt-2">
-                        <button type="submit" class="btn btn_ingresar">Ingresar &nbsp; <i class="fa-solid fa-arrow-right"></i></button>
+                        <button type="submit" class="btn btn_ingresar">Restablecer &nbsp; <i class="fa-solid fa-arrow-rotate-right"></i></button>
                     </div>
-                    
-                  
                 </div>
           </form>
     </div>

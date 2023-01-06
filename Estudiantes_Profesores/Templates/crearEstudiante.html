@@ -5,7 +5,6 @@
 <link rel="stylesheet" href="{% static 'libs/datepicker/dist/datepicker.css' %}">
 <link rel="stylesheet" href="{% static 'css/style.css' %}">
 <link rel="stylesheet" href="{% static 'css/estilosBase.css' %}">
-
 <style>
     input{border: 1px solid #dadce0;border-radius: 4px;box-shadow: 0 0 0 transparent;font-size: 16px;line-height: 17px;outline: transparent;padding: 11px 16px;transition: border .3s, box-shadow .3s;width: 100%;}
     select{border: 1px solid #dadce0;border-radius: 4px;box-shadow: 0 0 0 transparent;font-size: 17px;line-height: 24px;outline: transparent;padding: 11px 16px;transition: border .3s, box-shadow .3s;width: 100%;}
@@ -24,10 +23,7 @@
     }
 </style>
 {% endblock estilos %}
-
-
 {% block contenido %}
-
 <div id="fondoContrato"style="display:none; width:100%; position:fixed; top:0; height:100vh; background-color:rgba(0,0,0,0.5);">
     <div id="DivContrato" style="width:90%;height: 90vh;background-color: #fff; position:absolute; top:2.5%;left: 2%; border: 1px solid rgba(0,0,0,1); z-index: 100; border-radius: 5px;overflow: auto;">
         <div id="header" style="width: 88%; margin: 0 0.5%; height:60px; border-bottom: 1px solid rgba(0,0,0,0.3); display:grid;grid-template-columns: 96% 4%; padding: 0 10px; position: fixed; background-color: #fff;">
@@ -38,7 +34,6 @@
         <div>
             <label for="AceptacionContrato" style="padding: 0 20px;"><strong>Aceptación del reglamento: </strong>Por medio de la suscripción de este documento declaro en forma clara y expresa que he leído y comprendido el presente reglamento, razón por lo acepto en su integridad y me comprometo a cumplirlo en su integridad, así como velar por su cumplimiento por parte de mi hijo y/o representado.La dirección de este club pide el consentimiento a los padres o tutores legales para publicar las imágenes, en las cuales aparezcan individualmente o en grupo los niños(a), en las diferentes secuencias y actividades realizadas en el club y fuera del mismo.<sup class="required"  class="required"  class="required"  class="required"  style="color: red;">*</sup></label>
             <div class="form-check form-switch" >
-
                 <div style="margin-left: 0;" class="checkboxSiNo">
                     <input type="checkbox" name="AceptacionContrato" class="form-check-input" autocomplete="off" id="AceptacionContrato">
                     <label for="AceptacionContrato"></label>
@@ -84,20 +79,15 @@
         </div>
     </div>
 </div>
-
-
-<div class="container cont_list">
+<div class="container mt-5 mb-5 cont_list">
     <div class="container alert alert-danger" role="alert" id="alertDocumentDownload">
         <button style="float: right;" type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         <h4 class="alert-heading">!Antes de continuar con el registro tenga en cuenta lo siguiente!</h4>
-        
-        <p>Por favor leer, aceptar y firmar nuestro reglamento (políticas de clases), en especial nuestra política de cancelación y exoneración de responsabilidades.
+        <p>Por favor leer, aceptar y firmar nuestro reglamento (políticas de clases), en especial nuestra política de cancelación de clases y exoneración de responsabilidades.
         </p>
     </div>
-
     <form action="{% url 'registrarEstudiante' %}" method="post" enctype="multipart/form-data" id="CrearEstudianteForm">
         {% csrf_token %}
-    
         <p><center style="font-size: 30px; font-weight: 600; margin-top: -5px;">Registro alumno</center></p>
         <br>
         <div class="container">
@@ -118,9 +108,7 @@
                   <button onclick="document.getElementById('firm').style.visibility='visible'; cargarCanvas()" class="nav-link" id="pills-disabled-tab" data-bs-toggle="pill" data-bs-target="#pills-disabled" type="button" role="tab" aria-controls="pills-disabled" aria-selected="false"><i id="icon_danger_DOCUMENTOS" class="fa-solid fa-circle-exclamation"></i>   Reglamento y exoneración</button>
                 </li>
             </ul>
-            
             <div class="tab-content" id="pills-tabContent">
-
                 <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
                     <h5 class="mt-4">Información del alumno</h5>
                     <hr>
@@ -213,7 +201,6 @@
                             <p id="ciudad" class="error_text"></p>
                         </div>
                    </div>
-
                     <div class="row">
                         <div class="col-md-6">
                             <label for="" style="font-weight: 500;">{{form.seguro.label}}:</label>
@@ -227,20 +214,17 @@
                         </div>
                     </div>
                     <br>
-                   
                     <div class="col-md-12">
                         <label for="" style="font-weight: 500;">{{form.tipo_clase.label}}: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
                         {{form.tipo_clase}}
                         <p id="tipo_clase" class="error_text"></p>
                     </div>
-
                     <div class="col-md-12" style="display: none;" id="divTipoServicio">
                         <label for="" style="font-weight: 500;">Tipo servicio: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
                         <select name="tipo_servicio" id="id_tipo_servicio">
                         </select>
                         <p id="tipo_servicio" class="error_text"></p>
                     </div>
-
                      <div class="col-md-12" style="display: grid; grid-template-columns: repeat(2,1fr);">
                         <label for="" style="font-weight: 500;">{{form.facturacion_electronica.label}}: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
                         <div class="checkboxSiNo">
@@ -249,23 +233,16 @@
                         </div>
                         <p id="facturacion_electronica" class="error_text"></p>
                     </div>
-
                     <div class="row">
                         <div class="col-md-12">
                             <label for="" style="font-weight: 500;">{{form.nota.label}}: (<b>Opcional:</b> informar acerca de cualquier discapacidad, enfermedad o alergia que presente el alumno)</label>
-                            
                             {{form.nota}}
                             <p id="nota" class="error_text"></p>
                         </div>
                     </div>
-
-                    
                     <button type="button" class="btn btn-primary" style="float: right" onclick="moveTab('icon_danger_ACUDIENTE')">Siguiente <i class="fa-solid fa-arrow-right"></i></button>
                     <br><br>
                 </div>
-          
-           
-
                 <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
                     <h5 class="mt-4">Información de los padres</h5>
                     <hr>
@@ -287,7 +264,6 @@
                             <p id="celular_madre" class="error_text"></p>
                         </div>
                     </div>
-
                     <div class="row">
                         <div class="col-md-12">
                             <label for="" style="font-weight: 500;">{{form.email_madre.label}}:</label>
@@ -295,14 +271,12 @@
                             <p id="email_madre" class="error_text"></p>
                         </div>
                     </div>
-
                     <h5><center>Información del Padre</center></h5>
                     <div>
                         <label for="" style="font-weight: 500;">{{form.nombre_completo_padre.label}}:</label>
                         {{form.nombre_completo_padre}}
                         <p id="nombre_completo_padre" class="error_text"></p>
                     </div>
-
                     <div class="row">
                         <div class="col-md-6">
                             <label for="" style="font-weight: 500;">{{form.cedula_padre.label}}:</label>
@@ -315,7 +289,6 @@
                             <p id="celular_padre" class="error_text"></p>
                         </div>
                     </div>
-
                     <div class="row">
                         <div class="col-md-12">
                             <label for="" style="font-weight: 500;">{{form.email_padre.label}}:</label>
@@ -323,14 +296,12 @@
                             <p id="email_padre" class="error_text"></p>
                         </div>
                 </div>
-
                 <br>
                 <button type="button" class="btn btn-primary" style="float: left" onclick="moveTab('icon_danger_ESTUDIANTE')"><i class="fa-solid fa-arrow-left"></i> Anterior</button>
                 <button type="button" class="btn btn-primary" style="float: right" onclick="moveTab('icon_danger_EMERGENCIA')">Siguiente <i class="fa-solid fa-arrow-right"></i></button>
                 <br>
                 <br>
                 </div>
-
                 <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab" tabindex="0">
                     <div class="alert alert-warning d-flex align-items-center mt-4" role="alert">
                         <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
@@ -338,31 +309,26 @@
                             <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
                             </symbol>
                         </svg>
-
                         <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:"><use xlink:href="#exclamation-triangle-fill"/></svg>
                         <div>
                         El contacto de emergencia no puede ser el padre ni la madre.
                         </div>
                     </div>
-
                     <div>
                         <label for="" style="font-weight: 500;">{{form.nombre_contactoE.label}}: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
                         {{form.nombre_contactoE}}
                         <p id="nombre_contactoE" class="error_text"></p>
                     </div>
-
                     <div>
                         <label for="" style="font-weight: 500;">{{form.telefono_contactoE.label}}: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
                         {{form.telefono_contactoE}}
                         <p id="telefono_contactoE" class="error_text"></p>
                     </div>
-
                     <div>
                         <label for="" style="font-weight: 500;">{{form.relacion_contactoE.label}}: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
                         {{form.relacion_contactoE}}
                         <p id="relacion_contactoE" class="error_text"></p>
                     </div>
-
                     <div class="row justify-content-between" style="margin-bottom: 30px;">
                         <div class="col-4">
                             <button type="button" class="btn btn-primary" style="float: left" onclick="moveTab('icon_danger_ACUDIENTE')"><i class="fa-solid fa-arrow-left"></i> Anterior</button>
@@ -370,10 +336,8 @@
                         <div class="col-4">
                             <button type="button" class="btn btn-primary" style="float: right" onclick="moveTab('icon_danger_FACTURACION')">Siguiente <i class="fa-solid fa-arrow-right"></i></button>
                         </div>
-                    </div>  
-                    
+                    </div>
                 </div>
-
                 <div class="tab-pane fade" id="pills-facturacion" role="tabpanel" aria-labelledby="pills-contact-tab" tabindex="0">
                     <div class="row">
                         <div class="col-md-12 mt-4">
@@ -382,11 +346,10 @@
                                 <option value="1">Padre</option>
                                 <option value="2">Madre</option>
                                 <option value="3" selected>Otro</option>
-                            </select>   
+                            </select>
                             <p id="p_Facturado" class="error_text" style="display: none;"></p>
                         </div>
                     </div>
-
                     <hr>
                     <div class="row">
                         <div class="col-md-6">
@@ -400,7 +363,6 @@
                             <p id="identificacion_facturar" class="error_text"></p>
                         </div>
                     </div>
-
                     <div class="row">
                         <div class="col-md-6">
                             <label for="" style="font-weight: 500;">{{form.direccion_facturar.label}}:<sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
@@ -413,7 +375,6 @@
                             <p id="email_facturar" class="error_text"></p>
                         </div>
                     </div>
-
                     <div class="row" style="margin-bottom: 30px;">
                         <div class="col-md-12">
                             <label for="" style="font-weight: 500;">{{form.telefono_facturar.label}}:<sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label>
@@ -421,7 +382,6 @@
                             <p id="telefono_facturar" class="error_text"></p>
                         </div>
                     </div>
-
                     <div class="row justify-content-between" style="margin-bottom: 30px;">
                         <div class="col-4">
                             <button type="button" class="btn btn-primary" style="float: left" onclick="moveTab('icon_danger_EMERGENCIA')"><i class="fa-solid fa-arrow-left"></i> Anterior</button>
@@ -430,10 +390,7 @@
                             <button type="button" class="btn btn-primary" style="float: right" onclick="moveTab('icon_danger_DOCUMENTOS')">Siguiente <i class="fa-solid fa-arrow-right"></i></button>
                         </div>
                     </div>
-                    
-
                 </div>
-
                 <div class="tab-pane fade" id="pills-disabled" role="tabpanel" aria-labelledby="pills-disabled-tab" tabindex="0">
                     <h5 class="mt-4">Reglamento y exoneración</h5>
                     <div class="row">
@@ -448,30 +405,34 @@
                         <label for="" style="font-weight: 500;">Reglamento: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label><br>
                         <div style="display: flex;">
                             <button id="verContratob" type="button" class="btn btn-xs" style="color: rgb(40, 40, 252);" onclick="verContrato()">Ver el reglamento</button>
-                            
                     <div>
                         <p id="aceptaContrato" class="error_text"></p>
                     </div>
                         </div>
                     </div>
-
-
-                    <div class="row">
+                    <div class="row mb-3">
                         <label for="" style="font-weight: 500;">Nombre del firmante: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label><br>
                         <input type="text" name="nombrefirma">
                         <input type="hidden" name="firma" id="firma">
                     </div>
+
                     <div id="firm" style="visibility: hidden;">
                         <label for="" style="font-weight: 500;">Firma: <sup class="required"  class="required"  class="required"  class="required"  class="required"  class="requerido">*</sup></label><br>
                         <sub>Al firmar aceptas todo la información presentada en el consentimiento y en el reglamento.</sub>
                         <br>
-                        <canvas id="signature-canvas" style="border: 1px dashed rgb(79, 74, 74); background-color: #fff; width: 50%; height: 200px;"></canvas>
-                        <button id="limpiarCanvas" class="btn btn-outline-secondary btn-sm" type="button">Limpiar</button>
-                        <button type="button" id="send" class="btn btn-success w-100" style="float: right">Enviar</button>   
+                        <div class="row">
+                            <div class="col-12">
+                                <canvas id="signature-canvas" style="border: 1px dashed rgb(79, 74, 74); background-color: #fff; width: 50%; height: 200px;"></canvas>
+                            </div>
+                            <div class="col-3">
+                                <button id="limpiarCanvas" class="btn btn-outline-secondary btn-sm" type="button"><i class="fa-solid fa-arrows-rotate"></i> Limpiar</button>
+                            </div>
+                        </div>
+                        <br>
+                        <button type="button" id="send" class="btn btn-success w-100" style="float: right">Enviar</button>
                     </div>
                     <br><br>
                 </div>
-
             <script>
                 let campos = document.querySelectorAll("input");
                 let selects = document.querySelectorAll("select");
@@ -497,29 +458,24 @@
             </div>
         </div>
     </form>
-
 </div>
+<br>
+
 {% endblock contenido %}
-
-
 {% block scripts %}
 <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
 <script src="{% static 'js/reglamento.js' %}"></script>
 <script src="{% static 'js/consentimiento.js' %}"></script>
 <script>
     function cargarCanvas(){
-
             const canvas = document.querySelector("canvas");
             canvas.height = canvas.offsetHeight;
             canvas.width = canvas.offsetWidth;
-
             signaturePad = new SignaturePad(canvas, {syncField: '#signature64', syncFormat: 'PNG'});
     };
-
     $("#limpiarCanvas").on("click", function(){
         signaturePad.clear();
     })
-
     $("#send").on("click", function(){
         if(signaturePad.isEmpty()){
             alert("La firma esta vacia")
@@ -536,7 +492,6 @@
             }
             for (let i = 0; i < selectRequired.length; i++) {
                 selectRequired[i].required = false
-                
             }
         })
         var errores = []
@@ -559,16 +514,13 @@
     </script>
     {% endfor %}
     {% endfor %}
-    
     <script>
         console.log(errores)
-        
         $("#icon_danger_ESTUDIANTE").css("display","none")
         $("#icon_danger_ACUDIENTE").css("display","none")
         $("#icon_danger_EMERGENCIA").css("display","none")
         $("#icon_danger_FACTURACION").css("display","none")
         $("#icon_danger_DOCUMENTOS").css("display","none")
-
         pestañas = {
           "info_estudiante":["primer_nombre","segundo_nombre","primer_apellido","segundo_apellido","nombre_completo","fecha_nacimiento","documento","celular","email","direccion","barrio","seguro","poliza","comprobante_seguro_medico","comprobante_documento_identidad","ciudad","documento_A","seguro_A","tipo_clase"],
           "info_acudiente":["nombre_completo_madre","cedula_madre","celular_madre","email_madre","nombre_completo_padre","cedula_padre","celular_padre","email_padre"],
@@ -576,7 +528,6 @@
           "info_documentos":["exoneracion","aceptaContrato",'autorizaClub'],
           "info_facturacion":[]
         }
-        
         for(campo in pestañas["info_estudiante"]){
           if (pestañas["info_estudiante"][campo] in errores){
             $("#icon_danger_ESTUDIANTE").css("display","inline-block")
@@ -607,7 +558,6 @@
             break
           }
         }
-
         for (let i in errores){
             let x=form.find('input[name='+i+']')
             let y=form.find('select[name='+i+']')
@@ -616,16 +566,13 @@
             $("#"+i).text(errores[i])
             console.log(i, errores[i])
         }
-      
     </script>
 {% endif %}
-
 <script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
 <script>
     $("#CrearEstudianteForm").submit(function(event){
     event.preventDefault()
     this.submit()
-    
 })
 // Cargar informacion facturado
 let selectFacturacion = document.getElementById('Facturado')
@@ -714,7 +661,8 @@ tipoClase.onchange = function(tipo){
 }
 </script>
 
+
+
 <script src="{% static 'libs/datepicker/dist/datepicker.js' %}"></script>
 <script src="{% static 'libs/datepicker/i18n/datepicker.es-ES.js' %}"></script>
-
 {% endblock scripts %}

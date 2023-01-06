@@ -75,8 +75,15 @@
           <p id="nivel" class="bg-light text-danger" style="color: #dc3545;"></p>
           <br>
           <div class="form-check">
-            <Label class="form-check-label"><strong>Matrícula pagada <sup style="color: #dc3545;">*</sup></strong></Label>
-            {{form.pagado}}
+            {% if estudiante.tipo_clase == "1" %}
+              <Label class="form-check-label"><strong>Servicio pagado: <sup style="color: #dc3545;">(*)</sup></strong></Label>
+              {{form.pagado}}
+            {% elif estudiante.tipo_clase == "2" %}
+              <Label class="form-check-label"><strong>Matrícula pagada: <sup style="color: #dc3545;">(*)</sup></strong></Label>
+              {{form.pagado}}
+            {% endif %}
+            <!-- <Label class="form-check-label"><strong>Matrícula pagada <sup style="color: #dc3545;">*</sup></strong></Label> -->
+            
           </div>
             <p id="pagado" class="bg-light text-danger" style="color: #dc3545;"></p>
             <br>
@@ -123,13 +130,20 @@
       {{form.profesor}}
       <p id="profesor" class="bg-light text-danger" style="color: #dc3545;"></p>
       <br>
-      <Label><strong>Nivel: <sup style="color: #dc3545;">(*)</sup></strong></Label>
+      <Label><strong>Nivele: <sup style="color: #dc3545;">(*)</sup></strong></Label>
       {{form.nivel}}
       <p id="nivel" class="bg-light text-danger" style="color: #dc3545;"></p>
       <br>
+
       <div class="form-check">
-        <Label class="form-check-label"><strong>Matrícula pagada: <sup style="color: #dc3545;">(*)</sup></strong></Label>
-        {{form.pagado}}
+        {% if estudiante.tipo_clase == "1" %}
+              <Label class="form-check-label"><strong>Servicio pagado: <sup style="color: #dc3545;">(*)</sup></strong></Label>
+              {{form.pagado}}
+            {% elif estudiante.tipo_clase == "2" %}
+              <Label class="form-check-label"><strong>Matrícula pagada: <sup style="color: #dc3545;">(*)</sup></strong></Label>
+              {{form.pagado}}
+        {% endif %}
+        
       </div>
         <p id="pagado" class="bg-light text-danger" style="color: #dc3545;"></p>
         <br>
@@ -137,9 +151,7 @@
       <button type="button" onclick="RegistrarEstudianteSinRegistro(this)"  class="btn btn-success w-100">Registrar alumno</button>
   </form>
     {%endif%}
-      <div class="container alert alert-warning  alert-dismissible fade show" role="alert" id="EstudianteSinRegistrAlert">
-        <h5 id="texto"></h5>
- </div>
+      
     </div>
   </div>
 </div>

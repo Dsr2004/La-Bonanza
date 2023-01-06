@@ -9,5 +9,6 @@ urlpatterns = [
     path('FuncionesUsuario/<str:pk>', login_required(UserFunction.as_view()), name="funcionesUsuario"),
     path('editarEstadoUsuario/', login_required(EstadoUsuario), name="editarEstadoUsuario"),
     path('CambiarContrasena/', login_required(CambiarContrasena.as_view()), name='changePass'),
-    path('Perfil/', login_required(Perfil.as_view()), name='perfil')
+    path('Perfil/', login_required(Perfil.as_view()), name='perfil'),
+    path('Restablecer/', (RestablecerClave.as_view()), name='restablacer')
 ]
