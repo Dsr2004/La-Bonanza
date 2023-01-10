@@ -163,7 +163,7 @@ class UserFunction(TemplateView):
             form = self.form_class(instance=get_object)
         except Exception as e:
             return redirect('login')
-        return render(request, self.template_name, {'form':form,'title':get_object.usuario,'pk':get_object.pk})
+        return render(request, self.template_name, {'form':form,'title':get_object.usuario,'pk':get_object.pk, "imagen":get_object.imagen})
     
     def post(self, request, *args, **kwargs):
         try:
@@ -172,9 +172,13 @@ class UserFunction(TemplateView):
                 return redirect('index')
         except:
             return redirect('index')
-        form = self.form_class(request.POST or None, instance=get_object)
+        form = self.form_class(request.POST or None, request.FILES or None, instance=get_object)
         if form.is_valid():
-            form.save()
+            user  = form.save()
+            if request.FILES:
+                if "imagen" in request.FILES:
+                    user.imagen = request.FILES["imagen"]
+            user.save()
             return JsonResponse({"success":"Succes"})
         else:
             data = json.dumps({'error': 'Datos ingresados incorrectos', 'forms':form.errors})

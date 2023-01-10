@@ -143,16 +143,24 @@ class GestionDeAsistencia(View):
     model = CalendarioModel
     def get(self, request, *args, **kwargs):
         ctx = {}
-        hoy = datetime.now()
-        hoyA = date.today()
-        diaSemana = arreglarFormatoDia(hoy.weekday())
+        if "fecha" in request.GET:
+            hoy = request.GET.get("fecha")
+            hoyA = request.GET.get("fecha")
+            if hoy and hoyA:
+                hoy = datetime.strptime(hoy, "%d/%m/%Y")
+                hoyA = datetime.strptime(hoyA, "%d/%m/%Y").date()
+                diaSemana = arreglarFormatoDia(hoy.weekday())
+        else:
+            hoy = datetime.now()
+            hoyA = date.today()
+            diaSemana = arreglarFormatoDia(hoy.weekday())
         
         clasesHoy = self.model.objects.filter(diaClase = diaSemana)
         clasesHoy = clasesHoy.filter(registro__in = [x.registro.pk  for x in clasesHoy if x.registro.estudiante.estado == True]).order_by("horaClase")
         if not request.user.administrador:
             clasesHoy = clasesHoy.filter(registro__in=[x.registro.pk for x in clasesHoy if x.registro.profesor.pk == request.user.pk ]).order_by("horaClase")
         clasesHoy = [clases for clases in EstadoClase.objects.all() if clases.clase.calendario in clasesHoy and clases.estado == True]
-        clasesHoy = [calendario for calendario in clasesHoy if calendario.dia == datetime.now().date()]
+        clasesHoy = [calendario for calendario in clasesHoy if calendario.dia == hoyA]
         clasesHoyRango = []
         for clases in clasesHoy:
             if clases.clase.calendario.inicioClase  <= hoyA <= clases.clase.calendario.finClase:
@@ -175,12 +183,21 @@ class GestionDeAsistencia(View):
             clasesDia.append({"estudiante":clases[clase][1],"estado":clases[clase][0]})
         for clase in clasesDia:
             try:
-                hoy = datetime.now()
+                if "fecha" in request.GET:
+                    hoy = request.GET.get("fecha")
+                    if hoy:
+                        hoy = datetime.strptime(hoy, "%d/%m/%Y")
+                    else:
+                        hoy = datetime.now()
+                else:
+                    hoy = datetime.now()
                 diaSemana = arreglarFormatoDia(hoy.weekday())
-                registro = Registro.objects.get(estudiante=clase["estudiante"])
+                registro = Registro.objects.get(estudiante=Estudiante.objects.get(pk=clase["estudiante"]))
                 picadero = Picadero.objects.get(nivel=registro.nivel)
                 asistencia, creado = Asistencia.objects.get_or_create(registro=registro, dia=datetime.now().date(), hora=hora, picadero=picadero)
+                print(asistencia, creado)
                 calendario = CalendarioModel.objects.filter(registro=registro, inicioClase=hoy)
+                print(calendario)
                 calendario = [objecto for objecto in calendario if int([dia[0] for dia in DIAS_SEMANA if int(dia[0]) == int(objecto.diaClase)][0]) == int(diaSemana) and objecto.horaClase == hora][0]
                 claseObject = [clases for clases in EstadoClase.objects.all() if clases.clase.calendario == calendario][0]
                 if creado:
@@ -215,7 +232,6 @@ class GestionDeAsistencia(View):
             except  Exception as e:
                 print(e)
                 messages.add_message(request, messages.INFO, f"No se encontro al estudiante en la base de datos")
-        
         return redirect("asistencia")
     
 class ControlAsistencia(View):

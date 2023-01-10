@@ -185,9 +185,8 @@
 <script>
     $("#imagenId").change(function(){
         leerImg(this, document.getElementById("PerfilImg"));
-        });
-        function leerImg(input, img_destino)
-        {
+    });
+    function leerImg(input, img_destino){
         if (input.files && input.files[0]) {
             var reader = new FileReader();
             reader.onload = function (e) {
@@ -195,6 +194,6 @@
             };
             reader.readAsDataURL(input.files[0]);
         }
-        }
+    }
 </script>
 {% endblock scripts %}

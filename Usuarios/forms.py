@@ -57,7 +57,7 @@ class CambiarContrasena(forms.ModelForm):
 class UsuarioForm(forms.ModelForm):
     class Meta(forms.ModelForm):
         model = Usuario
-        fields = ['usuario','nombres','apellidos','cedula','fecha_nacimiento','email','celular']
+        fields = ['usuario','nombres','apellidos','cedula','fecha_nacimiento','email','celular',"imagen"]
         widgets = {
             "usuario": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off", "placeholder":"Ingrese el nombre de usuario"}),
             "nombres": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off", "placeholder":"Ingrese el nombre completo"}),
@@ -66,5 +66,5 @@ class UsuarioForm(forms.ModelForm):
             "fecha_nacimiento": forms.DateInput(attrs={"type":"date", "class":"form-control", "autocomplete":"off"},format=('%Y-%m-%d'),),
             "email": forms.EmailInput(attrs={"class":"form-control", "autocomplete":"off", "placeholder":"Ingrese el correo electrónico"}),
             "celular": forms.TextInput(attrs={"class":"form-control", "autocomplete":"off", "placeholder":"Ingrese el número de celular"}),
-            
+            "imagen": forms.HiddenInput(attrs={"type":"file", "id":"imagenId","style":"display: none;"})
         }   
