@@ -172,10 +172,13 @@ class UserFunction(TemplateView):
                 return redirect('index')
         except:
             return redirect('index')
-        form = self.form_class(request.POST, request.FILES, instance=get_object)
-        print(request.FILES)
+        form = self.form_class(request.POST or None, request.FILES or None, instance=get_object)
         if form.is_valid():
-            form.save()
+            user  = form.save()
+            if request.FILES:
+                if "imagen" in request.FILES:
+                    user.imagen = request.FILES["imagen"]
+            user.save()
             return JsonResponse({"success":"Succes"})
         else:
             data = json.dumps({'error': 'Datos ingresados incorrectos', 'forms':form.errors})
