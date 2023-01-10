@@ -7,8 +7,8 @@
 {% endblock estilos %}
 
 {% block contenido %}
-<div class="container cont_list">
-    <a class="mb-3" href="{%url 'profesores'%}">Volver</a>
+<div class="container mt-5 cont_list">
+    <a class="mb-3" style="text-decoration: none;" href="{%url 'profesores'%}"><- Volver</a>
     {%for Profesor in Profesor%}
     <div class="card">
         
