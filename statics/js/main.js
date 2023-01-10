@@ -122,7 +122,14 @@ function ModificarEstudiante(url){
       },
     })
 }
-
+function modificarDocsEstudiante() { 
+  event.preventDefault()
+  form = $("#modificarDocsEstudiante")
+  let spinner = $("#spinnerLoad")
+  form.css("display", "none")
+  spinner.removeClass("ocultar")
+  form.submit()
+ }
 
 function ModificarRegistroEstudiante(){
   let form = $("#ModificarRegistroEstudianteForm")

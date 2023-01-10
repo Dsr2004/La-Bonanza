@@ -558,16 +558,16 @@
         signaturePad.clear();
     })  
 
-    function modificarDocsEstudiante() { 
-        event.preventDefault()
-        form = $("#modificarDocsEstudiante")
-        formData = new FormData(document.getElementById("modificarDocsEstudiante"))
-        formData.append("firma", signaturePad.toDataURL())
-        let spinner = $("#spinnerLoad")
-        form.css("display", "none")
-        spinner.removeClass("ocultar")
-        formData.submit()
-    }
+    // function modificarDocsEstudiante() { 
+    //     event.preventDefault()
+    //     form = $("#modificarDocsEstudiante")
+    //     formData = new FormData(document.getElementById("modificarDocsEstudiante"))
+    //     // formData.append("firma", signaturePad.toDataURL())
+    //     let spinner = $("#spinnerLoad")
+    //     form.css("display", "none")
+    //     spinner.removeClass("ocultar")
+    //     formData.submit
+    // }
 </script>
 <script>
     const valores = window.location.search;
