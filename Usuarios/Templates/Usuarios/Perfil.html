@@ -116,28 +116,28 @@
                 <div class="row">
                     <div class="col-6">
                         <label><strong>Nombres</strong> <sup class="campo_requerido">*</sup></label>
-                        {{form.nombres}}
+                        <input type="text" class="form-control" value="{{form.nombres.value}}" disabled>
                         <p id="nombres" class="error_text"></p>
                     </div>
                     <div class="col-6">
                         <label><strong>Apellidos</strong> <sup class="campo_requerido">*</sup></label>
-                        {{form.apellidos}}
+                        <input type="text" class="form-control" value="{{form.apellidos.value}}" disabled>
                         <p id="apellidos" class="error_text"></p>
                     </div>
                 </div>
                 
                 <label><strong>Nombre de usuario</strong> <sup class="campo_requerido">*</sup></label>
-                <input type="text" class="form-control" value="{{form.usuario.value}}" readonly>
+                <input type="text" class="form-control" value="{{form.usuario.value}}" disabled>
                 <input type="hidden" name="usuario" value="{{form.usuario.value}}">
                 
                 <p id="usuario" class="error_text"></p>
 
                 <label><strong>Cédula</strong> <sup class="campo_requerido">*</sup></label>
-                {{form.cedula}}
+                <input type="text" class="form-control" value="{{form.cedula.value}}" disabled>
                 <p id="cedula" class="error_text"></p>
 
                 <label><strong>Fecha de nacimiento</strong> <sup class="campo_requerido">*</sup></label>
-                {{form.fecha_nacimiento}}
+                <input type="text" class="form-control" value="{{form.fecha_nacimiento.value}}" disabled>
                 <p id="cedula" class="error_text"></p>
 
                 <label><strong>Correo electrónico</strong> <sup class="campo_requerido">*</sup></label>

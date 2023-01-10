@@ -4,18 +4,57 @@
 
 {% block estilos %}
 <link rel="stylesheet" href="{% static 'libs/daterangepicker/daterangepicker.css' %}">
+<link rel="stylesheet" href="{% static 'css/estilosBase.css' %}">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 {% endblock estilos %}
     
 
 {% block contenido %}
-
+<style>
+    #conten_movil{
+        display: none;
+    }
+    #difFecha{
+        display: flex;
+        flex-direction: row;
+        justify-content: left;
+        margin-left: -80px;
+        margin-right: 50px;
+    }
+    @media(max-width: 900px){
+        #conten_pc{
+            display: none;
+        }
+        #conten_movil{
+            display: flex;
+        }
+        #difFecha{
+            display: flex;
+            flex-direction: row;
+            justify-content: left;
+            margin-left: -70px;
+            margin-right: 60px;
+            align-items: center;
+        }
+        #difFecha h4{
+            font-size: 18PX;
+            width: 100%;
+            margin-left: 0px;
+            margin-right: 0px;
+        }
+        #btn_opciones a{
+            width: 50px;
+            margin-bottom: 5px;
+        }
+    }
+</style>
 {% regroup asistencia by hora as clases %}
-    <div class="container">
+<br>
+    <div class="container mt-5">
         
-        <div class="row sticky-top" style="background-color: white;">
+        <div class="row sticky-top cont_list" id="conten_pc">
             <div class="col-1"></div>
-            <div class="col-9" style="display: flex;">
+            <div class="col-9" id="difFecha">
                 <form action="" method="post">
                     {% csrf_token %}
                     <input type="hidden" name="accion" value="anterior">
@@ -36,6 +75,38 @@
                 <a href="{% url 'calendario' %}" class="btn btn-outline-secondary "><i class="fa-solid fa-calendar-days"></i></a>
             </div>
         </div>
+
+        <div class="row sticky-top cont_list" id="conten_movil">
+            <div class="col-1"></div>
+            <div class="col-9" id="difFecha">
+                <div class="row">
+                    <div class="col-12">
+                        <h4 style="margin-left: 50px; margin-right: 50px">{{dia|date:"D-d M Y"}}</h4>
+                    </div>
+                    <div class="col-12" style="display: flex; justify-content: center; flex-direction: row; align-items: center;">
+                        <form action="" method="post" style="margin-right: 80px; margin-left: 20px;">
+                            {% csrf_token %}
+                            <input type="hidden" name="accion" value="anterior">
+                            <input type="hidden" name="dia" value="{{dia|date:'d/m/Y'}}">
+                            <button class="btn btn-outline-secondary btn-sm" type="submit"><i class="fa-solid fa-arrow-left"></i></button>
+                        </form>
+                        
+                        <form action="" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="accion" value="siguiente">
+                            <input type="hidden" name="dia" value="{{dia|date:'d/m/Y'}}">
+                            <button class="btn btn-outline-secondary btn-sm" type="submit"><i class="fa-solid fa-arrow-right"></i></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-2" id="btn_opciones">
+                <a type="button" data-bs-toggle="modal" data-bs-target="#FilterAsistenciaModal" class="btn btn-success "> <i class="fa-solid fa-file-excel"></i></a>
+                <a href="{% url 'controlAsistencia' %}" class="btn btn-outline-secondary "><i class="fa-solid fa-house"></i></a>
+                <a href="{% url 'calendario' %}" class="btn btn-outline-secondary "><i class="fa-solid fa-calendar-days"></i></a>
+            </div>
+        </div>
+
         <hr>
         
         {% if asistencia %}
