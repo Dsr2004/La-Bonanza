@@ -37,21 +37,27 @@
                 <h3>Información del alumno</h3>
                 <br>
                 <div class="row">
-                    <div class="col-md-5"></div>
-                    <div class="col-md-7"></div>
-                </div>
-                <div class="row">
                     <div class="col-md-6">
-                        <h5><strong>Nombre completo: </strong></h5>
-                        {{object.get_estudiante}}
+                        
+                            <img src="/media/{{object.imagen}}" alt="imagen_de_{{object}}" class="img-fluid" style="max-width: 300px; max-height:250px; min-height: 200px;">
+                        
                     </div>
                     <div class="col-md-6">
-                        <h5><strong>Fecha de nacimiento:
-                        </strong></h5>
-                        {{object.fecha_nacimiento|date:'d/m/Y'}}
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h5><strong>Nombre completo: </strong></h5>
+                                {{object.get_estudiante}}
+                                <br><br>
+                            </div>
+                            <div class="col-md-12">
+                                <h5><strong>Fecha de nacimiento:
+                                </strong></h5>
+                                {{object.fecha_nacimiento|date:'d/m/Y'}}
+                            </div>
+                        </div>
+                        <br>
                     </div>
                 </div>
-                <br>
                 <div class="row">
                     <div class="col-md-6">
                         <h5><strong>Número de documento:</strong></h5>

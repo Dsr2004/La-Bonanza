@@ -6,7 +6,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body" style="height: 80vh; overflow: auto;">
-        <form id="EditarUsuarioForm">
+        <form id="EditarUsuarioForm" enctype="multipart/form-data">
             <div id="FormularioUsuariosE" class="FormularioUsuariosE">
                 {%csrf_token%}
                 {%for campo in form %}
@@ -19,6 +19,12 @@
                     <p id="" style="display: none;"></p>
                 </div>
                 {%endfor%}
+                <label style="cursor: pointer;" for="imagenId">
+                    <div class="circulo">
+                        <img src="/media/{{imagen}}" style="border-radius: 50%; width: 100%; height: 100%;" alt="" id="PerfilImg">
+                    </div>
+               </label>
+               <input type="file" name="imagen" id="imagenId" style="display: none;">
                 <script>
                     let befores = document.getElementsByClassName('beforeCampoUserE')
                     for (let i = 0; i < befores.length; i++){
@@ -26,7 +32,23 @@
                         let after = befores[i].nextSibling.nextSibling
                         after.id = before + '-p'
                     }
+                    
                 </script>
+                <script>
+                    $("#imagenId").change(function(){
+                        leerImg(this, document.getElementById("PerfilImg"));
+                    });
+                    function leerImg(input, img_destino){
+                        if (input.files && input.files[0]) {
+                            var reader = new FileReader();
+                            reader.onload = function (e) {
+                            img_destino.setAttribute("src", e.target.result);
+                            };
+                            reader.readAsDataURL(input.files[0]);
+                        }
+                    }
+                </script>
+                
             </div>
             <button class="btn btn-success" style="float: right;"type="button"onclick="editarUsuario()">Editar</button>
             <br>
@@ -39,10 +61,13 @@
                    for (let i = 0; i < inputs.length; i++) {
                         datos[inputs[i].name]=inputs[i].value
                    }
+                   let formData = new FormData(document.getElementById("EditarUsuarioForm"))
                    $.ajax({
                         url:'{%url "funcionesUsuario" pk%}',
-                        data: datos,
+                        data: formData,
                         type:'POST',
+                        processData: false,
+                        contentType: false,
                         success: function(data) {
                             window.location.reload();
                         },

@@ -273,9 +273,22 @@ class ModificarDocsEstudiante(IsAdminMixin, UpdateView):
             if "seguro_A" in request.FILES:
                 estudiante.seguro_A = request.FILES["seguro_A"]
                 messages.add_message(request, messages.INFO, "El documento de la EPS ha sido modificado")
-            if "firma" in request.FILES:
-                estudiante.firma = request.FILES["firma"]
+            if "imagen" in request.FILES:
+                estudiante.imagen = request.FILES["imagen"]
+                messages.add_message(request, messages.INFO, "la imagen ha sido modificada")
+                
+            if "firma" in request.POST:
+                print("si hay firma")
+                image_data = self.request.POST.get("firma")
+                format, imgstr = image_data.split(';base64,')
+                ext = format.split('/')[-1]
+                data = ContentFile(base64.b64decode(imgstr))  
+                file_name = "firma-"+request.POST.get("nombrefirma")+"."+ ext
+                estudiante.firma.save(file_name, data, save=True)
+                estudiante.nombrefirma = request.POST.get("nombrefirma")
+                
                 messages.add_message(request, messages.INFO, "La firma ha sido modificada")
+            
             estudiante.save()
         return redirect("modificarEstudiante",pk= self.kwargs["pk"])
    
